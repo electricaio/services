@@ -1,0 +1,8 @@
+apply plugin: 'application'
+
+dependencies {
+    compile 'log4j:log4j:1.2.17'
+    compile project(':service1')
+}
+
+mainClassName = 'com.electrica.HelloWorld'

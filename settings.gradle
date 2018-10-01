@@ -1,1 +1,3 @@
-rootProject.name = 'electricaio-all'
+rootProject.name = 'electica'
+include 'service1'
+include 'service2'
