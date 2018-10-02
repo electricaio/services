@@ -1,4 +1,4 @@
-package io.electrica.services.user;
+package io.electrica;
 
 
 import org.springframework.boot.SpringApplication;

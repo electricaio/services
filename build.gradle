@@ -1,5 +1,4 @@
 
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -9,18 +8,40 @@ allprojects {
         jcenter()
         mavenCentral()
     }
+
+    group = "io.electrica"
+    version = "0.0.1"
 }
 
 subprojects {
+    ext {
+        // Plugins
+        liquibaseGradlePlugin = "2.0.1"
+
+        // Spring
+        springBootVersion = "2.0.5.RELEASE"
+        springCloudVersion = "Camden.SR4"
+
+        // Other
+        postgresqlDriverVersion = '42.2.5'
+        javaxInjectVersion = '1'
+    }
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     dependencies {
-        compile("org.springframework.boot:spring-boot-starter-web")
-        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    }
 
-        testCompile('org.springframework.boot:spring-boot-starter-test')
-        testCompile('com.jayway.jsonpath:json-path')
+    sourceSets {
+        main {
+            java {
+                srcDir "src/main/java"
+            }
+            resources {
+                srcDir "src/main/resources"
+            }
+        }
     }
 }
 
