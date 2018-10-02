@@ -1,3 +1,4 @@
 rootProject.name = 'electrica-services'
 include 'user-service'
 include 'stl-service'
+include 'auth-service'
