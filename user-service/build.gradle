@@ -14,12 +14,14 @@ apply plugin: 'org.springframework.boot'
 apply plugin: "org.liquibase.gradle"
 
 dependencies {
+    compile project(':user-service-api')
     compile project(':common')
 }
 
 dependencyManagement {
     imports {
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     }
 }
 
