@@ -1,2 +1,2 @@
 rootProject.name = 'electrica-services'
-include 'user_service'
+include 'user-service'
