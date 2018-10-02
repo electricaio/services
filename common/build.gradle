@@ -9,15 +9,25 @@ buildscript {
 
 apply plugin: 'io.spring.dependency-management'
 
-jar {
-    baseName = "common"
-}
-
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile project(':common-api')
+    
+    compile 'org.springframework.boot:spring-boot-starter-jetty'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-validation'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
+
+    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
 
     compile "javax.inject:javax.inject:${javaxInjectVersion}"
-    
+    compile "com.google.code.findbugs:jsr305:${findbugsAnnotationsVersion}"
+    compile "org.apache.commons:commons-lang3:${apacheCommonLang3Version}"
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "com.github.dozermapper:dozer-core:${dozerVersion}"
+    compile "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}"
+    compile "com.samskivert:jmustache"
+    compile "org.apache.commons:commons-io:${commonsioVersion}"
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.jayway.jsonpath:json-path'
 }
@@ -25,6 +35,7 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     }
 }
 
