@@ -11,7 +11,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 bootJar {
-    baseName = 'user_service'
+    baseName = 'user-service'
     version =  '0.1'
 }
 
