@@ -1,14 +1,32 @@
-apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
+
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
     repositories {
+        jcenter()
         mavenCentral()
     }
-
 }
 
+subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencies {
+        compile("org.springframework.boot:spring-boot-starter-web")
+        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+        testCompile('org.springframework.boot:spring-boot-starter-test')
+        testCompile('com.jayway.jsonpath:json-path')
+    }
+}
+
+/**
+ * These plugins have to be moved into subprojects lambda for them to apply to all submodules..
+ */
 apply plugin: 'checkstyle'
 checkstyle {
     toolVersion '7.8.1'
