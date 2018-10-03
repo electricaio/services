@@ -1,0 +1,6 @@
+server:
+  port: 22022
+
+spring:
+  application:
+    name: user-service
