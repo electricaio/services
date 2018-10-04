@@ -1,31 +1,36 @@
+plugins {
+    id 'com.github.kt3k.coveralls' version '2.8.2'
+}
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'eclipse'
+    apply plugin: 'jacoco'
+    apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
 
     repositories {
         jcenter()
         mavenCentral()
     }
 
-    group = "io.electrica"
-    version = "0.0.1"
+    group = 'io.electrica'
+    version = '0.0.1'
 }
 
 subprojects {
     ext {
         // Plugins
-        liquibaseGradlePlugin = "2.0.1"
+        liquibaseGradlePlugin = '2.0.1'
 
         // Spring
-        springBootVersion = "2.0.5.RELEASE"
-        springCloudVersion = "Finchley.SR1"
+        springBootVersion = '2.0.5.RELEASE'
+        springCloudVersion = 'Finchley.SR1'
 
         // Other
         postgresqlDriverVersion = '42.2.5'
         javaxInjectVersion = '1'
-        dozerVersion = "6.4.1"
+        dozerVersion = '6.4.1'
         guavaVersion = '26.0-jre'
         apacheCommonLang3Version = '3.8.1'
         findbugsAnnotationsVersion = '3.0.2'
@@ -40,53 +45,94 @@ subprojects {
     dependencies {
     }
 
+    jacocoTestReport {
+        reports {
+            xml.enabled = true // coveralls plugin depends on xml format report
+            html.enabled = true
+        }
+    }
+
     sourceSets {
         main {
             java {
-                srcDir "src/main/java"
+                srcDir 'src/main/java'
             }
             resources {
-                srcDir "src/main/resources"
+                srcDir 'src/main/resources'
             }
+        }
+    }
+
+    // Checkstyle settings
+    checkstyle {
+        toolVersion '7.8.1'
+        configFile file("${rootDir}/config/checkstyle/checkstyle.xml")
+    }
+    checkstyleMain {
+        source ='src/main/java'
+    }
+    checkstyleTest {
+        source = 'src/test/java'
+    }
+
+    tasks.withType(Checkstyle) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+    }
+
+    // Findbugs  settings
+    findbugs {
+        ignoreFailures = false
+        toolVersion = '3.0.1'
+        sourceSets=[sourceSets.main]
+        excludeFilter = file("${rootDir}/config/findbugs/excludeFilter.xml")
+        reportsDir = file("${buildDir}/reports/findbugs")
+        effort = 'max'
+    }
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled false
+            html.enabled true
         }
     }
 }
 
-/**
- * These plugins have to be moved into subprojects lambda for them to apply to all submodules..
- */
-apply plugin: 'checkstyle'
-checkstyle {
-    toolVersion '7.8.1'
-    configFile file("config/checkstyle/checkstyle.xml")
-}
-checkstyleMain {
-    source ='src/main/java'
-}
-checkstyleTest {
-    source = 'src/test/java'
-}
+def projects = subprojects
 
-tasks.withType(Checkstyle) {
-    reports {
-        xml.enabled false
-        html.enabled true
+task jacocoMerge(type: JacocoMerge) {
+    projects.each { subproject ->
+        executionData subproject.tasks.withType(Test)
+    }
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
     }
 }
 
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+    dependsOn projects.test, jacocoMerge
 
-apply plugin: 'findbugs'
-findbugs {
-    ignoreFailures = false
-    toolVersion = "3.0.1"
-    sourceSets=[sourceSets.main]
-    excludeFilter = file("config/findbugs/excludeFilter.xml")
-    reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = "max"
-}
-tasks.withType(FindBugs) {
+    additionalSourceDirs = files(projects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(projects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(projects.sourceSets.main.output)
+    executionData jacocoMerge.destinationFile
+
     reports {
-        xml.enabled false
-        html.enabled true
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
     }
+}
+
+coveralls {
+    sourceDirs = projects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
+
+tasks.coveralls {
+    group = 'Coverage reports'
+    description = 'Uploads the aggregated coverage report to Coveralls'
+
+    dependsOn jacocoRootReport
 }

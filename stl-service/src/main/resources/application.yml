@@ -1,0 +1,6 @@
+server:
+  port: 22023
+
+spring:
+  application:
+    name: stl-service
