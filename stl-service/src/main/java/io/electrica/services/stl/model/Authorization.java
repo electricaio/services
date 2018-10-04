@@ -1,4 +1,4 @@
-package io.electrica.services.stl.model;
+package io.electrica.stl.model;
 
 import java.io.Serializable;
 

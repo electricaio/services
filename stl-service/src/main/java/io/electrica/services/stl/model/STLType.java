@@ -1,4 +1,4 @@
-package io.electrica.services.stl.model;
+package io.electrica.stl.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
