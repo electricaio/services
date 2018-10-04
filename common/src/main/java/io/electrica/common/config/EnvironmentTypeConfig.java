@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * Added to container {@link EnvironmentType} according to specified spring profile.
+ */
 @Configuration
 public class EnvironmentTypeConfig {
 

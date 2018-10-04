@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Filter to intercept and manage user's identity contexts.
+ *
+ * @see Identity
+ * @see IdentityContextHolder
+ */
 @Component
 public class IdentityContextFilter extends OncePerRequestFilter {
 
@@ -24,7 +30,11 @@ public class IdentityContextFilter extends OncePerRequestFilter {
     private IdentityContextHolder identityContextHolder;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         try {
             Identity identity = Identity.ANONYMOUS;
             if (RequestHelper.isSecuredResource(request)) {

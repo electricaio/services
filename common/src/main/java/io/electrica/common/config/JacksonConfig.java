@@ -14,8 +14,10 @@ public class JacksonConfig {
             EnvironmentType environmentType
     ) {
         return builder -> {
-            //builder.modules(new JavaTimeModule());
+            // skip unknown properties
             builder.failOnUnknownProperties(false);
+
+            // include nullable properties for safe environment to simplify development and testing
             if (!environmentType.isSafe()) {
                 builder.serializationInclusion(JsonInclude.Include.NON_NULL);
             }

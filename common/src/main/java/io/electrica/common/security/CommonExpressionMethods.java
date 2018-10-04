@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+/**
+ * Most common method security set used for custom security verifications.
+ */
 public class CommonExpressionMethods {
 
     private final Authentication authentication;
@@ -18,19 +21,22 @@ public class CommonExpressionMethods {
         this.mi = mi;
     }
 
-    public Identity getIdentity(){
+    public Identity getIdentity() {
         return new IdentityImpl(authentication);
     }
 
-    public boolean isUser(Integer userId){
+    public boolean isUser(Integer userId) {
         return Objects.equals(getIdentity().getUserId(), userId);
     }
 
+    /**
+     * Component that register {@link CommonExpressionMethods} factory in 'common' namespace.
+     */
     @Component
     public static class Factory implements ExpressionMethodsFactory {
 
         @Override
-        public String getId() {
+        public String getNamespace() {
             return "common";
         }
 

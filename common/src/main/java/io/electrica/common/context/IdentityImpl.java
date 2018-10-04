@@ -7,6 +7,9 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Identity implementation for authenticated users.
+ */
 public class IdentityImpl implements Identity {
 
     private final Authentication authentication;

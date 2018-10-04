@@ -11,13 +11,15 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import java.time.Instant;
 import java.util.Map;
 
+/**
+ * Collect common things to work with JWT tokens.
+ */
 public class TokenHelper {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static final String ID_INDICATOR = "@id:";
     private static final String EMAIL_INDICATOR = "@e:";
-    private static final String PHONE_INDICATOR = "@p:";
 
     private static final String ISSUED_AT_ID = "iat";
 
@@ -43,9 +45,6 @@ public class TokenHelper {
         return username.startsWith(EMAIL_INDICATOR);
     }
 
-    public static boolean isPhone(String username) {
-        return username.startsWith(PHONE_INDICATOR);
-    }
 
     public static int extractId(String username) {
         return Integer.parseInt(username.substring(ID_INDICATOR.length()));
@@ -53,10 +52,6 @@ public class TokenHelper {
 
     public static String extractEmail(String username) {
         return StringUtils.substringAfter(username, EMAIL_INDICATOR);
-    }
-
-    public static String extractPhone(String username) {
-        return StringUtils.substringAfter(username, PHONE_INDICATOR);
     }
 
     public static OAuth2AccessToken addIssuedAtInfo(OAuth2AccessToken accessToken) {

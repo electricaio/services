@@ -1,5 +1,8 @@
 package io.electrica.common;
 
+/**
+ * Possible types of environments.
+ */
 public enum EnvironmentType {
 
     Default(true),

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Enable and configure oauth2 Resource Server.
+ */
 @Component
 @EnableResourceServer
 public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigurerAdapter {
@@ -25,6 +28,8 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        // specify id of resource, that validated using JWT token
+        // token have to be explicitly granted to all required micro-services
         resources.resourceId(applicationName);
     }
 
@@ -40,6 +45,5 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Bad credentials"));
     }
-
 
 }

@@ -1,5 +1,8 @@
 package io.electrica.common.rest;
 
+/**
+ *
+ */
 public interface PathConstants {
 
     String PUBLIC = "/public";

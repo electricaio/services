@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Filter that returns {@link ApplicationContextHeaderCustomFilter#HEADER_NAME} header with service unique identifier,
+ * service name, environment and version on each request.
+ */
 @Component
 public class ApplicationContextHeaderCustomFilter extends OncePerRequestFilter {
 
-    public static final String HEADER_NAME = "X-Application-Context";
+    private static final String HEADER_NAME = "X-Application-Context";
 
     private final String headerValue;
 
@@ -27,7 +31,11 @@ public class ApplicationContextHeaderCustomFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         response.addHeader(HEADER_NAME, headerValue);
         filterChain.doFilter(request, response);
     }
