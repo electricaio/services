@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 @MappedSuperclass
-public class AbstractBaseEntity implements Serializable {
+public abstract class AbstractBaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,6 @@ public class AbstractBaseEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     @Override
     public boolean equals(Object obj) {
