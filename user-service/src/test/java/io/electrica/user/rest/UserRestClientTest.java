@@ -8,9 +8,10 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
 
 import javax.inject.Inject;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -24,8 +25,8 @@ public class UserRestClientTest {
 
     @Test
     public void createUser() {
-        ResponseEntity<UserDto> user = userRestClient.createUser(new CreateUserDto());
-        Assert.notNull(user.getBody());
+        ResponseEntity<UserDto> response = userRestClient.createUser(new CreateUserDto());
+        assertNotNull(response.getBody());
     }
 
 }

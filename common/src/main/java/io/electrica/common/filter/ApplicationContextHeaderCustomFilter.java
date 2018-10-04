@@ -1,5 +1,6 @@
 package io.electrica.common.filter;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,8 @@ import java.io.IOException;
 @Component
 public class ApplicationContextHeaderCustomFilter extends OncePerRequestFilter {
 
-    private static final String HEADER_NAME = "X-Application-Context";
+    @VisibleForTesting
+    static final String HEADER_NAME = "X-Application-Context";
 
     private final String headerValue;
 

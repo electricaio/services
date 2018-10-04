@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -22,8 +23,8 @@ public class StlRestClientTest {
 
     @Test
     public void createTest() {
-        ResponseEntity<TestDto> user = stlRestClient.createTest(new TestDto());
-        Assert.notNull(user.getBody());
+        ResponseEntity<TestDto> response = stlRestClient.createTest(new TestDto());
+        assertNotNull(response.getBody());
     }
 
 }

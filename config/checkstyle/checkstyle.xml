@@ -79,10 +79,10 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
         -->
 
-        <module name="AvoidStarImport">
-            <property name="allowClassImports" value="true" />
-            <property name="severity" value="error" />
-        </module>
+        <!--<module name="AvoidStarImport">-->
+            <!--<property name="allowClassImports" value="true" />-->
+            <!--<property name="severity" value="error" />-->
+        <!--</module>-->
 
         <module name="RedundantImport">
             <!-- Checks for redundant import statements. -->
