@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Add to container Dozer {@link Mapper}, configured using {@link BeanMappingBuilder} set.
+ * <p>
+ * To configure just add to container in your module appropriate {@link BeanMappingBuilder}.
+ */
 @Configuration
 public class DozerMapperConfig {
 

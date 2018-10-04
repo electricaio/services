@@ -1,5 +1,8 @@
 package io.electrica.common.rest;
 
+/**
+ * Contains common endpoint paths prefixes.
+ */
 public interface PathConstants {
 
     String PUBLIC = "/public";
