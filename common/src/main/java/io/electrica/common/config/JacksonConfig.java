@@ -5,13 +5,14 @@ import io.electrica.common.EnvironmentType;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 @Configuration
 public class JacksonConfig {
 
     @Bean
-    public static Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(EnvironmentType environmentType) {
+    public static Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(
+            EnvironmentType environmentType
+    ) {
         return builder -> {
             //builder.modules(new JavaTimeModule());
             builder.failOnUnknownProperties(false);

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
-@RestController
 public interface UserRestClient {
 
     @PostMapping(PUBLIC + V1 + "/users")
