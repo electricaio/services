@@ -7,5 +7,5 @@ spring:
   auth:
     keystore:
       path: classpath:keystore.jks
-      secret: change_me
-      key-alias: coopel.com
+      secret: password
+      key-alias: io.electrica
