@@ -22,7 +22,8 @@ dependencyManagement {
 dependencies {
 
     compile project(':common')
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile project(':common-jpa')
+    compile("org.postgresql:postgresql:$postgresqlDriverVersion")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.jayway.jsonpath:json-path')
@@ -34,7 +35,7 @@ liquibase {
             changeLogFile "src/main/resources/db/changelog/v-1.0.0/initial.xml"
             url "jdbc:postgresql://localhost:5432/stl-service"
             username "postgres"
-            password "password"
+            password ""
         }
     }
 }
