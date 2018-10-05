@@ -23,12 +23,12 @@ public class BasicAuthorization extends AbstractPersistable<Long> implements Ser
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Size(max = 64)
+    @Size(max = 256)
     @Column(name = "user_hash")
     private String userHash;
 
     @NotNull
-    @Size(max = 64)
+    @Size(max = 256)
     @Column(name = "password_hash")
     private String passwordHash;
 

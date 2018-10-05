@@ -6,23 +6,24 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
+
+
 @Entity
-@Table(name = "stl_types")
+@Table(name = "authorization_types")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class STLType extends AbstractPersistable<Long> implements Serializable {
+public class AuthorizationType extends AbstractPersistable<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 256)
     @Column(name = "name")
     private String name;
 }

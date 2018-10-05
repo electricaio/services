@@ -28,22 +28,22 @@ public class STL extends AbstractPersistable<Long> implements Serializable {
     private STLType type;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 256)
     @Column(name = "name")
     private String name;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 256)
     @Column(name = "version")
     private String version;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 256)
     @Column(name = "namespace")
     private String namespace;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 256)
     @Column(name = "ern")
     private String ern;
 }

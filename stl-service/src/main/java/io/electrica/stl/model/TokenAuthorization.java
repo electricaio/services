@@ -23,7 +23,7 @@ public class TokenAuthorization extends AbstractPersistable<Long> implements Ser
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @Size(max = 64)
+    @Size(max = 256)
     @Column(name = "token_hash")
     private String tokenHash;
 
