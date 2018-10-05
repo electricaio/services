@@ -3,11 +3,12 @@ package io.electrica.user.rest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ *  REST Client implementation for Managing users..
+ *
+ */
 @RestController
 public class UserRestClientImpl implements UserRestClient {
 
@@ -17,7 +18,7 @@ public class UserRestClientImpl implements UserRestClient {
         return ResponseEntity.ok(new UserDto());
     }
 
-    @Override
+   /* @Override
     @PreAuthorize("#oauth2.hasScope('update') and #common.isUser(#id) and #id == #user.id")
     public ResponseEntity<UserDto> updateUser(@PathVariable int id, @RequestBody UserDto user) {
         // ToDo stubbed
@@ -29,5 +30,5 @@ public class UserRestClientImpl implements UserRestClient {
     public ResponseEntity<UserDto> getMe() {
         // ToDo stubbed
         return ResponseEntity.ok(new UserDto());
-    }
+    }*/
 }

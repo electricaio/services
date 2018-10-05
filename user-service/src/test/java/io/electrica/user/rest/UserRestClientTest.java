@@ -13,6 +13,11 @@ import javax.inject.Inject;
 
 import static org.junit.Assert.assertNotNull;
 
+/**
+ *  UserRestClientTest to test rest client.
+ *
+ */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         classes = UserServiceApplication.class,
@@ -27,6 +32,7 @@ public class UserRestClientTest {
     public void createUser() {
         ResponseEntity<UserDto> response = userRestClient.createUser(new CreateUserDto());
         assertNotNull(response.getBody());
+
     }
 
 }

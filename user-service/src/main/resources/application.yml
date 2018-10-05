@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: user-service
+  auth:
+    keystore:
+      path: classpath:keystore.jks
+      secret: password
+      key-alias: io.electrica
