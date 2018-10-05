@@ -34,4 +34,7 @@
         <Field name="ICON" />
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
+    <Match>
+        <Class name="org.springframework.data.jpa.domain.AbstractPersistable"/>
+    </Match>
 </FindBugsFilter>
