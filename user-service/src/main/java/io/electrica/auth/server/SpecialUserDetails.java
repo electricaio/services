@@ -10,7 +10,6 @@ import java.util.Objects;
 /**
  * A  Model object to support for token revoke or expire for a user.
  *
- * @author Munish Sodhi
  */
 @Getter
 public class SpecialUserDetails extends User {

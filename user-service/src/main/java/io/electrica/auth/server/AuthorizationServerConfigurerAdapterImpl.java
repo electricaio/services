@@ -21,7 +21,6 @@ import javax.inject.Inject;
  * AuthorizationServerConfigurerAdapterImpl provides implementation for Authorization server.
  *
  * Please see the {@link io.electrica.UserServiceApplication} class for true identity
- * @author Munish Sodhi
  *
  */
 @Component

@@ -24,7 +24,6 @@ import java.io.IOException;
  * This class provides configuration for JWT token store.
  *
  * Please see the {@link io.electrica.UserServiceApplication} class for true identity
- * @author Munish Sodhi
  *
  */
 @Configuration

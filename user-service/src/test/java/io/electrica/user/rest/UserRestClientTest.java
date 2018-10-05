@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 /**
  *  UserRestClientTest to test rest client.
  *
- *  @author Munish Sodhi
  */
 
 @RunWith(SpringRunner.class)

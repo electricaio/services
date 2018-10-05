@@ -11,7 +11,6 @@ import static io.electrica.common.rest.PathConstants.V1;
 /**
  *  REST Client for Managing users.
  *
- *  @author Munish Sodhi
  */
 public interface UserRestClient {
 

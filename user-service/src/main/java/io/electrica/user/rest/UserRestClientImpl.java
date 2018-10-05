@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *  REST Client implementation for Managing users..
  *
- *  @author Munish Sodhi
  */
 @RestController
 public class UserRestClientImpl implements UserRestClient {
