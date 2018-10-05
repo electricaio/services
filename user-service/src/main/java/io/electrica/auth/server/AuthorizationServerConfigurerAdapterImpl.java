@@ -27,8 +27,6 @@ import javax.inject.Inject;
 @EnableAuthorizationServer
 public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServerConfigurerAdapter {
 
-    public static final String AUTH_SERVICE_RESOURCE_ID = "auth";
-
     private final TokenStore tokenStore;
     private final JwtAccessTokenConverter tokenEnhancer;
     private final UserDetailsService userDetailsService;
