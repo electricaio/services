@@ -8,15 +8,20 @@ import org.springframework.web.bind.annotation.*;
 import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
+/**
+ *  REST Client for Managing users.
+ *
+ *  @author Munish Sodhi
+ */
 public interface UserRestClient {
 
     @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
-    @PutMapping(V1 + "/users/{id}")
+   /* @PutMapping(V1 + "/users/{id}")
     ResponseEntity<UserDto> updateUser(@PathVariable int id, @RequestBody UserDto user);
 
     @GetMapping(V1 + "/users/me")
-    ResponseEntity<UserDto> getMe();
+    ResponseEntity<UserDto> getMe();*/
 
 }

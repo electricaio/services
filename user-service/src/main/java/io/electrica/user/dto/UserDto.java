@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
-
+/**
+ *  A DTO representing user with authorities.
+ *
+ *  @author Munish Sodhi
+ */
 @Getter
 @Setter
 public class UserDto {
