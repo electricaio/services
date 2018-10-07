@@ -15,6 +15,10 @@ apply plugin: "org.liquibase.gradle"
 
 dependencies {
     compile project(':common')
+    compile project(':common-jpa')
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    runtime("org.postgresql:postgresql:${postgresqlDriverVersion}")
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -29,10 +33,10 @@ dependencyManagement {
 liquibase {
     activities {
         main {
-            changeLogFile "src/main/resources/db/changelog/v-1.0.0/initial.xml"
-            url "jdbc:postgresql://localhost:5432/stl-service"
+            changeLogFile "src/main/resources/db/changelog.xml"
+            url "jdbc:postgresql://localhost:5432/stl"
             username "postgres"
-            password "password"
+            password "postgres"
         }
     }
 }

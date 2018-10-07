@@ -3,7 +3,7 @@ server:
 
 spring:
     profiles:
-        active: dev
+        active: test
     application:
         name: stl-service
     datasource:
@@ -11,7 +11,7 @@ spring:
         url: jdbc:postgresql://localhost:5432/stl
         name:
         username: postgres
-        password: postgres
+        password: ""
     jpa:
         database: POSTGRESQL
         show-sql: true
@@ -20,3 +20,5 @@ spring:
         properties:
             id.new_generator_mappings: true
             hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+            hibernate.jdbc.lob.non_contextual_creation: true
+
