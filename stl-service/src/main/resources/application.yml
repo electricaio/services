@@ -2,5 +2,21 @@ server:
   port: 22023
 
 spring:
-  application:
-    name: stl-service
+    profiles:
+        active: dev
+    application:
+        name: stl-service
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://localhost:5432/stl
+        name:
+        username: postgres
+        password: postgres
+    jpa:
+        database: POSTGRESQL
+        show-sql: true
+        hibernate:
+            ddl-auto: validate
+        properties:
+            id.new_generator_mappings: true
+            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

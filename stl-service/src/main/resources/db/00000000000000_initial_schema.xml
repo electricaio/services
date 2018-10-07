@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="bgvoka" id="00000000000000">
+
+        <!--CREATE TABLES-->
+        <createTable tableName="stl_types">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="stls">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="namespace" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ern" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="stl_instances">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="stl_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_key_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="authorization_types">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="authorizations">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stl_instance_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="basic_authorizations">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="aws_iam_authorizations">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="details" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="token_authorizations">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="token_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!--ADD FOREIGN KEYS-->
+        <addForeignKeyConstraint baseColumnNames="type_id"
+                                 baseTableName="stls"
+                                 constraintName="fk_stls_type_id_2_stl_types"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="stl_types"/>
+
+        <addForeignKeyConstraint baseColumnNames="type_id"
+                                 baseTableName="authorizations"
+                                 constraintName="fk_authorizations_type_id_2_authorization_types"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorization_types"/>
+
+        <addForeignKeyConstraint baseColumnNames="stl_id"
+                                 baseTableName="stl_instances"
+                                 constraintName="fk_stl_instances_stl_id_2_stls"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="stls"/>
+
+        <addForeignKeyConstraint baseColumnNames="stl_instance_id"
+                                 baseTableName="authorizations"
+                                 constraintName="fk_authorizations_stl_instance_id_2_stl_instances"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="stl_instances"/>
+
+        <addForeignKeyConstraint baseColumnNames="authorization_id"
+                                 baseTableName="basic_authorizations"
+                                 constraintName="fk_basic_authorizations_authorization_id_2_authorizations"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorizations"/>
+
+        <addForeignKeyConstraint baseColumnNames="authorization_id"
+                                 baseTableName="aws_iam_authorizations"
+                                 constraintName="FK_AWS_IAM_AUT.A_AUT.I_A92D04"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorizations"/>
+
+        <addForeignKeyConstraint baseColumnNames="authorization_id"
+                                 baseTableName="token_authorizations"
+                                 constraintName="fk_token_authorizations_authorization_id_2_authorizations"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="authorizations"/>
+    </changeSet>
+</databaseChangeLog>
