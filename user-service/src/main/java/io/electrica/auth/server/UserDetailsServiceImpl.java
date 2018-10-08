@@ -26,8 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findUser(username);
         return new SpecialUserDetails(
-                TokenHelper.tokenUsernameFromId(user.getId()),
-                user.getPassword(),
+                TokenHelper.tokenUsernameFromId(1L), //user.getId()
+                user.getSaltedPassword(),
                 // to DO !user.getArchived(),
                 true,
                 true,
@@ -43,8 +43,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (username.equalsIgnoreCase("@e:qa@qa.qa")) {
             User user = new User();
-            user.setId(1);
-            user.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
+            //user.setId(1L);
+            user.setSaltedPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
             user.setFirstName("FirstNAme");
             result = Optional.of(user);
         }
