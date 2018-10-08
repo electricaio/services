@@ -1,0 +1,452 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="Nick Tc &lt;nick.tc@electrica.io&gt;" id="2018-10-08-00">
+        <createSequence sequenceName="access_key_id_seq" startValue="1000" />
+        <createSequence sequenceName="hibernate_sequence" startValue="1000" />
+        <createSequence sequenceName="organization_id_seq" startValue="1000" />
+        <createSequence sequenceName="permission_categories_id_seq" startValue="1000" />
+        <createSequence sequenceName="permission_id_seq" startValue="1000" />
+        <createSequence sequenceName="role_id_seq" startValue="1000" />
+        <createSequence sequenceName="role_to_permission_id_seq" startValue="1000" />
+        <createSequence sequenceName="user_id_seq" startValue="1000" />
+        <createSequence sequenceName="user_to_role_id_seq" startValue="1000" />
+
+        <!-- Create user service tables -->
+        <createTable tableName="usr_access_keys">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_access_keys_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="access_key" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="key_name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_user_uid" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_organizations">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_organizations_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="uuid" type="UUID" />
+        </createTable>
+        <createTable tableName="usr_permission_categories">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_permission_categories_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_permission_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_permissions">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_permissions_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="VARCHAR(1024)" />
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_roles">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="VARCHAR(1024)" />
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_roles_to_usr_permissions_map">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_to_usr_permissions_map_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_permission_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_role_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_users">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_users_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="salted_password" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="uuid" type="UUID" />
+            <column name="usr_organization_uid" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="usr_users_to_usr_roles_map">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_users_to_usr_roles_map_pkey" />
+            </column>
+            <column name="record_version" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_role_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="usr_user_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex indexName="usr_roles_to_usr_permissions_map_usr_permission_id_idx"
+            tableName="usr_roles_to_usr_permissions_map">
+            <column name="usr_permission_id" />
+        </createIndex>
+        <createIndex indexName="usr_roles_to_usr_permissions_map_usr_role_id_idx"
+            tableName="usr_roles_to_usr_permissions_map">
+            <column name="usr_role_id" />
+        </createIndex>
+        <createIndex indexName="usr_users_to_usr_roles_map_usr_role_id_idx"
+            tableName="usr_users_to_usr_roles_map">
+            <column name="usr_role_id" />
+        </createIndex>
+        <createIndex indexName="usr_users_to_usr_roles_map_usr_user_id_idx"
+            tableName="usr_users_to_usr_roles_map">
+            <column name="usr_user_id" />
+        </createIndex>
+        <addForeignKeyConstraint
+            baseColumnNames="usr_user_uid" baseTableName="usr_access_keys"
+            constraintName="usr_access_keys_usr_user_uid_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="id" referencedTableName="usr_users"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_permission_id"
+            baseTableName="usr_permission_categories"
+            constraintName="usr_permission_categories_usr_permission_id_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_permissions" validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_permission_id"
+            baseTableName="usr_roles_to_usr_permissions_map"
+            constraintName="usr_roles_to_usr_permissions_map_usr_permission_id_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_permissions" validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_role_id"
+            baseTableName="usr_roles_to_usr_permissions_map"
+            constraintName="usr_roles_to_usr_permissions_map_usr_role_id_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_roles" validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_role_id"
+            baseTableName="usr_users_to_usr_roles_map"
+            constraintName="usr_users_to_usr_roles_map_usr_role_id_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_roles" validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_user_id"
+            baseTableName="usr_users_to_usr_roles_map"
+            constraintName="usr_users_to_usr_roles_map_usr_user_id_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_users" validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="usr_organization_uid" baseTableName="usr_users"
+            constraintName="usr_users_usr_organization_uid_fkey"
+            deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+            onUpdate="NO ACTION" referencedColumnNames="id"
+            referencedTableName="usr_organizations" validate="true" />
+
+
+
+        <!-- Create HIBERNATE Audit tables -->
+        <createTable tableName="revchanges">
+            <column name="rev" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="entityname" type="VARCHAR(255)" />
+        </createTable>
+        <createTable tableName="revinfo">
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="revinfo_pkey" />
+            </column>
+            <column name="revtstmp" type="BIGINT" />
+        </createTable>
+        <createTable tableName="usr_access_keys_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_access_keys_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_access_keys_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="access_key" type="VARCHAR(255)" />
+            <column name="access_key_mod" type="BOOLEAN" />
+            <column name="key_name" type="VARCHAR(255)" />
+            <column name="key_name_mod" type="BOOLEAN" />
+            <column name="usr_user_uid" type="BIGINT" />
+            <column name="user_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_organizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_organizations_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_organizations_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="name_mod" type="BOOLEAN" />
+            <column name="uuid" type="UUID" />
+            <column name="uuid_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_permission_categories_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_permission_categories_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_permission_categories_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="category" type="VARCHAR(255)" />
+            <column name="category_mod" type="BOOLEAN" />
+            <column name="usr_permission_id" type="BIGINT" />
+            <column name="permission_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_permissions_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_permissions_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_permissions_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="description" type="VARCHAR(1024)" />
+            <column name="description_mod" type="BOOLEAN" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="name_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_roles_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="description" type="VARCHAR(1024)" />
+            <column name="description_mod" type="BOOLEAN" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="name_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_roles_to_usr_permissions_map_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_to_usr_permissions_map_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_roles_to_usr_permissions_map_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="usr_permission_id" type="BIGINT" />
+            <column name="permission_mod" type="BOOLEAN" />
+            <column name="usr_role_id" type="BIGINT" />
+            <column name="role_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_users_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_users_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_users_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="email" type="VARCHAR(255)" />
+            <column name="email_mod" type="BOOLEAN" />
+            <column name="first_name" type="VARCHAR(255)" />
+            <column name="first_name_mod" type="BOOLEAN" />
+            <column name="last_name" type="VARCHAR(255)" />
+            <column name="last_name_mod" type="BOOLEAN" />
+            <column name="salted_password" type="VARCHAR(255)" />
+            <column name="salted_password_mod" type="BOOLEAN" />
+            <column name="uuid" type="UUID" />
+            <column name="uuid_mod" type="BOOLEAN" />
+            <column name="usr_organization_uid" type="BIGINT" />
+            <column name="organization_mod" type="BOOLEAN" />
+        </createTable>
+        <createTable tableName="usr_users_to_usr_roles_map_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="usr_users_to_usr_roles_map_aud_pkey" />
+            </column>
+            <column name="rev" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="usr_users_to_usr_roles_map_aud_pkey" />
+            </column>
+            <column name="revtype" type="SMALLINT" />
+            <column name="revend" type="INTEGER" />
+            <column name="revend_tstmp" type="TIMESTAMP WITHOUT TIME ZONE" />
+            <column name="usr_role_id" type="BIGINT" />
+            <column name="role_mod" type="BOOLEAN" />
+            <column name="usr_user_id" type="BIGINT" />
+            <column name="user_mod" type="BOOLEAN" />
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_roles_aud"
+            constraintName="usr_roles_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_users_to_usr_roles_map_aud"
+            constraintName="usr_users_to_usr_roles_map_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_permission_categories_aud"
+            constraintName="usr_permission_categories_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend"
+            baseTableName="usr_users_to_usr_roles_map_aud"
+            constraintName="usr_users_to_usr_roles_map_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="revchanges"
+            constraintName="revchanges_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_roles_to_usr_permissions_map_aud"
+            constraintName="usr_roles_to_usr_permissions_map_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend" baseTableName="usr_roles_aud"
+            constraintName="usr_roles_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend"
+            baseTableName="usr_roles_to_usr_permissions_map_aud"
+            constraintName="usr_roles_to_usr_permissions_map_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_access_keys_aud"
+            constraintName="usr_access_keys_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_permissions_aud"
+            constraintName="usr_permissions_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend" baseTableName="usr_permissions_aud"
+            constraintName="usr_permissions_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_users_aud"
+            constraintName="usr_users_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend" baseTableName="usr_access_keys_aud"
+            constraintName="usr_access_keys_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend" baseTableName="usr_organizations_aud"
+            constraintName="usr_organizations_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend"
+            baseTableName="usr_permission_categories_aud"
+            constraintName="usr_permission_categories_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint
+            baseColumnNames="revend" baseTableName="usr_users_aud"
+            constraintName="usr_users_aud_revend_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+        <addForeignKeyConstraint baseColumnNames="rev"
+            baseTableName="usr_organizations_aud"
+            constraintName="usr_organizations_aud_rev_fkey" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+            referencedColumnNames="rev" referencedTableName="revinfo"
+            validate="true" />
+    </changeSet>
+</databaseChangeLog>

@@ -37,6 +37,7 @@ subprojects {
         logstashLogbackEncoderVersion = '5.2'
         commonsioVersion = '1.3.2'
         lombokVersion = '1.18.2'
+        liquibaseCorekVersion = '3.6.1'
     }
 
     sourceCompatibility = 1.8
