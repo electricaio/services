@@ -15,7 +15,6 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "stl_types")
 @Entity(name = "stl_types")
 public class STLType extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,6 +22,6 @@ public class STLType extends AbstractPersistable<Long> implements Serializable {
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 }
