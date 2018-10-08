@@ -31,8 +31,9 @@ public class UserRestClientImpl implements UserRestClient {
     @Override
     public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) throws URISyntaxException {
         logger.debug("REST request to save User : {}", createUserDto);
-        if (userService.findOneByLogin(createUserDto.getEmail()).isPresent())
+        if (userService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
             return new ResponseEntity("Login already in use", HttpStatus.CONFLICT);
+        }
         else {
             User newUser = userService.createUser(createUserDto);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))

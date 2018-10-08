@@ -6,6 +6,9 @@ import io.electrica.user.service.UserService;
 
 import java.util.Optional;
 
+/**
+ * Service implementation class for managing users.
+ */
 public class UserServiceImpl implements UserService {
 
     @Override
