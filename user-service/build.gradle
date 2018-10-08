@@ -35,6 +35,13 @@ dependencyManagement {
 
 }
 
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split("\\s+")
+    }
+    jvmArgs = ["-Xmx128m"]
+}
+
 liquibase {
     activities {
         main {

@@ -48,8 +48,27 @@
         </root>
     </springProfile>
 
-    <springProfile name="test">
+    <springProfile name="staging">
 
+        <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${SERVICE_NAME}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${SERVICE_NAME}_%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="info">
+            <appender-ref ref="SAVE-TO-FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
@@ -58,6 +77,7 @@
 
         <root level="info">
             <appender-ref ref="STDOUT"/>
+
         </root>
     </springProfile>
 

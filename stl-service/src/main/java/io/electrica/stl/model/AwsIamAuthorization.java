@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "aws_iam_authorizations")
 @Entity(name = "aws_iam_authorizations")
 public class AwsIamAuthorization extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,12 +22,12 @@ public class AwsIamAuthorization extends AbstractPersistable<Long> implements Se
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "details")
+    @Column(name = "details", nullable = false, length = 255)
     private String details;
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorization_id")
+    @JoinColumn(name = "authorization_id", nullable = false)
     private Authorization authorization;
 }
 
