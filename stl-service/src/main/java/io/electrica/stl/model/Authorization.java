@@ -12,7 +12,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "authorizations")
 @Entity(name = "authorizations")
 public class Authorization extends AbstractPersistable<Long> implements Serializable {
 
@@ -20,11 +19,11 @@ public class Authorization extends AbstractPersistable<Long> implements Serializ
 
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = false)
     private AuthorizationType type;
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stl_instance_id")
+    @JoinColumn(name = "stl_instance_id", nullable = false)
     private STLInstance stlInstance;
 }

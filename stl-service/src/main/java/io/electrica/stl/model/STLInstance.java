@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "stl_instances")
 @Entity(name = "stl_instances")
 public class STLInstance extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,10 +22,10 @@ public class STLInstance extends AbstractPersistable<Long> implements Serializab
 
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stl_id")
+    @JoinColumn(name = "stl_id", nullable = false)
     private STL stl;
 
     @NotNull
-    @Column(name = "access_key_id")
+    @Column(name = "access_key_id", nullable = false)
     private Long accessKeyId;
 }

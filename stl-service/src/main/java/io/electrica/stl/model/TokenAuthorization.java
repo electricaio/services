@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "token_authorizations")
 @Entity(name = "token_authorizations")
 public class TokenAuthorization extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,11 +22,11 @@ public class TokenAuthorization extends AbstractPersistable<Long> implements Ser
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "token_hash")
+    @Column(name = "token_hash", nullable = false, length = 255)
     private String tokenHash;
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorization_id")
+    @JoinColumn(name = "authorization_id", nullable = false)
     private Authorization authorization;
 }

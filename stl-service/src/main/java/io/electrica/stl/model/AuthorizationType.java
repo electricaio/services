@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "authorization_types")
 @Entity(name = "authorization_types")
 public class AuthorizationType extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,7 +22,7 @@ public class AuthorizationType extends AbstractPersistable<Long> implements Seri
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 }
 
