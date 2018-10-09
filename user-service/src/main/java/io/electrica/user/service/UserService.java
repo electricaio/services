@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserService {
 
     Optional<User> findOneByLogin(String login);
-    User createUser(CreateUserDto createUserDto);
-    User updateUser(UserDto userDto);
+    UserDto createUser(CreateUserDto createUserDto);
+    UserDto updateUser(UserDto userDto);
 
 }

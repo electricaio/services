@@ -1,87 +1,71 @@
 package io.electrica.user.service.impl;
 
-import com.google.common.collect.Sets;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.repository.UserRepository;
+import io.electrica.user.service.RoleService;
 import io.electrica.user.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service implementation class for managing users.
  */
 public class UserServiceImpl implements UserService {
 
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    private final UserRepository userRepository;
+    private final RoleService roleService;
+
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
+    }
+
     @Override
     public Optional<User> findOneByLogin(String login) {
-        return Optional.empty();
+        return userRepository.findOneByEmailIgnoreCase(login);
     }
 
     @Override
-    public User createUser(CreateUserDto createUserDto) {
+    public UserDto createUser(CreateUserDto createUserDto) {
+        User user = toEntity(createUserDto);
+        user = userRepository.save(user);
+        log.debug("Created Information for User: {}", user);
+        return toDto(user);
+
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto) {
         return null;
-    }
-
-    @Override
-    public User updateUser(UserDto userDto){
-
     }
 
     public UserDto toDto(User e) {
         return new UserDto(
                 e.getId(),
                 e.getFirstName(),
-                e.getMiddleName(),
                 e.getLastName(),
                 e.getEmail(),
-                e.getPhone(),
-                buildRolesAndAuthorities(e)
+                Collections.EMPTY_SET,
+                Collections.EMPTY_SET
         );
     }
 
-    public Set<String> buildAuthorities(User e) {
-        return Sets.newHashSet(
-                Sets.union(
-                        e.getUserRoles().stream()
-                                .map(userRole -> userRole.getRole().getName())
-                                .collect(Collectors.toSet()),
-
-                        e.getUserCooperativeRoles().stream()
-                                .map(userCooperativeRole -> {
-                                    CooperativeRole cr = userCooperativeRole.getCooperativeRole();
-                                    return cr.getRole().getName() + "_" + cr.getCooperative().getRemoteId();
-                                }).collect(Collectors.toSet())
-                )
-        );
-    }
-
-    public  User toEntity(UserDto userDto) {
+    public User toEntity(UserDto userDto) {
         User user = new User();
-        user.setId(userDto.getId());
-        user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
 
         if (userDto instanceof CreateUserDto) {
-            user.setPassword(((CreateUserDto) userDto).getPassword());
+            user.setSaltedPassword(((CreateUserDto) userDto).getPassword());
         }
-
-        Set<String> authorities = userDto.getAuthorities();
-        if (authorities != null) {
-            for (String authority : authorities) {
-                Role role = new Role();
-                role.setName(roleType.getName());
-
-                UserRole userRole = new UserRole();
-                userRole.setRole(role);
-
-                e.getUserRoles().add(userRole);
-                }
-            }
-        }
-        return e;
+        return user;
     }
 }

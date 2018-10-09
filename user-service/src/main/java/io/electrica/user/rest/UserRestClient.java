@@ -1,6 +1,7 @@
 package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
+import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface UserRestClient {
 
     @PostMapping(PUBLIC + V1 + "/users")
-    ResponseEntity<User> createUser(@RequestBody CreateUserDto user) throws URISyntaxException;
+    ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user) throws URISyntaxException;
 
    /* @PutMapping(V1 + "/users/{id}")
     ResponseEntity<UserDto> updateUser(@PathVariable int id, @RequestBody UserDto user);

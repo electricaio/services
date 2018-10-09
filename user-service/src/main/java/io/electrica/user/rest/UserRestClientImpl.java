@@ -1,7 +1,7 @@
 package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
-import io.electrica.user.model.User;
+import io.electrica.user.dto.UserDto;
 import io.electrica.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -29,12 +30,12 @@ public class UserRestClientImpl implements UserRestClient {
 
 
     @Override
-    public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) throws URISyntaxException {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) throws URISyntaxException {
         logger.debug("REST request to save User : {}", createUserDto);
         if (userService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
             return new ResponseEntity("Login already in use", HttpStatus.CONFLICT);
         } else {
-            User newUser = userService.createUser(createUserDto);
+            UserDto newUser = userService.createUser(createUserDto);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))
                     .body(newUser);
         }
