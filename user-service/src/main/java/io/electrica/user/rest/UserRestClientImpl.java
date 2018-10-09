@@ -33,13 +33,14 @@ public class UserRestClientImpl implements UserRestClient {
         logger.debug("REST request to save User : {}", createUserDto);
         if (userService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
             return new ResponseEntity("Login already in use", HttpStatus.CONFLICT);
-        }
-        else {
+        } else {
             User newUser = userService.createUser(createUserDto);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))
                     .body(newUser);
         }
     }
+
+
 
 
 

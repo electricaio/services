@@ -15,6 +15,7 @@ apply plugin: "org.liquibase.gradle"
 
 dependencies {
     compile project(':common')
+    compile project(':common-jpa')
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
