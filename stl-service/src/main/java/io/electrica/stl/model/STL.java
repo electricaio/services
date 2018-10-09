@@ -46,4 +46,8 @@ public class STL extends AbstractEntity {
     @Column(nullable = false)
     private String ern;
 
+    @NotNull
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinColumn(name = "authorization_type_id", nullable = false)
+    private AuthorizationType authorizationType;
 }

@@ -1,7 +1,8 @@
 package io.electrica.stl.repository;
 
 import io.electrica.STLServiceApplication;
-import io.electrica.stl.TestProfileResolver;
+import io.electrica.stl.util.Fixture;
+import io.electrica.stl.util.TestProfileResolver;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 @ActiveProfiles(resolver = TestProfileResolver.class)
 @SpringBootTest(classes = STLServiceApplication.class)
 @Transactional
-public abstract class AbstractDatabaseTest {
+public abstract class AbstractDatabaseTest implements Fixture {
 
     @Inject
     protected STLTypeRepository stlTypeRepository;
@@ -23,13 +24,50 @@ public abstract class AbstractDatabaseTest {
     @Inject
     protected STLRepository stlRepository;
 
-    @Before
-    public void setup() {
-        deleteAll();
+    @Inject
+    protected STLInstanceRepository stlInstanceRepository;
+
+    @Inject
+    protected AuthorizationTypeRepository authorizationTypeRepository;
+
+    @Inject
+    protected BasicAuthorizationRepository basicAuthorizationRepository;
+
+    @Inject
+    protected AwsIamAuthorizationRepository awsIamAuthorizationRepository;
+
+    @Inject
+    protected TokenAuthorizationRepository tokenAuthorizationRepository;
+
+    @Inject
+    private AuthorizationRepository authorizationRepository;
+
+    @Override
+    public AuthorizationRepository getAuthorizationRepository() {
+        return authorizationRepository;
     }
 
-    public void deleteAll() {
-        stlRepository.deleteAll();
-        stlTypeRepository.deleteAll();
+    @Override
+    public AuthorizationTypeRepository getAuthorizationTypeRepository() {
+        return authorizationTypeRepository;
+    }
+
+    @Override
+    public TokenAuthorizationRepository getTokenAuthorizationRepository() {
+        return tokenAuthorizationRepository;
+    }
+
+    @Override
+    public STLRepository getSTLRepository() {
+        return stlRepository;
+    }
+
+    @Override
+    public STLTypeRepository getSTLTypeRepository() {
+        return stlTypeRepository;
+    }
+
+    public STLInstanceRepository getSTLInstanceRepository() {
+        return stlInstanceRepository;
     }
 }

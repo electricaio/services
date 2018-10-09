@@ -1,4 +1,6 @@
-package io.electrica.stl.rest;
+package io.electrica.stl.util;
+
+import io.electrica.common.exception.handler.ErrorResult;
 
 import java.util.Optional;
 
@@ -16,11 +18,11 @@ public final class RestResponse<ResponseType> {
     private Optional<ResponseType> dtoResponse;
 
     // will be changed with proper class wrapper for errors
-    private Optional<String> error;
+    private Optional<ErrorResult> error;
 
     private int status;
 
-    public RestResponse(Optional<ResponseType> dtoResponse, Optional<String> error, int status) {
+    public RestResponse(Optional<ResponseType> dtoResponse, Optional<ErrorResult> error, int status) {
         this.dtoResponse = dtoResponse;
         this.error = error;
         this.status = status;
@@ -31,7 +33,7 @@ public final class RestResponse<ResponseType> {
                 .orElseThrow(() -> new IllegalStateException(MISSING_DATA_ERR_MSG));
     }
 
-    public String getError() {
+    public ErrorResult getError() {
         return this.error
                 .orElseThrow(() -> new IllegalArgumentException(MISSING_ERROR_ERR_MSG));
     }
