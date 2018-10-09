@@ -44,7 +44,7 @@
         <Package name="~io\.electrica\.common\.jpa\.exception\.handler.*"/>
     </Match>
     <Match>
-        <Class name="io.electrica.common.jpa.service.bl.JpaHelper"/>
+        <Class name="io.electrica.common.jpa.service.JpaHelper"/>
     </Match>
 
 </FindBugsFilter>
