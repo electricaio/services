@@ -1,11 +1,9 @@
 server:
   port: 22023
+
 spring:
-    application:
-        name: stl-service
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/stl
-        name: stl-ds
-        username: postgres
-        password: postgres
+  application:
+    name: stl-service
+  datasource:
+    name: pool-to-stl
+    url: jdbc:postgresql://localhost:5432/stl
