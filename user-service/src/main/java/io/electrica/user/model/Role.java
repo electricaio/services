@@ -1,28 +1,29 @@
 package io.electrica.user.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import io.electrica.common.jpa.model.AbstractBaseEntity;
+import org.hibernate.envers.Audited;
+
+import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "usr_roles")
-public class Role extends AbstractBaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Audited
+@Table(name = "roles")
+public class Role extends AbstractEntity {
 
     @NotNull
-    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    @Column(nullable = false, unique = true)
     private String name;
-    @Column(length = 1024)
+    @Column(length = 1023)
     private String description;
 
 }

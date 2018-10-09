@@ -1,34 +1,33 @@
 package io.electrica.user.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import io.electrica.common.jpa.model.AbstractBaseEntity;
+import org.hibernate.envers.Audited;
+
+import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "usr_permission_categories")
-public class PermissionCategories extends AbstractBaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Audited
+@Table(name = "permission_categories")
+public class PermissionCategories extends AbstractEntity {
 
     @NotNull
-    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    @Column(nullable = false, unique = true)
     private String category;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usr_permission_id", nullable = false,
-                foreignKey = @ForeignKey(name = "usr_permission_categories_usr_permission_id_fkey"))
+    @JoinColumn(name = "permission_id", nullable = false)
     private Permission permission;
 }

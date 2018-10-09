@@ -1,47 +1,50 @@
 package io.electrica.user.model;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import io.electrica.common.jpa.model.AbstractBaseEntity;
+import org.hibernate.envers.Audited;
+
+import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "usr_users")
-public class User extends AbstractBaseEntity implements Serializable {
+@Audited
+@Table(name = "users")
+public class User extends AbstractEntity {
 
-    private static final long serialVersionUID = 1L;
-
-    @Column(name = "uuid")
+    @NotNull
+    @Column(nullable = false, unique = true)
     private UUID uuid;
     @NotNull
-    @Column(name = "first_name", nullable = false)
+    @Size(max = 255)
+    @Column(nullable = false)
     private String firstName;
     @NotNull
-    @Column(name = "last_name", nullable = false)
+    @Size(max = 255)
+    @Column(nullable = false)
     private String lastName;
     @NotNull
-    @Column(name = "email", unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
     @NotNull
-    @Column(name = "salted_password", nullable = false)
+    @Size(max = 127)
+    @Column(nullable = false, length = 127)
     private String saltedPassword;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usr_organization_uid", nullable = false,
-            foreignKey = @ForeignKey(name = "usr_users_usr_organization_uid_fkey"))
+    @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
 }
