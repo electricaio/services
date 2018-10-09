@@ -59,7 +59,7 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleControllerException(HttpServletRequest request, Exception e) {
+    public ResponseEntity<ErrorResult> handleControllerException(HttpServletRequest request, Exception e) {
         CustomExceptionHandler handler = getExceptionHandler(e.getClass());
 
         ErrorResult errorResult = handler.handle(e);
