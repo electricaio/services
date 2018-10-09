@@ -1,4 +1,4 @@
-package io.electrica.stl;
+package io.electrica.stl.util;
 
 import org.springframework.test.context.ActiveProfilesResolver;
 

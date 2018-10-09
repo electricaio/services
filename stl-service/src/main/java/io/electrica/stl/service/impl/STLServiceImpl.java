@@ -5,11 +5,13 @@ import io.electrica.stl.repository.STLRepository;
 import io.electrica.stl.rest.dto.STLDto;
 import io.electrica.stl.service.STLService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class STLServiceImpl implements STLService {
 
     private Mapper mapper;
@@ -21,6 +23,7 @@ public class STLServiceImpl implements STLService {
         this.stlRepository = stlRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<STLDto> findAll() {
         return stlRepository.findAll()

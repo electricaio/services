@@ -1,7 +1,9 @@
 package io.electrica.stl.repository;
 
+import io.electrica.stl.model.AuthorizationType;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
+import io.electrica.stl.util.AuthorizationUtils;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,10 +15,8 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
     @Test
     public void test_create_stl_with_success() {
 //        setup
-        final STLType type = new STLType();
-        type.setName("Foundation");
-
-        stlTypeRepository.save(type);
+        final AuthorizationType authorizationType = createAuthorizationType(AuthorizationUtils.TOKEN_AUTH);
+        final STLType type = createSTLType("Foundation");
 
         final String name = "Hackerrank API";
         final String namespace = "stl.hackerrank";
@@ -29,6 +29,7 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         stl.setVersion(version);
         stl.setErn(ern);
         stl.setType(type);
+        stl.setAuthorizationType(authorizationType);
 
 //        method
         stlRepository.save(stl);

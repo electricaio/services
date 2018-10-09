@@ -1,9 +1,12 @@
 package io.electrica.stl.rest;
 
 import io.electrica.common.rest.PathConstants;
+import io.electrica.stl.model.AuthorizationType;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
 import io.electrica.stl.rest.dto.STLDto;
+import io.electrica.stl.util.AuthorizationUtils;
+import io.electrica.stl.util.RestResponse;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -11,6 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class STLControllerTest extends AbstractApiTest {
 
@@ -29,29 +33,18 @@ public class STLControllerTest extends AbstractApiTest {
     @Test
     public void test_list_stls_with_existing_one() throws Exception {
         //        setup
-        final STLType type = new STLType();
-        type.setName("Foundation");
+        final AuthorizationType authorizationType = createAuthorizationType(AuthorizationUtils.TOKEN_AUTH);
+        final STLType type = createSTLType("Foundation");
 
-        stlTypeRepository.save(type);
-
-        final String name = "Hackerrank API";
-        final String namespace = "stl.hackerrank";
-        final String version = "0.0.1";
-        final String ern = "stl://hackerrank:v0.0.1";
-
-        final STL expectedStl = new STL();
-        expectedStl.setName(name);
-        expectedStl.setNamespace(namespace);
-        expectedStl.setVersion(version);
-        expectedStl.setErn(ern);
-        expectedStl.setType(type);
+        final STL expectedStl = createSTL("Hackerrank API", "0.0.1", type, authorizationType);
 
 //        method
-        stlRepository.save(expectedStl);
+        final MvcResult wrappedResponse = mockMvc
+                .perform(
+                        get(PathConstants.V1 + "/stl/list"))
+                .andReturn();
 
-//        assert
-        final MvcResult wrappedResponse = mockMvc.perform(get(PathConstants.V1 + "/stl/list")).andReturn();
-
+        // assert
         final RestResponse<List<STLDto>> response = fromMvcResult(wrappedResponse, List.class, STLDto.class);
         final List<STLDto> result = response.getData();
 
