@@ -8,6 +8,7 @@ public enum EnvironmentType {
     Default(true),
     Production(false),
     Test(true),
+    Staging(true),
     Development(true);
 
     private final boolean safe;
