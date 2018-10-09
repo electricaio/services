@@ -15,7 +15,6 @@ import javax.validation.constraints.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "basic_authorizations")
 @Entity(name = "basic_authorizations")
 public class BasicAuthorization extends AbstractPersistable<Long> implements Serializable {
 
@@ -23,17 +22,17 @@ public class BasicAuthorization extends AbstractPersistable<Long> implements Ser
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "user_hash")
+    @Column(name = "user_hash", nullable = false, length = 255)
     private String userHash;
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "password_hash")
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorization_id")
+    @JoinColumn(name = "authorization_id", nullable = false)
     private Authorization authorization;
 }
 
