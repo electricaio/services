@@ -9,7 +9,7 @@ spring:
       path: classpath:keystore.jks
       secret: password
       key-alias: io.electrica
-  datasource:
+   datasource:
     name: pool-to-user-service
     username: postgres
     password: postgres

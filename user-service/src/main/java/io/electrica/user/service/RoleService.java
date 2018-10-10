@@ -1,7 +1,5 @@
 package io.electrica.user.service;
 
-import io.electrica.user.dto.RoleDto;
-
 import java.util.List;
 import java.util.Optional;
 

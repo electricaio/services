@@ -13,6 +13,5 @@ public interface UserService {
 
     Optional<User> findOneByLogin(String login);
     UserDto createUser(CreateUserDto createUserDto);
-    UserDto updateUser(UserDto userDto);
 
 }

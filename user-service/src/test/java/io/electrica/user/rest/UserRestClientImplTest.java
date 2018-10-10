@@ -1,6 +1,7 @@
 package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
+import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
 import io.electrica.user.service.UserService;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class UserRestClientImplTest {
         User user = createEntityUser();
         when(userService.findOneByLogin(DEFAULT_EMAIL)).thenReturn(Optional.empty());
         when(userService.createUser(createUserDto)).thenReturn(user);
-        User actualUser = userRestClient.createUser(createUserDto).getBody();
+        UserDto actualUser = userRestClient.createUser(createUserDto).getBody();
         assertEquals(user,actualUser);
     }
 

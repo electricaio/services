@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Service implementation class for managing users.
  */
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractService<User> implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 

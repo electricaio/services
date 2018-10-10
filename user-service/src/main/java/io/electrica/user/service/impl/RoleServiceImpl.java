@@ -1,6 +1,5 @@
 package io.electrica.user.service.impl;
 
-import io.electrica.user.dto.RoleDto;
 import io.electrica.user.model.Role;
 import io.electrica.user.repository.RoleRepository;
 import io.electrica.user.repository.UserRoleRepository;
