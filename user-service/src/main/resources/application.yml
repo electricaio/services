@@ -9,3 +9,6 @@ spring:
       path: classpath:keystore.jks
       secret: password
       key-alias: io.electrica
+  datasource:
+    name: pool-to-user-service
+    url: jdbc:postgresql://127.0.0.1:5432/user_service

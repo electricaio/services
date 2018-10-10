@@ -26,7 +26,7 @@ public class TokenHelper {
     private TokenHelper() {
     }
 
-    public static String tokenUsernameFromId(int userId) {
+    public static String tokenUsernameFromId(long userId) {
         return ID_INDICATOR + userId;
     }
 
