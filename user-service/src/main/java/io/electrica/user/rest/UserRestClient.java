@@ -19,7 +19,7 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface UserRestClient {
 
     @PostMapping(PUBLIC + V1 + "/users")
-    ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user) throws URISyntaxException;
+    ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
    /* @PutMapping(V1 + "/users/{id}")
     ResponseEntity<UserDto> updateUser(@PathVariable int id, @RequestBody UserDto user);

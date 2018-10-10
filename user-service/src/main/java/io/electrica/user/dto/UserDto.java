@@ -22,13 +22,13 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
-    private String organization;
+    private OrganizationDto organization;
     private Set<String> authorities;
     private Set<RolesDto> roles;
     private Instant createdAt;
     private Instant updatedAt;
 
-    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, String organization, Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt) {
+    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, OrganizationDto organization, Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.uuid = uuid;
         this.firstName = firstName;

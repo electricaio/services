@@ -2,6 +2,7 @@ package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
+import io.electrica.user.service.UserDtoService;
 import io.electrica.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -22,40 +23,24 @@ public class UserRestClientImpl implements UserRestClient {
 
     private final Logger logger = LoggerFactory.getLogger(UserRestClientImpl.class);
 
-    UserService userService;
+    private final UserDtoService userDtoService;
 
-    public UserRestClientImpl(UserService userService) {
-        this.userService = userService;
+    @Inject
+    public UserRestClientImpl(UserDtoService userDtoService) {
+        this.userDtoService = userDtoService;
     }
 
-
     @Override
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) throws URISyntaxException {
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createUserDto){
         logger.debug("REST request to save User : {}", createUserDto);
-        if (userService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
+       /* if (userDtoService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
             return new ResponseEntity("Login already in use", HttpStatus.CONFLICT);
         } else {
             UserDto newUser = userService.createUser(createUserDto);
-            return ResponseEntity.created(new URI("/api/users/" + newUser.getEmail()))
-                    .body(newUser);
-        }
+            return ResponseEntity.ok(newUser);
+        }*/
+        UserDto result = userDtoService.createUser(createUserDto);
+        return ResponseEntity.ok(result);
     }
 
-
-
-
-
-   /* @Override
-    @PreAuthorize("#oauth2.hasScope('update') and #common.isUser(#id) and #id == #user.id")
-    public ResponseEntity<UserDto> updateUser(@PathVariable int id, @RequestBody UserDto user) {
-        // ToDo stubbed
-        return ResponseEntity.ok(new UserDto());
-    }
-
-    @Override
-    @PreAuthorize("#oauth2.hasScope('get')")
-    public ResponseEntity<UserDto> getMe() {
-        // ToDo stubbed
-        return ResponseEntity.ok(new UserDto());
-    }*/
 }
