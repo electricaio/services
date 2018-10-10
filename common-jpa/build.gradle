@@ -17,6 +17,8 @@ dependencies {
     compile "org.hibernate:hibernate-envers"
     compile "org.hibernate:hibernate-java8"
     runtime("org.postgresql:postgresql:${postgresqlDriverVersion}")
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
