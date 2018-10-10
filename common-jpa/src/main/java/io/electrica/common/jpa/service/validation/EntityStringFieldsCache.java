@@ -1,6 +1,5 @@
 package io.electrica.common.jpa.service.validation;
 
-import io.electrica.common.exception.BadRequestServiceException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +11,6 @@ import org.springframework.util.ReflectionUtils;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Component
-public class StringFieldValidationService {
+class EntityStringFieldsCache {
 
-    private static final Logger log = LoggerFactory.getLogger(StringFieldValidationService.class);
+    private static final Logger log = LoggerFactory.getLogger(EntityStringFieldsCache.class);
 
     private final ConcurrentMap<Class, List<StringPropertyMetadata>> stringPropertiesByType = new ConcurrentHashMap<>();
 
@@ -58,40 +56,16 @@ public class StringFieldValidationService {
         return new StringPropertyMetadata(name, columnAnnotation.length(), columnAnnotation.nullable(), getter);
     }
 
-    /**
-     * Validate that all string properties of entity not empty and can't be trimmed.
-     */
-    public void validate(Object entity) {
-        List<StringPropertyMetadata> stringPropertiesMetadata = stringPropertiesByType.computeIfAbsent(
-                entity.getClass(),
-                StringFieldValidationService::findStringProperties
+    List<StringPropertyMetadata> getStringPropertiesMetadata(Class entityType) {
+        return stringPropertiesByType.computeIfAbsent(
+                entityType,
+                EntityStringFieldsCache::findStringProperties
         );
-
-        for (StringPropertyMetadata metadata : stringPropertiesMetadata) {
-            String propertyName = metadata.getPropertyName();
-            try {
-                String propertyValue = (String) metadata.getMethod().invoke(entity);
-                if (propertyValue != null) {
-                    if (propertyValue.isEmpty()) {
-                        String message = String.format("%s can't be blank", propertyName);
-                        throw new BadRequestServiceException(message);
-                    }
-                    String trimmed = StringUtils.trim(propertyValue);
-                    if (trimmed.length() != propertyValue.length()) {
-                        String message = String.format("%s must be trimmed", propertyName);
-                        throw new BadRequestServiceException(message);
-                    }
-                }
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                String message = String.format("Unable to get value of parameter %s", propertyName);
-                log.error(message, e);
-            }
-        }
     }
 
     @Getter
     @AllArgsConstructor
-    private static class StringPropertyMetadata {
+    static class StringPropertyMetadata {
         private final String propertyName;
         private final Integer length;
         private final Boolean nullable;
