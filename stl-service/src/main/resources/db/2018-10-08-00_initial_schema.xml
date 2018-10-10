@@ -1,89 +1,119 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="Branko Gvoka branko@electrica.io" id="2018-10-08-00">
-
-        <!--CREATE TABLES-->
-        <createTable tableName="stl_types">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="stls">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="type_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="namespace" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ern" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="stl_instances">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="stl_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="access_key_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="aleks (generated)" id="1539073594837-1">
+        <createSequence sequenceName="authorization_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-2">
+        <createSequence sequenceName="authorization_type_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-3">
+        <createSequence sequenceName="aws_iam_authorization_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-4">
+        <createSequence sequenceName="basic_authorization_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-5">
+        <createSequence sequenceName="revinfo_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-6">
+        <createSequence sequenceName="stl_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-7">
+        <createSequence sequenceName="stlinstance_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-8">
+        <createSequence sequenceName="stltype_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-9">
+        <createSequence sequenceName="token_authorization_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-10">
         <createTable tableName="authorization_types">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createTable tableName="authorizations">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-11">
+        <createTable tableName="authorization_types_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
-            <column name="type_id" type="BIGINT">
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-12">
+        <createTable tableName="authorizations">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="stl_instance_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-        </createTable>
-
-        <createTable tableName="basic_authorizations">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="user_hash" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password_hash" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="authorization_id" type="BIGINT">
+            <column name="type_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-13">
+        <createTable tableName="authorizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="stl_instance_id" type="BIGINT"/>
+            <column name="stl_instance_mod" type="BOOLEAN"/>
+            <column name="type_id" type="BIGINT"/>
+            <column name="type_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-14">
         <createTable tableName="aws_iam_authorizations">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
             <column name="details" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -92,10 +122,234 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-15">
+        <createTable tableName="aws_iam_authorizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="details" type="VARCHAR(255)"/>
+            <column name="details_mod" type="BOOLEAN"/>
+            <column name="authorization_id" type="BIGINT"/>
+            <column name="authorization_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-16">
+        <createTable tableName="basic_authorizations">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-17">
+        <createTable tableName="basic_authorizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="password_hash" type="VARCHAR(255)"/>
+            <column name="password_hash_mod" type="BOOLEAN"/>
+            <column name="user_hash" type="VARCHAR(255)"/>
+            <column name="user_hash_mod" type="BOOLEAN"/>
+            <column name="authorization_id" type="BIGINT"/>
+            <column name="authorization_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-18">
+        <createTable tableName="revchanges">
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entityname" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-19">
+        <createTable tableName="revinfo">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-20">
+        <createTable tableName="stl_instances">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_key_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stl_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-21">
+        <createTable tableName="stl_instances_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="access_key_id" type="BIGINT"/>
+            <column name="access_key_id_mod" type="BOOLEAN"/>
+            <column name="stl_id" type="BIGINT"/>
+            <column name="stl_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-22">
+        <createTable tableName="stl_types">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-23">
+        <createTable tableName="stl_types_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-24">
+        <createTable tableName="stls">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ern" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="namespace" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-25">
+        <createTable tableName="stls_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="ern" type="VARCHAR(255)"/>
+            <column name="ern_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+            <column name="namespace" type="VARCHAR(255)"/>
+            <column name="namespace_mod" type="BOOLEAN"/>
+            <column name="version" type="VARCHAR(255)"/>
+            <column name="version_mod" type="BOOLEAN"/>
+            <column name="type_id" type="BIGINT"/>
+            <column name="type_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-26">
         <createTable tableName="token_authorizations">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
             <column name="token_hash" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -104,55 +358,234 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <!--ADD FOREIGN KEYS-->
-        <addForeignKeyConstraint baseColumnNames="type_id"
-                                 baseTableName="stls"
-                                 constraintName="stls_type_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="stl_types"/>
-
-        <addForeignKeyConstraint baseColumnNames="type_id"
-                                 baseTableName="authorizations"
-                                 constraintName="authorizations_type_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="authorization_types"/>
-
-        <addForeignKeyConstraint baseColumnNames="stl_id"
-                                 baseTableName="stl_instances"
-                                 constraintName="stl_instances_stl_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="stls"/>
-
-        <addForeignKeyConstraint baseColumnNames="stl_instance_id"
-                                 baseTableName="authorizations"
-                                 constraintName="authorizations_stl_instance_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="stl_instances"/>
-
-        <addForeignKeyConstraint baseColumnNames="authorization_id"
-                                 baseTableName="basic_authorizations"
-                                 constraintName="basic_authorizations_authorization_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="authorizations"/>
-
-        <addForeignKeyConstraint baseColumnNames="authorization_id"
-                                 baseTableName="aws_iam_authorizations"
-                                 constraintName="aws_iam_authorizations_authorization_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="authorizations"/>
-
-        <addForeignKeyConstraint baseColumnNames="authorization_id"
-                                 baseTableName="token_authorizations"
-                                 constraintName="token_authorizations_authorization_id_fkey"
-                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-27">
+        <createTable tableName="token_authorizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="token_hash" type="VARCHAR(255)"/>
+            <column name="token_hash_mod" type="BOOLEAN"/>
+            <column name="authorization_id" type="BIGINT"/>
+            <column name="authorization_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-28">
+        <addPrimaryKey columnNames="id, rev" constraintName="authorization_types_aud_pkey"
+                       tableName="authorization_types_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-29">
+        <addPrimaryKey columnNames="id" constraintName="authorization_types_pkey" tableName="authorization_types"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-30">
+        <addPrimaryKey columnNames="id, rev" constraintName="authorizations_aud_pkey" tableName="authorizations_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-31">
+        <addPrimaryKey columnNames="id" constraintName="authorizations_pkey" tableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-32">
+        <addPrimaryKey columnNames="id, rev" constraintName="aws_iam_authorizations_aud_pkey"
+                       tableName="aws_iam_authorizations_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-33">
+        <addPrimaryKey columnNames="id" constraintName="aws_iam_authorizations_pkey"
+                       tableName="aws_iam_authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-34">
+        <addPrimaryKey columnNames="id, rev" constraintName="basic_authorizations_aud_pkey"
+                       tableName="basic_authorizations_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-35">
+        <addPrimaryKey columnNames="id" constraintName="basic_authorizations_pkey" tableName="basic_authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-36">
+        <addPrimaryKey columnNames="id" constraintName="revinfo_pkey" tableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-37">
+        <addPrimaryKey columnNames="id, rev" constraintName="stl_instances_aud_pkey" tableName="stl_instances_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-38">
+        <addPrimaryKey columnNames="id" constraintName="stl_instances_pkey" tableName="stl_instances"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-39">
+        <addPrimaryKey columnNames="id, rev" constraintName="stl_types_aud_pkey" tableName="stl_types_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-40">
+        <addPrimaryKey columnNames="id" constraintName="stl_types_pkey" tableName="stl_types"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-41">
+        <addPrimaryKey columnNames="id, rev" constraintName="stls_aud_pkey" tableName="stls_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-42">
+        <addPrimaryKey columnNames="id" constraintName="stls_pkey" tableName="stls"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-43">
+        <addPrimaryKey columnNames="id, rev" constraintName="token_authorizations_aud_pkey"
+                       tableName="token_authorizations_aud"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-44">
+        <addPrimaryKey columnNames="id" constraintName="token_authorizations_pkey" tableName="token_authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-45">
+        <addUniqueConstraint columnNames="type_id, stl_instance_id" constraintName="uk4u5ob5320rcocmvg254hdtkig"
+                             tableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-46">
+        <addUniqueConstraint columnNames="name" constraintName="uk_al6moyh0f4xf9ir8dn31brcng"
+                             tableName="authorization_types"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-47">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="authorizations_aud"
+                                 constraintName="fk2cl28leq2l23eut57viqk4rd7" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-48">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stl_types_aud"
+                                 constraintName="fk2ooxildin2hgaccblgl0fr83l" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-49">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="authorization_types_aud"
+                                 constraintName="fk2vbsbov9jrspd65c38dwy7qdf" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-50">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="aws_iam_authorizations_aud"
+                                 constraintName="fk31jexnhgoaflkn2atbhifgsd8" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-51">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="authorization_types_aud"
+                                 constraintName="fk4ljtii189hx2eetswwsm46hst" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-52">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="authorizations_aud"
+                                 constraintName="fk4xojf5da1awl2x72xrmxf7ip" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-53">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stl_types_aud"
+                                 constraintName="fk5528o25uh5mvm85icol34ybnp" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-54">
+        <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="token_authorizations"
+                                 constraintName="fk6w21uvdu63isqiog1oh57rpan" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-55">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="basic_authorizations_aud"
+                                 constraintName="fk7k43l5m0ql5lkrsjbl26u4kvk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-56">
+        <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="basic_authorizations"
+                                 constraintName="fk81nd1fdwnjbspb4vcfbjw3wld" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-57">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="basic_authorizations_aud"
+                                 constraintName="fk9hqk0lbk07wjx08eh0cdjp484" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-58">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="revchanges"
+                                 constraintName="fk9m2hkxrk7o2k0n7tm5qx949s1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-59">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="token_authorizations_aud"
+                                 constraintName="fkays3juwq0pikkbmqcd2mkqx8k" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-60">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stl_instances_aud"
+                                 constraintName="fkdi930lx8qypwqw3dqjnx9oi7l" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-61">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="authorizations"
+                                 constraintName="fkf2mijxehe0ae73dx2ggfn1mdh" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="authorization_types"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-62">
+        <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="aws_iam_authorizations"
+                                 constraintName="fkhciu3scicfye8u2042m4ub9yc" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="authorizations"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-63">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="stls"
+                                 constraintName="fki1kg8u75gh2bgdlip6nt2hd1y" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="stl_types"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-64">
+        <addForeignKeyConstraint baseColumnNames="stl_instance_id" baseTableName="authorizations"
+                                 constraintName="fkjolbhktk3vpaouod92b26qn8k" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="stl_instances"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-65">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="token_authorizations_aud"
+                                 constraintName="fkjq3s9nat9prhdo8oi7hpctk7c" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-66">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stls_aud"
+                                 constraintName="fkjxd6b7vl4kqeww3eqkm8pvarg" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-67">
+        <addForeignKeyConstraint baseColumnNames="stl_id" baseTableName="stl_instances"
+                                 constraintName="fkky76bj4dd4x65fhmm00jn08r2" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="stls"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-68">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stl_instances_aud"
+                                 constraintName="fkm2j78b6x9c85w9d3lalt5r687" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-69">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stls_aud"
+                                 constraintName="fkn5ln7fc7sqmo188ul4dnsr2c8" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-70">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="aws_iam_authorizations_aud"
+                                 constraintName="fkrghuotv7aao5vudcv2e4g6opm" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
 </databaseChangeLog>

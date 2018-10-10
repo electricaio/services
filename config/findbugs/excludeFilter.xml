@@ -37,4 +37,14 @@
     <Match>
         <Class name="org.springframework.data.jpa.domain.AbstractPersistable"/>
     </Match>
+    <Match>
+        <Package name="~io\.electrica\.common\.exception\.handler.*"/>
+    </Match>
+    <Match>
+        <Package name="~io\.electrica\.common\.jpa\.exception\.handler.*"/>
+    </Match>
+    <Match>
+        <Class name="io.electrica.common.jpa.service.bl.JpaHelper"/>
+    </Match>
+
 </FindBugsFilter>
