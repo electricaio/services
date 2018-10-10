@@ -4,10 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
-
 /**
  *  CreateUserDto is an extention to UserDTO.
  *
@@ -20,8 +16,8 @@ public class CreateUserDto extends UserDto {
 
     private String password;
 
-    public CreateUserDto(Long id, UUID uuid, String firstName, String lastName, String email, String organization, Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt, String password) {
-        super(id, uuid, firstName, lastName, email, organization, authorities, roles, createdAt, updatedAt);
+    public CreateUserDto(UserDto userDto, String password) {
+        super(userDto);
         this.password = password;
     }
 }

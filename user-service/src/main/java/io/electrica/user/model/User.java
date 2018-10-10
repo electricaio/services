@@ -17,6 +17,10 @@ import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *  A User.
+ *
+ */
 @Getter
 @Setter
 @Entity

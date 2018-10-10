@@ -15,6 +15,11 @@ import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *  An Access Key.
+ *
+ */
+
 @Getter
 @Setter
 @Entity

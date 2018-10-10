@@ -5,7 +5,6 @@ import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
-import io.electrica.user.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,15 +12,18 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.Collections;
 
+/**
+ * User Dto Service implementation class for managing users.
+ */
 @Component
 public class UserDtoService {
 
     private static final Logger log = LoggerFactory.getLogger(UserDtoService.class);
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Inject
-    public UserDtoService(UserServiceImpl userService) {
+    public UserDtoService(UserService userService) {
         this.userService = userService;
     }
 
@@ -59,7 +61,7 @@ public class UserDtoService {
         );
     }
 
-    private Organization toEntity(OrganizationDto organizationDto){
+    public Organization toEntity(OrganizationDto organizationDto) {
         Organization org = new Organization();
         org.setId(organizationDto.getId());
         return org;

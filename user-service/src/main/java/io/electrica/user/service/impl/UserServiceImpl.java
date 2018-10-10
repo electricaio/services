@@ -1,19 +1,16 @@
 package io.electrica.user.service.impl;
 
 import io.electrica.common.jpa.service.AbstractService;
-import io.electrica.user.dto.CreateUserDto;
-import io.electrica.user.dto.UserDto;
+import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.UserRepository;
-import io.electrica.user.service.RoleService;
-import io.electrica.user.service.UserRoleService;
 import io.electrica.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collections;
-import java.util.Optional;
+import javax.inject.Inject;
+import java.util.Collection;
 
 /**
  * Service implementation class for managing users.
@@ -23,11 +20,10 @@ public class UserServiceImpl extends AbstractService<User> {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-    private final UserRoleService userRoleService;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService) {
+    @Inject
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userRoleService = userRoleService;
     }
 
     @Override
@@ -45,5 +41,15 @@ public class UserServiceImpl extends AbstractService<User> {
     @Override
     protected JpaRepository<User, Long> getRepository() {
         return userRepository;
+    }
+
+    @Override
+    protected Collection<String> getContainerValidators() {
+        return null;
+    }
+
+    @Override
+    protected Collection<EntityValidator<User>> getValidators() {
+        return null;
     }
 }

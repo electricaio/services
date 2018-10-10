@@ -2,12 +2,9 @@ package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.net.URISyntaxException;
 
 import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;

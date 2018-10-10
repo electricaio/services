@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.UUID;
 
 /**
- *  A DTO representing organization
+ *  A DTO representing organization.
  *
  */
 @Getter

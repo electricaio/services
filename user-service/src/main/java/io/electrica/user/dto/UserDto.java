@@ -28,7 +28,8 @@ public class UserDto {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, OrganizationDto organization, Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt) {
+    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, OrganizationDto organization,
+                   Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.uuid = uuid;
         this.firstName = firstName;
