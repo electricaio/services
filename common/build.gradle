@@ -29,7 +29,6 @@ dependencies {
     compile "org.apache.commons:commons-io:${commonsioVersion}"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'com.jayway.jsonpath:json-path'
 }
 
 dependencyManagement {
