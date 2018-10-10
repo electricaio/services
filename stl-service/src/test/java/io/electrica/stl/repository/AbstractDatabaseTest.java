@@ -22,14 +22,4 @@ public abstract class AbstractDatabaseTest {
 
     @Inject
     protected STLRepository stlRepository;
-
-    @Before
-    public void setup() {
-        deleteAll();
-    }
-
-    public void deleteAll() {
-        stlRepository.deleteAll();
-        stlTypeRepository.deleteAll();
-    }
 }

@@ -4,6 +4,7 @@ import io.electrica.common.rest.PathConstants;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
 import io.electrica.stl.rest.dto.STLDto;
+import io.electrica.stl.util.RestResponse;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
