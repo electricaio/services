@@ -5,8 +5,8 @@ import io.electrica.common.exception.handler.ErrorResult;
 import java.util.Optional;
 
 /**
- * Wrapper class that returns either successful data of type <ResponseType>
- * or an error of type ErrorResult.class
+ * Wrapper class that returns either successful
+ * data of type <ResponseType> or an error of type ErrorResult.class.
  */
 public final class RestResponse<ResponseType> {
 

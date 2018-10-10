@@ -28,7 +28,7 @@ public class STL extends AbstractEntity {
 
     @NotNull
     @Size(max = 255)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @NotNull

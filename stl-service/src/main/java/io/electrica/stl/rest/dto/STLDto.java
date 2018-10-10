@@ -14,8 +14,6 @@ public class STLDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
     @Mapping("type.name")
     private String type;
 
@@ -24,6 +22,4 @@ public class STLDto implements Serializable {
     private String version;
 
     private String namespace;
-
-    private String ern;
 }

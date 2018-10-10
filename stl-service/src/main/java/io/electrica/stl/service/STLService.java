@@ -1,10 +1,13 @@
 package io.electrica.stl.service;
 
-import io.electrica.stl.rest.dto.STLDto;
+import io.electrica.stl.rest.dto.CreateSTLDto;
+import io.electrica.stl.rest.dto.ReadSTLDto;
 
 import java.util.List;
 
 public interface STLService {
 
-    List<STLDto> findAll();
+    List<ReadSTLDto> list();
+
+    ReadSTLDto create(CreateSTLDto request);
 }

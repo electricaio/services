@@ -28,4 +28,9 @@ public class STLInstance extends AbstractEntity {
     @NotNull
     @Column(nullable = false)
     private Long accessKeyId;
+
+    @NotNull
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "authorization_type_id", nullable = false)
+    private AuthorizationType authorizationType;
 }
