@@ -21,7 +21,7 @@ import java.util.Collections;
 @Component
 public class OrganizationService extends AbstractService<Organization> {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
     private OrganizationRepository organizationRepository;
 

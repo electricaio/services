@@ -54,11 +54,12 @@ public class UserService extends AbstractService<User> {
 
     @Override
     protected User executeCreate(User newEntity) {
-        if ( newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
+        if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
             throw new BadRequestServiceException("Organization Id cannot be null");
         }
 
         Organization organization = organizationService.findById(newEntity.getOrganization().getId(), false);
+
         if (organization == null) {
             throw new BadRequestServiceException("Invalid Organization Id in the request");
         }

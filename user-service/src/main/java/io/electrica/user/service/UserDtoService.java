@@ -4,6 +4,7 @@ import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
+import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,24 @@ public class UserDtoService extends AbstractDtoService<User, UserDto> {
         User newUser = userService.create(toEntity(user));
         UserDto userDto = toDto(newUser);
         return userDto;
+    }
+
+    // TODO Once we founf workaround of Dozer library issue . We will remove it.
+    private User toEntity(CreateUserDto userDto) {
+        User user = new User();
+        user.setUuid(userDto.getUuid());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setOrganization(toEntity(userDto.getOrganizationId()));
+        user.setSaltedPassword(userDto.getPassword());
+        return user;
+    }
+
+    private Organization toEntity(Long organizationId) {
+        Organization org = new Organization();
+        org.setId(organizationId);
+        return org;
     }
 
     @Override
