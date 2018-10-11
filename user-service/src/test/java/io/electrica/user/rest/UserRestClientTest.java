@@ -4,8 +4,10 @@ import io.electrica.UserServiceApplication;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
+import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.UserDtoService;
 import lombok.NoArgsConstructor;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -38,8 +41,19 @@ public class UserRestClientTest {
     @Autowired
     UserDtoService userDtoService;
     @Autowired
+    OrganizationDtoService organizationDtoService;
+    @Autowired
     UserRestClient userRestClient;
 
+    private OrganizationDto defaultOrganization;
+
+    @Before
+    public void init(){
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setName("test"+new Date().getTime());
+        organizationDto.setUuid(UUID.randomUUID());
+        defaultOrganization =organizationDtoService.create(organizationDto);
+    }
 
     @Test
     public void createUser() {
@@ -50,18 +64,13 @@ public class UserRestClientTest {
     public CreateUserDto createUserDto() {
         long random = new Random().nextInt(10000);
         CreateUserDto user = new CreateUserDto();
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(random);
-        organizationDto.setName("test" + random);
-        organizationDto.setUuid(UUID.randomUUID());
         user.setEmail(DEFAULT_EMAIL + random);
         user.setFirstName("FirstName" + random);
         user.setLastName("LastName" + random);
         user.setUuid(UUID.randomUUID());
-        user.setSaltedPassword("12345");
-        user.setOrganization(organizationDto);
+        user.setPassword("12345");
+        user.setOrganizationId(defaultOrganization.getId());
         return user;
     }
-
 
 }

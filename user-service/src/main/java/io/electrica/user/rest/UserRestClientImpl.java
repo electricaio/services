@@ -26,12 +26,6 @@ public class UserRestClientImpl implements UserRestClient {
     @Override
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createUserDto) {
         logger.debug("REST request to save User : {}", createUserDto);
-       /* if (userDtoService.findOneByLogin(createUserDto.getEmail()).isPresent()) {
-            return new ResponseEntity("Login already in use", HttpStatus.CONFLICT);
-        } else {
-            UserDto newUser = userService.createUser(createUserDto);
-            return ResponseEntity.ok(newUser);
-        }*/
         UserDto result = userDtoService.createUser(createUserDto);
         return ResponseEntity.ok(result);
     }

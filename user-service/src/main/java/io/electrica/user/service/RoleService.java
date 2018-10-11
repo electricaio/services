@@ -1,6 +1,6 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.EntityNotFoundServiceException;
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.Role;
@@ -27,7 +27,7 @@ public class RoleService extends AbstractService<Role> {
 
     public Role findByName(String name) {
         return roleRepository.findOneByName(name)
-                .orElseThrow(() -> new EntityNotFoundServiceException("role: " + name));
+                .orElseThrow(() -> new BadRequestServiceException("role: " + name));
     }
 
     @Override
