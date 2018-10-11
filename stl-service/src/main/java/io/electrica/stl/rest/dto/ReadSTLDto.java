@@ -14,4 +14,6 @@ public class ReadSTLDto extends STLDto {
     private Long id;
 
     private String ern;
+
+    private Long revisionVersion;
 }

@@ -6,15 +6,14 @@ import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
 import io.electrica.stl.service.ERNService;
-import io.electrica.stl.service.STLService;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class STLApiTest extends AbstractDatabaseTest {
 
@@ -46,6 +45,7 @@ public class STLApiTest extends AbstractDatabaseTest {
         assertEquals(expected.getName(), dto.getName());
         assertEquals(expected.getNamespace(), dto.getNamespace());
         assertEquals(expected.getType(), type);
+        assertNotNull(expected.getRevisionVersion());
     }
 
     @Test(expected = ConstraintViolationException.class)

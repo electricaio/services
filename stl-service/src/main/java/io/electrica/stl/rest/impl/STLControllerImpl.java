@@ -4,7 +4,6 @@ import io.electrica.stl.api.STLApi;
 import io.electrica.stl.rest.STLController;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
-import io.electrica.stl.service.STLService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
