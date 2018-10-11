@@ -10,6 +10,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -18,7 +19,9 @@ import javax.validation.constraints.Size;
 
 @Audited
 @Entity
-@Table(name = "stls")
+@Table(name = "stls",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource"})
+)
 public class STL extends AbstractEntity {
 
     @NotNull
@@ -28,8 +31,12 @@ public class STL extends AbstractEntity {
 
     @NotNull
     @Size(max = 255)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
+
+    @Size(max = 255)
+    @Column(nullable = true)
+    private String resource;
 
     @NotNull
     @Size(max = 255)
@@ -43,7 +50,17 @@ public class STL extends AbstractEntity {
 
     @NotNull
     @Size(max = 255)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String ern;
 
+    public STL(STLType type, String name, String version, String namespace) {
+        this.type = type;
+        this.name = name;
+        this.version = version;
+        this.namespace = namespace;
+    }
+
+    public Optional<String> getResourceOpt() {
+        return Optional.ofNullable(resource);
+    }
 }

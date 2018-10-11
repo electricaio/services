@@ -5,12 +5,13 @@ import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
-import io.electrica.stl.service.ERNService;
+import io.electrica.stl.util.ERNUtils;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,9 +21,6 @@ public class STLApiTest extends AbstractDatabaseTest {
     @Inject
     private STLApi stlApi;
 
-    @Inject
-    private ERNService ernService;
-
     @Test
     public void testCreateSTLWithSuccess() {
         //        setup
@@ -30,22 +28,24 @@ public class STLApiTest extends AbstractDatabaseTest {
         createSTLType(type);
 
         final CreateSTLDto dto = new CreateSTLDto();
-        dto.setName("HackerRank Applications");
-        dto.setNamespace("api.hackerrank");
+        dto.setName("HackerRank");
+        dto.setResource("Applications");
+        dto.setNamespace("com.hackerrank");
         dto.setType(type);
         dto.setVersion("1.0");
 
 //        method
-        final ReadSTLDto expected = stlApi.create(dto);
+        final ReadSTLDto actual = stlApi.create(dto);
 
 //        assert
-        assertNotNull(expected.getId());
+        assertNotNull(actual.getId());
 
-        assertEquals(expected.getErn(), dto.getName());
-        assertEquals(expected.getName(), dto.getName());
-        assertEquals(expected.getNamespace(), dto.getNamespace());
-        assertEquals(expected.getType(), type);
-        assertNotNull(expected.getRevisionVersion());
+        assertEquals(dto.getName(), actual.getName());
+        assertEquals(dto.getNamespace(), actual.getNamespace());
+        assertEquals(type, actual.getType());
+        final String expectedErn = "stl://hackerrank:applications:1.0";
+        assertEquals(expectedErn, actual.getErn());
+        assertNotNull(actual.getRevisionVersion());
     }
 
     @Test(expected = ConstraintViolationException.class)
@@ -54,10 +54,11 @@ public class STLApiTest extends AbstractDatabaseTest {
         final String type = "Foundation";
         createSTLType(type);
 
-        final String name = "HackerRank Applications";
-        final String namespace = "api.hackerrank";
+        final String name = "HackerRank";
+        final String resource = "Applications";
+        final String namespace = "com.hackerrank";
         final String version = "1.0";
-        final String ern = ernService.assignERN(name);
+        final String ern = ERNUtils.createERN(name, Optional.of(resource), version);
         final STL stl = new STL();
         stl.setName(name);
         stl.setNamespace(namespace);
@@ -68,6 +69,7 @@ public class STLApiTest extends AbstractDatabaseTest {
 
         final CreateSTLDto dto = new CreateSTLDto();
         dto.setName(name);
+        dto.setResource(resource);
         dto.setNamespace(namespace);
         dto.setType(type);
         dto.setVersion(version);
@@ -81,20 +83,24 @@ public class STLApiTest extends AbstractDatabaseTest {
         final STLType type = createSTLType("Foundation");
 
         final STL hackerRankSTL = new STL();
-        final String hackerRankName = "HackerRank Applications";
+        final String hackerRankName = "HackerRank";
+        final String hackerRankResource = "Applications";
+        final String hackerRankVersion = "1.0";
         hackerRankSTL.setName(hackerRankName);
         hackerRankSTL.setNamespace("api.hackerrank");
-        hackerRankSTL.setVersion("1.0");
-        hackerRankSTL.setErn(ernService.assignERN(hackerRankName));
+        hackerRankSTL.setResource(hackerRankResource);
+        hackerRankSTL.setVersion(hackerRankVersion);
+        hackerRankSTL.setErn(ERNUtils.createERN(hackerRankName, Optional.of(hackerRankResource), hackerRankVersion));
         hackerRankSTL.setType(type);
         stlRepository.saveAndFlush(hackerRankSTL);
 
         final STL greenhouseSTL = new STL();
         final String greenhouseName = "Greenhouse";
+        final String greenhouseVersion = "1.1";
         greenhouseSTL.setName(greenhouseName);
         greenhouseSTL.setNamespace("api.greenhouse");
-        greenhouseSTL.setVersion("1.1");
-        greenhouseSTL.setErn(ernService.assignERN(greenhouseName));
+        greenhouseSTL.setVersion(greenhouseVersion);
+        greenhouseSTL.setErn(ERNUtils.createERN(greenhouseName, greenhouseVersion));
         greenhouseSTL.setType(type);
         stlRepository.saveAndFlush(greenhouseSTL);
 
