@@ -25,7 +25,8 @@ public class UserDtoService extends AbstractDtoService<User, UserDto> {
     private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public UserDtoService(UserService userService, OrganizationService organizationService, PasswordEncoder passwordEncoder) {
+    public UserDtoService(UserService userService, OrganizationService organizationService,
+                          PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.organizationService = organizationService;
         this.passwordEncoder = passwordEncoder;
@@ -40,9 +41,9 @@ public class UserDtoService extends AbstractDtoService<User, UserDto> {
     }
 
     @Override
-    public User toEntity(UserDto userDto){
+    public User toEntity(UserDto userDto) {
         User user = super.toEntity(userDto);
-        user.setOrganization(organizationService.findById(userDto.getOrganizationId(),false));
+        user.setOrganization(organizationService.findById(userDto.getOrganizationId(), false));
         return user;
     }
 

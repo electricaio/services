@@ -36,14 +36,6 @@ public class UserRestClientImplTest {
         UserDto actualUser = userRestClient.createUser(createUserDto).getBody();
         assertEquals(createUserDto, actualUser);
     }
-/*
-    @Test
-    public void createUserTestWithLoginAlreadyExists() throws URISyntaxException{
-        CreateUserDto createUserDto = createEntityCreateUserDto();
-        when(userService.findOneByLogin(DEFAULT_EMAIL)).thenReturn(Optional.of(createEntityUser()));
-        assertEquals(userRestClient.createUser(createUserDto).getStatusCode(), HttpStatus.CONFLICT);
-
-    }*/
 
     public static CreateUserDto createEntityCreateUserDto() {
         CreateUserDto user = new CreateUserDto();

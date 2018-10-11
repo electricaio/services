@@ -48,11 +48,11 @@ public class UserRestClientTest {
     private OrganizationDto defaultOrganization;
 
     @Before
-    public void init(){
+    public void init() {
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test"+new Date().getTime());
+        organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization =organizationDtoService.create(organizationDto);
+        defaultOrganization = organizationDtoService.create(organizationDto);
     }
 
     @Test
