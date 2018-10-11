@@ -2,7 +2,7 @@ package io.electrica.stl.repository;
 
 import io.electrica.STLServiceApplication;
 import io.electrica.stl.TestProfileResolver;
-import org.junit.Before;
+import io.electrica.stl.util.Fixture;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 @ActiveProfiles(resolver = TestProfileResolver.class)
 @SpringBootTest(classes = STLServiceApplication.class)
 @Transactional
-public abstract class AbstractDatabaseTest {
+public abstract class AbstractDatabaseTest implements Fixture {
 
     @Inject
     protected STLTypeRepository stlTypeRepository;
@@ -23,13 +23,16 @@ public abstract class AbstractDatabaseTest {
     @Inject
     protected STLRepository stlRepository;
 
-    @Before
-    public void setup() {
-        deleteAll();
+    @Inject
+    protected AuthorizationTypeRepository authorizationTypeRepository;
+
+    @Override
+    public AuthorizationTypeRepository getAuthorizationTypeRepository() {
+        return authorizationTypeRepository;
     }
 
-    public void deleteAll() {
-        stlRepository.deleteAll();
-        stlTypeRepository.deleteAll();
+    @Override
+    public STLTypeRepository getSTLTypeRepository() {
+        return stlTypeRepository;
     }
 }
