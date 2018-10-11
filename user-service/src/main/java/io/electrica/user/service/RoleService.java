@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Role Service implementation class for managing roles.
@@ -46,11 +47,11 @@ public class RoleService extends AbstractService<Role> {
 
     @Override
     protected Collection<String> getContainerValidators() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     @Override
     protected Collection<EntityValidator<Role>> getValidators() {
-        return null;
+        return Collections.EMPTY_LIST;
     }
 }
