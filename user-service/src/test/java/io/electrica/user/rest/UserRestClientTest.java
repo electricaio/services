@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Random;
@@ -56,6 +57,7 @@ public class UserRestClientTest {
     }
 
     @Test
+    @Transactional
     public void createUser() {
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto());
         assertNotNull(response.getBody());
