@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class STLTypeRepositoryTest extends AbstractDatabaseTest {
 
     @Test
-    public void test_create_stl_type_with_success() {
+    public void testCreateSTLTypeWithSuccess() {
 //        setup
         final STLType type = new STLType();
         type.setName("Foundation");
