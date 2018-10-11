@@ -1,19 +1,28 @@
 package io.electrica.user.rest;
 
 import io.electrica.UserServiceApplication;
+import io.electrica.user.dto.CreateUserDto;
+import io.electrica.user.dto.OrganizationDto;
+import io.electrica.user.dto.UserDto;
+import io.electrica.user.service.UserDtoService;
+import lombok.NoArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertTrue;
+import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
- *  UserRestClientTest to test rest client.
- *
+ * UserRestClientTest to test rest client.
  */
 
+@NoArgsConstructor
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         classes = UserServiceApplication.class,
@@ -22,20 +31,33 @@ import static org.junit.Assert.assertTrue;
 )
 public class UserRestClientTest {
 
+    private static final String DEFAULT_EMAIL = "test@localhost.com";
 
-//    private UserRestClient userRestClient;
-//    private UserService userService;
 
-//    public UserRestClientTest(UserService userService) {
-//        this.userService = userService;
-//    }
+    @Autowired
+    UserDtoService userDtoService;
+    @Autowired
+    UserRestClient userRestClient;
+
 
     @Test
-    public void createUser()  {
-        assertTrue(true);
-        // TODO: Once we design all layers, we will update the unit tests
-//        ResponseEntity<User> response = userRestClient.createUser(new CreateUserDto());
-//        assertNotNull(response.getBody());
+    public void createUser() {
+        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto());
+        assertNotNull(response.getBody());
+    }
+
+    public CreateUserDto createUserDto() {
+        CreateUserDto user = new CreateUserDto();
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(1L);organizationDto.setOrgName("test");
+        organizationDto.setUuid(UUID.randomUUID());
+        user.setEmail(DEFAULT_EMAIL);
+        user.setFirstName("FirstName");
+        user.setLastName("LastName");
+        user.setUuid(UUID.randomUUID());
+        user.setPassword("12345");
+        user.setOrganization(organizationDto);
+        return user;
     }
 
 

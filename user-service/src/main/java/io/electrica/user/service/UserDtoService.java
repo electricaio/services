@@ -62,8 +62,13 @@ public class UserDtoService {
     }
 
     public Organization toEntity(OrganizationDto organizationDto) {
-        Organization org = new Organization();
-        org.setId(organizationDto.getId());
+        Organization org = null;
+        if (organizationDto != null) {
+            org = new Organization();
+            org.setId(organizationDto.getId());
+            org.setUuid(organizationDto.getUuid());
+            org.setName(organizationDto.getOrgName());
+        }
         return org;
     }
 

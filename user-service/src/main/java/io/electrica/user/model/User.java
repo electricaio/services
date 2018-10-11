@@ -2,15 +2,11 @@ package io.electrica.user.model;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import io.electrica.common.jpa.model.AbstractEntity;
@@ -18,11 +14,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- *  A User.
- *
+ * A User.
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Audited
 @Table(name = "users")

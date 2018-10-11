@@ -1,11 +1,16 @@
 package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
+import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
 import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 /**
  * REST Client implementation for Managing users..
@@ -24,16 +29,14 @@ public class UserRestClientImplTest {
         userRestClient = new UserRestClientImpl(userDtoService);
     }
 
-    /*@Test
+    @Test
     public void createUserTest() {
         CreateUserDto createUserDto = createEntityCreateUserDto();
-        User user = createEntityUser();
-        when(userDtoService.findOneByLogin(DEFAULT_EMAIL)).thenReturn(Optional.empty());
-        when(userService.createUser(createUserDto)).thenReturn(user);
+        when(userDtoService.createUser(createUserDto)).thenReturn(createUserDto);
         UserDto actualUser = userRestClient.createUser(createUserDto).getBody();
-        assertEquals(user,actualUser);
+        assertEquals(createUserDto, actualUser);
     }
-
+/*
     @Test
     public void createUserTestWithLoginAlreadyExists() throws URISyntaxException{
         CreateUserDto createUserDto = createEntityCreateUserDto();
