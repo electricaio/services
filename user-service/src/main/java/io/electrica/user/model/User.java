@@ -43,7 +43,7 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 127)
     private String saltedPassword;
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
