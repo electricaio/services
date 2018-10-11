@@ -9,6 +9,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,10 @@ public class STLService extends AbstractService<STL> {
 
     @Override
     protected Collection<String> getContainerValidators() {
-        return Collections.singletonList(ContainerEntityValidator.TRIMMED_STRINGS);
+        return Arrays.asList(
+                ContainerEntityValidator.TRIMMED_STRINGS,
+                ContainerEntityValidator.AVOID_EMTPY_STRINGS
+        );
     }
 
     @Override
