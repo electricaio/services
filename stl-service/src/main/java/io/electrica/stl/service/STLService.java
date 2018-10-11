@@ -1,6 +1,7 @@
 package io.electrica.stl.service;
 
 import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.repository.STLRepository;
@@ -49,7 +50,7 @@ public class STLService extends AbstractService<STL> {
 
     @Override
     protected Collection<String> getContainerValidators() {
-        return Collections.emptyList();
+        return Collections.singletonList(ContainerEntityValidator.TRIMMED_STRINGS);
     }
 
     @Override
