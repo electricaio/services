@@ -49,7 +49,8 @@ public class UserRestClientTest {
     public CreateUserDto createUserDto() {
         CreateUserDto user = new CreateUserDto();
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(1L);organizationDto.setOrgName("test");
+        organizationDto.setId(1L);
+        organizationDto.setOrgName("test");
         organizationDto.setUuid(UUID.randomUUID());
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName("FirstName");

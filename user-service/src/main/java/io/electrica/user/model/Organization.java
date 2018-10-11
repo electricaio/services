@@ -1,21 +1,17 @@
 package io.electrica.user.model;
 
-import java.util.Set;
-import java.util.UUID;
+import io.electrica.common.jpa.model.AbstractEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
-
-import io.electrica.common.jpa.model.AbstractEntity;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.UUID;
 
 /**
  *  A Organization.
