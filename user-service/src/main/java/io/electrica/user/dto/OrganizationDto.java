@@ -16,11 +16,11 @@ import java.util.UUID;
 public class OrganizationDto {
     private Long id;
     private UUID uuid;
-    private String orgName;
+    private String name;
 
-    public OrganizationDto(Long id, UUID uuid, String orgName) {
+    public OrganizationDto(Long id, UUID uuid, String name) {
         this.id = id;
         this.uuid = uuid;
-        this.orgName = orgName;
+        this.name = name;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
@@ -47,16 +48,17 @@ public class UserRestClientTest {
     }
 
     public CreateUserDto createUserDto() {
+        long random = new Random().nextInt(10000);
         CreateUserDto user = new CreateUserDto();
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(1L);
-        organizationDto.setOrgName("test");
+        organizationDto.setId(random);
+        organizationDto.setName("test" + random);
         organizationDto.setUuid(UUID.randomUUID());
-        user.setEmail(DEFAULT_EMAIL);
-        user.setFirstName("FirstName");
-        user.setLastName("LastName");
+        user.setEmail(DEFAULT_EMAIL + random);
+        user.setFirstName("FirstName" + random);
+        user.setLastName("LastName" + random);
         user.setUuid(UUID.randomUUID());
-        user.setPassword("12345");
+        user.setSaltedPassword("12345");
         user.setOrganization(organizationDto);
         return user;
     }

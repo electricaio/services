@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-
 /**
  * REST Client implementation for Managing users..
  */
@@ -21,7 +19,6 @@ public class UserRestClientImpl implements UserRestClient {
 
     private final UserDtoService userDtoService;
 
-    @Inject
     public UserRestClientImpl(UserDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }

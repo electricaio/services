@@ -1,22 +1,21 @@
 package io.electrica.user.service;
 
+import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.user.dto.CreateUserDto;
-import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
 /**
  * User Dto Service implementation class for managing users.
  */
 @Component
-public class UserDtoService {
+public class UserDtoService extends AbstractDtoService<User, UserDto> {
 
     private static final Logger log = LoggerFactory.getLogger(UserDtoService.class);
 
@@ -33,44 +32,19 @@ public class UserDtoService {
         return userDto;
     }
 
-    private User toEntity(UserDto userDto) {
-        User user = new User();
-        user.setUuid(userDto.getUuid());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setOrganization(toEntity(userDto.getOrganization()));
-        if (userDto instanceof CreateUserDto) {
-            user.setSaltedPassword(((CreateUserDto) userDto).getPassword());
-        }
-        return user;
+    @Override
+    protected AbstractService<User> getService() {
+        return userService;
     }
 
-    public UserDto toDto(User e) {
-        return new UserDto(
-                e.getId(),
-                e.getUuid(),
-                e.getFirstName(),
-                e.getLastName(),
-                e.getEmail(),
-                null,
-                Collections.EMPTY_SET,
-                Collections.EMPTY_SET,
-                null,
-                null
-        );
+    @Override
+    protected Class<User> getEntityClass() {
+        return User.class;
     }
 
-    public Organization toEntity(OrganizationDto organizationDto) {
-        Organization org = null;
-        if (organizationDto != null) {
-            org = new Organization();
-            org.setId(organizationDto.getId());
-            org.setUuid(organizationDto.getUuid());
-            org.setName(organizationDto.getOrgName());
-        }
-        return org;
+    @Override
+    protected Class<UserDto> getDtoClass() {
+        return UserDto.class;
     }
-
 
 }

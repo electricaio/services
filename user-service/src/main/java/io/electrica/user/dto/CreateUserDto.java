@@ -14,10 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateUserDto extends UserDto {
 
-    private String password;
+    private String saltedPassword;
 
-    public CreateUserDto(UserDto userDto, String password) {
+    public CreateUserDto(UserDto userDto, String saltedPassword) {
         super(userDto);
-        this.password = password;
+        this.saltedPassword = saltedPassword;
     }
 }
