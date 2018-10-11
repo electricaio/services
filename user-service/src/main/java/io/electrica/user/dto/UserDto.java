@@ -1,16 +1,15 @@
 package io.electrica.user.dto;
 
+import com.github.dozermapper.core.Mapping;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
 /**
- *  A DTO representing user with authorities.
- *
+ * A DTO representing user with authorities.
  */
 @Getter
 @Setter
@@ -22,24 +21,23 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
-    private OrganizationDto organization;
+    @Mapping("organization.id")
+    private Long organizationId;
     private Set<String> authorities;
     private Set<RolesDto> roles;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private Long revisionVersion;
 
-    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, OrganizationDto organization,
-                   Set<String> authorities, Set<RolesDto> roles, Instant createdAt, Instant updatedAt) {
+    public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, Long organizationId,
+                   Set<String> authorities, Set<RolesDto> roles, Long revisionVersion) {
         this.id = id;
         this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.organization = organization;
+        this.organizationId = organizationId;
         this.authorities = authorities;
         this.roles = roles;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.revisionVersion = revisionVersion;
     }
 
     public UserDto(UserDto userDto) {
@@ -49,11 +47,10 @@ public class UserDto {
                 userDto.getFirstName(),
                 userDto.getLastName(),
                 userDto.getEmail(),
-                userDto.getOrganization(),
+                userDto.getOrganizationId(),
                 userDto.getAuthorities(),
                 userDto.getRoles(),
-                userDto.getCreatedAt(),
-                userDto.getUpdatedAt()
+                userDto.getRevisionVersion()
         );
     }
 }
