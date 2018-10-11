@@ -1,10 +1,12 @@
-package io.electrica.stl.service;
+package io.electrica.stl.api;
 
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
+import io.electrica.stl.service.ERNService;
+import io.electrica.stl.service.STLService;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -14,10 +16,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class STLServiceTest extends AbstractDatabaseTest {
+public class STLApiTest extends AbstractDatabaseTest {
 
     @Inject
-    private STLService stlService;
+    private STLApi stlApi;
 
     @Inject
     private ERNService ernService;
@@ -35,7 +37,7 @@ public class STLServiceTest extends AbstractDatabaseTest {
         dto.setVersion("1.0");
 
 //        method
-        final ReadSTLDto expected = stlService.create(dto);
+        final ReadSTLDto expected = stlApi.create(dto);
 
 //        assert
         assertNotNull(expected.getId());
@@ -71,7 +73,7 @@ public class STLServiceTest extends AbstractDatabaseTest {
         dto.setVersion(version);
 
 //        method
-        stlService.create(dto);
+        stlApi.create(dto);
     }
 
     @Test
@@ -97,7 +99,7 @@ public class STLServiceTest extends AbstractDatabaseTest {
         stlRepository.saveAndFlush(greenhouseSTL);
 
 //        method
-        final List<ReadSTLDto> result = stlService.list();
+        final List<ReadSTLDto> result = stlApi.findAll();
 
 //        assert
         assertEquals(2, result.size());

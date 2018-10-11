@@ -1,5 +1,6 @@
 package io.electrica.stl.rest.impl;
 
+import io.electrica.stl.api.STLApi;
 import io.electrica.stl.rest.STLController;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
@@ -12,21 +13,21 @@ import java.util.List;
 @RestController
 public class STLControllerImpl implements STLController {
 
-    private final STLService stlService;
+    private final STLApi stlApi;
 
-    public STLControllerImpl(STLService stlService) {
-        this.stlService = stlService;
+    public STLControllerImpl(STLApi stlApi) {
+        this.stlApi = stlApi;
     }
 
     @Override
-    public ResponseEntity<List<ReadSTLDto>> list() {
-        final List<ReadSTLDto> result = stlService.list();
+    public ResponseEntity<List<ReadSTLDto>> findAll() {
+        final List<ReadSTLDto> result = stlApi.findAll();
         return ResponseEntity.ok().body(result);
     }
 
     @Override
     public ResponseEntity<ReadSTLDto> create(CreateSTLDto dto) {
-        final ReadSTLDto result = stlService.create(dto);
+        final ReadSTLDto result = stlApi.create(dto);
         return ResponseEntity.ok().body(result);
     }
 }

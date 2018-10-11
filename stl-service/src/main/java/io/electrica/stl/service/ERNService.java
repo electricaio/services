@@ -1,6 +1,11 @@
 package io.electrica.stl.service;
 
-public interface ERNService {
+import org.springframework.stereotype.Service;
 
-    String assignERN(String name);
+@Service
+public class ERNService {
+
+    public String assignERN(String name) {
+        return name;
+    }
 }

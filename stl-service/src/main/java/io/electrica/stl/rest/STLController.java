@@ -13,9 +13,9 @@ import static io.electrica.common.rest.PathConstants.V1;
 
 public interface STLController {
 
-    @GetMapping(PUBLIC + V1 + "/stl/list")
-    ResponseEntity<List<ReadSTLDto>> list();
+    @GetMapping(PUBLIC + V1 + "/stls")
+    ResponseEntity<List<ReadSTLDto>> findAll();
 
-    @PostMapping(V1 + "/stl")
+    @PostMapping(V1 + "/stls")
     ResponseEntity<ReadSTLDto> create(CreateSTLDto request);
 }
