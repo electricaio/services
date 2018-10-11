@@ -3,3 +3,5 @@ include 'common-jpa'
 include 'user-service'
 include 'common'
 include 'stl-service'
+include 'common-test'
+
