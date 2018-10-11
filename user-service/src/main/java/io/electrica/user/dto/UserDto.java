@@ -23,20 +23,16 @@ public class UserDto {
     private String email;
     @Mapping("organization.id")
     private Long organizationId;
-    private Set<String> authorities;
-    private Set<RolesDto> roles;
     private Long revisionVersion;
 
     public UserDto(Long id, UUID uuid, String firstName, String lastName, String email, Long organizationId,
-                   Set<String> authorities, Set<RolesDto> roles, Long revisionVersion) {
+                   Long revisionVersion) {
         this.id = id;
         this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.organizationId = organizationId;
-        this.authorities = authorities;
-        this.roles = roles;
         this.revisionVersion = revisionVersion;
     }
 
@@ -48,8 +44,6 @@ public class UserDto {
                 userDto.getLastName(),
                 userDto.getEmail(),
                 userDto.getOrganizationId(),
-                userDto.getAuthorities(),
-                userDto.getRoles(),
                 userDto.getRevisionVersion()
         );
     }

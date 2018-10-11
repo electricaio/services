@@ -40,7 +40,7 @@ public class OrganizationService extends AbstractService<Organization> {
 
     @Override
     protected Collection<EntityValidator<Organization>> getValidators() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override

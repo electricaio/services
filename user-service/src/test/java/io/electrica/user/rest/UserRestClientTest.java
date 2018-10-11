@@ -29,11 +29,7 @@ import static org.junit.Assert.assertNotNull;
 
 @NoArgsConstructor
 @RunWith(SpringRunner.class)
-@SpringBootTest(
-        classes = UserServiceApplication.class,
-        properties = "",
-        webEnvironment = WebEnvironment.RANDOM_PORT
-)
+@SpringBootTest(classes = UserServiceApplication.class)
 public class UserRestClientTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";

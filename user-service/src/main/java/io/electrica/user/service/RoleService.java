@@ -57,6 +57,6 @@ public class RoleService extends AbstractService<Role> {
 
     @Override
     protected Collection<EntityValidator<Role>> getValidators() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

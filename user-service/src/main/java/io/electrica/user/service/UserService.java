@@ -8,6 +8,7 @@ import io.electrica.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -24,11 +25,18 @@ public class UserService extends AbstractService<User> {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final OrganizationService organizationService;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       OrganizationService organizationService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.organizationService = organizationService;
+    }
 
     @Inject
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
 
     @Override
     protected Collection<String> getContainerValidators() {
@@ -40,11 +48,13 @@ public class UserService extends AbstractService<User> {
 
     @Override
     protected Collection<EntityValidator<User>> getValidators() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
     protected User executeCreate(User newEntity) {
+        newEntity.setOrganization(organizationService.findById(newEntity.getOrganization().getId(),false));
+        newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         User user = userRepository.save(newEntity);
         log.debug("Created Information for User: {}", user);
         return user;
