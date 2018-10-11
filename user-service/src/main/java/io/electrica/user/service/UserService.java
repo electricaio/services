@@ -1,6 +1,7 @@
 package io.electrica.user.service;
 
 import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -30,7 +32,10 @@ public class UserService extends AbstractService<User> {
 
     @Override
     protected Collection<String> getContainerValidators() {
-        return Collections.EMPTY_LIST;
+        return Arrays.asList(
+                ContainerEntityValidator.TRIMMED_STRINGS,
+                ContainerEntityValidator.AVOID_EMTPY_STRINGS
+        );
     }
 
     @Override
