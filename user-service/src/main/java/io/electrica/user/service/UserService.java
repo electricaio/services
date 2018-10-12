@@ -57,12 +57,7 @@ public class UserService extends AbstractService<User> {
         if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
             throw new BadRequestServiceException("Organization Id cannot be null");
         }
-
         Organization organization = organizationService.findById(newEntity.getOrganization().getId(), false);
-
-        if (organization == null) {
-            throw new BadRequestServiceException("Invalid Organization Id in the request");
-        }
         newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         User user = userRepository.save(newEntity);

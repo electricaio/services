@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -57,11 +58,10 @@ public class UserRestClientTest {
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto());
         UserDto result = response.getBody();
         assertNotNull(result.getId());
-        assertNotNull(result.getEmail());
-        assertNotNull(result.getFirstName());
-        assertNotNull(result.getLastName());
+        assertEquals(result.getEmail(), createUserDto().getEmail());
+        assertEquals(result.getFirstName(), createUserDto().getFirstName());
+        assertEquals(result.getLastName(), createUserDto().getLastName());
         assertNotNull(result.getRevisionVersion());
-
     }
 
     public CreateUserDto createUserDto() {
