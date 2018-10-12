@@ -15,6 +15,10 @@ import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *  Permission categories.
+ *
+ */
 @Getter
 @Setter
 @Entity
