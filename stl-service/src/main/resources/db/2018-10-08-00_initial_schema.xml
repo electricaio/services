@@ -1,8 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <changeSet author="aleks (generated)" id="1539073594837-1">
         <createSequence sequenceName="authorization_id_seq" startValue="1000"/>
     </changeSet>
@@ -311,6 +310,7 @@
             <column name="namespace" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="resource" type="VARCHAR(255)"/>
             <column name="version" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -340,6 +340,8 @@
             <column name="name_mod" type="BOOLEAN"/>
             <column name="namespace" type="VARCHAR(255)"/>
             <column name="namespace_mod" type="BOOLEAN"/>
+            <column name="resource" type="VARCHAR(255)"/>
+            <column name="resource_mod" type="BOOLEAN"/>
             <column name="version" type="VARCHAR(255)"/>
             <column name="version_mod" type="BOOLEAN"/>
             <column name="type_id" type="BIGINT"/>
@@ -447,157 +449,161 @@
                              tableName="authorizations"/>
     </changeSet>
     <changeSet author="aleks (generated)" id="1539073594837-46">
+        <addUniqueConstraint columnNames="ern" constraintName="uk_7pw3fbnl63tv75gu3akjshrfq" tableName="stls"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-47">
         <addUniqueConstraint columnNames="name" constraintName="uk_al6moyh0f4xf9ir8dn31brcng"
                              tableName="authorization_types"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-47">
-        <addUniqueConstraint columnNames="name" constraintName="uk_dd1xhn37o66c4x3258orwubhl" tableName="stls"/>
-    </changeSet>
     <changeSet author="aleks (generated)" id="1539073594837-48">
+        <addUniqueConstraint columnNames="name, resource, version" constraintName="ukqnv56x400nwuhr8eis190f0oo"
+                             tableName="stls"/>
+    </changeSet>
+    <changeSet author="aleks (generated)" id="1539073594837-49">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="authorizations_aud"
                                  constraintName="fk2cl28leq2l23eut57viqk4rd7" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-49">
+    <changeSet author="aleks (generated)" id="1539073594837-50">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stl_types_aud"
                                  constraintName="fk2ooxildin2hgaccblgl0fr83l" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-50">
+    <changeSet author="aleks (generated)" id="1539073594837-51">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="authorization_types_aud"
                                  constraintName="fk2vbsbov9jrspd65c38dwy7qdf" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-51">
+    <changeSet author="aleks (generated)" id="1539073594837-52">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="aws_iam_authorizations_aud"
                                  constraintName="fk31jexnhgoaflkn2atbhifgsd8" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-52">
+    <changeSet author="aleks (generated)" id="1539073594837-53">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="authorization_types_aud"
                                  constraintName="fk4ljtii189hx2eetswwsm46hst" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-53">
+    <changeSet author="aleks (generated)" id="1539073594837-54">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="authorizations_aud"
                                  constraintName="fk4xojf5da1awl2x72xrmxf7ip" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-54">
+    <changeSet author="aleks (generated)" id="1539073594837-55">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stl_types_aud"
                                  constraintName="fk5528o25uh5mvm85icol34ybnp" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-55">
+    <changeSet author="aleks (generated)" id="1539073594837-56">
         <addForeignKeyConstraint baseColumnNames="authorization_type_id" baseTableName="stl_instances"
                                  constraintName="fk5pngoq2v1mb15s1c2w8ftp9rj" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="authorization_types"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-56">
+    <changeSet author="aleks (generated)" id="1539073594837-57">
         <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="token_authorizations"
                                  constraintName="fk6w21uvdu63isqiog1oh57rpan" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="authorizations"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-57">
+    <changeSet author="aleks (generated)" id="1539073594837-58">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="basic_authorizations_aud"
                                  constraintName="fk7k43l5m0ql5lkrsjbl26u4kvk" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-58">
+    <changeSet author="aleks (generated)" id="1539073594837-59">
         <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="basic_authorizations"
                                  constraintName="fk81nd1fdwnjbspb4vcfbjw3wld" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="authorizations"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-59">
+    <changeSet author="aleks (generated)" id="1539073594837-60">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="basic_authorizations_aud"
                                  constraintName="fk9hqk0lbk07wjx08eh0cdjp484" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-60">
+    <changeSet author="aleks (generated)" id="1539073594837-61">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="revchanges"
                                  constraintName="fk9m2hkxrk7o2k0n7tm5qx949s1" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-61">
+    <changeSet author="aleks (generated)" id="1539073594837-62">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="token_authorizations_aud"
                                  constraintName="fkays3juwq0pikkbmqcd2mkqx8k" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-62">
+    <changeSet author="aleks (generated)" id="1539073594837-63">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stl_instances_aud"
                                  constraintName="fkdi930lx8qypwqw3dqjnx9oi7l" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-63">
+    <changeSet author="aleks (generated)" id="1539073594837-64">
         <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="authorizations"
                                  constraintName="fkf2mijxehe0ae73dx2ggfn1mdh" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="authorization_types"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-64">
+    <changeSet author="aleks (generated)" id="1539073594837-65">
         <addForeignKeyConstraint baseColumnNames="authorization_id" baseTableName="aws_iam_authorizations"
                                  constraintName="fkhciu3scicfye8u2042m4ub9yc" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="authorizations"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-65">
+    <changeSet author="aleks (generated)" id="1539073594837-66">
         <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="stls"
                                  constraintName="fki1kg8u75gh2bgdlip6nt2hd1y" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="stl_types"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-66">
+    <changeSet author="aleks (generated)" id="1539073594837-67">
         <addForeignKeyConstraint baseColumnNames="stl_instance_id" baseTableName="authorizations"
                                  constraintName="fkjolbhktk3vpaouod92b26qn8k" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="stl_instances"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-67">
+    <changeSet author="aleks (generated)" id="1539073594837-68">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="token_authorizations_aud"
                                  constraintName="fkjq3s9nat9prhdo8oi7hpctk7c" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-68">
+    <changeSet author="aleks (generated)" id="1539073594837-69">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="stls_aud"
                                  constraintName="fkjxd6b7vl4kqeww3eqkm8pvarg" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-69">
+    <changeSet author="aleks (generated)" id="1539073594837-70">
         <addForeignKeyConstraint baseColumnNames="stl_id" baseTableName="stl_instances"
                                  constraintName="fkky76bj4dd4x65fhmm00jn08r2" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="stls"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-70">
+    <changeSet author="aleks (generated)" id="1539073594837-71">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stl_instances_aud"
                                  constraintName="fkm2j78b6x9c85w9d3lalt5r687" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-71">
+    <changeSet author="aleks (generated)" id="1539073594837-72">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="stls_aud"
                                  constraintName="fkn5ln7fc7sqmo188ul4dnsr2c8" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="revinfo"/>
     </changeSet>
-    <changeSet author="aleks (generated)" id="1539073594837-72">
+    <changeSet author="aleks (generated)" id="1539073594837-73">
         <addForeignKeyConstraint baseColumnNames="revend" baseTableName="aws_iam_authorizations_aud"
                                  constraintName="fkrghuotv7aao5vudcv2e4g6opm" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"

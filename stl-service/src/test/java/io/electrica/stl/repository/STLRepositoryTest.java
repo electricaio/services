@@ -2,53 +2,48 @@ package io.electrica.stl.repository;
 
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
-import io.electrica.stl.service.ERNService;
+import io.electrica.common.helper.ERNUtils;
 import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 
-import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
 public class STLRepositoryTest extends AbstractDatabaseTest {
 
-    @Inject
-    private ERNService ernService;
 
-    @Test
-    public void testCreateSTLWithSuccess() {
-//        setup
-        final STLType type = new STLType();
-        type.setName("Foundation");
+    /**
+     * Tests a case when resource is not provided and adding
+     * 2 STLs with same name should raise constraint exception on ERN,
+     * since they would end up being same.
+     * */
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testSaveSTLWithoutResourceResultingInSameERN() {
 
-        stlTypeRepository.saveAndFlush(type);
+        final STLType type = createSTLType("Foundation");
 
-        final String name = "Hackerrank API";
-        final String namespace = "stl.hackerrank";
-        final String version = "0.0.1";
-        final String ern = "stl://hackerrank:v0.0.1";
+        final String name = "MySQL";
+        final String namespace = "com.mysql";
+        final String version = "5.6";
+        final String ern = ERNUtils.createERN(name, version);
 
-        final STL stl = new STL();
-        stl.setName(name);
-        stl.setNamespace(namespace);
-        stl.setVersion(version);
-        stl.setErn(ern);
-        stl.setType(type);
+        final STL first = new STL();
+        first.setType(type);
+        first.setName(name);
+        first.setVersion(version);
+        first.setNamespace(namespace);
+        first.setErn(ern);
+        stlRepository.saveAndFlush(first);
 
-//        method
-        stlRepository.saveAndFlush(stl);
-
-//        assert
-        final List<STL> result = stlRepository.findAll();
-
-        assertEquals(1, result.size());
-
-        final STL actual = result.get(0);
-        assertEquals(actual.getName(), name);
-        assertEquals(actual.getNamespace(), namespace);
-        assertEquals(actual.getErn(), ern);
-        assertEquals(actual.getName(), name);
-        assertEquals(actual.getType().getId(), type.getId());
+        final STL second = new STL();
+        second.setType(type);
+        second.setName(name);
+        second.setVersion(version);
+        second.setNamespace(namespace);
+        second.setErn(ern);
+        stlRepository.saveAndFlush(second);
     }
 
     @Test
@@ -72,20 +67,23 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         stl.setType(type);
 
         final STL hackerRankSTL = new STL();
-        final String hackerRankName = "HackerRank Applications";
+        final String hackerRankName = "HackerRank";
+        final String hackerRankVersion = "1.0";
+        final String hackerRankResource = "Applications";
         hackerRankSTL.setName(hackerRankName);
         hackerRankSTL.setNamespace("api.hackerrank");
         hackerRankSTL.setVersion("1.0");
-        hackerRankSTL.setErn(ernService.assignERN(hackerRankName));
+        hackerRankSTL.setErn(ERNUtils.createERN(hackerRankName, Optional.of(hackerRankResource), hackerRankVersion));
         hackerRankSTL.setType(type);
         stlRepository.saveAndFlush(hackerRankSTL);
 
         final STL greenhouseSTL = new STL();
         final String greenhouseName = "Greenhouse";
+        final String greenHouseVersion = "1.1";
         greenhouseSTL.setName(greenhouseName);
         greenhouseSTL.setNamespace("api.greenhouse");
         greenhouseSTL.setVersion("1.1");
-        greenhouseSTL.setErn(ernService.assignERN(greenhouseName));
+        greenhouseSTL.setErn(ERNUtils.createERN(greenhouseName, greenHouseVersion));
         greenhouseSTL.setType(type);
         greenhouseSTL.setArchived(true);
         stlRepository.saveAndFlush(greenhouseSTL);
