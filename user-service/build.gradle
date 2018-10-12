@@ -14,8 +14,6 @@ apply plugin: "org.liquibase.gradle"
 
 dependencies {
     compile project(':common-jpa')
-    compileOnly "com.google.code.findbugs:annotations:${findbugsVersion}"
-    compileOnly "com.google.code.findbugs:jsr305:${jsr305}"
 
     testCompile project(':common-test')
 
