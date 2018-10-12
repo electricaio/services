@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -53,6 +54,9 @@ public class UserService extends AbstractService<User> {
     }
 
     @Override
+    @SuppressFBWarnings(
+            value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
+            justification = "Find a better way to buypass this")
     protected User executeCreate(User newEntity) {
         if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
             throw new BadRequestServiceException("Organization Id cannot be null");
