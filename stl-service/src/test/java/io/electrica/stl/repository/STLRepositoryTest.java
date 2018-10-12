@@ -2,7 +2,7 @@ package io.electrica.stl.repository;
 
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
-import io.electrica.stl.util.ERNUtils;
+import io.electrica.common.helper.ERNUtils;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 

@@ -1,8 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <changeSet author="aleks (generated)" id="1539073594837-1">
         <createSequence sequenceName="authorization_id_seq" startValue="1000"/>
     </changeSet>
@@ -457,7 +456,7 @@
                              tableName="authorization_types"/>
     </changeSet>
     <changeSet author="aleks (generated)" id="1539073594837-48">
-        <addUniqueConstraint columnNames="name, resource" constraintName="ukt5hvi4hyxglle3f78qokepama"
+        <addUniqueConstraint columnNames="name, resource, version" constraintName="ukqnv56x400nwuhr8eis190f0oo"
                              tableName="stls"/>
     </changeSet>
     <changeSet author="aleks (generated)" id="1539073594837-49">

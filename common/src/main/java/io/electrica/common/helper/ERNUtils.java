@@ -1,4 +1,4 @@
-package io.electrica.stl.util;
+package io.electrica.common.helper;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,11 +29,10 @@ public final class ERNUtils {
     public static String createERN(String name, Optional<String> resource, String version) {
         final String ernUrl = Stream
                 .of(name, resource.orElse(""), version)
-                // replace whitespaces with single underscore
-                .map(s -> s.replaceAll("\\s+", StringUtil.UNDERSCORE))
-                // filter out empty strings - case when resource is not provided
+                // remove empty strings - case when resource is not provided
                 .filter(s -> !s.isEmpty())
-                .collect(Collectors.joining(StringUtil.COLON))
+                .map(ERNUtils::escapeInvalidChars)
+                .collect(Collectors.joining(StringUtils.COLON))
                 .toLowerCase();
 
         return PROTOCOL + ernUrl;
@@ -41,5 +40,16 @@ public final class ERNUtils {
 
     public static String createERN(String name, String version) {
         return createERN(name, Optional.empty(), version);
+    }
+
+    /**
+     * Given the string, it escapes multiple
+     * - whitespaces,
+     * - dots,
+     * - colons
+     * with an underscore.
+     */
+    protected static String escapeInvalidChars(String s) {
+        return s.replaceAll("[\\s.:]+", StringUtils.UNDERSCORE);
     }
 }

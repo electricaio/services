@@ -5,7 +5,7 @@ import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
-import io.electrica.stl.util.ERNUtils;
+import io.electrica.common.helper.ERNUtils;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ public class STLApiTest extends AbstractDatabaseTest {
         assertEquals(dto.getName(), actual.getName());
         assertEquals(dto.getNamespace(), actual.getNamespace());
         assertEquals(type, actual.getType());
-        final String expectedErn = "stl://hackerrank:applications:1.0";
+        final String expectedErn = "stl://hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertNotNull(actual.getRevisionVersion());
     }

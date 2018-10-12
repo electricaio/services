@@ -20,7 +20,7 @@ import java.util.Optional;
 @Audited
 @Entity
 @Table(name = "stls",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource", "version"})
 )
 public class STL extends AbstractEntity {
 

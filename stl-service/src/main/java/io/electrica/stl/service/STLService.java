@@ -5,7 +5,7 @@ import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.repository.STLRepository;
-import io.electrica.stl.util.ERNUtils;
+import io.electrica.common.helper.ERNUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
