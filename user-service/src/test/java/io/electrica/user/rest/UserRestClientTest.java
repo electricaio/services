@@ -55,12 +55,13 @@ public class UserRestClientTest {
     @Test
     @Transactional
     public void createUser() {
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto());
+        CreateUserDto createUserDto = createUserDto();
+        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
         UserDto result = response.getBody();
         assertNotNull(result.getId());
-        assertEquals(result.getEmail(), createUserDto().getEmail());
-        assertEquals(result.getFirstName(), createUserDto().getFirstName());
-        assertEquals(result.getLastName(), createUserDto().getLastName());
+        assertEquals(result.getEmail(), createUserDto.getEmail());
+        assertEquals(result.getFirstName(), createUserDto.getFirstName());
+        assertEquals(result.getLastName(), createUserDto.getLastName());
         assertNotNull(result.getRevisionVersion());
     }
 
