@@ -28,7 +28,7 @@ dependencies {
     compile "com.samskivert:jmustache"
     compile "org.apache.commons:commons-io:${commonsioVersion}"
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile project(':common-test')
 }
 
 dependencyManagement {

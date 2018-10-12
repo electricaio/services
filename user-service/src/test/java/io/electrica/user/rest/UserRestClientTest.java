@@ -1,19 +1,15 @@
 package io.electrica.user.rest;
 
-import io.electrica.UserServiceApplication;
+import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.service.OrganizationDtoService;
-import io.electrica.user.service.UserDtoService;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -26,17 +22,11 @@ import static org.junit.Assert.assertNotNull;
 /**
  * UserRestClientTest to test rest client.
  */
-
 @NoArgsConstructor
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = UserServiceApplication.class)
-public class UserRestClientTest {
+public class UserRestClientTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
-
-    @Autowired
-    UserDtoService userDtoService;
     @Autowired
     OrganizationDtoService organizationDtoService;
     @Autowired
@@ -76,5 +66,4 @@ public class UserRestClientTest {
         user.setOrganizationId(defaultOrganization.getId());
         return user;
     }
-
 }
