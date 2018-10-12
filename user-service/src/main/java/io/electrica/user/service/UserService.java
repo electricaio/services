@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * User Service implementation class for managing users.
@@ -57,7 +58,8 @@ public class UserService extends AbstractService<User> {
         if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
             throw new BadRequestServiceException("Organization Id cannot be null");
         }
-        Organization organization = organizationService.findById(newEntity.getOrganization().getId(), false);
+        Organization organization = Optional.of(organizationService.getRepository().findAllById() .findById(newEntity.getOrganization().getId(),
+                false)).orElse(null);
         newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         User user = userRepository.save(newEntity);
