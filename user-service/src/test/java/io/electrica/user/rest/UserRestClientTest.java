@@ -4,18 +4,23 @@ import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
+import io.electrica.user.model.User;
 import io.electrica.user.service.OrganizationDtoService;
+import io.electrica.user.service.UserService;
 import lombok.NoArgsConstructor;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -31,6 +36,10 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     OrganizationDtoService organizationDtoService;
     @Autowired
     UserRestClient userRestClient;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private OrganizationDto defaultOrganization;
 
@@ -54,6 +63,18 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         assertEquals(result.getFirstName(), createUserDto.getFirstName());
         assertEquals(result.getLastName(), createUserDto.getLastName());
         assertNotNull(result.getRevisionVersion());
+    }
+
+    @Test
+    @Transactional
+    public void saltedPasswordTest() {
+        CreateUserDto createUserDto = createUserDto();
+        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        UserDto result = response.getBody();
+        User saltedUSer = userService.findById(result.getId(),false);
+        Assert.assertNotEquals(saltedUSer.getSaltedPassword(), createUserDto.getPassword());
+        assertTrue(passwordEncoder.matches(createUserDto.getPassword(),saltedUSer.getSaltedPassword()));
+
     }
 
     public CreateUserDto createUserDto() {
