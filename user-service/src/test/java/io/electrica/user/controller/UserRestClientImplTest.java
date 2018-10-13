@@ -1,8 +1,10 @@
-package io.electrica.user.rest;
+package io.electrica.user.controller;
 
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.rest.UserRestClient;
+import io.electrica.user.rest.UserRestClientImpl;
 import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * REST Client implementation for Managing users..
+ * REST Client implementation test.
  */
 public class UserRestClientImplTest {
 
