@@ -29,6 +29,25 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     private UserService userService;
 
     @Override
+    protected AccessKey executeCreate(AccessKey newEntity) {
+        long id = Long.parseLong(String.valueOf(newEntity.getUser().getId()));
+        User user = userService.findById(id, true);
+        newEntity.setUser(user);
+        newEntity.setAccessKey(generateKey());
+        return getRepository().save(newEntity);
+    }
+
+    private String generateKey() {
+        //Implement key generation here
+        return Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    protected void executeUpdate(AccessKey merged, AccessKey update) {
+        throw new NotImplementedException("");
+    }
+
+    @Override
     protected Collection<String> getContainerValidators() {
         return Arrays.asList(
                 ContainerEntityValidator.TRIMMED_STRINGS,
@@ -46,22 +65,4 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return acccessKeyRepo;
     }
 
-    @Override
-    protected AccessKey executeCreate(AccessKey newEntity) {
-        long id = Long.parseLong(String.valueOf(newEntity.getUser().getId()));
-        User user = userService.findById(id, true);
-        newEntity.setUser(user);
-        newEntity.setAccessKey(generateKey());
-        return getRepository().save(newEntity);
-    }
-
-    @Override
-    protected void executeUpdate(AccessKey merged, AccessKey update) {
-        throw new NotImplementedException("");
-    }
-
-    private String generateKey() {
-        //Implement key generation here
-        return Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8));
-    }
 }

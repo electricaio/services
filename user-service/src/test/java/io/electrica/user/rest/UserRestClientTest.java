@@ -6,6 +6,8 @@ import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.model.AccessKey;
+import io.electrica.user.repository.AccessKeyRepository;
 import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.UserService;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,9 @@ public class UserRestClientTest extends UserServiceApplicationTest {
 
     @Inject
     private OrganizationDtoService organizationDtoService;
+    @Inject
+    private AccessKeyRepository accessKeyRepository;
+
     @Inject
     private UserRestClient userRestClient;
     @Inject
@@ -83,6 +88,9 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         assertEquals(accessKeyDto.getUserId(), user.getId());
         assertEquals(0L, (long) result.getRevisionVersion());
         assertNull(result.getAccessKey());
+
+        AccessKey accessKey = accessKeyRepository.findById(result.getId()).get();
+        assertNotNull(accessKey.getAccessKey());
     }
 
     private UserDto callCreateUser(CreateUserDto createUserDto) {
