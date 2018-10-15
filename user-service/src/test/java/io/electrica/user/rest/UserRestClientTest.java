@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -43,7 +44,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     @Test
-    @Transactional
+    @Commit
     public void createUser() {
         CreateUserDto createUserDto = createUserDto();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);

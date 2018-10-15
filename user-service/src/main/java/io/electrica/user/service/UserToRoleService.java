@@ -7,12 +7,14 @@ import io.electrica.user.model.User;
 import io.electrica.user.model.UserToRole;
 import io.electrica.user.repository.UserToRoleRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 
+@Component
 public class UserToRoleService extends AbstractService<UserToRole> {
 
     private final UserToRoleRepository userToRoleRepository;
