@@ -30,13 +30,15 @@ public class UserService extends AbstractService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final OrganizationService organizationService;
+    private final UserToRoleService userToRoleService;
 
     @Inject
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       OrganizationService organizationService) {
+                       OrganizationService organizationService, UserToRoleService userToRoleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.organizationService = organizationService;
+        this.userToRoleService = userToRoleService;
     }
 
 
@@ -66,6 +68,7 @@ public class UserService extends AbstractService<User> {
         newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         User user = userRepository.save(newEntity);
+        userToRoleService.addDefaultRoleToUser(user);
         log.debug("Created Information for User: {}", user);
         return user;
     }
