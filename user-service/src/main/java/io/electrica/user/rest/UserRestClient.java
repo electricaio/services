@@ -19,7 +19,8 @@ public interface UserRestClient {
     @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
-    @PostMapping(V1 + "/users/access-keys")
+    //TODO: move to another rest class
+    @PostMapping(V1 + "/access-keys")
     ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey);
 
 }

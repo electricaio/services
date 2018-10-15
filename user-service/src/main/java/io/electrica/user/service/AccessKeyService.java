@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -23,10 +21,13 @@ import io.electrica.user.repository.AccessKeyRepository;
 @Component
 public class AccessKeyService extends AbstractService<AccessKey> {
 
-    @Inject
-    private AccessKeyRepository acccessKeyRepo;
-    @Inject
-    private UserService userService;
+    private final AccessKeyRepository acccessKeyRepo;
+    private final UserService userService;
+
+    public AccessKeyService(AccessKeyRepository acccessKeyRepo, UserService userService) {
+        this.acccessKeyRepo = acccessKeyRepo;
+        this.userService = userService;
+    }
 
     @Override
     protected AccessKey executeCreate(AccessKey newEntity) {

@@ -1,7 +1,5 @@
 package io.electrica.user.service;
 
-import javax.inject.Inject;
-
 import org.springframework.stereotype.Component;
 
 import io.electrica.common.jpa.service.AbstractService;
@@ -12,8 +10,11 @@ import io.electrica.user.model.AccessKey;
 @Component
 public class AccessKeyDtoService extends AbstractDtoService<AccessKey, AccessKeyDto> {
 
-    @Inject
-    private AccessKeyService accessKeyService;
+    private final AccessKeyService accessKeyService;
+
+    public AccessKeyDtoService(AccessKeyService accessKeyService) {
+        this.accessKeyService = accessKeyService;
+    }
 
     @Override
     public AccessKeyDto create(AccessKeyDto persistentDto) {
