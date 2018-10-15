@@ -1,9 +1,11 @@
 package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
+import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -59,8 +61,13 @@ public class UserService extends AbstractService<User> {
             justification = "Find a better way to buypass this")
     protected User executeCreate(User newEntity) {
 
+        if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
+            throw new BadRequestServiceException("Organization Id cannot be null");
+        }
+        Organization organization = organizationService.findById(newEntity.getOrganization().getId(),
+                false);
+        newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
-        newEntity.setOrganization(organizationService.createIfAbsent(newEntity.getEmail()));
         User user = userRepository.save(newEntity);
         userToRoleService.addDefaultRoleToUser(user);
         log.debug("Created Information for User: {}", user);

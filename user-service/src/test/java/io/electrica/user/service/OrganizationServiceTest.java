@@ -6,10 +6,9 @@ import io.electrica.user.repository.OrganizationRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * OrganizationServiceTest to test rest client for Organization.
@@ -32,26 +31,6 @@ public class OrganizationServiceTest extends TestBase {
         Organization result = organizationService.executeCreate(organization);
         assertEquals(organization.getName(), result.getName());
         assertEquals(organization.getUuid(), result.getUuid());
-    }
-
-
-    @Test
-    public void getOrAddOrgTestWhenOrgExists() {
-        Organization organization = createNewOrg();
-        String domain = "test@" + organization.getName();
-        when(organizationRepository.findOneByNameIgnoreCase(organization.getName())).thenReturn(Optional.of(organization));
-        Organization actual = organizationService.createIfAbsent(domain);
-        assertEquals(organization, actual);
-    }
-
-    @Test
-    public void getOrAddOrgTestWhenOrgNotExists() {
-        Organization organization = createNewOrg();
-        String domain = "test@" + organization.getName();
-        when(organizationRepository.findOneByNameIgnoreCase(organization.getName())).thenReturn(Optional.empty());
-        when(organizationRepository.save(any())).thenReturn(organization);
-        Organization actual = organizationService.createIfAbsent(domain);
-        assertEquals(organization, actual);
     }
 
 }

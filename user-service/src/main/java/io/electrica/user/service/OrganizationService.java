@@ -11,7 +11,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Organization Service implementation class for managing roles.
@@ -22,6 +25,10 @@ public class OrganizationService extends AbstractService<Organization> {
     private final Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
     private OrganizationRepository organizationRepository;
+
+    public Optional<Organization> findByName(String name) {
+        return organizationRepository.findOneByNameIgnoreCase(name);
+    }
 
     @Inject
     public OrganizationService(OrganizationRepository organizationRepository) {
@@ -34,16 +41,6 @@ public class OrganizationService extends AbstractService<Organization> {
                 ContainerEntityValidator.TRIMMED_STRINGS,
                 ContainerEntityValidator.AVOID_EMTPY_STRINGS
         );
-    }
-
-    public Organization createIfAbsent(final String email) {
-        String domain = email.substring(email.indexOf("@") + 1);
-        Optional<Organization> org = organizationRepository.findOneByNameIgnoreCase(domain);
-        if (org.isPresent()) {
-            return org.get();
-        } else {
-            return createOrgFromDomain(domain);
-        }
     }
 
     @Override
@@ -66,10 +63,5 @@ public class OrganizationService extends AbstractService<Organization> {
         return organizationRepository;
     }
 
-    public Organization createOrgFromDomain(String domain) {
-        Organization org = new Organization();
-        org.setName(domain);
-        org.setUuid(UUID.randomUUID());
-        return organizationRepository.save(org);
-    }
+
 }

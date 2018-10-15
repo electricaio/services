@@ -2,7 +2,6 @@ package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
-import io.electrica.user.model.Organization;
 import io.electrica.user.repository.OrganizationRepository;
 import io.electrica.user.service.OrganizationService;
 import lombok.NoArgsConstructor;
@@ -75,36 +74,5 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         organizationDto.setUuid(null);
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();
-    }
-
-    @Test
-    public void whenCreateOrgTestNew() {
-        String domain = "gmail.com";
-        Organization result = organizationService.createOrgFromDomain(domain);
-        assertNotNull(result);
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void whenCreateOrgWithExistingDomainNameThrowsException() {
-        String domain = "gmail.com";
-        organizationService.createOrgFromDomain(domain);
-        organizationService.createOrgFromDomain(domain);
-        organizationRepository.flush();
-    }
-
-    @Test
-    public void whenGetOrAddOrgTestNew() {
-        String domain = "gmail.com";
-        Organization result = organizationService.createIfAbsent(domain);
-        assertNotNull(result);
-    }
-
-    @Test
-    public void whenGetOrAddOrgTestWithExistingDomain() {
-        String domain = "gmail.com";
-        Organization result1 = organizationService.createIfAbsent(domain);
-        Organization result2 = organizationService.createIfAbsent(domain);
-        organizationRepository.flush();
-        assertEquals(result1, result2);
     }
 }

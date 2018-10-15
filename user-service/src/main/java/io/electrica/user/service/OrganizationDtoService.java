@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Organization Dto Service implementation class for managing organization.
@@ -30,6 +32,15 @@ public class OrganizationDtoService extends AbstractDtoService<Organization, Org
         return organizationService;
     }
 
+    public OrganizationDto createIfAbsent(String orgName) {
+        Optional<Organization> organization = organizationService.findByName(orgName);
+        if (organization.isPresent()) {
+            return toDto(organization.get());
+        } else {
+            return toDto(organizationService.create(toEntity(createOrgDtoFromName(orgName))));
+        }
+    }
+
     @Override
     protected Class<Organization> getEntityClass() {
         return Organization.class;
@@ -38,5 +49,12 @@ public class OrganizationDtoService extends AbstractDtoService<Organization, Org
     @Override
     protected Class<OrganizationDto> getDtoClass() {
         return OrganizationDto.class;
+    }
+
+    private OrganizationDto createOrgDtoFromName(String domain) {
+        OrganizationDto org = new OrganizationDto();
+        org.setName(domain);
+        org.setUuid(UUID.randomUUID());
+        return org;
     }
 }

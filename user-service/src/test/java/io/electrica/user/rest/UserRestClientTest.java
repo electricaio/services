@@ -67,18 +67,6 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     @Test
-    public void createUserTestWhileCreatingOrgOnTheFly() {
-        CreateUserDto createUserDto = createUserDtoWithoutOrg();
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
-        UserDto result = response.getBody();
-        assertNotNull(result.getId());
-        assertEquals(result.getEmail(), createUserDto.getEmail());
-        assertEquals(result.getFirstName(), createUserDto.getFirstName());
-        assertEquals(result.getLastName(), createUserDto.getLastName());
-        assertNotNull(result.getRevisionVersion());
-    }
-
-    @Test
     public void saltedPasswordTest() {
         CreateUserDto createUserDto = createUserDto();
         UserDto result = callCreateUser(createUserDto);

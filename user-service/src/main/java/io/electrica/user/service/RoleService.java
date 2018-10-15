@@ -66,7 +66,7 @@ public class RoleService extends AbstractService<Role> {
         return Collections.emptyList();
     }
 
-    public String getDefaultRole(){
+    public String getDefaultRole() {
         return Default_Role;
     }
 }
