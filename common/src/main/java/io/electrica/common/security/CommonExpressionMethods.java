@@ -25,8 +25,16 @@ public class CommonExpressionMethods {
         return new IdentityImpl(authentication);
     }
 
-    public boolean isUser(Integer userId) {
+    public boolean isUser(Long userId) {
         return Objects.equals(getIdentity().getUserId(), userId);
+    }
+
+    public boolean hasPermission(PermissionType permission) {
+        return getIdentity().getPermissions().contains(permission);
+    }
+
+    public boolean userInOrganization(Long organizationId) {
+        return Objects.equals(getIdentity().getOrganizationId(), organizationId);
     }
 
     /**

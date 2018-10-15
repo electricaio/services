@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import java.time.Instant;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Collect common things to work with JWT tokens.
  */
@@ -26,33 +28,35 @@ public class TokenHelper {
     private TokenHelper() {
     }
 
-    public static String tokenUsernameFromId(long userId) {
+
+    public static String buildIdTokenUsername(Long userId) {
+        requireNonNull(userId, "userId");
         return ID_INDICATOR + userId;
     }
 
-    public static int idFromTokenUsername(String username) {
-        if (isId(username)) {
-            return extractId(username);
+    public static boolean isIdTokenUsername(String username) {
+        return username.startsWith(ID_INDICATOR);
+    }
+
+    public static long extractIdFromTokenUsername(String username) {
+        if (isIdTokenUsername(username)) {
+            return Long.parseLong(username.substring(ID_INDICATOR.length()));
         }
         throw new IllegalArgumentException("wrong token username: " + username);
     }
 
-    public static boolean isId(String username) {
-        return username.startsWith(ID_INDICATOR);
-    }
 
-    public static boolean isEmail(String username) {
+    public static boolean isEmailTokenUsername(String username) {
         return username.startsWith(EMAIL_INDICATOR);
     }
 
-
-    public static int extractId(String username) {
-        return Integer.parseInt(username.substring(ID_INDICATOR.length()));
+    public static String extractEmailFromTokenUsername(String username) {
+        if (isEmailTokenUsername(username)) {
+            return StringUtils.substringAfter(username, EMAIL_INDICATOR);
+        }
+        throw new IllegalArgumentException("wrong token username: " + username);
     }
 
-    public static String extractEmail(String username) {
-        return StringUtils.substringAfter(username, EMAIL_INDICATOR);
-    }
 
     public static OAuth2AccessToken addIssuedAtInfo(OAuth2AccessToken accessToken) {
         DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
