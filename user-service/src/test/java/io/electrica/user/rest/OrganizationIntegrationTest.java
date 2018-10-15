@@ -44,20 +44,17 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     public void createOrganizationTest() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(UUID.randomUUID());
         OrganizationDto result = organizationRestClient.create(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
         assertEquals(organizationDto.getUuid(), result.getUuid());
-        assertEquals(organizationDto.getIsActive(), result.getIsActive());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void whenAddOrgWithSameNameThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(UUID.randomUUID());
         organizationRestClient.create(organizationDto);
         organizationRestClient.create(organizationDto);
@@ -69,7 +66,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     public void whenAddOrgWithoutNameThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName(null);
-        organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(UUID.randomUUID());
         organizationRestClient.create(organizationDto);
         organizationRepository.flush();
@@ -79,7 +75,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     public void whenAddOrgWithoutUUIDThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(null);
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();
@@ -89,7 +84,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     public void whenAddOrgWithoutIsActiveThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setIsActive(null);
         organizationDto.setUuid(UUID.randomUUID());
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();

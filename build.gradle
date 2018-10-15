@@ -33,11 +33,11 @@ subprojects {
         dozerVersion = '6.4.1'
         guavaVersion = '26.0-jre'
         apacheCommonLang3Version = '3.8.1'
-        findbugsAnnotationsVersion = '3.0.2'
+        findbugsAnnotationsVersion = '3.0.1'
+        findbugsJsr305Version = '3.0.2'
         logstashLogbackEncoderVersion = '5.2'
         commonsioVersion = '1.3.2'
         lombokVersion = '1.18.2'
-        findbugsVersion = '3.0.1'
     }
 
     sourceCompatibility = 1.8

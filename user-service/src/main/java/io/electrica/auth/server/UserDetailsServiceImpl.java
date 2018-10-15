@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findUser(username);
         return new SpecialUserDetails(
-                TokenHelper.tokenUsernameFromId(1L), //user.getId()
+                TokenHelper.buildIdTokenUsername(1L), //user.getId()
                 user.getSaltedPassword(),
                 // to DO !user.getArchived(),
                 true,

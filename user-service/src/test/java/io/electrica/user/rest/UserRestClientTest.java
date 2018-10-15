@@ -50,7 +50,6 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     public void init() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(UUID.randomUUID());
         defaultOrganization = organizationDtoService.create(organizationDto);
     }

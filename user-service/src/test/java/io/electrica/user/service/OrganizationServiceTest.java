@@ -37,7 +37,6 @@ public class OrganizationServiceTest extends TestBase {
         Organization result = organizationService.executeCreate(organization);
         assertEquals(organization.getName(), result.getName());
         assertEquals(organization.getUuid(), result.getUuid());
-        assertEquals(organization.getIsActive(), result.getIsActive());
     }
 
 
