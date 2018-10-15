@@ -65,4 +65,8 @@ public class RoleService extends AbstractService<Role> {
     protected Collection<EntityValidator<Role>> getValidators() {
         return Collections.emptyList();
     }
+
+    public String getDefaultRole(){
+        return Default_Role;
+    }
 }
