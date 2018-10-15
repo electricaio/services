@@ -16,7 +16,6 @@ public class OrganizationDto {
     private Long id;
     private UUID uuid;
     private String name;
-    private Boolean isActive;
     private Long revisionVersion;
 
     public OrganizationDto(Long id, UUID uuid, String name, Long revisionVersion) {

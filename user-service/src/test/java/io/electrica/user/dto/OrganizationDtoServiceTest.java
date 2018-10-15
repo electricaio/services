@@ -43,6 +43,5 @@ public class OrganizationDtoServiceTest extends TestBase {
         assertNotNull(result);
         assertEquals(organization.getName(), result.getName());
         assertEquals(organization.getUuid(), result.getUuid());
-        assertEquals(organization.getIsActive(), result.getIsActive());
     }
 }
