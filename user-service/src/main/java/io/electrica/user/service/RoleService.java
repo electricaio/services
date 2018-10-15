@@ -33,11 +33,6 @@ public class RoleService extends AbstractService<Role> {
                 .orElseThrow(() -> new BadRequestServiceException("role: " + name));
     }
 
-    public Role findDefaultRole() {
-        return roleRepository.findOneByName(DEFAULT_ROLE)
-                .orElseThrow(() -> new BadRequestServiceException("role: " + DEFAULT_ROLE + " qnot found"));
-    }
-
     @Override
     protected Role executeCreate(Role newEntity) {
         return roleRepository.save(newEntity);
