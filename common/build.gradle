@@ -20,8 +20,8 @@ dependencies {
     compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
 
     compile "javax.inject:javax.inject:${javaxInjectVersion}"
-    compile "com.google.code.findbugs:jsr305:${findbugsAnnotationsVersion}"
-    compile "com.google.code.findbugs:annotations:${findbugsVersion}"
+    compile "com.google.code.findbugs:jsr305:${findbugsJsr305Version}"
+    compile "com.google.code.findbugs:annotations:${findbugsAnnotationsVersion}"
     compile "org.apache.commons:commons-lang3:${apacheCommonLang3Version}"
     compile "com.google.guava:guava:${guavaVersion}"
     compile "com.github.dozermapper:dozer-core:${dozerVersion}"

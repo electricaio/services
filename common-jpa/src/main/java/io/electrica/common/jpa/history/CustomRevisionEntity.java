@@ -36,7 +36,7 @@ public class CustomRevisionEntity extends AbstractPersistable<Long> {
     private Set<String> modifiedEntityNames = new HashSet<String>();
 
     @Column(nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Override
     @RevisionNumber

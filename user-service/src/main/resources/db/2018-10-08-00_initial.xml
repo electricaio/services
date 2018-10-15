@@ -228,8 +228,8 @@
             <column name="timestamp" type="BIGINT">
                 <constraints nullable="false" />
             </column>
-            <column name="user_id" type="INT">
-                <constraints nullable="false" />
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>

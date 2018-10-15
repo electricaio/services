@@ -205,7 +205,7 @@
             <column name="timestamp" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="INT">
+            <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>

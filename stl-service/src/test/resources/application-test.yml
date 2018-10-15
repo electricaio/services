@@ -1,1 +1,3 @@
 # Override here properties for functions tests
+
+spring.jpa.hibernate.ddl-auto: validate
