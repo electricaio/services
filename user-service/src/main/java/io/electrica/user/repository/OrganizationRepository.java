@@ -11,5 +11,5 @@ import java.util.Optional;
  */
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
-    Optional<Organization> findOneByName(String name);
+    Optional<Organization> findOneByNameIgnoreCase(String name);
 }

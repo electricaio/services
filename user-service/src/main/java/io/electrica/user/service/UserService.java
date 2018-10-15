@@ -58,8 +58,9 @@ public class UserService extends AbstractService<User> {
             value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
             justification = "Find a better way to buypass this")
     protected User executeCreate(User newEntity) {
+
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
-        newEntity.setOrganization(organizationService.getOrAdd(newEntity.getEmail()));
+        newEntity.setOrganization(organizationService.createIfAbsent(newEntity.getEmail()));
         User user = userRepository.save(newEntity);
         userToRoleService.addDefaultRoleToUser(user);
         log.debug("Created Information for User: {}", user);

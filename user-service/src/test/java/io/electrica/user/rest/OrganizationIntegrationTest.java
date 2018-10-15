@@ -95,15 +95,15 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     @Test
     public void whenGetOrAddOrgTestNew() {
         String domain = "gmail.com";
-        Organization result = organizationService.getOrAdd(domain);
+        Organization result = organizationService.createIfAbsent(domain);
         assertNotNull(result);
     }
 
     @Test
     public void whenGetOrAddOrgTestWithExistingDomain() {
         String domain = "gmail.com";
-        Organization result1 = organizationService.getOrAdd(domain);
-        Organization result2 = organizationService.getOrAdd(domain);
+        Organization result1 = organizationService.createIfAbsent(domain);
+        Organization result2 = organizationService.createIfAbsent(domain);
         organizationRepository.flush();
         assertEquals(result1, result2);
     }
