@@ -97,9 +97,6 @@
             <column name="revision_version" type="BIGINT">
                 <constraints nullable="false" />
             </column>
-            <column name="is_active" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false" />
             </column>
@@ -124,8 +121,6 @@
             <column name="archived_mod" type="BOOLEAN" />
             <column name="revision_version" type="BIGINT" />
             <column name="revision_version_mod" type="BOOLEAN" />
-            <column name="is_active" type="BOOLEAN"/>
-            <column name="is_active_mod" type="BOOLEAN"/>
             <column name="name" type="VARCHAR(255)" />
             <column name="name_mod" type="BOOLEAN" />
             <column name="uuid" type="UUID" />

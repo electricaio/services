@@ -37,7 +37,6 @@ public class OrganizationRestClientTest extends TestBase {
         assertNotNull(actual);
         assertEquals(organizationDto.getName(), result.getName());
         assertEquals(organizationDto.getUuid(), result.getUuid());
-        assertEquals(organizationDto.getIsActive(), result.getIsActive());
     }
 
     @Test(expected = BadRequestServiceException.class)
