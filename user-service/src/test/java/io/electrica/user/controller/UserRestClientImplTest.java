@@ -5,6 +5,7 @@ import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
 import io.electrica.user.rest.UserRestClient;
 import io.electrica.user.rest.UserRestClientImpl;
+import io.electrica.user.service.AccessKeyDtoService;
 import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +22,16 @@ public class UserRestClientImplTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
-    UserDtoService userDtoService;
+    private UserDtoService userDtoService;
+    private AccessKeyDtoService accessKeyDtoService;
 
     UserRestClient userRestClient;
 
     @Before
     public void setup() {
         userDtoService = mock(UserDtoService.class);
-        userRestClient = new UserRestClientImpl(userDtoService);
+        accessKeyDtoService = mock(AccessKeyDtoService.class);
+        userRestClient = new UserRestClientImpl(userDtoService, accessKeyDtoService);
     }
 
     @Test

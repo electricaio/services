@@ -19,7 +19,7 @@ public interface UserRestClient {
     @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
-    @PostMapping(V1 + "/users/accessKey")
+    @PostMapping(V1 + "/users/access-keys")
     ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey);
 
 }

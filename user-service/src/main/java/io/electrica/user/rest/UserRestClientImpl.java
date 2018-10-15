@@ -6,8 +6,6 @@ import io.electrica.user.dto.UserDto;
 import io.electrica.user.service.AccessKeyDtoService;
 import io.electrica.user.service.UserDtoService;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +21,11 @@ public class UserRestClientImpl implements UserRestClient {
     private final Logger logger = LoggerFactory.getLogger(UserRestClientImpl.class);
 
     private final UserDtoService userDtoService;
-    @Inject
-    private AccessKeyDtoService accessKeyDtoService;
+    private final AccessKeyDtoService accessKeyDtoService;
 
-    public UserRestClientImpl(UserDtoService userDtoService) {
+    public UserRestClientImpl(UserDtoService userDtoService, AccessKeyDtoService accessKeyDtoService) {
         this.userDtoService = userDtoService;
+        this.accessKeyDtoService = accessKeyDtoService;
     }
 
     @Override
@@ -41,10 +39,6 @@ public class UserRestClientImpl implements UserRestClient {
     public ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey) {
         logger.info("REST request to generate access key : {}", accessKey);
         return ResponseEntity.ok(accessKeyDtoService.create(accessKey));
-    }
-
-    void setAccessKeyDtoService(AccessKeyDtoService accessKeyDtoService) {
-        this.accessKeyDtoService = accessKeyDtoService;
     }
 
 }
