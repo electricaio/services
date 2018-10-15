@@ -60,13 +60,8 @@ public class UserService extends AbstractService<User> {
             value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
             justification = "Find a better way to buypass this")
     protected User executeCreate(User newEntity) {
-        if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
-            throw new BadRequestServiceException("Organization Id cannot be null");
-        }
-        Organization organization = organizationService.findById(newEntity.getOrganization().getId(),
-                false);
-        newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
+        newEntity.setOrganization(organizationService.getOrAdd(newEntity.getEmail()));
         User user = userRepository.save(newEntity);
         userToRoleService.addDefaultRoleToUser(user);
         log.debug("Created Information for User: {}", user);

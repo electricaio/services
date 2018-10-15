@@ -2,14 +2,18 @@ package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
+import io.electrica.user.model.Organization;
 import io.electrica.user.repository.OrganizationRepository;
+import io.electrica.user.service.OrganizationService;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.UUID;
@@ -23,11 +27,14 @@ import static org.junit.Assert.assertNotNull;
 @NoArgsConstructor
 public class OrganizationIntegrationTest extends UserServiceApplicationTest {
 
-    @Autowired
+    @Inject
     OrganizationRestClient organizationRestClient;
 
-    @Autowired
+    @Inject
     OrganizationRepository organizationRepository;
+
+    @Inject
+    OrganizationService organizationService;
 
     @Before
     public void init() {
@@ -69,7 +76,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     }
 
     @Test(expected = ConstraintViolationException.class)
-    @Transactional
     public void whenAddOrgWithoutUUIDThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
@@ -80,7 +86,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     }
 
     @Test(expected = ConstraintViolationException.class)
-    @Transactional
     public void whenAddOrgWithoutIsActiveThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
@@ -88,5 +93,36 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         organizationDto.setUuid(UUID.randomUUID());
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();
+    }
+
+    @Test
+    public void whenCreateOrgTestNew() {
+        String domain = "gmail.com";
+        Organization result = organizationService.createOrgFromDomain(domain);
+        assertNotNull(result);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void whenCreateOrgWithExistingDomainNameThrowsException() {
+        String domain = "gmail.com";
+        Organization result1 = organizationService.createOrgFromDomain(domain);
+        Organization result2 = organizationService.createOrgFromDomain(domain);
+        organizationRepository.flush();
+    }
+
+    @Test
+    public void whenGetOrAddOrgTestNew() {
+        String domain = "gmail.com";
+        Organization result = organizationService.getOrAdd(domain);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void whenGetOrAddOrgTestWithExistingDomain() {
+        String domain = "gmail.com";
+        Organization result1 = organizationService.getOrAdd(domain);
+        Organization result2 = organizationService.getOrAdd(domain);
+        organizationRepository.flush();
+        assertEquals(result1,result2);
     }
 }

@@ -42,11 +42,24 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         organizationDto.setIsActive(Boolean.TRUE);
         organizationDto.setUuid(UUID.randomUUID());
         defaultOrganization = organizationDtoService.create(organizationDto);
+
     }
 
     @Test
     public void createUserTest() {
         CreateUserDto createUserDto = createUserDto();
+        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        UserDto result = response.getBody();
+        assertNotNull(result.getId());
+        assertEquals(result.getEmail(), createUserDto.getEmail());
+        assertEquals(result.getFirstName(), createUserDto.getFirstName());
+        assertEquals(result.getLastName(), createUserDto.getLastName());
+        assertNotNull(result.getRevisionVersion());
+    }
+
+    @Test
+    public void createUserTestCreatingOrgOnTheFly() {
+        CreateUserDto createUserDto = createUserDtoWithoutOrg();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
         UserDto result = response.getBody();
         assertNotNull(result.getId());
@@ -65,6 +78,12 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         user.setUuid(UUID.randomUUID());
         user.setPassword("12345");
         user.setOrganizationId(defaultOrganization.getId());
+        return user;
+    }
+
+    public CreateUserDto createUserDtoWithoutOrg() {
+        CreateUserDto user = createUserDto();
+        user.setOrganizationId(null);
         return user;
     }
 }
