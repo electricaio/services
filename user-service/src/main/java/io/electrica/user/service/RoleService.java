@@ -21,7 +21,7 @@ import java.util.Collections;
 public class RoleService extends AbstractService<Role> {
 
     private final RoleRepository roleRepository;
-    private static final String Default_Role = "Org-User";
+    private static final String DEFAULT_ROLE = "Org-User";
 
     @Inject
     public RoleService(RoleRepository roleRepository) {
@@ -34,8 +34,8 @@ public class RoleService extends AbstractService<Role> {
     }
 
     public Role findDefaultRole() {
-        return roleRepository.findOneByName(Default_Role)
-                .orElseThrow(() -> new BadRequestServiceException("role: " + Default_Role + " qnot found"));
+        return roleRepository.findOneByName(DEFAULT_ROLE)
+                .orElseThrow(() -> new BadRequestServiceException("role: " + DEFAULT_ROLE + " qnot found"));
     }
 
     @Override
@@ -67,6 +67,6 @@ public class RoleService extends AbstractService<Role> {
     }
 
     public String getDefaultRole() {
-        return Default_Role;
+        return DEFAULT_ROLE;
     }
 }
