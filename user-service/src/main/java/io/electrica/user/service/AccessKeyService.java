@@ -31,6 +31,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     @Override
     protected AccessKey executeCreate(AccessKey newEntity) {
+        //TODO: Dozer issue with long converting, get rid of it, when it's fixed
         long id = Long.parseLong(String.valueOf(newEntity.getUser().getId()));
         User user = userService.findById(id, true);
         newEntity.setUser(user);
