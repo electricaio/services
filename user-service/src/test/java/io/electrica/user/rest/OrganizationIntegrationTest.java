@@ -47,7 +47,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    @Transactional
     public void whenAddOrgWithSameNameThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
@@ -59,7 +58,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
 
     }
 
-    @Transactional
     @Test(expected = ConstraintViolationException.class)
     public void whenAddOrgWithoutNameThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
