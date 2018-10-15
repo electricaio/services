@@ -33,4 +33,8 @@ public class Organization extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @NotNull
+    @Column(nullable = false)
+    private Boolean isActive = false;
+
 }
