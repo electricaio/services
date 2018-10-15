@@ -41,25 +41,8 @@ public class UserToRoleService extends AbstractService<UserToRole> {
 
     @Override
     protected UserToRole executeCreate(UserToRole newEntity) {
-        User user = newEntity.getUser();
-        if (user != null) {
-            Long userId = user.getId();
-            if (userId != null) {
-                User touchedUser = userService.get().findById(userId, true);
-                newEntity.setUser(touchedUser);
-            }
-        }
-
-        Role role = newEntity.getRole();
-        if (role != null) {
-            String name = role.getName();
-            if (name != null) {
-                Role touchedRole = roleService.findByName(name);
-                newEntity.setRole(touchedRole);
-            }
-        }
-
-        return userToRoleRepository.save(newEntity);
+        // TODO : Take it as diff task
+        return null;
     }
 
     @Override
