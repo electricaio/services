@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,11 +18,11 @@ public class UserToRoleService extends AbstractService<UserToRole> {
 
     private final UserToRoleRepository userToRoleRepository;
     private final RoleService roleService;
-    private final Provider<UserService> userService;
+    private final UserService userService;
 
     @Inject
     public UserToRoleService(UserToRoleRepository userRoleRepository, RoleService roleService,
-                             Provider<UserService> userService) {
+                             UserService userService) {
         this.userToRoleRepository = userRoleRepository;
         this.roleService = roleService;
         this.userService = userService;
@@ -46,7 +45,7 @@ public class UserToRoleService extends AbstractService<UserToRole> {
         if (user != null) {
             Long userId = user.getId();
             if (userId != null) {
-                User touchedUser = userService.get().findById(userId, true);
+                User touchedUser = userService.findById(userId, true);
                 newEntity.setUser(touchedUser);
             }
         }
