@@ -1,5 +1,6 @@
 package io.electrica.user.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.Role;
@@ -19,11 +20,11 @@ public class UserToRoleService extends AbstractService<UserToRole> {
 
     private final UserToRoleRepository userToRoleRepository;
     private final RoleService roleService;
-    private final Provider<UserService> userService
+    private final Provider<UserService> userService;
 
     @Inject
     public UserToRoleService(UserToRoleRepository userRoleRepository, RoleService roleService,
-                             Provider<UserService>  userService) {
+                             Provider<UserService> userService) {
         this.userToRoleRepository = userRoleRepository;
         this.roleService = roleService;
         this.userService = userService;
@@ -41,25 +42,15 @@ public class UserToRoleService extends AbstractService<UserToRole> {
 
 
     @Override
+    @SuppressFBWarnings(
+            value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
+            justification = "Find a better way to buypass this")
     protected UserToRole executeCreate(UserToRole newEntity) {
-        User user = newEntity.getUser();
-        if (user != null) {
-            Long userId = user.getId();
-            if (userId != null) {
-                User touchedUser = userService.get().findById(userId, true);
-                newEntity.setUser(touchedUser);
-            }
-        }
-
-        Role role = newEntity.getRole();
-        if (role != null) {
-            String name = role.getName();
-            if (name != null) {
-                Role touchedRole = roleService.findByName(name);
-                newEntity.setRole(touchedRole);
-            }
-        }
-
+        User touchedUser = userService.get().findById(newEntity.getUser().getId(), true);
+        newEntity.setUser(touchedUser);
+        String name = newEntity.getRole().getName();
+        Role touchedRole = roleService.findByName(name);
+        newEntity.setRole(touchedRole);
         return userToRoleRepository.save(newEntity);
     }
 
