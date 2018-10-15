@@ -21,6 +21,7 @@ import java.util.Collections;
 public class RoleService extends AbstractService<Role> {
 
     private final RoleRepository roleRepository;
+    private static final String DEFAULT_ROLE = "Org-User";
 
     @Inject
     public RoleService(RoleRepository roleRepository) {
@@ -58,5 +59,9 @@ public class RoleService extends AbstractService<Role> {
     @Override
     protected Collection<EntityValidator<Role>> getValidators() {
         return Collections.emptyList();
+    }
+
+    public String getDefaultRole() {
+        return DEFAULT_ROLE;
     }
 }

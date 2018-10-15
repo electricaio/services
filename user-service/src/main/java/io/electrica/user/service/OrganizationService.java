@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Organization Service implementation class for managing roles.
@@ -24,6 +25,10 @@ public class OrganizationService extends AbstractService<Organization> {
     private final Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
     private OrganizationRepository organizationRepository;
+
+    public Optional<Organization> findByName(String name) {
+        return organizationRepository.findOneByNameIgnoreCase(name);
+    }
 
     @Inject
     public OrganizationService(OrganizationRepository organizationRepository) {
@@ -57,4 +62,6 @@ public class OrganizationService extends AbstractService<Organization> {
     protected JpaRepository<Organization, Long> getRepository() {
         return organizationRepository;
     }
+
+
 }

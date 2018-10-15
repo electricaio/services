@@ -1,5 +1,6 @@
 package io.electrica.user.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -30,13 +30,15 @@ public class UserService extends AbstractService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final OrganizationService organizationService;
+    private final UserToRoleService userToRoleService;
 
     @Inject
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       OrganizationService organizationService) {
+                       OrganizationService organizationService, UserToRoleService userToRoleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.organizationService = organizationService;
+        this.userToRoleService = userToRoleService;
     }
 
 
@@ -58,6 +60,7 @@ public class UserService extends AbstractService<User> {
             value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
             justification = "Find a better way to buypass this")
     protected User executeCreate(User newEntity) {
+
         if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
             throw new BadRequestServiceException("Organization Id cannot be null");
         }
@@ -66,6 +69,7 @@ public class UserService extends AbstractService<User> {
         newEntity.setOrganization(organization);
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         User user = userRepository.save(newEntity);
+        userToRoleService.addDefaultRoleToUser(user);
         log.debug("Created Information for User: {}", user);
         return user;
     }

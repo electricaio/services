@@ -108,6 +108,11 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         user.setOrganizationId(defaultOrganization.getId());
         return user;
     }
+    public CreateUserDto createUserDtoWithoutOrg() {
+        CreateUserDto user = createUserDto();
+        user.setOrganizationId(null);
+        return user;
+    }
 
     private AccessKeyDto createAccessKeyDto(UserDto user) {
         AccessKeyDto accessKeyDto = new AccessKeyDto();

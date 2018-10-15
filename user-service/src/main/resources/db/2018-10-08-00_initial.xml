@@ -699,4 +699,5 @@
             initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
             referencedColumnNames="id" referencedTableName="revinfo" />
     </changeSet>
+
 </databaseChangeLog>
