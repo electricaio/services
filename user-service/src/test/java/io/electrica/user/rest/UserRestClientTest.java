@@ -1,10 +1,13 @@
 package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
+import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.model.AccessKey;
+import io.electrica.user.repository.AccessKeyRepository;
 import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.UserService;
 import lombok.NoArgsConstructor;
@@ -28,15 +31,19 @@ import static org.junit.Assert.*;
 public class UserRestClientTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
+    private static final String TEST_ACCESS_KEY = "TestAccessKey";
 
     @Inject
-    OrganizationDtoService organizationDtoService;
+    private OrganizationDtoService organizationDtoService;
     @Inject
-    UserRestClient userRestClient;
+    private AccessKeyRepository accessKeyRepository;
+
     @Inject
-    UserService userService;
+    private UserRestClient userRestClient;
     @Inject
-    PasswordEncoder passwordEncoder;
+    private UserService userService;
+    @Inject
+    private PasswordEncoder passwordEncoder;
 
     private OrganizationDto defaultOrganization;
 
@@ -52,8 +59,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     @Test
     public void createUserTest() {
         CreateUserDto createUserDto = createUserDto();
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
-        UserDto result = response.getBody();
+        UserDto result = callCreateUser(createUserDto);
         assertNotNull(result.getId());
         assertEquals(result.getEmail(), createUserDto.getEmail());
         assertEquals(result.getFirstName(), createUserDto.getFirstName());
@@ -64,12 +70,32 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     @Test
     public void saltedPasswordTest() {
         CreateUserDto createUserDto = createUserDto();
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
-        UserDto result = response.getBody();
+        UserDto result = callCreateUser(createUserDto);
         User saltedUSer = userService.findById(result.getId(), false);
         Assert.assertNotEquals(saltedUSer.getSaltedPassword(), createUserDto.getPassword());
         assertTrue(passwordEncoder.matches(createUserDto.getPassword(), saltedUSer.getSaltedPassword()));
+    }
 
+    @Test
+    public void generateAccessKey() {
+        CreateUserDto createUserDto = createUserDto();
+        UserDto user = callCreateUser(createUserDto);
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AccessKeyDto result = userRestClient.generateAccessKey(accessKeyDto).getBody();
+
+        assertNotSame(accessKeyDto, result);
+        assertEquals(accessKeyDto.getKeyName(), TEST_ACCESS_KEY);
+        assertEquals(accessKeyDto.getUserId(), user.getId());
+        assertEquals(0L, (long) result.getRevisionVersion());
+        assertNull(result.getAccessKey());
+
+        AccessKey accessKey = accessKeyRepository.findById(result.getId()).get();
+        assertNotNull(accessKey.getAccessKey());
+    }
+
+    private UserDto callCreateUser(CreateUserDto createUserDto) {
+        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        return response.getBody();
     }
 
     public CreateUserDto createUserDto() {
@@ -83,4 +109,12 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         user.setOrganizationId(defaultOrganization.getId());
         return user;
     }
+
+    private AccessKeyDto createAccessKeyDto(UserDto user) {
+        AccessKeyDto accessKeyDto = new AccessKeyDto();
+        accessKeyDto.setKeyName(TEST_ACCESS_KEY);
+        accessKeyDto.setUserId(user.getId());
+        return accessKeyDto;
+    }
+
 }

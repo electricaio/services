@@ -21,14 +21,14 @@ public class UserRestClientImplTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
-    UserDtoService userDtoService;
+    private UserDtoService userDtoService;
 
     UserRestClient userRestClient;
 
     @Before
     public void setup() {
         userDtoService = mock(UserDtoService.class);
-        userRestClient = new UserRestClientImpl(userDtoService);
+        userRestClient = new UserRestClientImpl(userDtoService, null);
     }
 
     @Test
