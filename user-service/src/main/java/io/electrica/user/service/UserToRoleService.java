@@ -22,21 +22,21 @@ public class UserToRoleService extends AbstractService<UserToRole> {
     private final Provider<UserService> userService;
 
     @Inject
-    public UserToRoleService(UserToRoleRepository userRoleRepository, RoleService roleService, Provider<UserService> userService) {
+    public UserToRoleService(UserToRoleRepository userRoleRepository, RoleService roleService,
+                             Provider<UserService> userService) {
         this.userToRoleRepository = userRoleRepository;
         this.roleService = roleService;
         this.userService = userService;
     }
 
 
-    public void addDefaultRoleToUser(User user){
+    public void addDefaultRoleToUser(User user) {
         Role defaultRole = roleService.findDefaultRole();
         UserToRole userToRole = new UserToRole();
         userToRole.setRole(defaultRole);
         userToRole.setUser(user);
         userToRoleRepository.save(userToRole);
     }
-
 
 
     @Override

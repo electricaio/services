@@ -8,10 +8,7 @@ import io.electrica.user.service.OrganizationService;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.annotation.Commit;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -80,15 +77,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         organizationRepository.flush();
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void whenAddOrgWithoutIsActiveThrowException() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
-        organizationRestClient.create(organizationDto).getBody();
-        organizationRepository.flush();
-    }
-
     @Test
     public void whenCreateOrgTestNew() {
         String domain = "gmail.com";
@@ -99,8 +87,8 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void whenCreateOrgWithExistingDomainNameThrowsException() {
         String domain = "gmail.com";
-        Organization result1 = organizationService.createOrgFromDomain(domain);
-        Organization result2 = organizationService.createOrgFromDomain(domain);
+        organizationService.createOrgFromDomain(domain);
+        organizationService.createOrgFromDomain(domain);
         organizationRepository.flush();
     }
 
@@ -117,6 +105,6 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         Organization result1 = organizationService.getOrAdd(domain);
         Organization result2 = organizationService.getOrAdd(domain);
         organizationRepository.flush();
-        assertEquals(result1,result2);
+        assertEquals(result1, result2);
     }
 }

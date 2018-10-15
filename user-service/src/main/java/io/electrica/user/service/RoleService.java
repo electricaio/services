@@ -33,7 +33,7 @@ public class RoleService extends AbstractService<Role> {
                 .orElseThrow(() -> new BadRequestServiceException("role: " + name));
     }
 
-    public Role findDefaultRole(){
+    public Role findDefaultRole() {
         return roleRepository.findOneByName(Default_Role)
                 .orElseThrow(() -> new BadRequestServiceException("role: " + Default_Role + " qnot found"));
     }

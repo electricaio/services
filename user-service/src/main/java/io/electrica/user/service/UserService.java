@@ -1,10 +1,9 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.BadRequestServiceException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
-import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import javax.inject.Inject;
 import java.util.Arrays;

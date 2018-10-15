@@ -31,6 +31,7 @@ import static org.junit.Assert.*;
 public class UserRestClientTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
+    private static final String TEST_ACCESS_KEY = "TestAccessKey";
 
     @Inject
     private OrganizationDtoService organizationDtoService;
@@ -66,7 +67,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     @Test
-    public void createUserTestCreatingOrgOnTheFly() {
+    public void createUserTestWhileCreatingOrgOnTheFly() {
         CreateUserDto createUserDto = createUserDtoWithoutOrg();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
         UserDto result = response.getBody();
@@ -119,4 +120,17 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         user.setOrganizationId(defaultOrganization.getId());
         return user;
     }
+    public CreateUserDto createUserDtoWithoutOrg() {
+        CreateUserDto user = createUserDto();
+        user.setOrganizationId(null);
+        return user;
+    }
+
+    private AccessKeyDto createAccessKeyDto(UserDto user) {
+        AccessKeyDto accessKeyDto = new AccessKeyDto();
+        accessKeyDto.setKeyName(TEST_ACCESS_KEY);
+        accessKeyDto.setUserId(user.getId());
+        return accessKeyDto;
+    }
+
 }

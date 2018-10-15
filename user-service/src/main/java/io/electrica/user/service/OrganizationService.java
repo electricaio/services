@@ -39,10 +39,9 @@ public class OrganizationService extends AbstractService<Organization> {
     public Organization getOrAdd(final String email) {
         String domain = email.substring(email.indexOf("@") + 1);
         Optional<Organization> org = organizationRepository.findOneByName(domain);
-        if(org.isPresent()) {
+        if (org.isPresent()) {
             return org.get();
-        }
-        else {
+        } else {
             return createOrgFromDomain(domain);
         }
     }
@@ -67,10 +66,9 @@ public class OrganizationService extends AbstractService<Organization> {
         return organizationRepository;
     }
 
-    public  Organization createOrgFromDomain(String domain) {
+    public Organization createOrgFromDomain(String domain) {
         Organization org = new Organization();
         org.setName(domain);
-        org.setIsActive(Boolean.TRUE);
         org.setUuid(UUID.randomUUID());
         return organizationRepository.save(org);
     }
