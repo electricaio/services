@@ -39,7 +39,7 @@ public class OrganizationServiceTest extends TestBase {
     public void getOrAddOrgTestWhenOrgExists() {
         Organization organization = createNewOrg();
         String domain = "test@" + organization.getName();
-        when(organizationRepository.findOneByName(organization.getName())).thenReturn(Optional.of(organization));
+        when(organizationRepository.findOneByNameIgnoreCase(organization.getName())).thenReturn(Optional.of(organization));
         Organization actual = organizationService.createIfAbsent(domain);
         assertEquals(organization, actual);
     }
@@ -48,7 +48,7 @@ public class OrganizationServiceTest extends TestBase {
     public void getOrAddOrgTestWhenOrgNotExists() {
         Organization organization = createNewOrg();
         String domain = "test@" + organization.getName();
-        when(organizationRepository.findOneByName(organization.getName())).thenReturn(Optional.empty());
+        when(organizationRepository.findOneByNameIgnoreCase(organization.getName())).thenReturn(Optional.empty());
         when(organizationRepository.save(any())).thenReturn(organization);
         Organization actual = organizationService.createIfAbsent(domain);
         assertEquals(organization, actual);

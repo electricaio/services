@@ -699,12 +699,5 @@
             initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
             referencedColumnNames="id" referencedTableName="revinfo" />
     </changeSet>
-    <changeSet author="munish" id="load-default-roles">
-        <loadData encoding="UTF-8"
-                  file="db/data/roles.csv"
-                  separator=";"
-                  tableName="roles">
-        </loadData>
-    </changeSet>
 
 </databaseChangeLog>
