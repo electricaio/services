@@ -34,7 +34,7 @@ public class UserRestClientImplTest {
     @Test
     public void createUserTest() {
         CreateUserDto createUserDto = createEntityCreateUserDto();
-        when(userDtoService.createUser(createUserDto)).thenReturn(createUserDto);
+        when(userDtoService.create(createUserDto)).thenReturn(createUserDto);
         UserDto actualUser = userRestClient.createUser(createUserDto).getBody();
         assertEquals(createUserDto, actualUser);
     }
