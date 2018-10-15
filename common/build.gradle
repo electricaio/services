@@ -29,7 +29,8 @@ dependencies {
     compile "com.samskivert:jmustache"
     compile "org.apache.commons:commons-io:${commonsioVersion}"
 
-    testCompile project(':common-test')
+    testCompile 'junit:junit'
+    testCompile 'org.mockito:mockito-core'
 }
 
 dependencyManagement {
