@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -30,13 +29,13 @@ public class UserRestClientTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
-    @Autowired
+    @Inject
     OrganizationDtoService organizationDtoService;
-    @Autowired
+    @Inject
     UserRestClient userRestClient;
-    @Autowired
+    @Inject
     UserService userService;
-    @Autowired
+    @Inject
     PasswordEncoder passwordEncoder;
 
     private OrganizationDto defaultOrganization;
@@ -51,7 +50,6 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     @Test
-    @Transactional
     public void createUserTest() {
         CreateUserDto createUserDto = createUserDto();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
@@ -64,7 +62,6 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     @Test
-    @Transactional
     public void saltedPasswordTest() {
         CreateUserDto createUserDto = createUserDto();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
