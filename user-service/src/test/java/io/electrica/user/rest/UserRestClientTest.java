@@ -20,9 +20,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * UserRestClientTest to test rest client.
@@ -71,9 +69,9 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         CreateUserDto createUserDto = createUserDto();
         ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
         UserDto result = response.getBody();
-        User saltedUSer = userService.findById(result.getId(),false);
+        User saltedUSer = userService.findById(result.getId(), false);
         Assert.assertNotEquals(saltedUSer.getSaltedPassword(), createUserDto.getPassword());
-        assertTrue(passwordEncoder.matches(createUserDto.getPassword(),saltedUSer.getSaltedPassword()));
+        assertTrue(passwordEncoder.matches(createUserDto.getPassword(), saltedUSer.getSaltedPassword()));
 
     }
 
