@@ -1,5 +1,6 @@
 package io.electrica.common.context;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -35,21 +36,37 @@ public class IdentityContextHolder {
     }
 
     /**
-     * Execute some work with specified identity context.
+     * Set specified identity to thread-local context.
      */
-    public void executeWithContext(Identity identity, ContextWork work) throws IOException, ServletException {
+    @VisibleForTesting
+    public void setIdentity(Identity identity) {
         MDC.put("user_id", String.valueOf(identity.getUserId()));
         Identity old = threadLocal.get();
         if (old != null) {
             log.error("Identity context re-entrance!!! Was: {} New: {}", old, identity);
         }
         threadLocal.set(identity);
+    }
+
+    /**
+     * Execute some work with specified identity context.
+     */
+    public void executeWithContext(Identity identity, ContextWork work) throws IOException, ServletException {
+        setIdentity(identity);
         try {
             work.doWork();
         } finally {
-            MDC.remove("user_id");
-            threadLocal.remove();
+            clearIdentity();
         }
+    }
+
+    /**
+     * Clean up context for current thread.
+     */
+    @VisibleForTesting
+    public void clearIdentity() {
+        MDC.remove("user_id");
+        threadLocal.remove();
     }
 
     /**

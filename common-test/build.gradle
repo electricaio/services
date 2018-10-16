@@ -10,6 +10,8 @@ buildscript {
 apply plugin: 'io.spring.dependency-management'
 
 dependencies {
+    compile project(':common-jpa')
+    
     compile 'org.springframework.boot:spring-boot-starter-test'
 
     compile "javax.inject:javax.inject:${javaxInjectVersion}"
