@@ -2,7 +2,6 @@ package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
-import io.electrica.user.dto.UserDto;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +9,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;

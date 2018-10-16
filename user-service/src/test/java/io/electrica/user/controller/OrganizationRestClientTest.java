@@ -6,7 +6,6 @@ import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.rest.OrganizationRestClient;
 import io.electrica.user.rest.OrganizationRestClientImpl;
 import io.electrica.user.service.OrganizationDtoService;
-import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
 

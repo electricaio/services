@@ -5,8 +5,6 @@ import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
-import io.electrica.user.service.OrganizationDtoService;
-import io.electrica.user.service.UserService;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
