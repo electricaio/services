@@ -59,7 +59,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
         accessKeyRestClient.generateAccessKey(accessKeyDto1).getBody();
         accessKeyRestClient.generateAccessKey(accessKeyDto2).getBody();
-        List<AccessKeyDto> resultList = accessKeyRestClient.findAllNonArchivedByUser(accessKeyDto1).getBody();
+        List<AccessKeyDto> resultList = accessKeyRestClient.findAllNonArchivedByUser(user.getId()).getBody();
 
         assertEquals(2, resultList.size());
         assertCommonAccessKey(user, accessKeyDto1, resultList.get(0), false);

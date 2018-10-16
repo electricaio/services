@@ -12,6 +12,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
@@ -35,7 +36,9 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     }
 
     public AccessKey findByKeyAndUser(Long accessKeyId, Long userId) {
-        return acccessKeyRepo.findByKeyAndUser(accessKeyId, userId);
+        return acccessKeyRepo.findByKeyAndUser(accessKeyId, userId).
+                orElseThrow(() -> new BadRequestServiceException(
+                        String.format("No access key %s for user %s", accessKeyId, userId)));
     }
 
     @Override

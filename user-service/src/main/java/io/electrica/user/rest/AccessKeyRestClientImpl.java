@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,8 +33,7 @@ public class AccessKeyRestClientImpl implements AccessKeyRestClient {
     }
 
     @Override
-    public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@RequestBody AccessKeyDto accessKey) {
-        Long userId = accessKey.getUserId();
+    public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId) {
         logger.info("REST request to get access keys for user: {}", userId);
         return ResponseEntity.ok(accessKeyDtoService.findAllNonArchivedByUser(userId));
     }
