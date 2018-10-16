@@ -5,12 +5,14 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
@@ -27,6 +29,16 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     public AccessKeyService(AccessKeyRepository acccessKeyRepo, UserService userService) {
         this.acccessKeyRepo = acccessKeyRepo;
         this.userService = userService;
+    }
+
+    public List<AccessKey> findAllNonArchivedByUser(Long userId) {
+        return acccessKeyRepo.findAllNonArchivedByUser(userId);
+    }
+
+    public AccessKey findByKeyAndUser(Long accessKeyId, Long userId) {
+        return acccessKeyRepo.findByKeyAndUser(accessKeyId, userId).
+                orElseThrow(() -> new EntityNotFoundServiceException(
+                        String.format("No access key %s for user %s", accessKeyId, userId)));
     }
 
     @Override

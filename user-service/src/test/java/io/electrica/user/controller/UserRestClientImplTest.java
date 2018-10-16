@@ -28,7 +28,7 @@ public class UserRestClientImplTest {
     @Before
     public void setup() {
         userDtoService = mock(UserDtoService.class);
-        userRestClient = new UserRestClientImpl(userDtoService, null);
+        userRestClient = new UserRestClientImpl(userDtoService);
     }
 
     @Test
