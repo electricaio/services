@@ -22,13 +22,11 @@ public class OrganizationRestClientTest extends TestBase {
 
     OrganizationRestClient organizationRestClient;
     OrganizationDtoService organizationDtoService;
-    UserDtoService userDtoService;
 
     @Before
     public void setUp() {
         organizationDtoService = mock(OrganizationDtoService.class);
-        userDtoService = mock(UserDtoService.class);
-        organizationRestClient = new OrganizationRestClientImpl(organizationDtoService, userDtoService);
+        organizationRestClient = new OrganizationRestClientImpl(organizationDtoService);
     }
 
     @Test

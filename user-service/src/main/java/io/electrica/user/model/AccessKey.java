@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -25,7 +26,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Audited
-@Table(name = "access_keys")
+@Table(
+        name = "access_keys",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"keyName", "user_id"})
+)
 public class AccessKey extends AbstractEntity {
 
     @NotNull

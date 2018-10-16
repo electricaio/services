@@ -1,6 +1,7 @@
 package io.electrica.common.context;
 
 import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
 import org.springframework.security.core.Authentication;
 
 import java.util.Set;
@@ -32,6 +33,10 @@ public interface Identity {
     }
 
     default Authentication getAuthentication() {
+        throw new UnsupportedOperationException();
+    }
+
+    default Set<RoleType> getRoles() {
         throw new UnsupportedOperationException();
     }
 
