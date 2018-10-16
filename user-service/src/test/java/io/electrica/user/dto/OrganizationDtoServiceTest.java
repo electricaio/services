@@ -8,7 +8,6 @@ import io.electrica.user.service.OrganizationService;
 import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class OrganizationDtoServiceTest extends TestBase {
 
     OrganizationDtoService organizationDtoService;
-    OrganizationService organizationService;
+    OrganizationService organizationService;un
     UserDtoService userDtoService;
 
     Mapper mapper = mock(Mapper.class);
