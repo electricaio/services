@@ -18,13 +18,13 @@ import java.util.List;
  */
 public interface AccessKeyRestClient {
 
-    //TODO review dto usage as a parameter during implementing authn for rest cals
+    //TODO review parameters list during implementing authn for rest cals
     @PostMapping(V1 + "/access-keys")
     ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey);
 
     @GetMapping(V1 + "/users/{userId}/access-keys")
     ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId);
 
-    @GetMapping(V1 + "/access-keys/{accessKeyId}")
-    ResponseEntity<AccessKeyDto> getAccessKey(@RequestBody AccessKeyDto accessKey);
+    @GetMapping(V1 + "/access-keys/{accessKeyId}/users/{userId}")
+    ResponseEntity<AccessKeyDto> getAccessKey(@PathVariable Long accessKeyId, Long userId);
 }

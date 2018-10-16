@@ -71,7 +71,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         AccessKeyDto generatedKey = accessKeyRestClient.generateAccessKey(accessKeyDto).getBody();
-        AccessKeyDto result = accessKeyRestClient.getAccessKey(generatedKey).getBody();
+        AccessKeyDto result = accessKeyRestClient.getAccessKey(generatedKey.getId(), user.getId()).getBody();
 
         assertCommonAccessKey(user, accessKeyDto, result, true);
     }

@@ -39,9 +39,7 @@ public class AccessKeyRestClientImpl implements AccessKeyRestClient {
     }
 
     @Override
-    public ResponseEntity<AccessKeyDto> getAccessKey(@RequestBody AccessKeyDto accessKey) {
-        Long accessKeyId = accessKey.getId();
-        Long userId = accessKey.getUserId();
+    public ResponseEntity<AccessKeyDto> getAccessKey(@PathVariable Long accessKeyId, @PathVariable Long userId) {
         logger.info("REST request to get access key : {} for user: {}", accessKeyId, userId);
         return ResponseEntity.ok(accessKeyDtoService.findByKeyAndUser(accessKeyId, userId));
     }
