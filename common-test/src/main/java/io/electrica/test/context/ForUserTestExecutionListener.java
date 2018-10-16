@@ -24,6 +24,7 @@ public class ForUserTestExecutionListener extends AbstractTestExecutionListener 
             Identity identity = IdentityContextTestHelper.createIdentity(
                     annotation.userId(),
                     annotation.organizationId(),
+                    Arrays.stream(annotation.roles()).collect(Collectors.toSet()),
                     Arrays.stream(annotation.permissions()).collect(Collectors.toSet())
             );
             identityContextHolder.setIdentity(identity);

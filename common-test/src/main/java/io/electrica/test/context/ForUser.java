@@ -1,6 +1,7 @@
 package io.electrica.test.context;
 
 import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,6 +21,8 @@ public @interface ForUser {
     long userId() default DEFAULT_USER_ID;
 
     long organizationId() default DEFAULT_ORGANIZATION_ID;
+
+    RoleType[] roles() default {};
 
     PermissionType[] permissions() default {};
 
