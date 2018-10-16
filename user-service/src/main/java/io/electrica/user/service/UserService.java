@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * User Service implementation class for managing users.
@@ -78,6 +79,11 @@ public class UserService extends AbstractService<User> {
     protected void executeUpdate(User merged, User update) {
 
     }
+
+    public List<User> getUsersForOrg(Long orgId) {
+        return userRepository.findByOrganizationId(orgId);
+    }
+
 
     @Override
     protected JpaRepository<User, Long> getRepository() {

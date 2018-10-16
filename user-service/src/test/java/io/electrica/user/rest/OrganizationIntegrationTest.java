@@ -2,16 +2,15 @@ package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
-import io.electrica.user.repository.OrganizationRepository;
-import io.electrica.user.service.OrganizationService;
+import io.electrica.user.dto.UserDto;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -23,24 +22,14 @@ import static org.junit.Assert.assertNotNull;
 @NoArgsConstructor
 public class OrganizationIntegrationTest extends UserServiceApplicationTest {
 
-    @Inject
-    OrganizationRestClient organizationRestClient;
-
-    @Inject
-    OrganizationRepository organizationRepository;
-
-    @Inject
-    OrganizationService organizationService;
-
     @Before
     public void init() {
+        initBaseClass();
     }
 
     @Test
     public void createOrganizationTest() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
+        OrganizationDto organizationDto = createNewOrganization();
         OrganizationDto result = organizationRestClient.create(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
@@ -49,9 +38,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void whenAddOrgWithSameNameThrowException() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
+        OrganizationDto organizationDto = createNewOrganization();
         organizationRestClient.create(organizationDto);
         organizationRestClient.create(organizationDto);
         organizationRepository.flush();
@@ -74,5 +61,42 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         organizationDto.setUuid(null);
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();
+    }
+
+    @Test
+    public void getUsersForOrganizationTest() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        assertEquals(2, userDtos.size());
+        assertEquals(u1.getId(), userDtos.get(0).getId());
+        assertEquals(u2.getId(), userDtos.get(1).getId());
+    }
+
+    @Test
+    public void getUsersForOrganizationWithMultipleOrgsTest() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        OrganizationDto organizationDto = createAndSaveNewOrganization();
+        UserDto u3 = createUserDto();
+        u3.setOrganizationId(organizationDto.getId());
+        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        assertEquals(2, userDtos.size());
+        assertEquals(u1.getId(), userDtos.get(0).getId());
+        assertEquals(u2.getId(), userDtos.get(1).getId());
+    }
+
+    @Test
+    public void getUsersForOrganizationWithOrgNotExist() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(121212L).getBody();
+        assertEquals(0, userDtos.size());
+    }
+
+    @Test
+    public void getUsersForOrganizationWithNoUsers() {
+        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(defaultOrganization.getId()).getBody();
+        assertEquals(0, userDtos.size());
     }
 }

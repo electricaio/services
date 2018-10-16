@@ -3,24 +3,14 @@ package io.electrica.user.rest;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
-import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.User;
 import io.electrica.user.model.AccessKey;
-import io.electrica.user.repository.AccessKeyRepository;
-import io.electrica.user.service.OrganizationDtoService;
-import io.electrica.user.service.UserService;
+import io.electrica.user.model.User;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.inject.Inject;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -30,29 +20,13 @@ import static org.junit.Assert.*;
 @NoArgsConstructor
 public class UserRestClientTest extends UserServiceApplicationTest {
 
-    private static final String DEFAULT_EMAIL = "test@localhost.com";
+
     private static final String TEST_ACCESS_KEY = "TestAccessKey";
 
-    @Inject
-    private OrganizationDtoService organizationDtoService;
-    @Inject
-    private AccessKeyRepository accessKeyRepository;
-
-    @Inject
-    private UserRestClient userRestClient;
-    @Inject
-    private UserService userService;
-    @Inject
-    private PasswordEncoder passwordEncoder;
-
-    private OrganizationDto defaultOrganization;
 
     @Before
     public void init() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationDtoService.create(organizationDto);
+        initBaseClass();
     }
 
     @Test
@@ -97,22 +71,6 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         return response.getBody();
     }
 
-    public CreateUserDto createUserDto() {
-        long random = new Random().nextInt(10000);
-        CreateUserDto user = new CreateUserDto();
-        user.setEmail(DEFAULT_EMAIL + random);
-        user.setFirstName("FirstName" + random);
-        user.setLastName("LastName" + random);
-        user.setUuid(UUID.randomUUID());
-        user.setPassword("12345");
-        user.setOrganizationId(defaultOrganization.getId());
-        return user;
-    }
-    public CreateUserDto createUserDtoWithoutOrg() {
-        CreateUserDto user = createUserDto();
-        user.setOrganizationId(null);
-        return user;
-    }
 
     private AccessKeyDto createAccessKeyDto(UserDto user) {
         AccessKeyDto accessKeyDto = new AccessKeyDto();

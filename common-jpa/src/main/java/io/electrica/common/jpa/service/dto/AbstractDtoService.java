@@ -5,6 +5,8 @@ import io.electrica.common.jpa.model.CommonEntity;
 import io.electrica.common.jpa.service.AbstractService;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class AbstractDtoService<P extends CommonEntity, D> {
 
@@ -37,6 +39,13 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
 
     public D toDto(P entity) {
         return mapper.map(entity, getDtoClass());
+    }
+
+    public List<D> toDto(List<P> fromList) {
+        return fromList
+                .stream()
+                .map(from -> this.mapper.map(from, getDtoClass()))
+                .collect(Collectors.toList());
     }
 
     protected abstract AbstractService<P> getService();

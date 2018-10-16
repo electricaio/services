@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * User Dto Service implementation class for managing users.
@@ -31,6 +32,10 @@ public class UserDtoService extends AbstractDtoService<User, UserDto> {
         User newUser = userService.create(toEntity(user));
         UserDto userDto = toDto(newUser);
         return userDto;
+    }
+
+    public List<UserDto> getUsersForOrg(Long orgId) {
+        return toDto(userService.getUsersForOrg(orgId));
     }
 
     // TODO Once we founf workaround of Dozer library issue . We will remove it.
