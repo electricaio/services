@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class OrganizationDtoServiceTest extends TestBase {
 
     OrganizationDtoService organizationDtoService;
-    OrganizationService organizationService;un
+    OrganizationService organizationService;
     UserDtoService userDtoService;
 
     Mapper mapper = mock(Mapper.class);
