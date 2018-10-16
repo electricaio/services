@@ -62,41 +62,4 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         organizationRestClient.create(organizationDto).getBody();
         organizationRepository.flush();
     }
-
-    @Test
-    public void getUsersForOrganizationTest() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithMultipleOrgsTest() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        OrganizationDto organizationDto = createAndSaveNewOrganization();
-        UserDto u3 = createUserDto();
-        u3.setOrganizationId(organizationDto.getId());
-        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithOrgNotExist() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(121212L).getBody();
-        assertEquals(0, userDtos.size());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithNoUsers() {
-        List<UserDto> userDtos = organizationRestClient.getUsersForOrganization(defaultOrganization.getId()).getBody();
-        assertEquals(0, userDtos.size());
-    }
 }

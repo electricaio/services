@@ -19,7 +19,4 @@ public interface OrganizationRestClient {
     @PostMapping(PUBLIC + V1 + "/organizations")
     ResponseEntity<OrganizationDto> create(@RequestBody OrganizationDto organizationDto);
 
-    @PostMapping(PUBLIC + V1 + "/organizations/{id}/users")
-    ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long orgId);
-
 }

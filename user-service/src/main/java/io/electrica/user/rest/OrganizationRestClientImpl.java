@@ -23,11 +23,8 @@ public class OrganizationRestClientImpl implements OrganizationRestClient {
 
     private final OrganizationDtoService organizationDtoService;
 
-    private final UserDtoService userDtoService;
-
-    public OrganizationRestClientImpl(OrganizationDtoService organizationDtoService, UserDtoService userDtoService) {
+    public OrganizationRestClientImpl(OrganizationDtoService organizationDtoService) {
         this.organizationDtoService = organizationDtoService;
-        this.userDtoService = userDtoService;
     }
 
     @Override
@@ -35,12 +32,6 @@ public class OrganizationRestClientImpl implements OrganizationRestClient {
         logger.debug("REST request to save User : {}", organizationDto);
         OrganizationDto result = organizationDtoService.create(organizationDto);
         return ResponseEntity.ok(result);
-    }
-
-    @Override
-    public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long orgId) {
-        List<UserDto> users = userDtoService.getUsersForOrg(orgId);
-        return ResponseEntity.ok(users);
     }
 
 }
