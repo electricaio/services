@@ -3,6 +3,7 @@ package io.electrica.test;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUserTestExecutionListener;
 import io.electrica.test.context.IdentityContextTestHelper;
 import lombok.SneakyThrows;
@@ -23,8 +24,14 @@ public abstract class AbstractJpaApplicationTest extends AbstractTransactionalJU
     protected IdentityContextHolder identityContextHolder;
 
     @SneakyThrows
-    protected void executeForUser(long userId, long organizationId, Set<PermissionType> permissions, Runnable work) {
-        Identity identity = IdentityContextTestHelper.createIdentity(userId, organizationId, permissions);
+    protected void executeForUser(
+            long userId,
+            long organizationId,
+            Set<RoleType> roles,
+            Set<PermissionType> permissions,
+            Runnable work
+    ) {
+        Identity identity = IdentityContextTestHelper.createIdentity(userId, organizationId, roles, permissions);
         identityContextHolder.executeWithContext(identity, work::run);
     }
 

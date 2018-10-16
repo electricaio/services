@@ -3,6 +3,7 @@ package io.electrica.user;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUser;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,11 +28,12 @@ public class CommonTestModuleSupportTest extends UserServiceApplicationTest {
     }
 
     @Test
-    @ForUser(userId = 1, organizationId = 1, permissions = PermissionType.ActivateOrg)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.ActivateOrg)
     public void annotationIdentityContextTest() {
         Identity identity = identityContextHolder.getIdentity();
         assertEquals(1, identity.getUserId());
         assertEquals(1, identity.getOrganizationId());
+        assertEquals(EnumSet.of(RoleType.OrgUser), identity.getRoles());
         assertEquals(EnumSet.of(PermissionType.ActivateOrg), identity.getPermissions());
     }
 
@@ -43,11 +45,14 @@ public class CommonTestModuleSupportTest extends UserServiceApplicationTest {
 
     @Test
     public void closureIdentityContextTest() {
-        executeForUser(2, 2, EnumSet.of(PermissionType.AddPermission), () -> {
+        EnumSet<RoleType> expectedRoles = EnumSet.of(RoleType.SuperAdmin);
+        EnumSet<PermissionType> expectedPermissions = EnumSet.of(PermissionType.AddPermission);
+        executeForUser(2, 2, expectedRoles, expectedPermissions, () -> {
             Identity identity = identityContextHolder.getIdentity();
             assertEquals(2, identity.getUserId());
             assertEquals(2, identity.getOrganizationId());
-            assertEquals(EnumSet.of(PermissionType.AddPermission), identity.getPermissions());
+            assertEquals(expectedRoles, identity.getRoles());
+            assertEquals(expectedPermissions, identity.getPermissions());
         });
     }
 }
