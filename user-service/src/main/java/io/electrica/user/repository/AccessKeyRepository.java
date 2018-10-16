@@ -15,13 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccessKeyRepository extends JpaRepository<AccessKey, Long> {
 
-    @Query(value = "SELECT ak.* FROM access_keys ak WHERE ak.archived = FALSE and user_id = :userId",
-            nativeQuery = true)
+    @Query(value = "from AccessKey ak where ak.archived = FALSE and user_id = :userId")
     List<AccessKey> findAllNonArchivedByUser(@Param("userId") Long userId);
 
-    @Query(value = "SELECT ak.* FROM access_keys ak WHERE ak.archived = FALSE and ak.id = :accessKeyId" +
-            " and ak.user_id = :userId ORDER BY key_name ASC",
-            nativeQuery = true)
+    @Query(value = "from AccessKey ak where ak.archived = FALSE and ak.id = :accessKeyId" +
+            " and ak.user.id = :userId order by key_name ASC")
     AccessKey findByKeyAndUser(@Param("accessKeyId") Long accessKeyId, @Param("userId") Long userId);
 
 }

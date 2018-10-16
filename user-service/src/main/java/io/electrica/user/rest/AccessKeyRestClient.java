@@ -4,7 +4,6 @@ import io.electrica.user.dto.AccessKeyDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,12 +17,13 @@ import java.util.List;
  */
 public interface AccessKeyRestClient {
 
+    //TODO review dto usage as a parameter during implementing authn for rest cals
     @PostMapping(V1 + "/access-keys")
     ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey);
 
-    @GetMapping(V1 + "/access-keys/user/{userId}")
-    ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId);
+    @GetMapping(V1 + "/access-keys")
+    ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@RequestBody AccessKeyDto accessKey);
 
-    @GetMapping(V1 + "/access-keys/{accessKeyId}/user/{userId}")
-    ResponseEntity<AccessKeyDto> getAccessKey(@PathVariable Long accessKeyId, @PathVariable Long userId);
+    @GetMapping(V1 + "/access-keys/{accessKeyId}")
+    ResponseEntity<AccessKeyDto> getAccessKey(@RequestBody AccessKeyDto accessKey);
 }

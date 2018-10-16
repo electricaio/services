@@ -5,9 +5,6 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.AccessKey;
-import io.electrica.user.repository.AccessKeyRepository;
-import io.electrica.user.service.OrganizationDtoService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * UserRestClientTest to test rest client.
+ * AccessKeyClientTest to test rest client.
  */
 public class AccessKeyClientTest extends UserServiceApplicationTest {
 
@@ -30,10 +27,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
     private static final String TEST_ACCESS_KEY2 = "TestAccessKey2";
 
     @Inject
-    private OrganizationDtoService organizationDtoService;
-    @Inject
-    private AccessKeyRepository accessKeyRepository;
-
+    private OrganizationRestClient organizationRestClient;
     @Inject
     private AccessKeyRestClient accessKeyRestClient;
     @Inject
@@ -46,7 +40,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationDtoService.create(organizationDto);
+        defaultOrganization = organizationRestClient.create(organizationDto).getBody();
     }
 
     @Test
@@ -56,8 +50,6 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         AccessKeyDto result = accessKeyRestClient.generateAccessKey(accessKeyDto).getBody();
 
         assertCommonAccessKey(user, accessKeyDto, result, false);
-        AccessKey accessKey = accessKeyRepository.findById(result.getId()).get();
-        assertNotNull(accessKey.getAccessKey());
     }
 
     @Test
@@ -67,7 +59,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
         accessKeyRestClient.generateAccessKey(accessKeyDto1).getBody();
         accessKeyRestClient.generateAccessKey(accessKeyDto2).getBody();
-        List<AccessKeyDto> resultList = accessKeyRestClient.findAllNonArchivedByUser(user.getId()).getBody();
+        List<AccessKeyDto> resultList = accessKeyRestClient.findAllNonArchivedByUser(accessKeyDto1).getBody();
 
         assertEquals(2, resultList.size());
         assertCommonAccessKey(user, accessKeyDto1, resultList.get(0), false);
@@ -79,8 +71,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         AccessKeyDto generatedKey = accessKeyRestClient.generateAccessKey(accessKeyDto).getBody();
-        AccessKeyDto result = accessKeyRestClient.getAccessKey(generatedKey.getId(), generatedKey.getUserId()).
-                                                        getBody();
+        AccessKeyDto result = accessKeyRestClient.getAccessKey(generatedKey).getBody();
 
         assertCommonAccessKey(user, accessKeyDto, result, true);
     }
