@@ -92,22 +92,4 @@ public class UserControllerTest extends UserServiceApplicationTest {
         return response.getBody();
     }
 
-    public CreateUserDto createUserDto() {
-        long random = new Random().nextInt(10000);
-        CreateUserDto user = new CreateUserDto();
-        user.setEmail(DEFAULT_EMAIL + random);
-        user.setFirstName("FirstName" + random);
-        user.setLastName("LastName" + random);
-        user.setUuid(UUID.randomUUID());
-        user.setPassword("12345");
-        user.setOrganizationId(defaultOrganization.getId());
-        return user;
-    }
-
-    public CreateUserDto createUserDtoWithoutOrg() {
-        CreateUserDto user = createUserDto();
-        user.setOrganizationId(null);
-        return user;
-    }
-
 }
