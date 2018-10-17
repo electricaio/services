@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
