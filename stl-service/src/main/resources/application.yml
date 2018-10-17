@@ -6,4 +6,4 @@ spring:
     name: stl-service
   datasource:
     name: pool-to-stl
-    url: jdbc:postgresql://localhost:5432/stl
+    url: jdbc:postgresql://localhost:5432/stl_db
