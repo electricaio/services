@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * REST Client implementation test.
+ * Test class for user controller.
  */
 public class UserControllerImplTest {
 
@@ -23,7 +23,7 @@ public class UserControllerImplTest {
 
     private UserDtoService userDtoService;
 
-    UserController userController;
+    private UserController userController;
 
     @Before
     public void setup() {

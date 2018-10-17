@@ -5,25 +5,48 @@ import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.service.OrganizationDtoService;
+import io.electrica.user.service.UserService;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
+import javax.inject.Inject;
+import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 /**
- * UserController to test rest client.
+ * Functional tests for user controller.
  */
 @NoArgsConstructor
 public class UserFunctionalTest extends UserServiceApplicationTest {
 
+    private static final String DEFAULT_EMAIL = "test@localhost.com";
+
+    @Inject
+    private OrganizationDtoService organizationDtoService;
+
+    @Inject
+    private UserController userController;
+    @Inject
+    private UserService userService;
+    @Inject
+    private PasswordEncoder passwordEncoder;
+
+    private OrganizationDto defaultOrganization;
+
     @Before
     public void init() {
-        initBaseClass();
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setName("test" + new Date().getTime());
+        organizationDto.setUuid(UUID.randomUUID());
+        defaultOrganization = organizationDtoService.create(organizationDto);
     }
 
     @Test
@@ -46,47 +69,26 @@ public class UserFunctionalTest extends UserServiceApplicationTest {
         assertTrue(passwordEncoder.matches(createUserDto.getPassword(), saltedUSer.getSaltedPassword()));
     }
 
-    @Test
-    public void getUsersForOrganizationTest() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithMultipleOrgsTest() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        OrganizationDto organizationDto = createAndSaveNewOrganization();
-        UserDto u3 = createUserDto();
-        u3.setOrganizationId(organizationDto.getId());
-        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithOrgNotExist() {
-        UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userController.getUsersForOrganization(121212L).getBody();
-        assertEquals(0, userDtos.size());
-    }
-
-    @Test
-    public void getUsersForOrganizationWithNoUsers() {
-        List<UserDto> userDtos = userController.getUsersForOrganization(defaultOrganization.getId()).getBody();
-        assertEquals(0, userDtos.size());
-    }
-
     private UserDto callCreateUser(CreateUserDto createUserDto) {
         ResponseEntity<UserDto> response = userController.createUser(createUserDto);
         return response.getBody();
     }
 
+    public CreateUserDto createUserDto() {
+        long random = new Random().nextInt(10000);
+        CreateUserDto user = new CreateUserDto();
+        user.setEmail(DEFAULT_EMAIL + random);
+        user.setFirstName("FirstName" + random);
+        user.setLastName("LastName" + random);
+        user.setUuid(UUID.randomUUID());
+        user.setPassword("12345");
+        user.setOrganizationId(defaultOrganization.getId());
+        return user;
+    }
+    public CreateUserDto createUserDtoWithoutOrg() {
+        CreateUserDto user = createUserDto();
+        user.setOrganizationId(null);
+        return user;
+    }
 
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * REST Client implementation for Managing users..
+ * User controller implementation.
  */
 @RestController
 public class UserControllerImpl implements UserController {

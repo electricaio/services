@@ -13,7 +13,7 @@ import static io.electrica.common.rest.PathConstants.V1;
 import java.util.List;
 
 /**
- *  REST Client for Managing users.
+ * Access key controller for managing access keys.
  *
  */
 public interface AccessKeyController {

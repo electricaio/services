@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Integration test suit for Organization.
+ * Functional tests for organization controller.
  */
 @NoArgsConstructor
 public class OrganizationFunctionalTest extends UserServiceApplicationTest {

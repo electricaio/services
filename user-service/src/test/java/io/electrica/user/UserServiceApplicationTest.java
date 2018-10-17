@@ -7,6 +7,7 @@ import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.repository.AccessKeyRepository;
 import io.electrica.user.repository.OrganizationRepository;
+import io.electrica.user.rest.AccessKeyController;
 import io.electrica.user.rest.OrganizationController;
 import io.electrica.user.rest.UserController;
 import io.electrica.user.service.OrganizationDtoService;
@@ -29,6 +30,10 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
 
     @Inject
     protected OrganizationDtoService organizationDtoService;
+
+
+    @Inject
+    protected AccessKeyController accessKeyController;
 
     @Inject
     protected AccessKeyRepository accessKeyRepository;

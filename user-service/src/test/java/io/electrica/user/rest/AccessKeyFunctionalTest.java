@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
-import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +17,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * AccessKeyController to test rest client.
+ * Functional tests for access key controller.
  */
 public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
 
@@ -26,21 +25,12 @@ public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
     private static final String TEST_ACCESS_KEY = "TestAccessKey";
     private static final String TEST_ACCESS_KEY2 = "TestAccessKey2";
 
-    @Inject
-    private OrganizationController organizationRestClient;
-    @Inject
-    private AccessKeyController accessKeyController;
-    @Inject
-    private UserController userRestClient;
-
-    private OrganizationDto defaultOrganization;
-
     @Before
     public void init() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationRestClient.create(organizationDto).getBody();
+        defaultOrganization = organizationController.create(organizationDto).getBody();
     }
 
     @Test
@@ -77,12 +67,12 @@ public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
     }
 
     private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result,
-                                        boolean keyPresent) {
+                                       boolean keyPresent) {
         assertCommonAccessKey(user, accessKeyDto, result, keyPresent, TEST_ACCESS_KEY);
     }
 
-    private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result, 
-                                        boolean keyPresent, String keyName) {
+    private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result,
+                                       boolean keyPresent, String keyName) {
         assertNotSame(accessKeyDto, result);
         assertEquals(accessKeyDto.getKeyName(), keyName);
         assertEquals(accessKeyDto.getUserId(), user.getId());
@@ -96,7 +86,7 @@ public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
 
     private UserDto callCreateUser() {
         CreateUserDto createUserDto = createUserDto();
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        ResponseEntity<UserDto> response = userController.createUser(createUserDto);
         return response.getBody();
     }
 
