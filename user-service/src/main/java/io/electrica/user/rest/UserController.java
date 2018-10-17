@@ -22,7 +22,7 @@ public interface UserController {
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
     @GetMapping(V1 + "/users/{id}")
-    ResponseEntity<UserDto> getUser(@PathVariable Long userId);
+    ResponseEntity<UserDto> getUser(@PathVariable Long id);
 
     @PostMapping(V1 + "/organizations/{id}/users")
     ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id);
