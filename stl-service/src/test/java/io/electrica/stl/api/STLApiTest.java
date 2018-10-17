@@ -1,15 +1,15 @@
 package io.electrica.stl.api;
 
+import io.electrica.common.helper.ERNUtils;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
-import io.electrica.common.helper.ERNUtils;
 import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,14 +24,14 @@ public class STLApiTest extends AbstractDatabaseTest {
     @Test
     public void testCreateSTLWithSuccess() {
         //        setup
-        final String type = "Foundation";
-        createSTLType(type);
+        final STLType type = createSTLType("Foundation");;
+
 
         final CreateSTLDto dto = new CreateSTLDto();
         dto.setName("HackerRank");
         dto.setResource("Applications");
         dto.setNamespace("com.hackerrank");
-        dto.setType(type);
+        dto.setTypeId(type.getId());
         dto.setVersion("1.0");
 
 //        method
@@ -42,17 +42,16 @@ public class STLApiTest extends AbstractDatabaseTest {
 
         assertEquals(dto.getName(), actual.getName());
         assertEquals(dto.getNamespace(), actual.getNamespace());
-        assertEquals(type, actual.getType());
+        assertEquals(type.getId(), actual.getTypeId());
         final String expectedErn = "stl://hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertNotNull(actual.getRevisionVersion());
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testCreateSTLWithAlreadyExistingName() {
         //        setup
-        final String type = "Foundation";
-        createSTLType(type);
+        final STLType type = createSTLType("Foundation");;
 
         final String name = "HackerRank";
         final String resource = "Applications";
@@ -64,6 +63,7 @@ public class STLApiTest extends AbstractDatabaseTest {
         stl.setNamespace(namespace);
         stl.setVersion(version);
         stl.setErn(ern);
+        stl.setType(type);
 
         stlRepository.saveAndFlush(stl);
 
@@ -71,11 +71,12 @@ public class STLApiTest extends AbstractDatabaseTest {
         dto.setName(name);
         dto.setResource(resource);
         dto.setNamespace(namespace);
-        dto.setType(type);
+        dto.setTypeId(type.getId());
         dto.setVersion(version);
 
 //        method
         stlApi.create(dto);
+        stlRepository.flush();
     }
 
     @Test

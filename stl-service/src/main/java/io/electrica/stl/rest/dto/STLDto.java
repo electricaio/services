@@ -21,7 +21,7 @@ public class STLDto implements Serializable {
     @NotBlank
     @Max(255)
     @Mapping("type.name")
-    private String type;
+    private Long typeId;
 
     @NotNull
     @NotBlank
