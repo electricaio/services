@@ -1,6 +1,5 @@
 package io.electrica.user.dto;
 
-import com.github.dozermapper.core.Mapping;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +19,6 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
-    @Mapping("organization.id")
     private Long organizationId;
     private Long revisionVersion;
 

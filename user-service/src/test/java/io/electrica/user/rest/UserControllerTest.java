@@ -22,10 +22,10 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * Functional tests for user controller.
+ * Tests for user controller.
  */
 @NoArgsConstructor
-public class UserFunctionalTest extends UserServiceApplicationTest {
+public class UserControllerTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 

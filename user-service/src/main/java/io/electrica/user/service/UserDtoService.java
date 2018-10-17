@@ -2,16 +2,12 @@ package io.electrica.user.service;
 
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
-import io.electrica.user.dto.CreateUserDto;
+import io.electrica.common.security.RoleType;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * User Dto Service implementation class for managing users.
@@ -19,41 +15,21 @@ import java.util.List;
 @Component
 public class UserDtoService extends AbstractDtoService<User, UserDto> {
 
-    private static final Logger log = LoggerFactory.getLogger(UserDtoService.class);
-
     private final UserService userService;
+    private final UserToRoleService userToRoleService;
 
     @Inject
-    public UserDtoService(UserService userService) {
+    public UserDtoService(UserService userService, UserToRoleService userToRoleService) {
         this.userService = userService;
+        this.userToRoleService = userToRoleService;
     }
 
-    public UserDto createUser(CreateUserDto user) {
-        User newUser = userService.create(toEntity(user));
-        UserDto userDto = toDto(newUser);
-        return userDto;
-    }
-
-    public List<UserDto> getUsersForOrg(Long orgId) {
-        return toDto(userService.getUsersForOrg(orgId));
-    }
-
-    // TODO Once we founf workaround of Dozer library issue . We will remove it.
-    private User toEntity(CreateUserDto userDto) {
-        User user = new User();
-        user.setUuid(userDto.getUuid());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setOrganization(toEntity(userDto.getOrganizationId()));
-        user.setSaltedPassword(userDto.getPassword());
-        return user;
-    }
-
-    private Organization toEntity(Long organizationId) {
-        Organization org = new Organization();
-        org.setId(organizationId);
-        return org;
+    @Override
+    public UserDto create(UserDto dto) {
+        User user = userService.create(toEntity(dto));
+        // ToDo create all users with OrgUser role
+        userToRoleService.addRoleToUser(user, RoleType.OrgUser);
+        return toDto(user);
     }
 
     @Override

@@ -2,11 +2,13 @@ package io.electrica.user.rest;
 
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
+import io.electrica.user.repository.OrganizationRepository;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.UUID;
@@ -15,19 +17,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Functional tests for organization controller.
+ * Tests for organization controller.
  */
 @NoArgsConstructor
-public class OrganizationFunctionalTest extends UserServiceApplicationTest {
+public class OrganizationControllerTest extends UserServiceApplicationTest {
+
+    @Inject
+    private OrganizationController organizationController;
+
+    @Inject
+    private OrganizationRepository organizationRepository;
 
     @Before
     public void init() {
-        initBaseClass();
     }
 
     @Test
     public void createOrganizationTest() {
-        OrganizationDto organizationDto = createNewOrganization();
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setName("test" + new Date().getTime());
+        organizationDto.setUuid(UUID.randomUUID());
         OrganizationDto result = organizationController.create(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
@@ -36,7 +45,9 @@ public class OrganizationFunctionalTest extends UserServiceApplicationTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void whenAddOrgWithSameNameThrowException() {
-        OrganizationDto organizationDto = createNewOrganization();
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setName("test" + new Date().getTime());
+        organizationDto.setUuid(UUID.randomUUID());
         organizationController.create(organizationDto);
         organizationController.create(organizationDto);
         organizationRepository.flush();

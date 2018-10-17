@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractService<E extends CommonEntity> {
 
+    @PersistenceContext
+    protected EntityManager entityManager;
     @Inject
     private ContainerValidatorStorage containerValidatorStorage;
 
@@ -39,6 +43,10 @@ public abstract class AbstractService<E extends CommonEntity> {
                 "Id %d not found %s.", id,
                 hideArchived ? "(except archived)" : "(including archived)"
         ));
+    }
+
+    protected <T extends CommonEntity> T getReference(Class<T> type, long id) {
+        return entityManager.getReference(type, id);
     }
 
     @Transactional

@@ -12,7 +12,7 @@ import java.util.List;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
- * User controller for managing users.
+ *  User controller for managing users.
  */
 public interface UserController {
 

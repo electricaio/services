@@ -12,3 +12,6 @@ spring:
   datasource:
     name: pool-to-user-service
     url: jdbc:postgresql://127.0.0.1:5432/user_service
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5432/user_migration

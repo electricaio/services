@@ -1,15 +1,12 @@
 package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,22 +23,14 @@ import java.util.List;
 @Component
 public class UserService extends AbstractService<User> {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final OrganizationService organizationService;
-    private final UserToRoleService userToRoleService;
 
     @Inject
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       OrganizationService organizationService, UserToRoleService userToRoleService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.organizationService = organizationService;
-        this.userToRoleService = userToRoleService;
     }
-
 
     @Override
     protected Collection<String> getContainerValidators() {
@@ -57,27 +46,23 @@ public class UserService extends AbstractService<User> {
     }
 
     @Override
-    @SuppressFBWarnings(
-            value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
-            justification = "Find a better way to buypass this")
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     protected User executeCreate(User newEntity) {
-
-        if (newEntity.getOrganization() == null || newEntity.getOrganization().getId() == null) {
-            throw new BadRequestServiceException("Organization Id cannot be null");
+        Long organizationId = newEntity.getOrganization().getId();
+        if (organizationId != null) {
+            Organization organization = getReference(Organization.class, organizationId);
+            newEntity.setOrganization(organization);
+        } else {
+            throw new IllegalArgumentException("Required field: organization.id");
         }
-        Organization organization = organizationService.findById(newEntity.getOrganization().getId(),
-                false);
-        newEntity.setOrganization(organization);
+
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
-        User user = userRepository.save(newEntity);
-        userToRoleService.addDefaultRoleToUser(user);
-        log.debug("Created Information for User: {}", user);
-        return user;
+        return userRepository.save(newEntity);
     }
 
     @Override
     protected void executeUpdate(User merged, User update) {
-
+        throw new UnsupportedOperationException();
     }
 
     public List<User> getUsersForOrg(Long orgId) {

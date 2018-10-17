@@ -29,7 +29,7 @@ public class UserControllerImpl implements UserController {
     @Override
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createUserDto) {
         logger.debug("REST request to save User : {}", createUserDto);
-        UserDto result = userDtoService.createUser(createUserDto);
+        UserDto result = userDtoService.create(createUserDto);
         return ResponseEntity.ok(result);
     }
 
