@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
@@ -17,10 +16,10 @@ import static io.electrica.common.rest.PathConstants.V1;
  */
 public interface UserRestClient {
 
-    @PostMapping(PUBLIC + V1 + "/users")
+    @PostMapping(V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
-    @PostMapping(PUBLIC + V1 + "/users/organizations/{id}")
+    @PostMapping(V1 + "/users/organizations/{id}")
     ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id);
 
 }
