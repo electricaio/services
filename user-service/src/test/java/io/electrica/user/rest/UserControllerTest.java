@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
@@ -21,8 +22,6 @@ import static org.junit.Assert.*;
 @NoArgsConstructor
 public class UserControllerTest extends UserServiceApplicationTest {
 
-    private static final String DEFAULT_EMAIL = "test@localhost.com";
-
     @Before
     public void init() {
         initBaseClass();
@@ -41,11 +40,14 @@ public class UserControllerTest extends UserServiceApplicationTest {
 
     @Test
     public void getUserTest() {
-
         UserDto userDto = createAndSaveUser();
         UserDto searchUser = userController.getUser(userDto.getId()).getBody();
         assertEquals(userDto.getId(), searchUser.getId());
+    }
 
+    @Test(expected = EntityNotFoundServiceException.class)
+    public void getUserTestWithIdDontExist() {
+        userController.getUser(100L).getBody();
     }
 
     @Test
