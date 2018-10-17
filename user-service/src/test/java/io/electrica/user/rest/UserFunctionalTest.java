@@ -22,10 +22,10 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * UserRestClientTest to test rest client.
+ * UserController to test rest client.
  */
 @NoArgsConstructor
-public class UserRestClientTest extends UserServiceApplicationTest {
+public class UserFunctionalTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
@@ -33,7 +33,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     private OrganizationDtoService organizationDtoService;
 
     @Inject
-    private UserRestClient userRestClient;
+    private UserController userController;
     @Inject
     private UserService userService;
     @Inject
@@ -70,7 +70,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     }
 
     private UserDto callCreateUser(CreateUserDto createUserDto) {
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        ResponseEntity<UserDto> response = userController.createUser(createUserDto);
         return response.getBody();
     }
 

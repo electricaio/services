@@ -21,10 +21,10 @@ import static org.junit.Assert.assertNotNull;
  * Integration test suit for Organization.
  */
 @NoArgsConstructor
-public class OrganizationIntegrationTest extends UserServiceApplicationTest {
+public class OrganizationFunctionalTest extends UserServiceApplicationTest {
 
     @Inject
-    OrganizationRestClient organizationRestClient;
+    OrganizationController organizationController;
 
     @Inject
     OrganizationRepository organizationRepository;
@@ -41,7 +41,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        OrganizationDto result = organizationRestClient.create(organizationDto).getBody();
+        OrganizationDto result = organizationController.create(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
         assertEquals(organizationDto.getUuid(), result.getUuid());
@@ -52,8 +52,8 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        organizationRestClient.create(organizationDto);
-        organizationRestClient.create(organizationDto);
+        organizationController.create(organizationDto);
+        organizationController.create(organizationDto);
         organizationRepository.flush();
 
     }
@@ -63,7 +63,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName(null);
         organizationDto.setUuid(UUID.randomUUID());
-        organizationRestClient.create(organizationDto);
+        organizationController.create(organizationDto);
         organizationRepository.flush();
     }
 
@@ -72,7 +72,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(null);
-        organizationRestClient.create(organizationDto).getBody();
+        organizationController.create(organizationDto).getBody();
         organizationRepository.flush();
     }
 }
