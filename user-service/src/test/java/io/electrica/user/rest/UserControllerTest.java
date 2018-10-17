@@ -40,8 +40,12 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
-    public void getUserTest(){
-        
+    public void getUserTest() {
+
+        UserDto userDto = createAndSaveUser();
+        UserDto searchUser = userController.getUser(userDto.getId()).getBody();
+        assertEquals(userDto.getId(), searchUser.getId());
+
     }
 
     @Test

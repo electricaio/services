@@ -35,9 +35,10 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<UserDto> getUser(Long userId) {
-        UserDto userDto = userDtoService.findById(userId,false);
+        UserDto userDto = userDtoService.findById(userId, false);
         return ResponseEntity.ok(userDto);
     }
+
     @Override
     public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id) {
         List<UserDto> users = userDtoService.getUsersForOrg(id);
