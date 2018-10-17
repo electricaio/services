@@ -9,7 +9,7 @@ import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
- *  REST Client for Managing organizations.
+ *  Organization controller for managing organizations.
  *
  */
 public interface OrganizationController {

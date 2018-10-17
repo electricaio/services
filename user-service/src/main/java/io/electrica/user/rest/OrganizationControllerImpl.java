@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST Client implementation for Managing organizations..
+ * Organization controller implementation.
  */
 @RestController
 public class OrganizationControllerImpl implements OrganizationController {

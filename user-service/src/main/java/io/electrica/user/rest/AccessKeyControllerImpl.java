@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST Client implementation for Managing users..
+ * Access key controller implementation.
  */
 @RestController
 public class AccessKeyControllerImpl implements AccessKeyController {
