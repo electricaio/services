@@ -22,11 +22,11 @@ public class OrganizationControllerImpl implements OrganizationController {
         this.organizationDtoService = organizationDtoService;
     }
 
-
     @Override
     public ResponseEntity<OrganizationDto> create(@RequestBody OrganizationDto organizationDto) {
         logger.debug("REST request to save User : {}", organizationDto);
         OrganizationDto result = organizationDtoService.create(organizationDto);
         return ResponseEntity.ok(result);
     }
+
 }

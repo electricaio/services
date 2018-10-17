@@ -5,6 +5,7 @@ import io.electrica.user.TestBase;
 import io.electrica.user.model.Organization;
 import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.OrganizationService;
+import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,11 +21,14 @@ public class OrganizationDtoServiceTest extends TestBase {
 
     OrganizationDtoService organizationDtoService;
     OrganizationService organizationService;
+    UserDtoService userDtoService;
+
     Mapper mapper = mock(Mapper.class);
 
     @Before
     public void setUp() throws Exception {
         organizationService = mock(OrganizationService.class);
+        userDtoService = mock(UserDtoService.class);
         organizationDtoService = new OrganizationDtoService(organizationService);
         org.springframework.test.util.ReflectionTestUtils.setField(
                 organizationDtoService, "mapper", mapper

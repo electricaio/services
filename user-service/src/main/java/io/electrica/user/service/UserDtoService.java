@@ -8,6 +8,7 @@ import io.electrica.user.model.User;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * User Dto Service implementation class for managing users.
@@ -30,6 +31,10 @@ public class UserDtoService extends AbstractDtoService<User, UserDto> {
         // ToDo create all users with OrgUser role
         userToRoleService.addRoleToUser(user, RoleType.OrgUser);
         return toDto(user);
+    }
+
+    public List<UserDto> getUsersForOrg(Long orgId) {
+        return toDto(userService.getUsersForOrg(orgId));
     }
 
     @Override

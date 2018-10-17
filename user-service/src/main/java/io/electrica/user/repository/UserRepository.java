@@ -4,6 +4,8 @@ import io.electrica.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.OrderBy;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -13,4 +15,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByEmailIgnoreCase(String email);
+
+    @OrderBy("id ASC")
+    List<User> findByOrganizationId(long organizationId);
 }
