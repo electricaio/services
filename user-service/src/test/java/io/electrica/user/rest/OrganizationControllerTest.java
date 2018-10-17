@@ -17,10 +17,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Functional tests for organization controller.
+ * Tests for organization controller.
  */
 @NoArgsConstructor
-public class OrganizationFunctionalTest extends UserServiceApplicationTest {
+public class OrganizationControllerTest extends UserServiceApplicationTest {
 
     @Inject
     private OrganizationController organizationController;

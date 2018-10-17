@@ -18,9 +18,9 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * Functional tests for access key controller.
+ * Tests for access key controller.
  */
-public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
+public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
     private static final String TEST_ACCESS_KEY = "TestAccessKey";
