@@ -16,7 +16,7 @@ import java.util.List;
  *  REST Client for Managing users.
  *
  */
-public interface AccessKeyRestClient {
+public interface AccessKeyController {
 
     //TODO review parameters list during implementing authn for rest cals
     @PostMapping(V1 + "/access-keys")

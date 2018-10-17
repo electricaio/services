@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
  * REST Client implementation for Managing users..
  */
 @RestController
-public class UserRestClientImpl implements UserRestClient {
+public class UserControllerImpl implements UserController {
 
-    private final Logger logger = LoggerFactory.getLogger(UserRestClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
 
     private final UserDtoService userDtoService;
 
-    public UserRestClientImpl(UserDtoService userDtoService) {
+    public UserControllerImpl(UserDtoService userDtoService) {
         this.userDtoService = userDtoService;
     }
 
