@@ -27,7 +27,7 @@ public class Role extends AbstractEntity {
 
     @NotNull
     @Size(max = 255)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(length = 1023)
