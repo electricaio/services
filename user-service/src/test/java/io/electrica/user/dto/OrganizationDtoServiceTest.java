@@ -29,7 +29,7 @@ public class OrganizationDtoServiceTest extends TestBase {
     public void setUp() throws Exception {
         organizationService = mock(OrganizationService.class);
         userDtoService = mock(UserDtoService.class);
-        organizationDtoService = new OrganizationDtoService(organizationService, userDtoService);
+        organizationDtoService = new OrganizationDtoService(organizationService);
         org.springframework.test.util.ReflectionTestUtils.setField(
                 organizationDtoService, "mapper", mapper
         );
