@@ -19,6 +19,8 @@ dependencies {
 
     compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
 
+    compile 'org.flywaydb:flyway-core'
+
     compile "javax.inject:javax.inject:${javaxInjectVersion}"
     compile "com.google.code.findbugs:jsr305:${findbugsJsr305Version}"
     compile "com.google.code.findbugs:annotations:${findbugsAnnotationsVersion}"
