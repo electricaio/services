@@ -12,8 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -22,9 +20,6 @@ public class UserToRoleService extends AbstractService<UserToRole> {
 
     private final UserToRoleRepository userToRoleRepository;
     private final RoleService roleService;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Inject
     public UserToRoleService(UserToRoleRepository userRoleRepository, RoleService roleService) {
@@ -47,14 +42,18 @@ public class UserToRoleService extends AbstractService<UserToRole> {
     protected UserToRole executeCreate(UserToRole newEntity) {
         Long userId = newEntity.getUser().getId();
         if (userId != null) {
-            User touchedUser = entityManager.getReference(User.class, userId);
-            newEntity.setUser(touchedUser);
+            User user = getReference(User.class, userId);
+            newEntity.setUser(user);
+        } else {
+            throw new IllegalArgumentException("Required field: user.id");
         }
 
         RoleType roleType = newEntity.getRole().getType();
         if (roleType != null) {
-            Role touchedRole = roleService.findByType(roleType);
-            newEntity.setRole(touchedRole);
+            Role role = roleService.findByType(roleType);
+            newEntity.setRole(role);
+        } else {
+            throw new IllegalArgumentException("Required field: role.type");
         }
 
         return userToRoleRepository.save(newEntity);

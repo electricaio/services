@@ -13,6 +13,8 @@ import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.Arrays;
+
 public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements SpringJdbcMigration {
 
     private RoleRepository roleRepository;
@@ -98,13 +100,13 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
     }
 
     private void assignPermissionsToRole(Role role, Permission... permissions) {
-        for (Permission permission : permissions) {
-            RoleToPermission rp = new RoleToPermission();
-            rp.setRole(role);
-            rp.setPermission(permission);
-
-            roleToPermissionRepository.save(rp);
-        }
+        Arrays.stream(permissions)
+                .map(permission -> {
+                    RoleToPermission rp = new RoleToPermission();
+                    rp.setRole(role);
+                    rp.setPermission(permission);
+                    return rp;
+                }).forEach(rtp -> roleToPermissionRepository.save(rtp));
     }
 
     private Permission savePermission(PermissionType type, String name, String description) {

@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,9 +24,6 @@ public class UserService extends AbstractService<User> {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Inject
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -54,8 +49,10 @@ public class UserService extends AbstractService<User> {
     protected User executeCreate(User newEntity) {
         Long organizationId = newEntity.getOrganization().getId();
         if (organizationId != null) {
-            Organization touchedOrganization = entityManager.getReference(Organization.class, organizationId);
-            newEntity.setOrganization(touchedOrganization);
+            Organization organization = getReference(Organization.class, organizationId);
+            newEntity.setOrganization(organization);
+        } else {
+            throw new IllegalArgumentException("Required field: organization.id");
         }
 
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
