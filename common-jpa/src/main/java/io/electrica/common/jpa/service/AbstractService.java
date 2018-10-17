@@ -4,6 +4,7 @@ import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.helper.ValueCache;
 import io.electrica.common.jpa.model.CommonEntity;
+import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.ContainerValidatorStorage;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,8 +15,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -24,18 +24,16 @@ import java.util.stream.Collectors;
 public abstract class AbstractService<E extends CommonEntity> {
 
     @PersistenceContext
-    protected EntityManager entityManager;
+    private EntityManager entityManager;
     @Inject
     private ContainerValidatorStorage containerValidatorStorage;
 
-    private final ValueCache<List<EntityValidator<E>>> validators = new ValueCache<>(() -> {
-        List<EntityValidator<E>> result = new ArrayList<>();
-        result.addAll(getContainerValidators().stream()
+    private final ValueCache<EntityValidator<E>> chainValidator = new ValueCache<>(() -> {
+        List<EntityValidator<E>> validators = Arrays.stream(getContainerValidators())
                 .map((Function<String, EntityValidator<E>>) id -> containerValidatorStorage.get(id))
-                .collect(Collectors.toList())
-        );
-        result.addAll(getValidators());
-        return result;
+                .collect(Collectors.toList());
+        validators.add(getValidator());
+        return new EntityValidator.Chain<>(validators);
     });
 
     private static void throwEntityNotFound(long id, boolean hideArchived) {
@@ -45,7 +43,7 @@ public abstract class AbstractService<E extends CommonEntity> {
         ));
     }
 
-    protected <T extends CommonEntity> T getReference(Class<T> type, long id) {
+    protected <T extends CommonEntity> T getReference(Class<T> type, Long id) {
         return entityManager.getReference(type, id);
     }
 
@@ -73,7 +71,7 @@ public abstract class AbstractService<E extends CommonEntity> {
         }
 
         // validation
-        validators.get().forEach(v -> v.validateCreate(newEntity));
+        chainValidator.get().validateCreate(newEntity);
         if (validator != null) {
             validator.validateCreate(newEntity);
         }
@@ -81,9 +79,17 @@ public abstract class AbstractService<E extends CommonEntity> {
         return executeCreate(newEntity);
     }
 
-    protected abstract Collection<String> getContainerValidators();
+    protected String[] getContainerValidators() {
+        return new String[]{
+                ContainerEntityValidator.TRIMMED_STRINGS,
+                ContainerEntityValidator.AVOID_EMTPY_STRINGS
+        };
+    }
 
-    protected abstract Collection<EntityValidator<E>> getValidators();
+    @SuppressWarnings("unchecked")
+    protected EntityValidator<E> getValidator() {
+        return (EntityValidator<E>) EntityValidator.NOP;
+    }
 
     protected abstract E executeCreate(E newEntity);
 
@@ -109,7 +115,7 @@ public abstract class AbstractService<E extends CommonEntity> {
         }
 
         // validation
-        validators.get().forEach(v -> v.validateUpdate(merged, update));
+        chainValidator.get().validateUpdate(merged, update);
         if (validator != null) {
             validator.validateUpdate(merged, update);
         }

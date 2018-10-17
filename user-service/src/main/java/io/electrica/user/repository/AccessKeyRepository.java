@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccessKeyRepository extends JpaRepository<AccessKey, Long> {
 
-    @Query(value = "from AccessKey ak where ak.archived = FALSE and ak.user.id = :userId order by ak.keyName ASC")
+    @Query(value = "from AccessKey ak where ak.archived = FALSE and ak.user.id = :userId order by ak.name ASC")
     List<AccessKey> findAllNonArchivedByUser(@Param("userId") Long userId);
 
     @Query(value = "from AccessKey ak where ak.archived = FALSE and ak.id = :accessKeyId and ak.user.id = :userId")

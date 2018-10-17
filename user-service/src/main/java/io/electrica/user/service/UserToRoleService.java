@@ -1,7 +1,6 @@
 package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.common.security.RoleType;
@@ -13,8 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserToRoleService extends AbstractService<UserToRole> {
@@ -42,18 +41,39 @@ public class UserToRoleService extends AbstractService<UserToRole> {
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     protected UserToRole executeCreate(UserToRole newEntity) {
         Long userId = newEntity.getUser().getId();
-        RoleType roleType = newEntity.getRole().getType();
-        if (userId == null || roleType == null) {
-            throw new BadRequestServiceException("Required fields: 'user.id' and 'role.type'");
-        }
-
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
 
+        RoleType roleType = newEntity.getRole().getType();
         Role role = roleService.findByType(roleType);
         newEntity.setRole(role);
 
         return userToRoleRepository.save(newEntity);
+    }
+
+    @Override
+    protected EntityValidator<UserToRole> getValidator() {
+        return create -> {
+            List<String> required = new ArrayList<>();
+
+            User user = create.getUser();
+            if (user == null) {
+                required.add("user");
+            } else if (user.getId() == null) {
+                required.add("user.id");
+            }
+
+            Role role = create.getRole();
+            if (role == null) {
+                required.add("role");
+            } else if (role.getType() == null) {
+                required.add("role.type");
+            }
+
+            if (!required.isEmpty()) {
+                throw new IllegalArgumentException("Required fields: " + String.join(", ", required));
+            }
+        };
     }
 
     @Override
@@ -62,13 +82,8 @@ public class UserToRoleService extends AbstractService<UserToRole> {
     }
 
     @Override
-    protected Collection<String> getContainerValidators() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    protected Collection<EntityValidator<UserToRole>> getValidators() {
-        return Collections.emptyList();
+    protected String[] getContainerValidators() {
+        return new String[]{};
     }
 
     @Override
