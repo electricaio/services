@@ -1,9 +1,10 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.BadRequestServiceException;
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
+import io.electrica.common.security.RoleType;
 import io.electrica.user.model.Role;
 import io.electrica.user.repository.RoleRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,16 +22,15 @@ import java.util.Collections;
 public class RoleService extends AbstractService<Role> {
 
     private final RoleRepository roleRepository;
-    private static final String DEFAULT_ROLE = "Org-User";
 
     @Inject
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
-    public Role findByName(String name) {
-        return roleRepository.findOneByName(name)
-                .orElseThrow(() -> new BadRequestServiceException("role: " + name));
+    public Role findByType(RoleType type) {
+        return roleRepository.findOneByType(type)
+                .orElseThrow(() -> new EntityNotFoundServiceException("Role with type: " + type));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RoleService extends AbstractService<Role> {
 
     @Override
     protected void executeUpdate(Role merged, Role update) {
-        merged.setName(update.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -61,7 +61,4 @@ public class RoleService extends AbstractService<Role> {
         return Collections.emptyList();
     }
 
-    public String getDefaultRole() {
-        return DEFAULT_ROLE;
-    }
 }
