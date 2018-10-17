@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  * REST Client implementation for Managing users..
  */
 @RestController
-public class AccessKeyRestClientImpl implements AccessKeyRestClient {
+public class AccessKeyControllerImpl implements AccessKeyController {
 
-    private final Logger logger = LoggerFactory.getLogger(AccessKeyRestClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AccessKeyControllerImpl.class);
 
     private final AccessKeyDtoService accessKeyDtoService;
 
-    public AccessKeyRestClientImpl(AccessKeyDtoService accessKeyDtoService) {
+    public AccessKeyControllerImpl(AccessKeyDtoService accessKeyDtoService) {
         this.accessKeyDtoService = accessKeyDtoService;
     }
 

@@ -14,7 +14,7 @@ import static io.electrica.common.rest.PathConstants.V1;
 /**
  * REST Client for Managing users.
  */
-public interface UserRestClient {
+public interface UserController {
 
     @PostMapping(V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);

@@ -1,0 +1,545 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="hikolay (generated)" id="1539688033071-1">
+        <createSequence sequenceName="access_key_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-2">
+        <createSequence sequenceName="organization_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-3">
+        <createSequence sequenceName="permission_categories_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-4">
+        <createSequence sequenceName="permission_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-5">
+        <createSequence sequenceName="revinfo_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-6">
+        <createSequence sequenceName="role_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-7">
+        <createSequence sequenceName="role_to_permission_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-8">
+        <createSequence sequenceName="user_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-9">
+        <createSequence sequenceName="user_to_role_id_seq" startValue="1000"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-10">
+        <createTable tableName="access_keys">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="key_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-11">
+        <createTable tableName="access_keys_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="access_key" type="VARCHAR(255)"/>
+            <column name="access_key_mod" type="BOOLEAN"/>
+            <column name="key_name" type="VARCHAR(255)"/>
+            <column name="key_name_mod" type="BOOLEAN"/>
+            <column name="user_id" type="BIGINT"/>
+            <column name="user_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-12">
+        <createTable tableName="organizations">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-13">
+        <createTable tableName="organizations_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+            <column name="uuid" type="UUID"/>
+            <column name="uuid_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-14">
+        <createTable tableName="permission_categories">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-15">
+        <createTable tableName="permission_categories_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="category_mod" type="BOOLEAN"/>
+            <column name="permission_id" type="BIGINT"/>
+            <column name="permission_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-16">
+        <createTable tableName="permissions">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(1023)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-17">
+        <createTable tableName="permissions_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="description" type="VARCHAR(1023)"/>
+            <column name="description_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-18">
+        <createTable tableName="revchanges">
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entityname" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-19">
+        <createTable tableName="revinfo">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-20">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(1023)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-21">
+        <createTable tableName="roles_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="description" type="VARCHAR(1023)"/>
+            <column name="description_mod" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="name_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-22">
+        <createTable tableName="roles_to_permissions_map">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-23">
+        <createTable tableName="roles_to_permissions_map_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="permission_id" type="BIGINT"/>
+            <column name="permission_mod" type="BOOLEAN"/>
+            <column name="role_id" type="BIGINT"/>
+            <column name="role_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-24">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salted_password" type="VARCHAR(127)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-25">
+        <createTable tableName="users_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="email_mod" type="BOOLEAN"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="first_name_mod" type="BOOLEAN"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="last_name_mod" type="BOOLEAN"/>
+            <column name="salted_password" type="VARCHAR(127)"/>
+            <column name="salted_password_mod" type="BOOLEAN"/>
+            <column name="uuid" type="UUID"/>
+            <column name="uuid_mod" type="BOOLEAN"/>
+            <column name="organization_id" type="BIGINT"/>
+            <column name="organization_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-26">
+        <createTable tableName="users_to_roles_map">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revision_version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-27">
+        <createTable tableName="users_to_roles_map_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="revend" type="BIGINT"/>
+            <column name="revend_tstmp" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="archived_mod" type="BOOLEAN"/>
+            <column name="revision_version" type="BIGINT"/>
+            <column name="revision_version_mod" type="BOOLEAN"/>
+            <column name="role_id" type="BIGINT"/>
+            <column name="role_mod" type="BOOLEAN"/>
+            <column name="user_id" type="BIGINT"/>
+            <column name="user_mod" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-28">
+        <addPrimaryKey columnNames="id, rev" constraintName="access_keys_aud_pkey" tableName="access_keys_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-29">
+        <addPrimaryKey columnNames="id" constraintName="access_keys_pkey" tableName="access_keys"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-30">
+        <addPrimaryKey columnNames="id, rev" constraintName="organizations_aud_pkey" tableName="organizations_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-31">
+        <addPrimaryKey columnNames="id" constraintName="organizations_pkey" tableName="organizations"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-32">
+        <addPrimaryKey columnNames="id, rev" constraintName="permission_categories_aud_pkey" tableName="permission_categories_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-33">
+        <addPrimaryKey columnNames="id" constraintName="permission_categories_pkey" tableName="permission_categories"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-34">
+        <addPrimaryKey columnNames="id, rev" constraintName="permissions_aud_pkey" tableName="permissions_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-35">
+        <addPrimaryKey columnNames="id" constraintName="permissions_pkey" tableName="permissions"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-36">
+        <addPrimaryKey columnNames="id" constraintName="revinfo_pkey" tableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-37">
+        <addPrimaryKey columnNames="id, rev" constraintName="roles_aud_pkey" tableName="roles_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-38">
+        <addPrimaryKey columnNames="id" constraintName="roles_pkey" tableName="roles"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-39">
+        <addPrimaryKey columnNames="id, rev" constraintName="roles_to_permissions_map_aud_pkey" tableName="roles_to_permissions_map_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-40">
+        <addPrimaryKey columnNames="id" constraintName="roles_to_permissions_map_pkey" tableName="roles_to_permissions_map"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-41">
+        <addPrimaryKey columnNames="id, rev" constraintName="users_aud_pkey" tableName="users_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-42">
+        <addPrimaryKey columnNames="id" constraintName="users_pkey" tableName="users"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-43">
+        <addPrimaryKey columnNames="id, rev" constraintName="users_to_roles_map_aud_pkey" tableName="users_to_roles_map_aud"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-44">
+        <addPrimaryKey columnNames="id" constraintName="users_to_roles_map_pkey" tableName="users_to_roles_map"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-45">
+        <addUniqueConstraint columnNames="email" constraintName="uk_6dotkott2kjsp8vw4d0m25fb7" tableName="users"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-46">
+        <addUniqueConstraint columnNames="uuid" constraintName="uk_6km2m9i3vjuy36rnvkgj1l61s" tableName="users"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-47">
+        <addUniqueConstraint columnNames="category" constraintName="uk_8v6wtkug694o0ikvcplksiirl" tableName="permission_categories"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-48">
+        <addUniqueConstraint columnNames="uuid" constraintName="uk_jqb3882o0pak77hc5xln2wlg1" tableName="organizations"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-49">
+        <addUniqueConstraint columnNames="name" constraintName="uk_ofx66keruapi6vyqpv6f2or37" tableName="roles"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-50">
+        <addUniqueConstraint columnNames="name" constraintName="uk_p9pbw3flq9hkay8hdx3ypsldy" tableName="organizations"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-51">
+        <addUniqueConstraint columnNames="name" constraintName="uk_pnvtwliis6p05pn6i3ndjrqt2" tableName="permissions"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-52">
+        <addUniqueConstraint columnNames="key_name, user_id" constraintName="ukcigebupgsqlbywgabjnse4fm1" tableName="access_keys"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-53">
+        <addUniqueConstraint columnNames="role_id, permission_id" constraintName="ukovyhaxj34b432m22rvywhubwb" tableName="roles_to_permissions_map"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-54">
+        <addUniqueConstraint columnNames="user_id, role_id" constraintName="ukt33vxm3ctwgam68h1x158tvpk" tableName="users_to_roles_map"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-55">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="roles_to_permissions_map_aud" constraintName="fk18pkgel3ypphyjjpb43e1dg8k" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-56">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="roles_to_permissions_map_aud" constraintName="fk3nem8nwldlc0g7ttgce50rvli" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-57">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="users_to_roles_map_aud" constraintName="fk46njq6fm0o66j8n0ur9fkbacn" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-58">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="roles_aud" constraintName="fk9ge4qh7wogccqw9p68nbxhq5s" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-59">
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="permission_categories" constraintName="fk9ielw64fb2ls6ln3mdij6affe" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="permissions"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-60">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="revchanges" constraintName="fk9m2hkxrk7o2k0n7tm5qx949s1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-61">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="permissions_aud" constraintName="fkbcjh1knyfnk51nv2cllrct4iw" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-62">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="users_aud" constraintName="fkc4vk4tui2la36415jpgm9leoq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-63">
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="roles_to_permissions_map" constraintName="fkc6svqrad8khfijsdndojx1rt0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="permissions"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-64">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="users_aud" constraintName="fkcqbcwiebsa2dy3bxv1ybbwsk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-65">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="organizations_aud" constraintName="fkfxeq0lp5j0m5ftym4oq5xo2yq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-66">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="access_keys_aud" constraintName="fkgq8khhgovyto8rcs91viaj8ky" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-67">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="users_to_roles_map_aud" constraintName="fkh9fqkoci6jrmuskx7sjcvckd0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-68">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="permission_categories_aud" constraintName="fkib8pij3u3h3i8681tbfm8uqnw" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-69">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="access_keys_aud" constraintName="fklio27gbhgc2kqi6skit6vm3qa" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-70">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_to_roles_map" constraintName="fkmxxed1v71um529ihd28b164fi" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-71">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="organizations_aud" constraintName="fknh88pmnqymqwfpaijxkpcgm3y" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-72">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="users_to_roles_map" constraintName="fko3ikcbwfko3fisaihmpnqlc1b" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-73">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="permissions_aud" constraintName="fko6mo76tmu5d3xnk09rmmsdln" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-74">
+        <addForeignKeyConstraint baseColumnNames="revend" baseTableName="permission_categories_aud" constraintName="fkpdfglt2glgr45mmjv1ey38a9v" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-75">
+        <addForeignKeyConstraint baseColumnNames="organization_id" baseTableName="users" constraintName="fkqpugllwvyv37klq7ft9m8aqxk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organizations"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-76">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="access_keys" constraintName="fksjh3o5d1kms37ifcj9n7ymiac" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-77">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="roles_aud" constraintName="fkt0mnl3rej2p0h9gxnbalf2kdd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="hikolay (generated)" id="1539688033071-78">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="roles_to_permissions_map" constraintName="fktqohlhs30n0pxbcf2avwr0s4l" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+</databaseChangeLog>

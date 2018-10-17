@@ -7,8 +7,8 @@ import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.repository.AccessKeyRepository;
 import io.electrica.user.repository.OrganizationRepository;
-import io.electrica.user.rest.OrganizationRestClient;
-import io.electrica.user.rest.UserRestClient;
+import io.electrica.user.rest.OrganizationController;
+import io.electrica.user.rest.UserController;
 import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.OrganizationService;
 import io.electrica.user.service.UserService;
@@ -34,7 +34,7 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     protected AccessKeyRepository accessKeyRepository;
 
     @Inject
-    protected UserRestClient userRestClient;
+    protected UserController userController;
 
     @Inject
     protected UserService userService;
@@ -43,7 +43,7 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     protected PasswordEncoder passwordEncoder;
 
     @Inject
-    protected OrganizationRestClient organizationRestClient;
+    protected OrganizationController organizationController;
 
     @Inject
     protected OrganizationRepository organizationRepository;
@@ -78,12 +78,12 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     }
 
     public UserDto createAndSaveUser() {
-        return userRestClient.createUser(createUserDto()).getBody();
+        return userController.createUser(createUserDto()).getBody();
     }
 
     public OrganizationDto createAndSaveNewOrganization() {
 
-        return organizationRestClient.create(createNewOrganization()).getBody();
+        return organizationController.create(createNewOrganization()).getBody();
     }
 
     public OrganizationDto createNewOrganization() {

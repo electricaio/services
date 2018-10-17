@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * UserRestClientTest to test rest client.
+ * UserController to test rest client.
  */
 @NoArgsConstructor
-public class UserRestClientTest extends UserServiceApplicationTest {
+public class UserFunctionalTest extends UserServiceApplicationTest {
 
     @Before
     public void init() {
@@ -50,7 +50,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     public void getUsersForOrganizationTest() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
         assertEquals(2, userDtos.size());
         assertEquals(u1.getId(), userDtos.get(0).getId());
         assertEquals(u2.getId(), userDtos.get(1).getId());
@@ -63,7 +63,7 @@ public class UserRestClientTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = createAndSaveNewOrganization();
         UserDto u3 = createUserDto();
         u3.setOrganizationId(organizationDto.getId());
-        List<UserDto> userDtos = userRestClient.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
         assertEquals(2, userDtos.size());
         assertEquals(u1.getId(), userDtos.get(0).getId());
         assertEquals(u2.getId(), userDtos.get(1).getId());
@@ -73,18 +73,18 @@ public class UserRestClientTest extends UserServiceApplicationTest {
     public void getUsersForOrganizationWithOrgNotExist() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userRestClient.getUsersForOrganization(121212L).getBody();
+        List<UserDto> userDtos = userController.getUsersForOrganization(121212L).getBody();
         assertEquals(0, userDtos.size());
     }
 
     @Test
     public void getUsersForOrganizationWithNoUsers() {
-        List<UserDto> userDtos = userRestClient.getUsersForOrganization(defaultOrganization.getId()).getBody();
+        List<UserDto> userDtos = userController.getUsersForOrganization(defaultOrganization.getId()).getBody();
         assertEquals(0, userDtos.size());
     }
 
     private UserDto callCreateUser(CreateUserDto createUserDto) {
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
+        ResponseEntity<UserDto> response = userController.createUser(createUserDto);
         return response.getBody();
     }
 
