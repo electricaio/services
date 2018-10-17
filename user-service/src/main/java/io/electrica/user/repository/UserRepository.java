@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.OrderBy;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,5 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = "userToRoles.role.roleToPermissions.permission")
     Optional<User> findOneById(Long id);
+
+    @OrderBy("id ASC")
+    List<User> findByOrganizationId(long organizationId);
 
 }

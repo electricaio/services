@@ -74,6 +74,11 @@ public class UserService extends AbstractService<User> {
         throw new UnsupportedOperationException();
     }
 
+    public List<User> getUsersForOrg(Long orgId) {
+        return userRepository.findByOrganizationId(orgId);
+    }
+
+
     @Override
     protected JpaRepository<User, Long> getRepository() {
         return userRepository;
