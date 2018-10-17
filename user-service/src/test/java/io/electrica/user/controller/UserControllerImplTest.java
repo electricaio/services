@@ -3,8 +3,8 @@ package io.electrica.user.controller;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
-import io.electrica.user.rest.UserRestClient;
-import io.electrica.user.rest.UserRestClientImpl;
+import io.electrica.user.rest.UserController;
+import io.electrica.user.rest.UserControllerImpl;
 import io.electrica.user.service.UserDtoService;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,27 +15,27 @@ import static org.mockito.Mockito.when;
 
 
 /**
- * REST Client implementation test.
+ * Test class for user controller.
  */
-public class UserRestClientImplTest {
+public class UserControllerImplTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
     private UserDtoService userDtoService;
 
-    UserRestClient userRestClient;
+    private UserController userController;
 
     @Before
     public void setup() {
         userDtoService = mock(UserDtoService.class);
-        userRestClient = new UserRestClientImpl(userDtoService);
+        userController = new UserControllerImpl(userDtoService);
     }
 
     @Test
     public void createUserTest() {
         CreateUserDto createUserDto = createEntityCreateUserDto();
         when(userDtoService.create(createUserDto)).thenReturn(createUserDto);
-        UserDto actualUser = userRestClient.createUser(createUserDto).getBody();
+        UserDto actualUser = userController.createUser(createUserDto).getBody();
         assertEquals(createUserDto, actualUser);
     }
 

@@ -18,20 +18,20 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * AccessKeyClientTest to test rest client.
+ * Tests for access key controller.
  */
-public class AccessKeyClientTest extends UserServiceApplicationTest {
+public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
     private static final String DEFAULT_EMAIL = "test@localhost.com";
     private static final String TEST_ACCESS_KEY = "TestAccessKey";
     private static final String TEST_ACCESS_KEY2 = "TestAccessKey2";
 
     @Inject
-    private OrganizationRestClient organizationRestClient;
+    private OrganizationController organizationRestClient;
     @Inject
-    private AccessKeyRestClient accessKeyRestClient;
+    private AccessKeyController accessKeyController;
     @Inject
-    private UserRestClient userRestClient;
+    private UserController userRestClient;
 
     private OrganizationDto defaultOrganization;
 
@@ -47,7 +47,7 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
     public void generateAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
-        AccessKeyDto result = accessKeyRestClient.generateAccessKey(accessKeyDto).getBody();
+        AccessKeyDto result = accessKeyController.generateAccessKey(accessKeyDto).getBody();
 
         assertCommonAccessKey(user, accessKeyDto, result, false);
     }
@@ -57,9 +57,9 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
-        accessKeyRestClient.generateAccessKey(accessKeyDto1).getBody();
-        accessKeyRestClient.generateAccessKey(accessKeyDto2).getBody();
-        List<AccessKeyDto> resultList = accessKeyRestClient.findAllNonArchivedByUser(user.getId()).getBody();
+        accessKeyController.generateAccessKey(accessKeyDto1).getBody();
+        accessKeyController.generateAccessKey(accessKeyDto2).getBody();
+        List<AccessKeyDto> resultList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
 
         assertEquals(2, resultList.size());
         assertCommonAccessKey(user, accessKeyDto1, resultList.get(0), false);
@@ -70,8 +70,8 @@ public class AccessKeyClientTest extends UserServiceApplicationTest {
     public void getAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
-        AccessKeyDto generatedKey = accessKeyRestClient.generateAccessKey(accessKeyDto).getBody();
-        AccessKeyDto result = accessKeyRestClient.getAccessKey(generatedKey.getId(), user.getId()).getBody();
+        AccessKeyDto generatedKey = accessKeyController.generateAccessKey(accessKeyDto).getBody();
+        AccessKeyDto result = accessKeyController.getAccessKey(generatedKey.getId(), user.getId()).getBody();
 
         assertCommonAccessKey(user, accessKeyDto, result, true);
     }

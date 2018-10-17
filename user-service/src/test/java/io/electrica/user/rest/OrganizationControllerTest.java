@@ -3,7 +3,6 @@ package io.electrica.user.rest;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.repository.OrganizationRepository;
-import io.electrica.user.service.OrganizationService;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,19 +17,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Integration test suit for Organization.
+ * Tests for organization controller.
  */
 @NoArgsConstructor
-public class OrganizationIntegrationTest extends UserServiceApplicationTest {
+public class OrganizationControllerTest extends UserServiceApplicationTest {
 
     @Inject
-    OrganizationRestClient organizationRestClient;
+    private OrganizationController organizationController;
 
     @Inject
-    OrganizationRepository organizationRepository;
-
-    @Inject
-    OrganizationService organizationService;
+    private OrganizationRepository organizationRepository;
 
     @Before
     public void init() {
@@ -41,7 +37,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        OrganizationDto result = organizationRestClient.create(organizationDto).getBody();
+        OrganizationDto result = organizationController.create(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
         assertEquals(organizationDto.getUuid(), result.getUuid());
@@ -52,8 +48,8 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        organizationRestClient.create(organizationDto);
-        organizationRestClient.create(organizationDto);
+        organizationController.create(organizationDto);
+        organizationController.create(organizationDto);
         organizationRepository.flush();
 
     }
@@ -63,7 +59,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName(null);
         organizationDto.setUuid(UUID.randomUUID());
-        organizationRestClient.create(organizationDto);
+        organizationController.create(organizationDto);
         organizationRepository.flush();
     }
 
@@ -72,7 +68,7 @@ public class OrganizationIntegrationTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(null);
-        organizationRestClient.create(organizationDto).getBody();
+        organizationController.create(organizationDto).getBody();
         organizationRepository.flush();
     }
 }

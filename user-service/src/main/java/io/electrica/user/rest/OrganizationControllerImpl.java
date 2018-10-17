@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST Client implementation for Managing organizations..
+ * Organization controller implementation.
  */
 @RestController
-public class OrganizationRestClientImpl implements OrganizationRestClient {
+public class OrganizationControllerImpl implements OrganizationController {
 
-    private final Logger logger = LoggerFactory.getLogger(OrganizationRestClientImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(OrganizationControllerImpl.class);
 
     private final OrganizationDtoService organizationDtoService;
 
-    public OrganizationRestClientImpl(OrganizationDtoService organizationDtoService) {
+    public OrganizationControllerImpl(OrganizationDtoService organizationDtoService) {
         this.organizationDtoService = organizationDtoService;
     }
 
