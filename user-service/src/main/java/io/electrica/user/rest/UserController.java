@@ -10,7 +10,7 @@ import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
- *  REST Client for Managing users.
+ *  User controller for managing users.
  *
  */
 public interface UserController {

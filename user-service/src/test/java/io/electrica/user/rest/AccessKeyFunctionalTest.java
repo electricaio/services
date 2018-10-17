@@ -18,7 +18,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * AccessKeyController to test rest client.
+ * Functional tests for access key controller.
  */
 public class AccessKeyFunctionalTest extends UserServiceApplicationTest {
 

@@ -15,12 +15,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test class for Organization Rest Controller.
+ * Test class for organization controller.
  */
 public class OrganizationControllerImplTest extends TestBase {
 
-    OrganizationController organizationController;
-    OrganizationDtoService organizationDtoService;
+    private OrganizationController organizationController;
+    private OrganizationDtoService organizationDtoService;
 
     @Before
     public void setUp() {

@@ -22,7 +22,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * UserController to test rest client.
+ * Functional tests for user controller.
  */
 @NoArgsConstructor
 public class UserFunctionalTest extends UserServiceApplicationTest {

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST Client implementation for Managing users..
+ * User controller implementation.
  */
 @RestController
 public class UserControllerImpl implements UserController {
