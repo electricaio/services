@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
@@ -16,7 +17,7 @@ import static io.electrica.common.rest.PathConstants.V1;
  */
 public interface UserController {
 
-    @PostMapping(V1 + "/users")
+    @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
     @PostMapping(V1 + "/users/organizations/{id}")

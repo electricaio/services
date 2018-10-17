@@ -44,7 +44,7 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
     public List<D> toDto(List<P> fromList) {
         return fromList
                 .stream()
-                .map(from -> this.mapper.map(from, getDtoClass()))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
