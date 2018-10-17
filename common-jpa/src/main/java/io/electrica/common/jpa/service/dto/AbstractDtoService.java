@@ -11,7 +11,7 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
     @Inject
     protected Mapper mapper;
 
-    public D findById(int id, boolean hideArchived) {
+    public D findById(long id, boolean hideArchived) {
         return toDto(getService().findById(id, hideArchived));
     }
 

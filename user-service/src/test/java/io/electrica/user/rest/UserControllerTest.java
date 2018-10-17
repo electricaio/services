@@ -61,6 +61,11 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    public void getUserTest(){
+        
+    }
+
+    @Test
     public void saltedPasswordTest() {
         CreateUserDto createUserDto = createUserDto();
         UserDto result = callCreateUser(createUserDto);
