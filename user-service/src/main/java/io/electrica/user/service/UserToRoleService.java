@@ -1,6 +1,7 @@
 package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.common.security.RoleType;
@@ -41,20 +42,16 @@ public class UserToRoleService extends AbstractService<UserToRole> {
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     protected UserToRole executeCreate(UserToRole newEntity) {
         Long userId = newEntity.getUser().getId();
-        if (userId != null) {
-            User user = getReference(User.class, userId);
-            newEntity.setUser(user);
-        } else {
-            throw new IllegalArgumentException("Required field: user.id");
+        RoleType roleType = newEntity.getRole().getType();
+        if (userId == null || roleType == null) {
+            throw new BadRequestServiceException("Required fields: 'user.id' and 'role.type'");
         }
 
-        RoleType roleType = newEntity.getRole().getType();
-        if (roleType != null) {
-            Role role = roleService.findByType(roleType);
-            newEntity.setRole(role);
-        } else {
-            throw new IllegalArgumentException("Required field: role.type");
-        }
+        User user = getReference(User.class, userId);
+        newEntity.setUser(user);
+
+        Role role = roleService.findByType(roleType);
+        newEntity.setRole(role);
 
         return userToRoleRepository.save(newEntity);
     }
