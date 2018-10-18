@@ -4,13 +4,12 @@ import io.electrica.common.helper.AuthorityHelper;
 import io.electrica.common.helper.TokenHelper;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Set;
-
-import static org.mockito.Mockito.*;
 
 public class IdentityContextTestHelper {
 
@@ -23,15 +22,9 @@ public class IdentityContextTestHelper {
             Set<RoleType> roles,
             Set<PermissionType> permissions
     ) {
-        Authentication authentication = mock(Authentication.class);
-
         String tokenUsername = TokenHelper.buildIdTokenUsername(userId);
-        when(authentication.getName()).thenReturn(tokenUsername);
-
         Collection<? extends GrantedAuthority> authorities =
                 AuthorityHelper.buildGrantedAuthorities(organizationId, roles, permissions);
-        doReturn(authorities).when(authentication).getAuthorities();
-
-        return authentication;
+        return new UsernamePasswordAuthenticationToken(tokenUsername, null, authorities);
     }
 }
