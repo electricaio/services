@@ -1,30 +1,22 @@
 package io.electrica.user.rest;
 
-import io.electrica.common.context.Identity;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUser;
-import io.electrica.test.context.IdentityContextTestHelper;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.Permission;
 import io.electrica.user.model.User;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 
-import javax.annotation.Resource;
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -80,7 +72,41 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationTest() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        assertEquals(2, userDtos.size());
+        assertEquals(u1.getId(), userDtos.get(0).getId());
+        assertEquals(u2.getId(), userDtos.get(1).getId());
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.ReadOrg)
+    public void getUsersForOrganizationTestWithUserInSameOrg() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        assertEquals(2, userDtos.size());
+        assertEquals(u1.getId(), userDtos.get(0).getId());
+        assertEquals(u2.getId(), userDtos.get(1).getId());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 2, roles = RoleType.OrgUser, permissions = PermissionType.ReadOrg)
+    public void getUsersForOrganizationTestWithUserInDiffOrg() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+        assertEquals(2, userDtos.size());
+        assertEquals(u1.getId(), userDtos.get(0).getId());
+        assertEquals(u2.getId(), userDtos.get(1).getId());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.AddPermission)
+    public void getUsersForOrganizationTestWithWrongPermission() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
         List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
@@ -104,6 +130,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithOrgNotExist() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
@@ -112,6 +139,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithNoUsers() {
         List<UserDto> userDtos = userController.getUsersForOrganization(defaultOrganization.getId()).getBody();
         assertEquals(0, userDtos.size());

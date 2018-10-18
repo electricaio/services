@@ -6,7 +6,11 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Most common method security set used for custom security verifications.
@@ -25,8 +29,31 @@ public class CommonExpressionMethods {
         return new IdentityImpl(authentication);
     }
 
-    public boolean isRoleType(String roleType){
+    public boolean isRoleType(String roleType) {
         return getIdentity().getRoles().contains(RoleType.valueOf(roleType));
+    }
+
+    public boolean haveOneOfRoles(String... roles) {
+        boolean result = false;
+        for(String role : roles){
+            if(getIdentity().getRoles().contains(RoleType.valueOf(role))){
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public boolean isSuperAdmin (String roleType){
+        return RoleType.valueOf(roleType)== RoleType.SuperAdmin;
+    }
+
+    public boolean isOrgAdmin (String roleType){
+        return RoleType.valueOf(roleType)== RoleType.OrgAdmin;
+    }
+
+    public boolean isOrgUser (String roleType){
+        return RoleType.valueOf(roleType)== RoleType.OrgUser;
     }
 
     public boolean isUser(Long userId) {
@@ -34,7 +61,7 @@ public class CommonExpressionMethods {
     }
 
     public boolean hasPermission(String permission) {
-        return getIdentity().getPermissions().contains(PermissionType.parse(permission));
+        return getIdentity().getPermissions().contains(PermissionType.valueOf(permission));
     }
 
     public boolean userInOrganization(Long organizationId) {
