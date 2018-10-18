@@ -19,9 +19,8 @@ import javax.inject.Inject;
 
 /**
  * AuthorizationServerConfigurerAdapterImpl provides implementation for Authorization server.
- *
+ * <p>
  * Please see the {@link io.electrica.UserServiceApplication} class for true identity
- *
  */
 @Component
 @EnableAuthorizationServer
@@ -54,7 +53,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .withClient("frontend")
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds("auth")
+                .resourceIds("auth-service", "stl-service")
                 .scopes("create", "get", "update", "delete", "do")
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
