@@ -13,14 +13,14 @@ import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
- *  User controller for managing users.
+ * User controller for managing users.
  */
 public interface UserController {
 
     @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
-    @PostMapping(V1 + "/organizations/{id}/users")
-    ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id);
+    @PostMapping(V1 + "/organizations/{organizationId}/users")
+    ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long organizationId);
 
 }
