@@ -1,6 +1,5 @@
 package io.electrica.user.dto;
 
-import com.github.dozermapper.core.Mapping;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateUserDto extends UserDto {
 
-    @Mapping("saltedPassword")
     private String password;
 
     public CreateUserDto(UserDto userDto, String password) {
