@@ -1,14 +1,18 @@
 package io.electrica.user.model;
 
-import io.electrica.common.jpa.model.AbstractEntity;
-import io.electrica.common.security.RoleType;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.envers.Audited;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import io.electrica.common.security.RoleType;
+import org.hibernate.envers.Audited;
+
+import io.electrica.common.jpa.model.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Role.
@@ -32,5 +36,11 @@ public class Role extends AbstractEntity {
 
     @Column(length = 1023)
     private String description;
+
+    @OneToMany(mappedBy = "role")
+    private Set<UserToRole> userToRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "role")
+    private Set<RoleToPermission> roleToPermissions = new HashSet<>();
 
 }
