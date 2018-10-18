@@ -6,7 +6,6 @@ import io.electrica.user.repository.OrganizationRepository;
 import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -37,19 +36,21 @@ public class OrganizationControllerTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        OrganizationDto result = organizationController.create(organizationDto).getBody();
+        OrganizationDto result = organizationController.createIfAbsent(organizationDto).getBody();
         assertNotNull(result);
         assertEquals(organizationDto.getName(), result.getName());
         assertEquals(organizationDto.getUuid(), result.getUuid());
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void whenAddOrgWithSameNameThrowException() {
+    @Test(expected = ConstraintViolationException.class)
+    public void whenAddOrgWithTooLongNameThrowException() {
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
+        organizationDto.setName("" +
+                "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345" +
+                "678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901" +
+                "2345678901234567890123456789012345678901234567890123456789012345");
         organizationDto.setUuid(UUID.randomUUID());
-        organizationController.create(organizationDto);
-        organizationController.create(organizationDto);
+        organizationController.createIfAbsent(organizationDto);
         organizationRepository.flush();
 
     }
@@ -59,7 +60,7 @@ public class OrganizationControllerTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName(null);
         organizationDto.setUuid(UUID.randomUUID());
-        organizationController.create(organizationDto);
+        organizationController.createIfAbsent(organizationDto);
         organizationRepository.flush();
     }
 
@@ -68,7 +69,7 @@ public class OrganizationControllerTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(null);
-        organizationController.create(organizationDto).getBody();
+        organizationController.createIfAbsent(organizationDto).getBody();
         organizationRepository.flush();
     }
 }

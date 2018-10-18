@@ -40,7 +40,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationRestClient.create(organizationDto).getBody();
+        defaultOrganization = organizationRestClient.createIfAbsent(organizationDto).getBody();
     }
 
     @Test

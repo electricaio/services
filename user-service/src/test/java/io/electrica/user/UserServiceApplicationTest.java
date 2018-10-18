@@ -5,13 +5,9 @@ import io.electrica.test.AbstractJpaApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.repository.AccessKeyRepository;
-import io.electrica.user.repository.OrganizationRepository;
-import io.electrica.user.rest.AccessKeyController;
 import io.electrica.user.rest.OrganizationController;
 import io.electrica.user.rest.UserController;
 import io.electrica.user.service.OrganizationDtoService;
-import io.electrica.user.service.OrganizationService;
 import io.electrica.user.service.UserService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,13 +27,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     @Inject
     protected OrganizationDtoService organizationDtoService;
 
-
-    @Inject
-    protected AccessKeyController accessKeyController;
-
-    @Inject
-    protected AccessKeyRepository accessKeyRepository;
-
     @Inject
     protected UserController userController;
 
@@ -49,12 +38,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
 
     @Inject
     protected OrganizationController organizationController;
-
-    @Inject
-    protected OrganizationRepository organizationRepository;
-
-    @Inject
-    protected OrganizationService organizationService;
 
 
     protected void initBaseClass() {
@@ -88,7 +71,7 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
 
     public OrganizationDto createAndSaveNewOrganization() {
 
-        return organizationController.create(createNewOrganization()).getBody();
+        return organizationController.createIfAbsent(createNewOrganization()).getBody();
     }
 
     public OrganizationDto createNewOrganization() {
