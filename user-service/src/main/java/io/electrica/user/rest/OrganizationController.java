@@ -9,11 +9,11 @@ import static io.electrica.common.rest.PathConstants.PUBLIC;
 import static io.electrica.common.rest.PathConstants.V1;
 
 /**
- *  Organization controller for managing organizations.
- *
+ * Organization controller for managing organizations.
  */
 public interface OrganizationController {
+
     @PostMapping(PUBLIC + V1 + "/organizations")
-    ResponseEntity<OrganizationDto> create(@RequestBody OrganizationDto organizationDto);
+    ResponseEntity<OrganizationDto> createIfAbsent(@RequestBody OrganizationDto organizationDto);
 
 }

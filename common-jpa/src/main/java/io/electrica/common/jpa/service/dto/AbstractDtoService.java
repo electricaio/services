@@ -13,7 +13,7 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
     @Inject
     protected Mapper mapper;
 
-    public D findById(int id, boolean hideArchived) {
+    public D findById(long id, boolean hideArchived) {
         return toDto(getService().findById(id, hideArchived));
     }
 
@@ -21,15 +21,15 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
         return toDto(getService().create(toEntity(persistentDto)));
     }
 
-    public D update(int id, D persistentDto) {
+    public D update(long id, D persistentDto) {
         return toDto(getService().update(id, toEntity(persistentDto)));
     }
 
-    public D archive(int id) {
+    public D archive(long id) {
         return toDto(getService().archive(id));
     }
 
-    public D unArchive(int id) {
+    public D unArchive(long id) {
         return toDto(getService().unArchive(id));
     }
 

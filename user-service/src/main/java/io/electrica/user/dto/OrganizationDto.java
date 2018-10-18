@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -13,15 +16,14 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class OrganizationDto {
-    private Long id;
-    private UUID uuid;
-    private String name;
-    private Long revisionVersion;
 
-    public OrganizationDto(Long id, UUID uuid, String name, Long revisionVersion) {
-        this.id = id;
-        this.uuid = uuid;
-        this.name = name;
-        this.revisionVersion = revisionVersion;
-    }
+    private Long id;
+    private Long revisionVersion;
+    private UUID uuid;
+
+    @NotNull
+    @NotBlank
+    @Max(255)
+    private String name;
+
 }
