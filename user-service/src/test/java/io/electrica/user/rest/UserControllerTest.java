@@ -34,12 +34,6 @@ import static org.junit.Assert.*;
 @NoArgsConstructor
 public class UserControllerTest extends UserServiceApplicationTest {
 
-    @Resource
-    private FilterChainProxy springSecurityFilterChain;
-
-    @Resource
-    private WebApplicationContext webApplicationContext;
-
     @Before
     public void init() {
         initBaseClass();
