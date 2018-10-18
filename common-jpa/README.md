@@ -19,7 +19,7 @@ create database user_db;
 ```
 4. start user-service:
 ```
-gardle :user-service:bootRun
+gradle :user-service:bootRun
 ```
 5. drop Flyway history table:
 ```
