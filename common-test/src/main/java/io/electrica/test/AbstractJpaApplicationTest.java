@@ -1,12 +1,13 @@
 package io.electrica.test;
 
-import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
+import io.electrica.common.context.IdentityImpl;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUserTestExecutionListener;
-import io.electrica.test.context.IdentityContextTestHelper;
 import lombok.SneakyThrows;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
@@ -14,6 +15,8 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 
 import javax.inject.Inject;
 import java.util.Set;
+
+import static io.electrica.test.context.IdentityContextTestHelper.createAuthentication;
 
 @ActiveProfiles("test")
 @TestExecutionListeners(ForUserTestExecutionListener.class)
@@ -31,8 +34,15 @@ public abstract class AbstractJpaApplicationTest extends AbstractTransactionalJU
             Set<PermissionType> permissions,
             Runnable work
     ) {
-        Identity identity = IdentityContextTestHelper.createIdentity(userId, organizationId, roles, permissions);
-        identityContextHolder.executeWithContext(identity, work::run);
+        Authentication authentication = createAuthentication(userId, organizationId, roles, permissions);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            IdentityImpl identity = new IdentityImpl(authentication);
+            identityContextHolder.executeWithContext(identity, work::run);
+        } finally {
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+
     }
 
 }

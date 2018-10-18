@@ -1,7 +1,9 @@
 package io.electrica.test.context;
 
-import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
+import io.electrica.common.context.IdentityImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -21,12 +23,15 @@ public class ForUserTestExecutionListener extends AbstractTestExecutionListener 
     public void beforeTestExecution(TestContext testContext) {
         ForUser annotation = testContext.getTestMethod().getAnnotation(ForUser.class);
         if (annotation != null) {
-            Identity identity = IdentityContextTestHelper.createIdentity(
+            Authentication authentication = IdentityContextTestHelper.createAuthentication(
                     annotation.userId(),
                     annotation.organizationId(),
                     Arrays.stream(annotation.roles()).collect(Collectors.toSet()),
                     Arrays.stream(annotation.permissions()).collect(Collectors.toSet())
             );
+            IdentityImpl identity = new IdentityImpl(authentication);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             identityContextHolder.setIdentity(identity);
         }
     }
@@ -35,6 +40,7 @@ public class ForUserTestExecutionListener extends AbstractTestExecutionListener 
     public void afterTestExecution(TestContext testContext) {
         if (testContext.getTestMethod().isAnnotationPresent(ForUser.class)) {
             identityContextHolder.clearIdentity();
+            SecurityContextHolder.getContext().setAuthentication(null);
         }
     }
 }
