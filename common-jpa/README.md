@@ -28,7 +28,7 @@ drop table flyway_schema_history;
 ```
 6. generate changelog using Liquibase gradle plugin:
 ```
-gardle :user-service:generateChangelog
+gradle :user-service:generateChangelog
 ```
 7. copy created file to initial
 8. revert properties override from item 2
