@@ -18,8 +18,7 @@ public final class RequestHelper {
         return !isAuthPath(path) &&
                 !isHealthPath(path) &&
                 !isSwaggerApiDoc(path) &&
-                !isPublicApi(path) &&
-                !isPrivateApi(path);
+                !isPublicApi(path);
     }
 
     public static boolean isPublicApi(String path) {
