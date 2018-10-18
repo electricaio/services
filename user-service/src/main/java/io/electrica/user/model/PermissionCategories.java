@@ -1,23 +1,16 @@
 package io.electrica.user.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.envers.Audited;
-
 import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
- *  Permission categories.
- *
+ * Permission categories.
  */
 @Getter
 @Setter
@@ -29,9 +22,11 @@ public class PermissionCategories extends AbstractEntity {
     @NotNull
     @Size(max = 255)
     @Column(nullable = false, unique = true)
-    private String category;
+    private String name;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "permission_id", nullable = false)
     private Permission permission;
+
 }

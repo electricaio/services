@@ -1,0 +1,1414 @@
+databaseChangeLog:
+- changeSet:
+    id: 1539845835761-1
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: access_key_id_seq
+- changeSet:
+    id: 1539845835761-2
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: organization_id_seq
+- changeSet:
+    id: 1539845835761-3
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: permission_categories_id_seq
+- changeSet:
+    id: 1539845835761-4
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: permission_id_seq
+- changeSet:
+    id: 1539845835761-5
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: revinfo_id_seq
+- changeSet:
+    id: 1539845835761-6
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: role_id_seq
+- changeSet:
+    id: 1539845835761-7
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: role_to_permission_id_seq
+- changeSet:
+    id: 1539845835761-8
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: user_id_seq
+- changeSet:
+    id: 1539845835761-9
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: user_to_role_id_seq
+- changeSet:
+    id: 1539845835761-10
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: key
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: uuid
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: access_keys
+- changeSet:
+    id: 1539845835761-11
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: key
+            type: VARCHAR(255)
+        - column:
+            name: key_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: uuid
+            type: UUID
+        - column:
+            name: uuid_mod
+            type: BOOLEAN
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: user_mod
+            type: BOOLEAN
+        tableName: access_keys_aud
+- changeSet:
+    id: 1539845835761-12
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: uuid
+            type: UUID
+        tableName: organizations
+- changeSet:
+    id: 1539845835761-13
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: uuid
+            type: UUID
+        - column:
+            name: uuid_mod
+            type: BOOLEAN
+        - column:
+            name: users_mod
+            type: BOOLEAN
+        tableName: organizations_aud
+- changeSet:
+    id: 1539845835761-14
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: permission_id
+            type: BIGINT
+        tableName: permission_categories
+- changeSet:
+    id: 1539845835761-15
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: permission_id
+            type: BIGINT
+        - column:
+            name: permission_mod
+            type: BOOLEAN
+        tableName: permission_categories_aud
+- changeSet:
+    id: 1539845835761-16
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: description
+            type: VARCHAR(1023)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(63)
+        tableName: permissions
+- changeSet:
+    id: 1539845835761-17
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: description
+            type: VARCHAR(1023)
+        - column:
+            name: description_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: type
+            type: VARCHAR(63)
+        - column:
+            name: type_mod
+            type: BOOLEAN
+        - column:
+            name: permission_categories_mod
+            type: BOOLEAN
+        - column:
+            name: role_to_permissions_mod
+            type: BOOLEAN
+        tableName: permissions_aud
+- changeSet:
+    id: 1539845835761-18
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: entityname
+            type: VARCHAR(255)
+        tableName: revchanges
+- changeSet:
+    id: 1539845835761-19
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: timestamp
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: revinfo
+- changeSet:
+    id: 1539845835761-20
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: description
+            type: VARCHAR(1023)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(63)
+        tableName: roles
+- changeSet:
+    id: 1539845835761-21
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: description
+            type: VARCHAR(1023)
+        - column:
+            name: description_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: type
+            type: VARCHAR(63)
+        - column:
+            name: type_mod
+            type: BOOLEAN
+        - column:
+            name: role_to_permissions_mod
+            type: BOOLEAN
+        - column:
+            name: user_to_roles_mod
+            type: BOOLEAN
+        tableName: roles_aud
+- changeSet:
+    id: 1539845835761-22
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: permission_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: role_id
+            type: BIGINT
+        tableName: roles_to_permissions_map
+- changeSet:
+    id: 1539845835761-23
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: permission_id
+            type: BIGINT
+        - column:
+            name: permission_mod
+            type: BOOLEAN
+        - column:
+            name: role_id
+            type: BIGINT
+        - column:
+            name: role_mod
+            type: BOOLEAN
+        tableName: roles_to_permissions_map_aud
+- changeSet:
+    id: 1539845835761-24
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: salted_password
+            type: VARCHAR(127)
+        - column:
+            constraints:
+              nullable: false
+            name: uuid
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: organization_id
+            type: BIGINT
+        tableName: users
+- changeSet:
+    id: 1539845835761-25
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: email_mod
+            type: BOOLEAN
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: first_name_mod
+            type: BOOLEAN
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name_mod
+            type: BOOLEAN
+        - column:
+            name: salted_password
+            type: VARCHAR(127)
+        - column:
+            name: salted_password_mod
+            type: BOOLEAN
+        - column:
+            name: uuid
+            type: UUID
+        - column:
+            name: uuid_mod
+            type: BOOLEAN
+        - column:
+            name: access_keys_mod
+            type: BOOLEAN
+        - column:
+            name: organization_id
+            type: BIGINT
+        - column:
+            name: organization_mod
+            type: BOOLEAN
+        - column:
+            name: user_to_roles_mod
+            type: BOOLEAN
+        tableName: users_aud
+- changeSet:
+    id: 1539845835761-26
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: role_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: users_to_roles_map
+- changeSet:
+    id: 1539845835761-27
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: role_id
+            type: BIGINT
+        - column:
+            name: role_mod
+            type: BOOLEAN
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: user_mod
+            type: BOOLEAN
+        tableName: users_to_roles_map_aud
+- changeSet:
+    id: 1539845835761-28
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: access_keys_aud_pkey
+        tableName: access_keys_aud
+- changeSet:
+    id: 1539845835761-29
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: access_keys_pkey
+        tableName: access_keys
+- changeSet:
+    id: 1539845835761-30
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: organizations_aud_pkey
+        tableName: organizations_aud
+- changeSet:
+    id: 1539845835761-31
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: organizations_pkey
+        tableName: organizations
+- changeSet:
+    id: 1539845835761-32
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: permission_categories_aud_pkey
+        tableName: permission_categories_aud
+- changeSet:
+    id: 1539845835761-33
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: permission_categories_pkey
+        tableName: permission_categories
+- changeSet:
+    id: 1539845835761-34
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: permissions_aud_pkey
+        tableName: permissions_aud
+- changeSet:
+    id: 1539845835761-35
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: permissions_pkey
+        tableName: permissions
+- changeSet:
+    id: 1539845835761-36
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: revinfo_pkey
+        tableName: revinfo
+- changeSet:
+    id: 1539845835761-37
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: roles_aud_pkey
+        tableName: roles_aud
+- changeSet:
+    id: 1539845835761-38
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: roles_pkey
+        tableName: roles
+- changeSet:
+    id: 1539845835761-39
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: roles_to_permissions_map_aud_pkey
+        tableName: roles_to_permissions_map_aud
+- changeSet:
+    id: 1539845835761-40
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: roles_to_permissions_map_pkey
+        tableName: roles_to_permissions_map
+- changeSet:
+    id: 1539845835761-41
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: users_aud_pkey
+        tableName: users_aud
+- changeSet:
+    id: 1539845835761-42
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: users_pkey
+        tableName: users
+- changeSet:
+    id: 1539845835761-43
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: users_to_roles_map_aud_pkey
+        tableName: users_to_roles_map_aud
+- changeSet:
+    id: 1539845835761-44
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: users_to_roles_map_pkey
+        tableName: users_to_roles_map
+- changeSet:
+    id: 1539845835761-45
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name, user_id
+        constraintName: uk5y6c9m5j19slyka3xgrvrhyk1
+        tableName: access_keys
+- changeSet:
+    id: 1539845835761-46
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: email
+        constraintName: uk_6dotkott2kjsp8vw4d0m25fb7
+        tableName: users
+- changeSet:
+    id: 1539845835761-47
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: uuid
+        constraintName: uk_6km2m9i3vjuy36rnvkgj1l61s
+        tableName: users
+- changeSet:
+    id: 1539845835761-48
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: uuid
+        constraintName: uk_bpcblmsryhxmrki7v6neumywj
+        tableName: access_keys
+- changeSet:
+    id: 1539845835761-49
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: uk_h1g7hjv0htte9cl6kr77aw5ks
+        tableName: permission_categories
+- changeSet:
+    id: 1539845835761-50
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: uuid
+        constraintName: uk_jqb3882o0pak77hc5xln2wlg1
+        tableName: organizations
+- changeSet:
+    id: 1539845835761-51
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: type
+        constraintName: uk_mvhxqf2hk0ophq3s7byxlii44
+        tableName: permissions
+- changeSet:
+    id: 1539845835761-52
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: uk_p9pbw3flq9hkay8hdx3ypsldy
+        tableName: organizations
+- changeSet:
+    id: 1539845835761-53
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: type
+        constraintName: uk_q9npl2ty4pngm2cussiul2qj5
+        tableName: roles
+- changeSet:
+    id: 1539845835761-54
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: role_id, permission_id
+        constraintName: ukovyhaxj34b432m22rvywhubwb
+        tableName: roles_to_permissions_map
+- changeSet:
+    id: 1539845835761-55
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id, role_id
+        constraintName: ukt33vxm3ctwgam68h1x158tvpk
+        tableName: users_to_roles_map
+- changeSet:
+    id: 1539845835761-56
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: roles_to_permissions_map_aud
+        constraintName: fk18pkgel3ypphyjjpb43e1dg8k
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-57
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: roles_to_permissions_map_aud
+        constraintName: fk3nem8nwldlc0g7ttgce50rvli
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-58
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: users_to_roles_map_aud
+        constraintName: fk46njq6fm0o66j8n0ur9fkbacn
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-59
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: roles_aud
+        constraintName: fk9ge4qh7wogccqw9p68nbxhq5s
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-60
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: permission_id
+        baseTableName: permission_categories
+        constraintName: fk9ielw64fb2ls6ln3mdij6affe
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: permissions
+- changeSet:
+    id: 1539845835761-61
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: revchanges
+        constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-62
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: permissions_aud
+        constraintName: fkbcjh1knyfnk51nv2cllrct4iw
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-63
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: users_aud
+        constraintName: fkc4vk4tui2la36415jpgm9leoq
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-64
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: permission_id
+        baseTableName: roles_to_permissions_map
+        constraintName: fkc6svqrad8khfijsdndojx1rt0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: permissions
+- changeSet:
+    id: 1539845835761-65
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: users_aud
+        constraintName: fkcqbcwiebsa2dy3bxv1ybbwsk0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-66
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: organizations_aud
+        constraintName: fkfxeq0lp5j0m5ftym4oq5xo2yq
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-67
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: access_keys_aud
+        constraintName: fkgq8khhgovyto8rcs91viaj8ky
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-68
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: users_to_roles_map_aud
+        constraintName: fkh9fqkoci6jrmuskx7sjcvckd0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-69
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: permission_categories_aud
+        constraintName: fkib8pij3u3h3i8681tbfm8uqnw
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-70
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: access_keys_aud
+        constraintName: fklio27gbhgc2kqi6skit6vm3qa
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-71
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: users_to_roles_map
+        constraintName: fkmxxed1v71um529ihd28b164fi
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+- changeSet:
+    id: 1539845835761-72
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: organizations_aud
+        constraintName: fknh88pmnqymqwfpaijxkpcgm3y
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-73
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: users_to_roles_map
+        constraintName: fko3ikcbwfko3fisaihmpnqlc1b
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: roles
+- changeSet:
+    id: 1539845835761-74
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: permissions_aud
+        constraintName: fko6mo76tmu5d3xnk09rmmsdln
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-75
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: permission_categories_aud
+        constraintName: fkpdfglt2glgr45mmjv1ey38a9v
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-76
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: organization_id
+        baseTableName: users
+        constraintName: fkqpugllwvyv37klq7ft9m8aqxk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: organizations
+- changeSet:
+    id: 1539845835761-77
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: access_keys
+        constraintName: fksjh3o5d1kms37ifcj9n7ymiac
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+- changeSet:
+    id: 1539845835761-78
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: roles_aud
+        constraintName: fkt0mnl3rej2p0h9gxnbalf2kdd
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845835761-79
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: roles_to_permissions_map
+        constraintName: fktqohlhs30n0pxbcf2avwr0s4l
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: roles
+
