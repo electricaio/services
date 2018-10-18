@@ -25,6 +25,10 @@ public class CommonExpressionMethods {
         return new IdentityImpl(authentication);
     }
 
+    public boolean isRoleType(RoleType roleType){
+        return getIdentity().getRoles().contains(roleType);
+    }
+
     public boolean isUser(Long userId) {
         return Objects.equals(getIdentity().getUserId(), userId);
     }

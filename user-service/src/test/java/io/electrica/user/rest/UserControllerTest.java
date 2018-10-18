@@ -1,18 +1,30 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.context.Identity;
 import io.electrica.common.exception.EntityNotFoundServiceException;
+import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
+import io.electrica.test.context.ForUser;
+import io.electrica.test.context.IdentityContextTestHelper;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
+import io.electrica.user.model.Permission;
 import io.electrica.user.model.User;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.Resource;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -21,6 +33,12 @@ import static org.junit.Assert.*;
  */
 @NoArgsConstructor
 public class UserControllerTest extends UserServiceApplicationTest {
+
+    @Resource
+    private FilterChainProxy springSecurityFilterChain;
+
+    @Resource
+    private WebApplicationContext webApplicationContext;
 
     @Before
     public void init() {
@@ -43,12 +61,12 @@ public class UserControllerTest extends UserServiceApplicationTest {
         UserDto userDto = createAndSaveUser();
         UserDto searchUser = userController.getUser(userDto.getId()).getBody();
         assertEquals(userDto.getId(), searchUser.getId());
-        assertEquals(userDto.getEmail(),searchUser.getEmail());
-        assertEquals(userDto.getRevisionVersion(),searchUser.getRevisionVersion());
-        assertEquals(userDto.getFirstName(),searchUser.getFirstName());
-        assertEquals(userDto.getLastName(),searchUser.getLastName());
-        assertEquals(userDto.getUuid(),searchUser.getUuid());
-        assertEquals(userDto.getOrganizationId(),searchUser.getOrganizationId());
+        assertEquals(userDto.getEmail(), searchUser.getEmail());
+        assertEquals(userDto.getRevisionVersion(), searchUser.getRevisionVersion());
+        assertEquals(userDto.getFirstName(), searchUser.getFirstName());
+        assertEquals(userDto.getLastName(), searchUser.getLastName());
+        assertEquals(userDto.getUuid(), searchUser.getUuid());
+        assertEquals(userDto.getOrganizationId(), searchUser.getOrganizationId());
 
 
     }
@@ -78,6 +96,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithMultipleOrgsTest() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
