@@ -43,8 +43,8 @@ public class UserControllerImpl implements UserController {
     @Override
 
     @PreAuthorize(" #common.hasPermission('ReadOrg')  and " +
-            " ( #common.haveOneOfRoles('OrgUser' , 'OrgAdmin') and  " +
-            "#common.userInOrganization(#organizationId) )")
+            " ( #common.isSuperAdmin() OR    (#common.haveOneOfRoles('OrgUser' , 'OrgAdmin') and  " +
+            "#common.userInOrganization(#organizationId)) )")
     public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long organizationId) {
         List<UserDto> users = userDtoService.getUsersForOrg(organizationId);
         return ResponseEntity.ok(users);

@@ -35,8 +35,8 @@ public class CommonExpressionMethods {
 
     public boolean haveOneOfRoles(String... roles) {
         boolean result = false;
-        for(String role : roles){
-            if(getIdentity().getRoles().contains(RoleType.valueOf(role))){
+        for (String role : roles) {
+            if (getIdentity().getRoles().contains(RoleType.valueOf(role))) {
                 result = true;
                 break;
             }
@@ -44,16 +44,16 @@ public class CommonExpressionMethods {
         return result;
     }
 
-    public boolean isSuperAdmin (String roleType){
-        return RoleType.valueOf(roleType)== RoleType.SuperAdmin;
+    public boolean isSuperAdmin() {
+        return getIdentity().getRoles().contains(RoleType.SuperAdmin);
     }
 
-    public boolean isOrgAdmin (String roleType){
-        return RoleType.valueOf(roleType)== RoleType.OrgAdmin;
+    public boolean isOrgAdmin(String roleType) {
+        return getIdentity().getRoles().contains(RoleType.OrgAdmin);
     }
 
-    public boolean isOrgUser (String roleType){
-        return RoleType.valueOf(roleType)== RoleType.OrgUser;
+    public boolean isOrgUser(String roleType) {
+        return getIdentity().getRoles().contains(RoleType.OrgUser);
     }
 
     public boolean isUser(Long userId) {
