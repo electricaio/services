@@ -54,7 +54,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
                 .resourceIds("auth-service", "stl-service")
-                .scopes("create", "get", "update", "delete", "do")
+                .scopes("c", "r", "u", "d", "do")
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
     }

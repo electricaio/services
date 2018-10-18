@@ -4,9 +4,11 @@ import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AuthorityHelper {
 
@@ -18,6 +20,20 @@ public class AuthorityHelper {
     private AuthorityHelper() {
     }
 
+    public static Collection<? extends GrantedAuthority> buildGrantedAuthorities(
+            Long organizationId,
+            Set<RoleType> roles,
+            Set<PermissionType> permissions
+    ) {
+        String rolesAuthority = AuthorityHelper.writeRoles(roles);
+        String permissionsAuthority = AuthorityHelper.writePermissions(permissions);
+        String organizationAuthority = AuthorityHelper.writeOrganization(organizationId);
+        return Stream.of(rolesAuthority, permissionsAuthority, organizationAuthority)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+    }
+
     private static Optional<String> findByPrefix(Collection<? extends GrantedAuthority> authorities, String prefix) {
         return authorities.stream()
                 .filter(ga -> ga.getAuthority().startsWith(prefix))
@@ -25,7 +41,7 @@ public class AuthorityHelper {
                 .findFirst();
     }
 
-    public static String writeOrganization(Long organizationId) {
+    private static String writeOrganization(Long organizationId) {
         return ORGANIZATION_PREFIX + organizationId;
     }
 
@@ -35,7 +51,7 @@ public class AuthorityHelper {
                 .orElseThrow(() -> new ActionForbiddenServiceException("Organization authority required in token"));
     }
 
-    public static String writeRoles(Set<RoleType> roles) {
+    private static String writeRoles(Set<RoleType> roles) {
         return DEFINED_ROLES_PREFIX + roles.stream()
                 .map(RoleType::getStringCode)
                 .collect(Collectors.joining(SEPARATOR));
@@ -50,7 +66,7 @@ public class AuthorityHelper {
                 .orElse(Collections.emptySet());
     }
 
-    public static String writePermissions(Set<PermissionType> permissions) {
+    private static String writePermissions(Set<PermissionType> permissions) {
         return DEFINED_PERMISSIONS_PREFIX + permissions.stream()
                 .map(PermissionType::getStringCode)
                 .collect(Collectors.joining(SEPARATOR));

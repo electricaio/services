@@ -1,5 +1,6 @@
 package io.electrica.auth.server;
 
+import io.electrica.common.helper.AuthorityHelper;
 import io.electrica.common.helper.TokenHelper;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
@@ -9,7 +10,6 @@ import io.electrica.user.model.User;
 import io.electrica.user.model.UserToRole;
 import io.electrica.user.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,10 +21,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static io.electrica.common.helper.AuthorityHelper.*;
 
 /**
  * UserDetailsServiceImpl provides authentication lookup service which validates the http header token.
@@ -66,7 +62,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return result.orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-    private Collection<GrantedAuthority> buildGrantedAuthorities(User user) {
+    private Collection<? extends GrantedAuthority> buildGrantedAuthorities(User user) {
         Long organizationId = user.getOrganization().getId();
 
         Set<RoleType> roles = new HashSet<>();
@@ -79,8 +75,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
-        return Stream.of(writeOrganization(organizationId), writeRoles(roles), writePermissions(permissions))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return AuthorityHelper.buildGrantedAuthorities(organizationId, roles, permissions);
     }
 }
