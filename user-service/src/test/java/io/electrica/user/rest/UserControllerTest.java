@@ -43,6 +43,14 @@ public class UserControllerTest extends UserServiceApplicationTest {
         UserDto userDto = createAndSaveUser();
         UserDto searchUser = userController.getUser(userDto.getId()).getBody();
         assertEquals(userDto.getId(), searchUser.getId());
+        assertEquals(userDto.getEmail(),searchUser.getEmail());
+        assertEquals(userDto.getRevisionVersion(),searchUser.getRevisionVersion());
+        assertEquals(userDto.getFirstName(),searchUser.getFirstName());
+        assertEquals(userDto.getLastName(),searchUser.getLastName());
+        assertEquals(userDto.getUuid(),searchUser.getUuid());
+        assertEquals(userDto.getOrganizationId(),searchUser.getOrganizationId());
+
+
     }
 
     @Test(expected = EntityNotFoundServiceException.class)
