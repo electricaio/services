@@ -2,7 +2,6 @@ package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.jpa.service.AbstractService;
-import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.Organization;
 import io.electrica.user.model.User;
@@ -12,10 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User Service implementation class for managing users.
@@ -32,32 +30,43 @@ public class UserService extends AbstractService<User> {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    protected Collection<String> getContainerValidators() {
-        return Arrays.asList(
-                ContainerEntityValidator.TRIMMED_STRINGS,
-                ContainerEntityValidator.AVOID_EMTPY_STRINGS
-        );
+    public Optional<User> findByEmailWithPermissions(String email) {
+        return userRepository.findOneByEmailIgnoreCase(email);
     }
 
-    @Override
-    protected Collection<EntityValidator<User>> getValidators() {
-        return Collections.emptyList();
+    public Optional<User> findByIdWithPermissions(Long id) {
+        return userRepository.findOneById(id);
     }
 
     @Override
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     protected User executeCreate(User newEntity) {
         Long organizationId = newEntity.getOrganization().getId();
-        if (organizationId != null) {
-            Organization organization = getReference(Organization.class, organizationId);
-            newEntity.setOrganization(organization);
-        } else {
-            throw new IllegalArgumentException("Required field: organization.id");
-        }
+        Organization organization = getReference(Organization.class, organizationId);
+        newEntity.setOrganization(organization);
 
         newEntity.setSaltedPassword(passwordEncoder.encode(newEntity.getSaltedPassword()));
         return userRepository.save(newEntity);
+    }
+
+    @Override
+    protected EntityValidator<User> getValidator() {
+        return create -> {
+            // ToDo validate email and password
+
+            List<String> required = new ArrayList<>();
+
+            Organization org = create.getOrganization();
+            if (org == null) {
+                required.add("organization");
+            } else if (org.getId() == null) {
+                required.add("organization.id");
+            }
+
+            if (!required.isEmpty()) {
+                throw new IllegalArgumentException("Required fields: " + String.join(", ", required));
+            }
+        };
     }
 
     @Override

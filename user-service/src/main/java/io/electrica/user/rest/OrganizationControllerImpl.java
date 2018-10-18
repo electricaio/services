@@ -24,9 +24,9 @@ public class OrganizationControllerImpl implements OrganizationController {
 
 
     @Override
-    public ResponseEntity<OrganizationDto> create(@RequestBody OrganizationDto organizationDto) {
-        logger.debug("REST request to save User : {}", organizationDto);
-        OrganizationDto result = organizationDtoService.create(organizationDto);
+    public ResponseEntity<OrganizationDto> createIfAbsent(@RequestBody OrganizationDto dto) {
+        logger.debug("REST request to save User : {}", dto);
+        OrganizationDto result = organizationDtoService.createIfAbsent(dto);
         return ResponseEntity.ok(result);
     }
 }

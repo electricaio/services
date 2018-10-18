@@ -22,6 +22,7 @@ subprojects {
     ext {
         // Plugins
         liquibaseGradlePlugin = '2.0.1'
+        snakeyamlVersion = '1.15'
 
         // Spring
         springBootVersion = '2.0.5.RELEASE'

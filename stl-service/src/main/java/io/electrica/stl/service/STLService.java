@@ -1,18 +1,12 @@
 package io.electrica.stl.service;
 
+import io.electrica.common.helper.ERNUtils;
 import io.electrica.common.jpa.service.AbstractService;
-import io.electrica.common.jpa.service.validation.ContainerEntityValidator;
-import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.repository.STLRepository;
-import io.electrica.common.helper.ERNUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -42,7 +36,7 @@ public class STLService extends AbstractService<STL> {
 
     @Override
     protected void executeUpdate(STL merged, STL update) {
-        throw new NotImplementedException("");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -50,17 +44,4 @@ public class STLService extends AbstractService<STL> {
         return stlRepository;
     }
 
-
-    @Override
-    protected Collection<String> getContainerValidators() {
-        return Arrays.asList(
-                ContainerEntityValidator.TRIMMED_STRINGS,
-                ContainerEntityValidator.AVOID_EMTPY_STRINGS
-        );
-    }
-
-    @Override
-    protected Collection<EntityValidator<STL>> getValidators() {
-        return Collections.emptyList();
-    }
 }

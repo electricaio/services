@@ -40,7 +40,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationRestClient.create(organizationDto).getBody();
+        defaultOrganization = organizationRestClient.createIfAbsent(organizationDto).getBody();
     }
 
     @Test
@@ -84,13 +84,13 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result, 
                                         boolean keyPresent, String keyName) {
         assertNotSame(accessKeyDto, result);
-        assertEquals(accessKeyDto.getKeyName(), keyName);
+        assertEquals(accessKeyDto.getName(), keyName);
         assertEquals(accessKeyDto.getUserId(), user.getId());
         assertEquals(0L, (long) result.getRevisionVersion());
         if (keyPresent) {
-            assertNotNull(result.getAccessKey());
+            assertNotNull(result.getKey());
         } else {
-            assertNull(result.getAccessKey());
+            assertNull(result.getKey());
         }
     }
 
@@ -118,7 +118,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
     private AccessKeyDto createAccessKeyDto(UserDto user, String keyName) {
         AccessKeyDto accessKeyDto = new AccessKeyDto();
-        accessKeyDto.setKeyName(keyName);
+        accessKeyDto.setName(keyName);
         accessKeyDto.setUserId(user.getId());
         return accessKeyDto;
     }

@@ -9,6 +9,8 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Permission.
@@ -32,5 +34,11 @@ public class Permission extends AbstractEntity {
 
     @Column(length = 1023)
     private String description;
+
+    @OneToMany(mappedBy = "permission")
+    private Set<RoleToPermission> roleToPermissions = new HashSet<>();
+
+    @OneToMany(mappedBy = "permission")
+    private Set<PermissionCategories> permissionCategories = new HashSet<>();
 
 }

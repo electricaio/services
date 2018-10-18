@@ -23,21 +23,21 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, AccessKey
         return accessKeyService.findAllNonArchivedByUser(userId).
                 stream().
                 map(e -> {
-                    e.setAccessKey(null);
+                    e.setKey(null);
                     return toDto(e);
                 }).
                 collect(Collectors.toList());
     }
 
     public AccessKeyDto findByKeyAndUser(Long accessKeyId, Long userId) {
-        return toDto(accessKeyService.findByKeyAndUser(accessKeyId, userId));
+        return toDto(accessKeyService.findByIdAndUser(accessKeyId, userId));
     }
 
     @Override
     public AccessKeyDto create(AccessKeyDto persistentDto) {
         AccessKeyDto result = super.create(persistentDto);
         //We should display Access Key on demand as a separate call
-        result.setAccessKey(null);
+        result.setKey(null);
         return result;
     }
 
