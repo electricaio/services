@@ -25,7 +25,7 @@ public class AuthorityHelper {
                 .findFirst();
     }
 
-    public static String writeOrganization(long organizationId) {
+    public static String writeOrganization(Long organizationId) {
         return ORGANIZATION_PREFIX + organizationId;
     }
 

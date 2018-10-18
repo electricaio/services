@@ -30,11 +30,11 @@ public class UserService extends AbstractService<User> {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<User> findByEmailWithPermissions(String email) {
+    public Optional<User> findByEmailFetchingAuthorities(String email) {
         return userRepository.findOneByEmailIgnoreCase(email);
     }
 
-    public Optional<User> findByIdWithPermissions(Long id) {
+    public Optional<User> findByIdFetchingAuthorities(Long id) {
         return userRepository.findOneById(id);
     }
 

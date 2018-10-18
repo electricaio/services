@@ -1,19 +1,30 @@
 package io.electrica.auth.server;
 
 import io.electrica.common.helper.TokenHelper;
+import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
+import io.electrica.user.model.Role;
+import io.electrica.user.model.RoleToPermission;
 import io.electrica.user.model.User;
+import io.electrica.user.model.UserToRole;
+import io.electrica.user.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.electrica.common.helper.AuthorityHelper.*;
 
 /**
  * UserDetailsServiceImpl provides authentication lookup service which validates the http header token.
@@ -21,54 +32,55 @@ import java.util.stream.Collectors;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final Provider<UserService> userService;
+
+    @Inject
+    public UserDetailsServiceImpl(Provider<UserService> userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findUser(username);
         return new SpecialUserDetails(
-                TokenHelper.buildIdTokenUsername(1L), //user.getId()
+                TokenHelper.buildIdTokenUsername(user.getId()),
                 user.getSaltedPassword(),
-                // to DO !user.getArchived(),
-                true,
+                !user.getArchived(),
                 true,
                 true,
                 true,
                 buildGrantedAuthorities(user),
-                10000000L //user.getTokensNotBefore()
+                null
         );
     }
 
     private User findUser(String username) throws UsernameNotFoundException {
         Optional<User> result = Optional.empty();
-
-        if (username.equalsIgnoreCase("@e:qa@qa.qa")) {
-            User user = new User();
-            //user.setId(1L);
-            user.setSaltedPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
-            user.setFirstName("FirstNAme");
-            result = Optional.of(user);
+        if (TokenHelper.isIdTokenUsername(username)) {
+            long id = TokenHelper.extractIdFromTokenUsername(username);
+            result = userService.get().findByIdFetchingAuthorities(id);
+        } else if (TokenHelper.isEmailTokenUsername(username)) {
+            String email = TokenHelper.extractEmailFromTokenUsername(username);
+            result = userService.get().findByEmailFetchingAuthorities(email);
         }
-
-/*        if (TokenHelper.isId(username)) {
-            int id = TokenHelper.extractId(username);
-            result = userService.get().findByIdHideArchived(id);
-        } else if (TokenHelper.isEmail(username)) {
-            String email = TokenHelper.extractEmail(username);
-            result = userService.get().findByEmailHideArchived(email);
-        } else if (TokenHelper.isPhone(username)) {
-            String phone = TokenHelper.extractPhone(username);
-            result = userService.get().findByPhoneHideArchived(phone);
-        }*/
-
         return result.orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     private Collection<GrantedAuthority> buildGrantedAuthorities(User user) {
-        return Arrays.asList("AllUserManagementPermissions").stream()
+        Long organizationId = user.getOrganization().getId();
+
+        Set<RoleType> roles = new HashSet<>();
+        Set<PermissionType> permissions = new HashSet<>();
+        for (UserToRole userToRole : user.getUserToRoles()) {
+            Role role = userToRole.getRole();
+            roles.add(role.getType());
+            for (RoleToPermission roleToPermission : role.getRoleToPermissions()) {
+                permissions.add(roleToPermission.getPermission().getType());
+            }
+        }
+
+        return Stream.of(writeOrganization(organizationId), writeRoles(roles), writePermissions(permissions))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        /*return userDtoService.get().buildAuthorities(user).stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());*/
     }
 }
