@@ -25,16 +25,16 @@ public class CommonExpressionMethods {
         return new IdentityImpl(authentication);
     }
 
-    public boolean isRoleType(RoleType roleType){
-        return getIdentity().getRoles().contains(roleType);
+    public boolean isRoleType(String roleType){
+        return getIdentity().getRoles().contains(RoleType.valueOf(roleType));
     }
 
     public boolean isUser(Long userId) {
         return Objects.equals(getIdentity().getUserId(), userId);
     }
 
-    public boolean hasPermission(PermissionType permission) {
-        return getIdentity().getPermissions().contains(permission);
+    public boolean hasPermission(String permission) {
+        return getIdentity().getPermissions().contains(PermissionType.parse(permission));
     }
 
     public boolean userInOrganization(Long organizationId) {

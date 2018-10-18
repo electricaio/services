@@ -41,11 +41,14 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PreAuthorize("#common.isRoleType(SuperAdmin) or (#common.hasPermission(PermissionType.ReadOrg) " +
-            " and (#common.isRoleType(OgrUser) or #common.isRoleType(OrgAdmin) ) " +
-            " and #common.userInOrganization(#id) )")
-       public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id) {
-        List<UserDto> users = userDtoService.getUsersForOrg(id);
+    @PreAuthorize("#common.isRoleType('SuperAdmin')" +
+            "or (#common.hasPermission('ReadOrg')" +
+            "       and (#common.isRoleType('OrgUser') or #common.isRoleType('OrgAdmin') )" +
+            "       and #common.userInOrganization(#organizationId)" +
+            "   )"
+    )
+    public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long organizationId) {
+        List<UserDto> users = userDtoService.getUsersForOrg(organizationId);
         return ResponseEntity.ok(users);
     }
 

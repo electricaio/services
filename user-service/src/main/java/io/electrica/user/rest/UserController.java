@@ -21,10 +21,10 @@ public interface UserController {
     @PostMapping(PUBLIC + V1 + "/users")
     ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto user);
 
+    @PostMapping(V1 + "/organizations/{organizationId}/users")
+    ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long organizationId);
+
     @GetMapping(V1 + "/users/{id}")
     ResponseEntity<UserDto> getUser(@PathVariable Long id);
-
-    @PostMapping(V1 + "/organizations/{id}/users")
-    ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long id);
 
 }
