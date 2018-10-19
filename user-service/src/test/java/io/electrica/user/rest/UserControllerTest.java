@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -82,40 +83,39 @@ public class UserControllerTest extends UserServiceApplicationTest {
         assertEquals(u2.getId(), userDtos.get(1).getId());
     }
 
-    /*  TODO : This test should pass. The problem here is that we dont know the default organization id.
     @Test
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationTestWithUserInSameOrg() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
+        executeForUser(u1.getId(), u1.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg), () -> {
+                    List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+                    assertEquals(2, userDtos.size());
+                    assertEquals(u1.getId(), userDtos.get(0).getId());
+                    assertEquals(u2.getId(), userDtos.get(1).getId());
+                });
     }
 
-      @Test
-    @ForUser(userId = 1, organizationId = 1,roles = RoleType.OrgUser, permissions = PermissionType.ReadOrg)
-    public void getUsersForOrganizationTestWithUserInDiffOrg() {
+    @Test(expected = AccessDeniedException.class)
+    public void getUsersForOrganizationTestWithUserInDiffOrgThrowException() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
-      //  ForUser annotation = testContext.getTestMethod().getAnnotation(ForUser.class);
-        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
+        executeForUser(u1.getId(), 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg), () -> {
+                    userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+                });
     }
-    */
+
 
     @Test(expected = AccessDeniedException.class)
     @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.AddPermission)
-    public void getUsersForOrganizationTestWithWrongPermission() {
+    public void getUsersForOrganizationTestWithWrongPermissionShouldThrowException() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
-        List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
-        assertEquals(2, userDtos.size());
-        assertEquals(u1.getId(), userDtos.get(0).getId());
-        assertEquals(u2.getId(), userDtos.get(1).getId());
+        executeForUser(u1.getId(), u1.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.AddPermission), () -> {
+                    userController.getUsersForOrganization(u1.getOrganizationId());
+                });
     }
 
     @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
