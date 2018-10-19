@@ -3,7 +3,6 @@ package io.electrica.user.rest;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.repository.OrganizationRepository;
-import lombok.NoArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,17 +16,14 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Tests for organization controller.
  */
-@NoArgsConstructor
 public class OrganizationControllerTest extends UserServiceApplicationTest {
-
-    @Inject
-    private OrganizationController organizationController;
 
     @Inject
     private OrganizationRepository organizationRepository;
 
     @Before
     public void init() {
+        initBaseClass();
     }
 
     @Test
