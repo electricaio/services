@@ -25,14 +25,16 @@ public enum PermissionType {
     UpdateOrg(8),
     ActivateOrg(9),
     CreateAccessKey(10),
-    STLService(11),
-    CreateSTL(12),
-    STLDeActivate(13),
-    STLActivate(14),
-    AssociateAccessKeyToSTL(15),
-    ListActiveSTLs(16),
-    AddPermission(17),
-    RemovePermission(18);
+    ListAccessKeys(11),
+    ReadAccessKey(12),
+    STLService(13),
+    CreateSTL(14),
+    STLDeActivate(15),
+    STLActivate(16),
+    AssociateAccessKeyToSTL(17),
+    ListActiveSTLs(18),
+    AddPermission(19),
+    RemovePermission(20);
 
     private static final Map<Integer, PermissionType> ALL = Arrays.stream(PermissionType.values())
             .collect(Collectors.toMap(PermissionType::getCode, Function.identity()));

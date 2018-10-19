@@ -18,14 +18,13 @@ import static io.electrica.common.rest.PathConstants.V1;
  */
 public interface AccessKeyController {
 
-    //TODO review parameters list during implementing authn for rest cals
     @PostMapping(V1 + "/access-keys")
     ResponseEntity<AccessKeyDto> createAccessKey(@RequestBody CreateAccessKeyDto accessKey);
 
     @GetMapping(V1 + "/users/{userId}/access-keys")
     ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId);
 
-    @GetMapping(V1 + "/access-keys/{accessKeyId}/users/{userId}")
+    @GetMapping(V1 + "/users/{userId}/access-keys/{accessKeyId}")
     ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId, @PathVariable Long userId);
 
 }

@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUser;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
+
 import java.util.EnumSet;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     /**
-     * Getting list of key success flow.
+     * Getting list of keys success flow.
      */
     @Test
     public void findAllNonArchivedByUser() {
@@ -83,7 +85,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.CreateAccessKey),
+                EnumSet.of(PermissionType.CreateAccessKey, PermissionType.ListAccessKeys),
                 () -> {
                     accessKeyController.createAccessKey(accessKeyDto1).getBody();
                     accessKeyController.createAccessKey(accessKeyDto2).getBody();
@@ -96,6 +98,21 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     /**
+     * Getting list of keys when list is empty.
+     */
+    @Test
+    public void findAllNonArchivedByUserNoKeys() {
+        UserDto user = createAndSaveUser();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ListAccessKeys),
+                () -> {
+                    List<AccessKeyDto> resList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
+
+                    assertEquals(0, resList.size());
+                });
+    }
+
+    /**
      * Getting access key value success flow.
      */
     @Test
@@ -103,13 +120,41 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.CreateAccessKey),
+                EnumSet.of(PermissionType.CreateAccessKey, PermissionType.ReadAccessKey),
                 () -> {
                     AccessKeyDto generatedKey = accessKeyController.createAccessKey(accessKeyDto).getBody();
                     FullAccessKeyDto res = accessKeyController.getAccessKey(generatedKey.getId(), user.getId())
                             .getBody();
 
                     assertTestAccessKey(user, accessKeyDto, res);
+                });
+    }
+
+    /**
+     * Getting access key value wrong access key id.
+     */
+    @Test(expected = EntityNotFoundServiceException.class)
+    public void getAccessKeyWrongKeyId() {
+        UserDto user = createAndSaveUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey, PermissionType.ReadAccessKey),
+                () -> {
+                    accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyController.getAccessKey(0L, user.getId()).getBody();
+                });
+    }
+
+    /**
+     * Getting access key value when no keys for user.
+     */
+    @Test(expected = EntityNotFoundServiceException.class)
+    public void getAccessKeyNoKeyForUserId() {
+        UserDto user = createAndSaveUser();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadAccessKey),
+                () -> {
+                    accessKeyController.getAccessKey(0L, user.getId()).getBody();
                 });
     }
 
