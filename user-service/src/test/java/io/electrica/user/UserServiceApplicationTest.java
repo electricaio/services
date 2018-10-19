@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+
 @SpringBootTest(classes = UserServiceApplication.class)
 public abstract class UserServiceApplicationTest extends AbstractJpaApplicationTest {
 
@@ -79,5 +81,15 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
         organizationDto.setName("test" + new Date().getTime());
         organizationDto.setUuid(UUID.randomUUID());
         return organizationDto;
+    }
+
+    public void equals(UserDto u1, UserDto u2) {
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getEmail(), u2.getEmail());
+        assertEquals(u1.getRevisionVersion(), u2.getRevisionVersion());
+        assertEquals(u1.getFirstName(), u2.getFirstName());
+        assertEquals(u1.getLastName(), u2.getLastName());
+        assertEquals(u1.getUuid(), u2.getUuid());
+        assertEquals(u1.getOrganizationId(), u2.getOrganizationId());
     }
 }

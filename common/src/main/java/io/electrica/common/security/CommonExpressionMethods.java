@@ -2,6 +2,7 @@ package io.electrica.common.security;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.helper.TokenHelper;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -44,11 +45,11 @@ public class CommonExpressionMethods {
         return hasRole("SuperAdmin");
     }
 
-    public boolean isOrgAdmin(String roleType) {
+    public boolean isOrgAdmin() {
         return hasRole("OrgAdmin");
     }
 
-    public boolean isOrgUser(String roleType) {
+    public boolean isOrgUser() {
         return hasRole("OrgUser");
     }
 
