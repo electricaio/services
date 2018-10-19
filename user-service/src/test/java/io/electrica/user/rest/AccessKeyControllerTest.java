@@ -1,5 +1,8 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
+import io.electrica.test.context.ForUser;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
@@ -8,6 +11,7 @@ import io.electrica.user.dto.UserDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -44,6 +48,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.CreateAccessKey)
     public void generateAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
@@ -52,7 +57,16 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         assertCommonAccessKey(user, accessKeyDto, result, false);
     }
 
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadUser)
+    public void generateAccessKeyNoAccess() {
+        UserDto user = callCreateUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        accessKeyController.generateAccessKey(accessKeyDto).getBody();
+    }
+
     @Test
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.CreateAccessKey)
     public void findAllNonArchivedByUser() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
@@ -67,6 +81,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.CreateAccessKey)
     public void getAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);

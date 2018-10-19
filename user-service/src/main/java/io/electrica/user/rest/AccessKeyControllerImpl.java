@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,8 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     }
 
     @Override
+    @PreAuthorize("#common.hasPermission('CreateAccessKey') and " +
+                    "(#common.isSuperAdmin() OR #common.haveOneOfRoles('OrgUser', 'OrgAdmin'))")
     public ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey) {
         logger.info("REST request to generate access key : {}", accessKey);
         return ResponseEntity.ok(accessKeyDtoService.create(accessKey));
