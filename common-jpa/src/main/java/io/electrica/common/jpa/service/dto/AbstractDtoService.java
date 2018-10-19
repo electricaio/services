@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractDtoService<P extends CommonEntity, D> {
+public abstract class AbstractDtoService<P extends CommonEntity, C, D> {
 
     @Inject
     protected Mapper mapper;
@@ -17,8 +17,8 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
         return toDto(getService().findById(id, hideArchived));
     }
 
-    public D create(D persistentDto) {
-        return toDto(getService().create(toEntity(persistentDto)));
+    public D create(C persistentDto) {
+        return toDto(getService().create(toCreateEntity(persistentDto)));
     }
 
     public D update(long id, D persistentDto) {
@@ -34,6 +34,10 @@ public abstract class AbstractDtoService<P extends CommonEntity, D> {
     }
 
     public P toEntity(D dto) {
+        return mapper.map(dto, getEntityClass());
+    }
+
+    public P toCreateEntity(C dto) {
         return mapper.map(dto, getEntityClass());
     }
 

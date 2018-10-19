@@ -2,10 +2,9 @@ package io.electrica.user.service;
 
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
+import io.electrica.user.dto.CreateOrganizationDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.model.Organization;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -14,9 +13,7 @@ import javax.inject.Inject;
  * Organization Dto Service implementation class for managing organization.
  */
 @Component
-public class OrganizationDtoService extends AbstractDtoService<Organization, OrganizationDto> {
-
-    private static final Logger log = LoggerFactory.getLogger(UserDtoService.class);
+public class OrganizationDtoService extends AbstractDtoService<Organization, CreateOrganizationDto, OrganizationDto> {
 
     private final OrganizationService organizationService;
 
@@ -30,9 +27,9 @@ public class OrganizationDtoService extends AbstractDtoService<Organization, Org
         return organizationService;
     }
 
-    public OrganizationDto createIfAbsent(OrganizationDto dto) {
+    public OrganizationDto createIfAbsent(CreateOrganizationDto dto) {
         return toDto(organizationService.findByName(dto.getName())
-                .orElseGet(() -> organizationService.create(toEntity(dto)))
+                .orElseGet(() -> organizationService.create(toCreateEntity(dto)))
         );
     }
 

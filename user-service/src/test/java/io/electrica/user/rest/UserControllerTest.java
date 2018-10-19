@@ -147,7 +147,6 @@ public class UserControllerTest extends UserServiceApplicationTest {
     @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.AddPermission)
     public void getUsersForOrganizationTestWithWrongPermissionShouldThrowException() {
         UserDto u1 = createAndSaveUser();
-        UserDto u2 = createAndSaveUser();
         executeForUser(u1.getId(), u1.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.AddPermission), () -> {
                     userController.getUsersForOrganization(u1.getOrganizationId());
@@ -159,7 +158,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
         OrganizationDto organizationDto = createAndSaveNewOrganization();
-        UserDto u3 = createUserDto();
+        CreateUserDto u3 = createUserDto();
         u3.setOrganizationId(organizationDto.getId());
         List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
         assertEquals(2, userDtos.size());

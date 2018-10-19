@@ -5,12 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccessKeyDto {
+public class AccessKeyDto extends CreateAccessKeyDto {
 
     private Long id;
-    private String name;
-    private String key;
     private Long revisionVersion;
-    private Long userId;
 
 }
