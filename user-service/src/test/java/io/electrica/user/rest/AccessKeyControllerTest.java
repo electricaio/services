@@ -1,5 +1,8 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
+import io.electrica.test.context.ForUser;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
@@ -8,9 +11,11 @@ import io.electrica.user.dto.UserDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -43,37 +48,83 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         defaultOrganization = organizationRestClient.createIfAbsent(organizationDto).getBody();
     }
 
+    /**
+     * Generate access key success flow.
+     */
     @Test
     public void generateAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
-        AccessKeyDto result = accessKeyController.generateAccessKey(accessKeyDto).getBody();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey), 
+                () -> {
+                    AccessKeyDto result = accessKeyController.generateAccessKey(accessKeyDto).getBody();
 
-        assertCommonAccessKey(user, accessKeyDto, result, false);
+                    assertCommonAccessKey(user, accessKeyDto, result, false);
+                });
     }
 
+    /**
+     * Not for self user.
+     */
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.CreateAccessKey)
+    public void generateAccessKeyNoAccessIncorrectUser() {
+        UserDto user = callCreateUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        accessKeyController.generateAccessKey(accessKeyDto).getBody();
+    }
+
+    /**
+     * No Permission for key generation.
+     */
+    @Test(expected = AccessDeniedException.class)
+    public void generateAccessKeyNoPermission() {
+        UserDto user = callCreateUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg), 
+                () -> {
+                    accessKeyController.generateAccessKey(accessKeyDto).getBody();
+                });
+    }
+
+    /**
+     * Getting list of key success flow.
+     */
     @Test
     public void findAllNonArchivedByUser() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
-        accessKeyController.generateAccessKey(accessKeyDto1).getBody();
-        accessKeyController.generateAccessKey(accessKeyDto2).getBody();
-        List<AccessKeyDto> resultList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey), 
+                () -> {
+                    accessKeyController.generateAccessKey(accessKeyDto1).getBody();
+                    accessKeyController.generateAccessKey(accessKeyDto2).getBody();
+                    List<AccessKeyDto> resList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
 
-        assertEquals(2, resultList.size());
-        assertCommonAccessKey(user, accessKeyDto1, resultList.get(0), false);
-        assertCommonAccessKey(user, accessKeyDto2, resultList.get(1), false, TEST_ACCESS_KEY2);
+                    assertEquals(2, resList.size());
+                    assertCommonAccessKey(user, accessKeyDto1, resList.get(0), false);
+                    assertCommonAccessKey(user, accessKeyDto2, resList.get(1), false, TEST_ACCESS_KEY2);
+                });
     }
 
+    /**
+     * Getting access key value success flow.
+     */
     @Test
     public void getAccessKey() {
         UserDto user = callCreateUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
-        AccessKeyDto generatedKey = accessKeyController.generateAccessKey(accessKeyDto).getBody();
-        AccessKeyDto result = accessKeyController.getAccessKey(generatedKey.getId(), user.getId()).getBody();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey), 
+                () -> {
+                    AccessKeyDto generatedKey = accessKeyController.generateAccessKey(accessKeyDto).getBody();
+                    AccessKeyDto res = accessKeyController.getAccessKey(generatedKey.getId(), user.getId()).getBody();
 
-        assertCommonAccessKey(user, accessKeyDto, result, true);
+                    assertCommonAccessKey(user, accessKeyDto, res, true);
+                });
     }
 
     private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result,
