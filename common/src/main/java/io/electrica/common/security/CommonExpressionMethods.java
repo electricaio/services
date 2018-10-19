@@ -44,11 +44,11 @@ public class CommonExpressionMethods {
         return hasRole("SuperAdmin");
     }
 
-    public boolean isOrgAdmin(String roleType) {
+    public boolean isOrgAdmin() {
         return hasRole("OrgAdmin");
     }
 
-    public boolean isOrgUser(String roleType) {
+    public boolean isOrgUser() {
         return hasRole("OrgUser");
     }
 

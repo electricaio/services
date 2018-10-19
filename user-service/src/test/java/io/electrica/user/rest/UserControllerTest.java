@@ -44,21 +44,57 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
-    public void getUserTest() {
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadUser)
+    public void getUserTestWithSuperAdmin() {
         UserDto userDto = createAndSaveUser();
         UserDto searchUser = userController.getUser(userDto.getId()).getBody();
-        assertEquals(userDto.getId(), searchUser.getId());
-        assertEquals(userDto.getEmail(), searchUser.getEmail());
-        assertEquals(userDto.getRevisionVersion(), searchUser.getRevisionVersion());
-        assertEquals(userDto.getFirstName(), searchUser.getFirstName());
-        assertEquals(userDto.getLastName(), searchUser.getLastName());
-        assertEquals(userDto.getUuid(), searchUser.getUuid());
-        assertEquals(userDto.getOrganizationId(), searchUser.getOrganizationId());
+        equals(userDto, searchUser);
+    }
 
+    @Test
+    public void getUserTestWithOrgAdminInSameOrgHavePermission() {
+        UserDto userDto = createAndSaveUser();
+        UserDto userDto2 = createAndSaveUser();
+        executeForUser(userDto2.getId(), userDto2.getOrganizationId(), EnumSet.of(RoleType.OrgAdmin),
+                EnumSet.of(PermissionType.ReadUser), () -> {
+                    UserDto searchUser = userController.getUser(userDto.getId()).getBody();
+                    equals(userDto, searchUser);
+                });
+    }
 
+    @Test(expected = AccessDeniedException.class)
+    public void getUserTestWithOrgAdminInDiffOrgHavePermission() {
+        UserDto userDto = createAndSaveUser();
+        UserDto userDto2 = createAndSaveUser();
+        executeForUser(userDto2.getId(), 0L, EnumSet.of(RoleType.OrgAdmin),
+                EnumSet.of(PermissionType.ReadUser), () -> {
+                    UserDto searchUser = userController.getUser(userDto.getId()).getBody();
+                    equals(userDto, searchUser);
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getUserTestWithOrgUserInSameOrgHavePermission() {
+        UserDto userDto = createAndSaveUser();
+        UserDto userDto2 = createAndSaveUser();
+        executeForUser(userDto2.getId(), userDto2.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadUser), () -> {
+                    userController.getUser(userDto.getId()).getBody();
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getUserTestWithOrgUserInDiffOrgHavePermission() {
+        UserDto userDto = createAndSaveUser();
+        UserDto userDto2 = createAndSaveUser();
+        executeForUser(userDto2.getId(), 0L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadUser), () -> {
+                    userController.getUser(userDto.getId()).getBody();
+                });
     }
 
     @Test(expected = EntityNotFoundServiceException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadUser)
     public void getUserTestWithIdDontExist() {
         userController.getUser(100L).getBody();
     }
