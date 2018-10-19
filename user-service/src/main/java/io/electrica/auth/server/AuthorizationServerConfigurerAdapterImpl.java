@@ -16,6 +16,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.UUID;
+
+import static io.electrica.common.helper.AuthorityConstants.*;
 
 /**
  * AuthorizationServerConfigurerAdapterImpl provides implementation for Authorization server.
@@ -50,13 +53,21 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("frontend")
+                .withClient(FRONTEND_CLIENT_ID)
+                // ToDo change secret
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds("auth-service", "stl-service")
-                .scopes("c", "r", "u", "d", "do")
+                .resourceIds(USER_SERVICE_RESOURCE_ID, STL_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
                 .accessTokenValiditySeconds(30 * 60)
-                .refreshTokenValiditySeconds(30 * 24 * 60 * 60);
+                .refreshTokenValiditySeconds(30 * 24 * 60 * 60)
+
+                .and()
+                .withClient(ACCESS_KEY_CLIENT_ID)
+                .secret("{none}" + UUID.randomUUID())
+                .resourceIds(USER_SERVICE_RESOURCE_ID, STL_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                .scopes(READ_SCOPE, INVOKE_SCOPE)
+                .accessTokenValiditySeconds(Integer.MAX_VALUE);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.electrica.common.server;
 
+import io.electrica.common.helper.AuthorityConstants;
 import io.electrica.common.helper.RequestHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +31,23 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         // specify id of resource, that validated using JWT token
         // token have to be explicitly granted to all required micro-services
-        resources.resourceId(applicationName);
+        String resourceId;
+        switch (applicationName) {
+            case "user-service":
+                resourceId = AuthorityConstants.USER_SERVICE_RESOURCE_ID;
+                break;
+            case "stl-service":
+                resourceId = AuthorityConstants.STL_SERVICE_RESOURCE_ID;
+                break;
+            case "invoker-service":
+                resourceId = AuthorityConstants.INVOKER_SERVICE_RESOURCE_ID;
+                break;
+            default:
+                throw new UnsupportedOperationException(
+                        "Unknown service name to resolve oauth resourceId: " + applicationName
+                );
+        }
+        resources.resourceId(resourceId);
     }
 
 

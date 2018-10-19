@@ -5,5 +5,5 @@ spring:
   application:
     name: stl-service
   datasource:
-    name: pool-to-stl
+    name: pool-to-stl-db
     url: jdbc:postgresql://localhost:5432/stl_db

@@ -24,6 +24,7 @@ public class TokenHelper {
     private static final String EMAIL_INDICATOR = "@e:";
 
     private static final String ISSUED_AT_ID = "iat";
+    public static final String JWT_TOKEN_IDENTIFIER = "jti";
 
     private TokenHelper() {
     }

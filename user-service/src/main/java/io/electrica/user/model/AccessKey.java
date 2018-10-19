@@ -24,17 +24,17 @@ import java.util.UUID;
 public class AccessKey extends AbstractEntity {
 
     @NotNull
-    @Column(nullable = false, unique = true)
-    private UUID uuid;
-
-    @NotNull
     @Size(max = 255)
     @Column(nullable = false)
     private String name;
 
     @NotNull
-    @Size(max = 255)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    private UUID jti;
+
+    @NotNull
+    @Size(max = 1023)
+    @Column(nullable = false, length = 1023)
     private String key;
 
     @NotNull
