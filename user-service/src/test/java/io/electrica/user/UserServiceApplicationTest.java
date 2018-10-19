@@ -8,9 +8,7 @@ import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.rest.OrganizationController;
 import io.electrica.user.rest.UserController;
-import io.electrica.user.service.UserService;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -27,12 +25,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
 
     @Inject
     protected UserController userController;
-
-    @Inject
-    protected UserService userService;
-
-    @Inject
-    protected PasswordEncoder passwordEncoder;
 
     @Inject
     protected OrganizationController organizationController;

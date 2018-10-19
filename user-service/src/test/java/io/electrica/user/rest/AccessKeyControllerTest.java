@@ -5,12 +5,10 @@ import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUser;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.AccessKeyDto;
-import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
@@ -28,11 +26,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     private static final String TEST_ACCESS_KEY2 = "TestAccessKey2";
 
     @Inject
-    private OrganizationController organizationRestClient;
-    @Inject
     private AccessKeyController accessKeyController;
-    @Inject
-    private UserController userRestClient;
 
     @Before
     public void init() {
@@ -44,14 +38,14 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
      */
     @Test
     public void generateAccessKey() {
-        UserDto user = callCreateUser();
+        UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
                 () -> {
                     AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
 
-                    assertCommonAccessKey(user, accessKeyDto, result);
+                    assertTestAccessKey(user, accessKeyDto, result);
                 });
     }
 
@@ -61,7 +55,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     @Test(expected = AccessDeniedException.class)
     @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.CreateAccessKey)
     public void generateAccessKeyNoAccessIncorrectUser() {
-        UserDto user = callCreateUser();
+        UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         accessKeyController.createAccessKey(accessKeyDto).getBody();
     }
@@ -71,7 +65,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
      */
     @Test(expected = AccessDeniedException.class)
     public void generateAccessKeyNoPermission() {
-        UserDto user = callCreateUser();
+        UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadOrg),
@@ -85,7 +79,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
      */
     @Test
     public void findAllNonArchivedByUser() {
-        UserDto user = callCreateUser();
+        UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
@@ -96,8 +90,8 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                     List<AccessKeyDto> resList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
 
                     assertEquals(2, resList.size());
-                    assertCommonAccessKey(user, accessKeyDto1, resList.get(0));
-                    assertCommonAccessKey(user, accessKeyDto2, resList.get(1), TEST_ACCESS_KEY2);
+                    assertTestAccessKey(user, accessKeyDto1, resList.get(0));
+                    assertAccessKey(user, accessKeyDto2, resList.get(1), TEST_ACCESS_KEY2);
                 });
     }
 
@@ -106,7 +100,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
      */
     @Test
     public void getAccessKey() {
-        UserDto user = callCreateUser();
+        UserDto user = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
@@ -115,15 +109,15 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                     FullAccessKeyDto res = accessKeyController.getAccessKey(generatedKey.getId(), user.getId())
                             .getBody();
 
-                    assertCommonAccessKey(user, accessKeyDto, res);
+                    assertTestAccessKey(user, accessKeyDto, res);
                 });
     }
 
-    private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {
-        assertCommonAccessKey(user, accessKeyDto, result, TEST_ACCESS_KEY);
+    private void assertTestAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {
+        assertAccessKey(user, accessKeyDto, result, TEST_ACCESS_KEY);
     }
 
-    private void assertCommonAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result, String keyName) {
+    private void assertAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result, String keyName) {
         assertNotSame(accessKeyDto, result);
         assertEquals(accessKeyDto.getName(), keyName);
         assertEquals(accessKeyDto.getUserId(), user.getId());
@@ -133,12 +127,6 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
             assertNotNull(fullKey.getKey());
             assertNotNull(fullKey.getJti());
         }
-    }
-
-    private UserDto callCreateUser() {
-        CreateUserDto createUserDto = createUserDto();
-        ResponseEntity<UserDto> response = userRestClient.createUser(createUserDto);
-        return response.getBody();
     }
 
     private AccessKeyDto createAccessKeyDto(UserDto user) {
