@@ -28,8 +28,8 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('CreateAccessKey') and " +
-                    "(#common.isSuperAdmin() OR #common.haveOneOfRoles('OrgUser', 'OrgAdmin'))")
+    @PreAuthorize("#common.hasPermission('CreateAccessKey') and (#common.isSuperAdmin() " +
+                    "OR (#common.haveOneOfRoles('OrgUser', 'OrgAdmin') and #common.isUser(#accessKey.userId)))")
     public ResponseEntity<AccessKeyDto> generateAccessKey(@RequestBody AccessKeyDto accessKey) {
         logger.info("REST request to generate access key : {}", accessKey);
         return ResponseEntity.ok(accessKeyDtoService.create(accessKey));
