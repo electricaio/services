@@ -77,18 +77,18 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
+            name: jti
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
             name: key
-            type: VARCHAR(255)
+            type: VARCHAR(1023)
         - column:
             constraints:
               nullable: false
             name: name
             type: VARCHAR(255)
-        - column:
-            constraints:
-              nullable: false
-            name: uuid
-            type: UUID
         - column:
             constraints:
               nullable: false
@@ -133,8 +133,14 @@ databaseChangeLog:
             name: revision_version_mod
             type: BOOLEAN
         - column:
+            name: jti
+            type: UUID
+        - column:
+            name: jti_mod
+            type: BOOLEAN
+        - column:
             name: key
-            type: VARCHAR(255)
+            type: VARCHAR(1023)
         - column:
             name: key_mod
             type: BOOLEAN
@@ -143,12 +149,6 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: name_mod
-            type: BOOLEAN
-        - column:
-            name: uuid
-            type: UUID
-        - column:
-            name: uuid_mod
             type: BOOLEAN
         - column:
             name: user_id
@@ -1000,16 +1000,16 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: email
-        constraintName: uk_6dotkott2kjsp8vw4d0m25fb7
-        tableName: users
+        columnNames: jti
+        constraintName: uk_57tavpao4whe9uw8tol00wx0x
+        tableName: access_keys
 - changeSet:
     id: 1539845835761-47
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: uuid
-        constraintName: uk_6km2m9i3vjuy36rnvkgj1l61s
+        columnNames: email
+        constraintName: uk_6dotkott2kjsp8vw4d0m25fb7
         tableName: users
 - changeSet:
     id: 1539845835761-48
@@ -1017,8 +1017,8 @@ databaseChangeLog:
     changes:
     - addUniqueConstraint:
         columnNames: uuid
-        constraintName: uk_bpcblmsryhxmrki7v6neumywj
-        tableName: access_keys
+        constraintName: uk_6km2m9i3vjuy36rnvkgj1l61s
+        tableName: users
 - changeSet:
     id: 1539845835761-49
     author: aleks (generated)

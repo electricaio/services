@@ -9,19 +9,18 @@ import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class AccessKeyService extends AbstractService<AccessKey> {
 
     private final AccessKeyRepository accessKeyRepository;
+    private final AccessKeyGenerator accessKeyGenerator;
 
-    public AccessKeyService(AccessKeyRepository accessKeyRepository) {
+    public AccessKeyService(AccessKeyRepository accessKeyRepository, AccessKeyGenerator accessKeyGenerator) {
         this.accessKeyRepository = accessKeyRepository;
+        this.accessKeyGenerator = accessKeyGenerator;
     }
 
     public List<AccessKey> findAllNonArchivedByUser(Long userId) {
@@ -40,7 +39,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
 
-        fillAccessKey(newEntity);
+        fillAccessKeyInfo(userId, newEntity);
         return getRepository().save(newEntity);
     }
 
@@ -64,13 +63,10 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         };
     }
 
-    private void fillAccessKey(AccessKey accessKey) {
-        // TODO: Implement key generation here
-        UUID uuid = UUID.randomUUID();
-        String key = Base64.getEncoder().encodeToString(uuid.toString().getBytes(StandardCharsets.UTF_8));
-
-        accessKey.setUuid(uuid);
-        accessKey.setKey(key);
+    private void fillAccessKeyInfo(Long userID, AccessKey accessKey) {
+        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(userID);
+        accessKey.setJti(key.getJti());
+        accessKey.setKey(key.getValue());
     }
 
     @Override
