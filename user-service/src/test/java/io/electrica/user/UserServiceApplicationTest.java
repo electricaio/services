@@ -2,12 +2,12 @@ package io.electrica.user;
 
 import io.electrica.UserServiceApplication;
 import io.electrica.test.AbstractJpaApplicationTest;
+import io.electrica.user.dto.CreateOrganizationDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.rest.OrganizationController;
 import io.electrica.user.rest.UserController;
-import io.electrica.user.service.OrganizationDtoService;
 import io.electrica.user.service.UserService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,9 +24,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     private static final String DEFAULT_EMAIL = "test@localhost.com";
 
     protected OrganizationDto defaultOrganization;
-
-    @Inject
-    protected OrganizationDtoService organizationDtoService;
 
     @Inject
     protected UserController userController;
@@ -43,10 +39,9 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
 
 
     protected void initBaseClass() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
-        defaultOrganization = organizationDtoService.create(organizationDto);
+        CreateOrganizationDto organizationDto = new CreateOrganizationDto();
+        organizationDto.setName("test");
+        defaultOrganization = organizationController.createIfAbsent(organizationDto).getBody();
     }
 
     public CreateUserDto createUserDto() {
@@ -55,7 +50,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
         user.setEmail(DEFAULT_EMAIL + random);
         user.setFirstName("FirstName" + random);
         user.setLastName("LastName" + random);
-        user.setUuid(UUID.randomUUID());
         user.setPassword("12345");
         user.setOrganizationId(defaultOrganization.getId());
         return user;
@@ -79,7 +73,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     public OrganizationDto createNewOrganization() {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("test" + new Date().getTime());
-        organizationDto.setUuid(UUID.randomUUID());
         return organizationDto;
     }
 
@@ -89,7 +82,6 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
         assertEquals(u1.getRevisionVersion(), u2.getRevisionVersion());
         assertEquals(u1.getFirstName(), u2.getFirstName());
         assertEquals(u1.getLastName(), u2.getLastName());
-        assertEquals(u1.getUuid(), u2.getUuid());
         assertEquals(u1.getOrganizationId(), u2.getOrganizationId());
     }
 }

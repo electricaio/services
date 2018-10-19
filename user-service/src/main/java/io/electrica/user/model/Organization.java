@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * A Organization.
@@ -26,10 +25,6 @@ import java.util.UUID;
 @Audited
 @Table(name = "organizations")
 public class Organization extends AbstractEntity {
-
-    @NotNull
-    @Column(nullable = false, unique = true)
-    private UUID uuid;
 
     @NotNull
     @Size(max = 255)

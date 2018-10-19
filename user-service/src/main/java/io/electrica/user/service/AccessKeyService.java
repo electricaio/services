@@ -23,11 +23,11 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    public List<AccessKey> findAllNonArchivedByUser(Long userId) {
+    List<AccessKey> findAllNonArchivedByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
-    public AccessKey findByIdAndUser(Long accessKeyId, Long userId) {
+    AccessKey findByIdAndUser(Long accessKeyId, Long userId) {
         return accessKeyRepository.findByKeyAndUser(accessKeyId, userId).
                 orElseThrow(() -> new EntityNotFoundServiceException(
                         String.format("No access key %s for user %s", accessKeyId, userId)));

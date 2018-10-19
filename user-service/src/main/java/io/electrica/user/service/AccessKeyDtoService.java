@@ -1,17 +1,17 @@
 package io.electrica.user.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
-
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.user.dto.AccessKeyDto;
+import io.electrica.user.dto.CreateAccessKeyDto;
+import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.model.AccessKey;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
-public class AccessKeyDtoService extends AbstractDtoService<AccessKey, AccessKeyDto> {
+public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAccessKeyDto, AccessKeyDto> {
 
     private final AccessKeyService accessKeyService;
 
@@ -20,25 +20,12 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, AccessKey
     }
 
     public List<AccessKeyDto> findAllNonArchivedByUser(Long userId) {
-        return accessKeyService.findAllNonArchivedByUser(userId).
-                stream().
-                map(e -> {
-                    e.setKey(null);
-                    return toDto(e);
-                }).
-                collect(Collectors.toList());
+        return toDto(accessKeyService.findAllNonArchivedByUser(userId));
     }
 
-    public AccessKeyDto findByKeyAndUser(Long accessKeyId, Long userId) {
-        return toDto(accessKeyService.findByIdAndUser(accessKeyId, userId));
-    }
-
-    @Override
-    public AccessKeyDto create(AccessKeyDto persistentDto) {
-        AccessKeyDto result = super.create(persistentDto);
-        //We should display Access Key on demand as a separate call
-        result.setKey(null);
-        return result;
+    public FullAccessKeyDto findByKeyAndUser(Long accessKeyId, Long userId) {
+        AccessKey entity = accessKeyService.findByIdAndUser(accessKeyId, userId);
+        return mapper.map(entity, FullAccessKeyDto.class);
     }
 
     @Override

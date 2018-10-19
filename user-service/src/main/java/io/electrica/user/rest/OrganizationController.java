@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.user.dto.CreateOrganizationDto;
 import io.electrica.user.dto.OrganizationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,6 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface OrganizationController {
 
     @PostMapping(PUBLIC + V1 + "/organizations")
-    ResponseEntity<OrganizationDto> createIfAbsent(@RequestBody OrganizationDto organizationDto);
+    ResponseEntity<OrganizationDto> createIfAbsent(@RequestBody CreateOrganizationDto organizationDto);
 
 }
