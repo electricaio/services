@@ -6,11 +6,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Most common method security set used for custom security verifications.
