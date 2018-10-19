@@ -2,7 +2,6 @@ package io.electrica.common.security;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
-import io.electrica.common.helper.TokenHelper;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
