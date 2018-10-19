@@ -25,14 +25,14 @@ public class CommonExpressionMethods {
         return new IdentityImpl(authentication);
     }
 
-    public boolean isRoleType(String roleType) {
+    public boolean hasRole(String roleType) {
         return getIdentity().getRoles().contains(RoleType.valueOf(roleType));
     }
 
     public boolean haveOneOfRoles(String... roles) {
         boolean result = false;
         for (String role : roles) {
-            if (getIdentity().getRoles().contains(RoleType.valueOf(role))) {
+            if (hasRole(role)) {
                 result = true;
                 break;
             }
@@ -41,15 +41,15 @@ public class CommonExpressionMethods {
     }
 
     public boolean isSuperAdmin() {
-        return getIdentity().getRoles().contains(RoleType.SuperAdmin);
+        return hasRole("SuperAdmin");
     }
 
     public boolean isOrgAdmin(String roleType) {
-        return getIdentity().getRoles().contains(RoleType.OrgAdmin);
+        return hasRole("OrgAdmin");
     }
 
     public boolean isOrgUser(String roleType) {
-        return getIdentity().getRoles().contains(RoleType.OrgUser);
+        return hasRole("OrgUser");
     }
 
     public boolean isUser(Long userId) {
