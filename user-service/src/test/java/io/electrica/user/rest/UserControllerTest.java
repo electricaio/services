@@ -1,5 +1,9 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.EntityNotFoundServiceException;
+import io.electrica.common.security.PermissionType;
+import io.electrica.common.security.RoleType;
+import io.electrica.test.context.ForUser;
 import io.electrica.user.UserServiceApplicationTest;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
@@ -10,7 +14,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -20,8 +26,6 @@ import static org.junit.Assert.*;
  */
 @NoArgsConstructor
 public class UserControllerTest extends UserServiceApplicationTest {
-
-    private static final String DEFAULT_EMAIL = "test@localhost.com";
 
     @Before
     public void init() {
@@ -40,6 +44,26 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    public void getUserTest() {
+        UserDto userDto = createAndSaveUser();
+        UserDto searchUser = userController.getUser(userDto.getId()).getBody();
+        assertEquals(userDto.getId(), searchUser.getId());
+        assertEquals(userDto.getEmail(), searchUser.getEmail());
+        assertEquals(userDto.getRevisionVersion(), searchUser.getRevisionVersion());
+        assertEquals(userDto.getFirstName(), searchUser.getFirstName());
+        assertEquals(userDto.getLastName(), searchUser.getLastName());
+        assertEquals(userDto.getUuid(), searchUser.getUuid());
+        assertEquals(userDto.getOrganizationId(), searchUser.getOrganizationId());
+
+
+    }
+
+    @Test(expected = EntityNotFoundServiceException.class)
+    public void getUserTestWithIdDontExist() {
+        userController.getUser(100L).getBody();
+    }
+
+    @Test
     public void saltedPasswordTest() {
         CreateUserDto createUserDto = createUserDto();
         UserDto result = callCreateUser(createUserDto);
@@ -49,6 +73,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationTest() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
@@ -59,6 +84,41 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    public void getUsersForOrganizationTestWithUserInSameOrg() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        executeForUser(u1.getId(), u1.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg), () -> {
+                    List<UserDto> userDtos = userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+                    assertEquals(2, userDtos.size());
+                    assertEquals(u1.getId(), userDtos.get(0).getId());
+                    assertEquals(u2.getId(), userDtos.get(1).getId());
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getUsersForOrganizationTestWithUserInDiffOrgThrowException() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        executeForUser(u1.getId(), 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg), () -> {
+                    userController.getUsersForOrganization(u1.getOrganizationId()).getBody();
+                });
+    }
+
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.AddPermission)
+    public void getUsersForOrganizationTestWithWrongPermissionShouldThrowException() {
+        UserDto u1 = createAndSaveUser();
+        UserDto u2 = createAndSaveUser();
+        executeForUser(u1.getId(), u1.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.AddPermission), () -> {
+                    userController.getUsersForOrganization(u1.getOrganizationId());
+                });
+    }
+
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithMultipleOrgsTest() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
@@ -72,6 +132,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithOrgNotExist() {
         UserDto u1 = createAndSaveUser();
         UserDto u2 = createAndSaveUser();
@@ -80,6 +141,7 @@ public class UserControllerTest extends UserServiceApplicationTest {
     }
 
     @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = PermissionType.ReadOrg)
     public void getUsersForOrganizationWithNoUsers() {
         List<UserDto> userDtos = userController.getUsersForOrganization(defaultOrganization.getId()).getBody();
         assertEquals(0, userDtos.size());

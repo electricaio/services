@@ -6,6 +6,7 @@ import io.electrica.user.service.UserDtoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,16 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        UserDto userDto = userDtoService.findById(id, false);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @Override
+
+    @PreAuthorize(" #common.hasPermission('ReadOrg')  and " +
+            " ( #common.isSuperAdmin() OR    (#common.haveOneOfRoles('OrgUser' , 'OrgAdmin') and  " +
+            "#common.userInOrganization(#organizationId)) )")
     public ResponseEntity<List<UserDto>> getUsersForOrganization(@PathVariable Long organizationId) {
         List<UserDto> users = userDtoService.getUsersForOrg(organizationId);
         return ResponseEntity.ok(users);
