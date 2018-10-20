@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 public class Authorization extends AbstractEntity {
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
     private AuthorizationType type;
 
