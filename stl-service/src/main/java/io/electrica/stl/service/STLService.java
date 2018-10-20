@@ -2,6 +2,7 @@ package io.electrica.stl.service;
 
 import io.electrica.common.helper.ERNUtils;
 import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.stl.model.AuthorizationType;
 import io.electrica.stl.model.STL;
 import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.STLRepository;
@@ -32,8 +33,15 @@ public class STLService extends AbstractService<STL> {
         );
         model.setErn(ern);
 
-        final STLType type = getReference(STLType.class, model.getType().getId());
+        final STLType type = getReference(
+                STLType.class, model.getType().getId()
+        );
         model.setType(type);
+
+        final AuthorizationType authorizationType = getReference(
+                AuthorizationType.class, model.getAuthorizationType().getId()
+        );
+        model.setAuthorizationType(authorizationType);
 
         return stlRepository.save(model);
     }

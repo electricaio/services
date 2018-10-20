@@ -36,5 +36,10 @@ public class BasicAuthorization extends AbstractEntity {
     @JoinColumn(name = "authorization_id", nullable = false)
     private Authorization authorization;
 
+    public BasicAuthorization(String userHash, String passwordHash, Authorization authorization) {
+        this.userHash = userHash;
+        this.passwordHash = passwordHash;
+        this.authorization = authorization;
+    }
 }
 

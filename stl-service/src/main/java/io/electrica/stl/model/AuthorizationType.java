@@ -10,7 +10,6 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -23,10 +22,12 @@ import javax.validation.constraints.Size;
 public class AuthorizationType extends AbstractEntity {
 
     @NotNull
-    @Size(max = 255)
     @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private AuthorizationTypeName name;
 
+    public AuthorizationType(AuthorizationTypeName name) {
+        this.name = name;
+    }
 }
 

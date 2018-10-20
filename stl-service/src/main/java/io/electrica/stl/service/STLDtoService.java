@@ -9,7 +9,6 @@ import io.electrica.stl.rest.dto.ReadSTLDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class STLDtoService extends AbstractDtoService<STL, CreateSTLDto, ReadSTLDto> {
@@ -22,10 +21,7 @@ public class STLDtoService extends AbstractDtoService<STL, CreateSTLDto, ReadSTL
     }
 
     public List<ReadSTLDto> findAll() {
-        return stlService.findAll()
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        return toDto(stlService.findAll());
     }
 
     @Override
