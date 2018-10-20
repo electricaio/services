@@ -20,7 +20,6 @@ public class STLInstanceControllerImpl implements STLInstanceController {
         this.stlInstanceService = stlInstanceService;
     }
 
-
     @Override
     @PreAuthorize("#common.hasPermission('AssociateAccessKeyToSTL')")
     public ResponseEntity<ReadSTLInstanceDto> create(@Valid @RequestBody CreateSTLInstanceDto request) {
