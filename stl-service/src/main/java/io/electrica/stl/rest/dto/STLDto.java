@@ -1,6 +1,5 @@
 package io.electrica.stl.rest.dto;
 
-import com.github.dozermapper.core.Mapping;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,10 +17,7 @@ public class STLDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    @NotBlank
-    @Max(255)
-    @Mapping("type.name")
-    private String type;
+    private Long typeId;
 
     @NotNull
     @NotBlank

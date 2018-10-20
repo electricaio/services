@@ -25,7 +25,7 @@ import java.util.Optional;
 public class STL extends AbstractEntity {
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
     private STLType type;
 

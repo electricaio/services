@@ -13,14 +13,6 @@ public abstract class AbstractDatabaseTest extends STLServiceApplicationTest imp
     @Inject
     protected STLRepository stlRepository;
 
-    @Inject
-    protected AuthorizationTypeRepository authorizationTypeRepository;
-
-    @Override
-    public AuthorizationTypeRepository getAuthorizationTypeRepository() {
-        return authorizationTypeRepository;
-    }
-
     @Override
     public STLTypeRepository getSTLTypeRepository() {
         return stlTypeRepository;

@@ -7,3 +7,5 @@ spring:
   datasource:
     name: pool-to-stl-db
     url: jdbc:postgresql://localhost:5432/stl_db
+  flyway:
+    enabled: true
