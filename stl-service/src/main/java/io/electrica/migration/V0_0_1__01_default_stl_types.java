@@ -16,6 +16,7 @@ public class V0_0_1__01_default_stl_types implements SpringJdbcMigration {
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
         final ApplicationContext context = FlywayApplicationContextBridge.getApplicationContext();
+
         stlTypeRepository = context.getBean(STLTypeRepository.class);
         stlTypeRepository.saveAll(
                 Arrays.asList(
