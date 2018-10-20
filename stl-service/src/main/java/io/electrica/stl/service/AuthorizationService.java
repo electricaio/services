@@ -30,21 +30,21 @@ public class AuthorizationService {
         this.authorizationRepository = authorizationRepository;
     }
 
-    private Authorization createAuthorization(AuthorizationType type, STLInstance stlInstance) {
+    private Authorization createAuthorization(AuthorizationType type, Connection connection) {
         final Authorization model = new Authorization();
         model.setType(type);
-        model.setStlInstance(stlInstance);
+        model.setConnection(connection);
         return authorizationRepository.save(model);
     }
 
     public BasicAuthorization createBasicAuth(
             AuthorizationType type,
-            STLInstance stlInstance,
+            Connection connection,
             AuthorizationDto authorizationDto) {
         if (authorizationDto.getUser() == null || authorizationDto.getPassword() == null) {
             throw new BadRequestServiceException("Missing mandatory fields for basic authorization type.");
         }
-        final Authorization authorization = createAuthorization(type, stlInstance);
+        final Authorization authorization = createAuthorization(type, connection);
         final BasicAuthorization model = new BasicAuthorization();
         model.setUserHash(authorizationDto.getUser());
         model.setPasswordHash(authorizationDto.getPassword());
@@ -53,23 +53,23 @@ public class AuthorizationService {
     }
 
     public AwsIamAuthorization createAwsIamAuth(AuthorizationType type,
-                                                STLInstance stlInstance,
+                                                Connection connection,
                                                 AuthorizationDto data) {
         if (data.getDetails() == null) {
             throw new BadRequestServiceException("Missing mandatory fields for aws iam authorization type.");
         }
-        final Authorization authorization = createAuthorization(type, stlInstance);
+        final Authorization authorization = createAuthorization(type, connection);
         final AwsIamAuthorization model = new AwsIamAuthorization();
         model.setAuthorization(authorization);
         model.setDetails(data.getDetails());
         return awsIamAuthorizationRepository.save(model);
     }
 
-    public TokenAuthorization createTokenAuth(AuthorizationType type, STLInstance stlInstance, AuthorizationDto data) {
+    public TokenAuthorization createTokenAuth(AuthorizationType type, Connection connection, AuthorizationDto data) {
         if (data.getToken() == null) {
             throw new BadRequestServiceException("Missing mandatory fields for token authorization type.");
         }
-        final Authorization authorization = createAuthorization(type, stlInstance);
+        final Authorization authorization = createAuthorization(type, connection);
         final TokenAuthorization model = new TokenAuthorization();
         model.setAuthorization(authorization);
         model.setTokenHash(data.getToken());

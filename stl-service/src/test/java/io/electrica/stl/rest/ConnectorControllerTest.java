@@ -3,12 +3,12 @@ package io.electrica.stl.rest;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.stl.model.AuthorizationType;
-import io.electrica.stl.model.STLType;
+import io.electrica.stl.model.ConnectorType;
 import io.electrica.stl.model.enums.AuthorizationTypeName;
 import io.electrica.stl.repository.AbstractDatabaseTest;
-import io.electrica.stl.rest.dto.CreateSTLDto;
-import io.electrica.stl.rest.dto.ReadSTLDto;
-import io.electrica.stl.service.STLService;
+import io.electrica.stl.rest.dto.CreateConnectorDto;
+import io.electrica.stl.rest.dto.ReadConnectorDto;
+import io.electrica.stl.service.ConnectorService;
 import io.electrica.test.context.ForUser;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,22 +21,22 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class STLControllerTest extends AbstractDatabaseTest {
+public class ConnectorControllerTest extends AbstractDatabaseTest {
 
     @Inject
-    private STLController stlController;
+    private ConnectorController connectorController;
 
     @Inject
-    private STLService stlService;
+    private ConnectorService connectorService;
 
-    private STLType stlType;
+    private ConnectorType connectorType;
 
     private AuthorizationType authorizationType;
 
     @Before
     public void setup() {
         super.setup();
-        stlType = findSTLType("Talent");
+        connectorType = findConnectorType("Talent");
         authorizationType = findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION);
     }
 
@@ -45,11 +45,11 @@ public class STLControllerTest extends AbstractDatabaseTest {
             userId = 1,
             organizationId = 1,
             roles = RoleType.SuperAdmin,
-            permissions = PermissionType.CreateSTL
+            permissions = PermissionType.CreateConnector
     )
-    public void testCreateSTLWithSuccess() {
-        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
-        final ReadSTLDto actual = stlController.create(dto).getBody();
+    public void testCreateConnectorWithSuccess() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto(connectorType.getId(), authorizationType.getId());
+        final ReadConnectorDto actual = connectorController.create(dto).getBody();
 
         Assert.assertNotNull(actual.getId());
         Assert.assertNotNull(actual.getRevisionVersion());
@@ -59,7 +59,7 @@ public class STLControllerTest extends AbstractDatabaseTest {
         assertEquals(dto.getVersion(), actual.getVersion());
         assertEquals(dto.getResource(), actual.getResource());
 
-        Assert.assertEquals(stlType.getId(), actual.getTypeId());
+        Assert.assertEquals(connectorType.getId(), actual.getTypeId());
 
         final String expectedErn = "stl://hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
@@ -70,13 +70,13 @@ public class STLControllerTest extends AbstractDatabaseTest {
             userId = 1,
             organizationId = 1,
             roles = RoleType.SuperAdmin,
-            permissions = PermissionType.CreateSTL
+            permissions = PermissionType.CreateConnector
     )
-    public void testCreateSTLWithNonExistingSTLType() {
-        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
+    public void testCreateConnectorWithNonExistingSTLType() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto(connectorType.getId(), authorizationType.getId());
         dto.setTypeId(-1L);
-        stlController.create(dto).getBody();
-        stlRepository.flush();
+        connectorController.create(dto).getBody();
+        connectorRepository.flush();
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -84,13 +84,13 @@ public class STLControllerTest extends AbstractDatabaseTest {
             userId = 1,
             organizationId = 1,
             roles = RoleType.SuperAdmin,
-            permissions = PermissionType.CreateSTL
+            permissions = PermissionType.CreateConnector
     )
-    public void testCreateSTLWithNonExistingAuthType() {
-        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
+    public void testCreateConnectorWithNonExistingAuthType() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto(connectorType.getId(), authorizationType.getId());
         dto.setAuthorizationTypeId(-1L);
-        stlController.create(dto).getBody();
-        stlRepository.flush();
+        connectorController.create(dto).getBody();
+        connectorRepository.flush();
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -100,8 +100,8 @@ public class STLControllerTest extends AbstractDatabaseTest {
             roles = RoleType.SuperAdmin,
             permissions = PermissionType.CreateOrg
     )
-    public void testCreateSTLWithWrongPermission() {
-        stlController.create(createHackerRankSTLDto(stlType.getId(), authorizationType.getId()));
+    public void testCreateConnectorWithWrongPermission() {
+        connectorController.create(createHackerRankConnectorDto(connectorType.getId(), authorizationType.getId()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -109,10 +109,10 @@ public class STLControllerTest extends AbstractDatabaseTest {
             userId = 1,
             organizationId = 1,
             roles = RoleType.OrgAdmin,
-            permissions = PermissionType.CreateSTL
+            permissions = PermissionType.CreateConnector
     )
-    public void testCreateSTLWithWrongRole() {
-        stlController.create(createHackerRankSTLDto(stlType.getId(), authorizationType.getId()));
+    public void testCreateConnectorWithWrongRole() {
+        connectorController.create(createHackerRankConnectorDto(connectorType.getId(), authorizationType.getId()));
     }
 
     @Test
@@ -120,17 +120,21 @@ public class STLControllerTest extends AbstractDatabaseTest {
             userId = 1,
             organizationId = 1,
             roles = RoleType.SuperAdmin,
-            permissions = PermissionType.CreateSTL
+            permissions = PermissionType.CreateConnector
     )
     public void testFindAllNonArchived() {
-        final CreateSTLDto createHackerRankSTLDto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
-        stlController.create(createHackerRankSTLDto);
+        final CreateConnectorDto createHackerRankSTLDto = createHackerRankConnectorDto(
+                connectorType.getId(),
+                authorizationType.getId()
+        );
+        connectorController.create(createHackerRankSTLDto);
 
-        final ReadSTLDto greenHouseDto = stlController.create(createGreenhouseSTLDto(stlType.getId(), authorizationType
-                .getId())).getBody();
-        stlService.archive(greenHouseDto.getId());
+        final ReadConnectorDto greenHouseDto = connectorController
+                .create(createGreenhouseConnectorDto(connectorType.getId(), authorizationType.getId()))
+                .getBody();
+        connectorService.archive(greenHouseDto.getId());
 
-        final List<ReadSTLDto> actual = stlController.findAll().getBody();
+        final List<ReadConnectorDto> actual = connectorController.findAll().getBody();
 
         assertEquals(1, actual.size());
         assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());

@@ -3,29 +3,29 @@ package io.electrica.stl.service;
 import io.electrica.common.helper.ERNUtils;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.stl.model.AuthorizationType;
-import io.electrica.stl.model.STL;
-import io.electrica.stl.model.STLType;
-import io.electrica.stl.repository.STLRepository;
+import io.electrica.stl.model.Connector;
+import io.electrica.stl.model.ConnectorType;
+import io.electrica.stl.repository.ConnectorRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class STLService extends AbstractService<STL> {
+public class ConnectorService extends AbstractService<Connector> {
 
-    private final STLRepository stlRepository;
+    private final ConnectorRepository connectorRepository;
 
-    public STLService(STLRepository stlRepository) {
-        this.stlRepository = stlRepository;
+    public ConnectorService(ConnectorRepository connectorRepository) {
+        this.connectorRepository = connectorRepository;
     }
 
-    public List<STL> findAll() {
-        return stlRepository.findAllNonArchived();
+    public List<Connector> findAll() {
+        return connectorRepository.findAllNonArchived();
     }
 
     @Override
-    protected STL executeCreate(STL model) {
+    protected Connector executeCreate(Connector model) {
         final String ern = ERNUtils.createERN(
                 model.getName(),
                 model.getResourceOpt(),
@@ -33,8 +33,8 @@ public class STLService extends AbstractService<STL> {
         );
         model.setErn(ern);
 
-        final STLType type = getReference(
-                STLType.class, model.getType().getId()
+        final ConnectorType type = getReference(
+                ConnectorType.class, model.getType().getId()
         );
         model.setType(type);
 
@@ -43,17 +43,17 @@ public class STLService extends AbstractService<STL> {
         );
         model.setAuthorizationType(authorizationType);
 
-        return stlRepository.save(model);
+        return connectorRepository.save(model);
     }
 
     @Override
-    protected void executeUpdate(STL merged, STL update) {
+    protected void executeUpdate(Connector merged, Connector update) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected JpaRepository<STL, Long> getRepository() {
-        return stlRepository;
+    protected JpaRepository<Connector, Long> getRepository() {
+        return connectorRepository;
     }
 
 }

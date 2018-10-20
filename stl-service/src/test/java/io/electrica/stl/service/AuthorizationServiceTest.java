@@ -2,7 +2,7 @@ package io.electrica.stl.service;
 
 import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.stl.model.AuthorizationType;
-import io.electrica.stl.model.STLInstance;
+import io.electrica.stl.model.Connection;
 import io.electrica.stl.model.enums.AuthorizationTypeName;
 import io.electrica.stl.rest.dto.AuthorizationDto;
 import org.junit.Before;
@@ -17,12 +17,12 @@ public class AuthorizationServiceTest {
     @InjectMocks
     private AuthorizationService authorizationService;
 
-    private STLInstance stlInstance;
+    private Connection connection;
 
     @Before
     public void setup() {
-        stlInstance = new STLInstance();
-        stlInstance.setId(1L);
+        connection = new Connection();
+        connection.setId(1L);
     }
 
     @Test(expected = BadRequestServiceException.class)
@@ -32,7 +32,7 @@ public class AuthorizationServiceTest {
         final AuthorizationDto authorizationDto = new AuthorizationDto();
         authorizationDto.setDetails("test");
 
-        authorizationService.createBasicAuth(type, stlInstance, authorizationDto);
+        authorizationService.createBasicAuth(type, connection, authorizationDto);
     }
 
     @Test(expected = BadRequestServiceException.class)
@@ -42,7 +42,7 @@ public class AuthorizationServiceTest {
         final AuthorizationDto authorizationDto = new AuthorizationDto();
         authorizationDto.setToken("test");
 
-        authorizationService.createBasicAuth(type, stlInstance, authorizationDto);
+        authorizationService.createBasicAuth(type, connection, authorizationDto);
     }
 
     @Test(expected = BadRequestServiceException.class)
@@ -52,6 +52,6 @@ public class AuthorizationServiceTest {
         final AuthorizationDto authorizationDto = new AuthorizationDto();
         authorizationDto.setUser("test");
 
-        authorizationService.createBasicAuth(type, stlInstance, authorizationDto);
+        authorizationService.createBasicAuth(type, connection, authorizationDto);
     }
 }

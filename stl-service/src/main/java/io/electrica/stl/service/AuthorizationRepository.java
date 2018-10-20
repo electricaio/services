@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface AuthorizationRepository extends JpaRepository<Authorization, Long> {
 
-    @Query(value = "FROM Authorization a WHERE a.stlInstance.id=:stlInstanceId")
-    Optional<Authorization> findOneByStlInstance(@Param("stlInstanceId") Long stlInstanceId);
+    @Query(value = "FROM Authorization a WHERE a.connection.id=:connectionId")
+    Optional<Authorization> findOneByConnection(@Param("connectionId") Long connectionId);
 }

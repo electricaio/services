@@ -26,12 +26,12 @@ public enum PermissionType {
     ActivateOrg(9),
     CreateAccessKey(10),
     ReadAccessKey(11),
-    STLService(12),
-    CreateSTL(13),
-    STLDeActivate(14),
-    STLActivate(15),
-    AssociateAccessKeyToSTL(16),
-    ListActiveSTLs(17),
+    ConnectorService(12),
+    CreateConnector(13),
+    DeActivateConnection(14),
+    ActivateConnection(15),
+    AssociateAccessKeyToConnector(16),
+    ReadActiveConnection(17),
     AddPermission(18),
     RemovePermission(19);
 

@@ -44,11 +44,16 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission activateOrg = savePermission(PermissionType.ActivateOrg, "Activate organization", "ActivateOrg");
         Permission createAccessKey = savePermission(PermissionType.CreateAccessKey, "Create access key", "CreateAccessKey");
         Permission readAccessKey = savePermission(PermissionType.ReadAccessKey, "Read access key", "ReadAccessKey");
-        Permission createSTL = savePermission(PermissionType.CreateSTL, "Create STL", "CreateSTL");
-        Permission stlDeActivate = savePermission(PermissionType.STLDeActivate, "Disable STL", "STLDeActivate");
-        Permission stlActivate = savePermission(PermissionType.STLActivate, "Activate STL", "STLActivate");
-        Permission associateAccessKeyToSTL = savePermission(PermissionType.AssociateAccessKeyToSTL, "Associate access key to STL", "AssociateAccessKeyToSTL");
-        Permission listActiveSTLs = savePermission(PermissionType.ListActiveSTLs, "List active STLs", "ListActiveSTLs");
+        Permission createSTL = savePermission(PermissionType.CreateConnector, "Create Connector", "CreateConnector");
+        Permission stlDeActivate = savePermission(PermissionType.DeActivateConnection, "Deactivate Connection",
+                "DeActivateConnection");
+        Permission stlActivate = savePermission(PermissionType.ActivateConnection, "Activate Connection",
+                "ActivateConnection");
+        Permission associateAccessKeyToSTL = savePermission(PermissionType.AssociateAccessKeyToConnector, "Associate" +
+                        " access key to Connector",
+                "AssociateAccessKeyToConnector");
+        Permission listActiveSTLs = savePermission(PermissionType.ReadActiveConnection, "Read active connections",
+                "ReadActiveConnection");
         Permission addPermission = savePermission(PermissionType.AddPermission, "Add permission", "AddPermission");
         Permission removePermission = savePermission(PermissionType.RemovePermission, "Remove permission", "RemovePermission");
 

@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateSTLInstanceDto {
+public class ConnectDto {
 
     @NotNull
-    public Long stlId;
+    public Long connectorId;
 
     @NotNull
     public Long accessKeyId;
@@ -22,8 +22,8 @@ public class CreateSTLInstanceDto {
     @NotNull
     private AuthorizationDto authorization;
 
-    public CreateSTLInstanceDto(Long stlId, Long accessKeyId, AuthorizationDto authorization) {
-        this.stlId = stlId;
+    public ConnectDto(Long connectorId, Long accessKeyId, AuthorizationDto authorization) {
+        this.connectorId = connectorId;
         this.accessKeyId = accessKeyId;
         this.authorization = authorization;
     }

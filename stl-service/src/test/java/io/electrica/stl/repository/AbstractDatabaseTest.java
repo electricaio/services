@@ -2,7 +2,7 @@ package io.electrica.stl.repository;
 
 import io.electrica.STLServiceApplicationTest;
 import io.electrica.stl.model.AuthorizationType;
-import io.electrica.stl.model.STLType;
+import io.electrica.stl.model.ConnectorType;
 import io.electrica.stl.service.AuthorizationRepository;
 import io.electrica.stl.util.Fixture;
 import org.junit.Before;
@@ -13,10 +13,10 @@ import java.util.List;
 public abstract class AbstractDatabaseTest extends STLServiceApplicationTest implements Fixture {
 
     @Inject
-    protected STLInstanceRepository stlInstanceRepository;
+    protected ConnectionRepository connectionRepository;
 
     @Inject
-    protected STLTypeRepository stlTypeRepository;
+    protected ConnectorTypeRepository connectorTypeRepository;
 
     @Inject
     protected AuthorizationTypeRepository authorizationTypeRepository;
@@ -28,21 +28,21 @@ public abstract class AbstractDatabaseTest extends STLServiceApplicationTest imp
     protected TokenAuthorizationRepository tokenAuthorizationRepository;
 
     @Inject
-    protected STLRepository stlRepository;
+    protected ConnectorRepository connectorRepository;
 
     protected List<AuthorizationType> authorizationTypes;
 
-    protected List<STLType> stlTypes;
+    protected List<ConnectorType> connectorTypes;
 
     @Before
     public void setup() {
-        stlTypes = stlTypeRepository.findAll();
+        connectorTypes = connectorTypeRepository.findAll();
         authorizationTypes = authorizationTypeRepository.findAll();
     }
 
     @Override
-    public STLTypeRepository getSTLTypeRepository() {
-        return stlTypeRepository;
+    public ConnectorTypeRepository getConnectorTypeRepository() {
+        return connectorTypeRepository;
     }
 
     @Override

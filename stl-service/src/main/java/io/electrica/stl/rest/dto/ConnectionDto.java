@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReadSTLInstanceDto {
+public class ConnectionDto {
 
     @NotNull
     private Long id;
