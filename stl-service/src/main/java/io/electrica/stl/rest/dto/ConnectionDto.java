@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReadSTLDto extends STLDto {
+public class ConnectionDto {
 
-    private static final long serialVersionUID = 1L;
-
+    @NotNull
     private Long id;
 
-    private String ern;
-
+    @NotNull
     private Long revisionVersion;
 }

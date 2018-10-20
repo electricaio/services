@@ -1,16 +1,16 @@
 package io.electrica.stl.rest;
 
-import io.electrica.stl.rest.dto.CreateSTLInstanceDto;
-import io.electrica.stl.rest.dto.ReadSTLInstanceDto;
+import io.electrica.stl.rest.dto.ConnectDto;
+import io.electrica.stl.rest.dto.ConnectionDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static io.electrica.common.rest.PathConstants.V1;
 
-@RequestMapping(V1 + "/stl-instances")
-public interface STLInstanceController {
+@RequestMapping(V1 + "/connections")
+public interface ConnectionController {
 
     @PostMapping
-    ResponseEntity<ReadSTLInstanceDto> create(CreateSTLInstanceDto request);
+    ResponseEntity<ConnectionDto> connect(ConnectDto request);
 }

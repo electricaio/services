@@ -1,31 +1,31 @@
 package io.electrica.stl.repository;
 
 import io.electrica.common.helper.ERNUtils;
-import io.electrica.stl.model.STL;
-import io.electrica.stl.model.STLType;
+import io.electrica.stl.model.Connector;
+import io.electrica.stl.model.ConnectorType;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import static io.electrica.stl.model.enums.AuthorizationTypeName.BASIC_AUTHORIZATION;
 
-public class STLRepositoryTest extends AbstractDatabaseTest {
+public class ConnectorRepositoryTest extends AbstractDatabaseTest {
 
     /**
      * Tests a case when resource is not provided and adding
-     * 2 STLs with same name should raise constraint exception on ERN,
+     * 2 Connectors with same name should raise constraint exception on ERN,
      * since they would end up being same.
      * */
     @Test(expected = DataIntegrityViolationException.class)
-    public void testSaveSTLWithoutResourceResultingInSameERN() {
+    public void testSaveConnectorWithoutResourceResultingInSameERN() {
 
-        final STLType type = findSTLType("Foundation");
+        final ConnectorType type = findConnectorType("Foundation");
 
         final String name = "MySQL";
         final String namespace = "com.mysql";
         final String version = "5.6";
         final String ern = ERNUtils.createERN(name, version);
 
-        final STL first = new STL();
+        final Connector first = new Connector();
         first.setType(type);
         first.setName(name);
         first.setVersion(version);
@@ -34,9 +34,9 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         first.setAuthorizationType(
                 findAuthorizationType(BASIC_AUTHORIZATION)
         );
-        stlRepository.saveAndFlush(first);
+        connectorRepository.saveAndFlush(first);
 
-        final STL second = new STL();
+        final Connector second = new Connector();
         second.setType(type);
         second.setName(name);
         second.setVersion(version);
@@ -45,6 +45,6 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         second.setAuthorizationType(
                 findAuthorizationType(BASIC_AUTHORIZATION)
         );
-        stlRepository.saveAndFlush(second);
+        connectorRepository.saveAndFlush(second);
     }
 }

@@ -40,7 +40,7 @@ liquibase {
     activities {
         main {
             changeLogFile "src/main/resources/db/generated.yml"
-            url "jdbc:postgresql://localhost:5432/stl_db"
+            url "jdbc:postgresql://localhost:5432/connector_hub_db"
             username "postgres"
             password ""
         }

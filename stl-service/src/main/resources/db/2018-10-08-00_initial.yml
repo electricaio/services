@@ -28,25 +28,25 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - createSequence:
-        sequenceName: revinfo_id_seq
+        sequenceName: connection_id_seq
 - changeSet:
     id: 1539845818495-6
     author: aleks (generated)
     changes:
     - createSequence:
-        sequenceName: stl_id_seq
+        sequenceName: connector_id_seq
 - changeSet:
     id: 1539845818495-7
     author: aleks (generated)
     changes:
     - createSequence:
-        sequenceName: stlinstance_id_seq
+        sequenceName: connector_type_id_seq
 - changeSet:
     id: 1539845818495-8
     author: aleks (generated)
     changes:
     - createSequence:
-        sequenceName: stltype_id_seq
+        sequenceName: revinfo_id_seq
 - changeSet:
     id: 1539845818495-9
     author: aleks (generated)
@@ -148,7 +148,7 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: stl_instance_id
+            name: connection_id
             type: BIGINT
         - column:
             constraints:
@@ -194,10 +194,10 @@ databaseChangeLog:
             name: revision_version_mod
             type: BOOLEAN
         - column:
-            name: stl_instance_id
+            name: connection_id
             type: BIGINT
         - column:
-            name: stl_instance_mod
+            name: connection_mod
             type: BOOLEAN
         - column:
             name: type_id
@@ -390,43 +390,6 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: rev
-            type: BIGINT
-        - column:
-            name: entityname
-            type: VARCHAR(255)
-        tableName: revchanges
-- changeSet:
-    id: 1539845818495-19
-    author: aleks (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: timestamp
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: user_id
-            type: BIGINT
-        tableName: revinfo
-- changeSet:
-    id: 1539845818495-20
-    author: aleks (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
             name: id
             type: BIGINT
         - column:
@@ -447,11 +410,11 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: stl_id
+            name: connector_id
             type: BIGINT
-        tableName: stl_instances
+        tableName: connections
 - changeSet:
-    id: 1539845818495-21
+    id: 1539845818495-19
     author: aleks (generated)
     changes:
     - createTable:
@@ -494,14 +457,14 @@ databaseChangeLog:
             name: access_key_id_mod
             type: BOOLEAN
         - column:
-            name: stl_id
+            name: connector_id
             type: BIGINT
         - column:
-            name: stl_mod
+            name: connector_mod
             type: BOOLEAN
-        tableName: stl_instances_aud
+        tableName: connections_aud
 - changeSet:
-    id: 1539845818495-22
+    id: 1539845818495-20
     author: aleks (generated)
     changes:
     - createTable:
@@ -526,9 +489,9 @@ databaseChangeLog:
               nullable: false
             name: name
             type: VARCHAR(255)
-        tableName: stl_types
+        tableName: connector_types
 - changeSet:
-    id: 1539845818495-23
+    id: 1539845818495-21
     author: aleks (generated)
     changes:
     - createTable:
@@ -570,9 +533,9 @@ databaseChangeLog:
         - column:
             name: name_mod
             type: BOOLEAN
-        tableName: stl_types_aud
+        tableName: connector_types_aud
 - changeSet:
-    id: 1539845818495-24
+    id: 1539845818495-22
     author: aleks (generated)
     changes:
     - createTable:
@@ -625,9 +588,9 @@ databaseChangeLog:
               nullable: false
             name: type_id
             type: BIGINT
-        tableName: stls
+        tableName: connectors
 - changeSet:
-    id: 1539845818495-25
+    id: 1539845818495-23
     author: aleks (generated)
     changes:
     - createTable:
@@ -705,7 +668,44 @@ databaseChangeLog:
         - column:
             name: type_mod
             type: BOOLEAN
-        tableName: stls_aud
+        tableName: connectors_aud
+- changeSet:
+    id: 1539845818495-24
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: entityname
+            type: VARCHAR(255)
+        tableName: revchanges
+- changeSet:
+    id: 1539845818495-25
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: timestamp
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: revinfo
 - changeSet:
     id: 1539845818495-26
     author: aleks (generated)
@@ -857,57 +857,57 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id
-        constraintName: revinfo_pkey
-        tableName: revinfo
+        columnNames: id, rev
+        constraintName: connections_aud_pkey
+        tableName: connections_aud
 - changeSet:
     id: 1539845818495-37
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id, rev
-        constraintName: stl_instances_aud_pkey
-        tableName: stl_instances_aud
+        columnNames: id
+        constraintName: connections_pkey
+        tableName: connections
 - changeSet:
     id: 1539845818495-38
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id
-        constraintName: stl_instances_pkey
-        tableName: stl_instances
+        columnNames: id, rev
+        constraintName: connector_types_aud_pkey
+        tableName: connector_types_aud
 - changeSet:
     id: 1539845818495-39
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id, rev
-        constraintName: stl_types_aud_pkey
-        tableName: stl_types_aud
+        columnNames: id
+        constraintName: connector_types_pkey
+        tableName: connector_types
 - changeSet:
     id: 1539845818495-40
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id
-        constraintName: stl_types_pkey
-        tableName: stl_types
+        columnNames: id, rev
+        constraintName: connectors_aud_pkey
+        tableName: connectors_aud
 - changeSet:
     id: 1539845818495-41
     author: aleks (generated)
     changes:
     - addPrimaryKey:
-        columnNames: id, rev
-        constraintName: stls_aud_pkey
-        tableName: stls_aud
+        columnNames: id
+        constraintName: connectors_pkey
+        tableName: connectors
 - changeSet:
     id: 1539845818495-42
     author: aleks (generated)
     changes:
     - addPrimaryKey:
         columnNames: id
-        constraintName: stls_pkey
-        tableName: stls
+        constraintName: revinfo_pkey
+        tableName: revinfo
 - changeSet:
     id: 1539845818495-43
     author: aleks (generated)
@@ -929,17 +929,17 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: type_id, stl_instance_id
-        constraintName: uk4u5ob5320rcocmvg254hdtkig
+        columnNames: type_id, connection_id
+        constraintName: uk5oq678f65ekeg6sgo87mtqkg9
         tableName: authorizations
 - changeSet:
     id: 1539845818495-46
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: ern
-        constraintName: uk_7pw3fbnl63tv75gu3akjshrfq
-        tableName: stls
+        columnNames: connector_id, access_key_id
+        constraintName: uk8hw4mlak7oax43t0vh16qb8rx
+        tableName: connections
 - changeSet:
     id: 1539845818495-47
     author: aleks (generated)
@@ -953,25 +953,25 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: name
-        constraintName: uk_r23li3fpvqnp5xs5n8a84unf9
-        tableName: stl_types
+        columnNames: ern
+        constraintName: uk_bgs68g10coch77da3uc4grj21
+        tableName: connectors
 - changeSet:
     id: 1539845818495-49
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: stl_id, access_key_id
-        constraintName: ukgq2kl5buixc1ledpckv513wvv
-        tableName: stl_instances
+        columnNames: name
+        constraintName: uk_gvmefa9y8i3sbh79ei0xayjby
+        tableName: connector_types
 - changeSet:
     id: 1539845818495-50
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
         columnNames: name, resource, version
-        constraintName: ukqnv56x400nwuhr8eis190f0oo
-        tableName: stls
+        constraintName: ukn064y686je7wg091hqwvasdnc
+        tableName: connectors
 - changeSet:
     id: 1539845818495-51
     author: aleks (generated)
@@ -991,20 +991,6 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: revend
-        baseTableName: stl_types_aud
-        constraintName: fk2ooxildin2hgaccblgl0fr83l
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: revinfo
-- changeSet:
-    id: 1539845818495-53
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
         baseColumnNames: rev
         baseTableName: authorization_types_aud
         constraintName: fk2vbsbov9jrspd65c38dwy7qdf
@@ -1015,7 +1001,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-54
+    id: 1539845818495-53
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1029,7 +1015,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-55
+    id: 1539845818495-54
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1043,7 +1029,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-56
+    id: 1539845818495-55
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1057,13 +1043,13 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-57
+    id: 1539845818495-56
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: rev
-        baseTableName: stl_types_aud
-        constraintName: fk5528o25uh5mvm85icol34ybnp
+        baseTableName: connectors_aud
+        constraintName: fk55xdqlhiesan1k49doy61gg7t
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
@@ -1071,7 +1057,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-58
+    id: 1539845818495-57
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1084,6 +1070,20 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: authorizations
+- changeSet:
+    id: 1539845818495-58
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: connector_types_aud
+        constraintName: fk78ys2lfimynod2g6nl8fxi5l8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
 - changeSet:
     id: 1539845818495-59
     author: aleks (generated)
@@ -1117,6 +1117,20 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
+        baseColumnNames: type_id
+        baseTableName: connectors
+        constraintName: fk83t40y7lewdlffaea1qql8tdc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: connector_types
+- changeSet:
+    id: 1539845818495-62
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
         baseColumnNames: revend
         baseTableName: basic_authorizations_aud
         constraintName: fk9hqk0lbk07wjx08eh0cdjp484
@@ -1127,7 +1141,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-62
+    id: 1539845818495-63
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1141,7 +1155,21 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-63
+    id: 1539845818495-64
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: connector_types_aud
+        constraintName: fkalflpmhpu610it5aewlrhyw58
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-65
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1155,21 +1183,21 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-64
+    id: 1539845818495-66
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: rev
-        baseTableName: stl_instances_aud
-        constraintName: fkdi930lx8qypwqw3dqjnx9oi7l
+        baseColumnNames: connection_id
+        baseTableName: authorizations
+        constraintName: fkb7vnjvxvl74epnm6axvpp0mfo
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
         onUpdate: NO ACTION
         referencedColumnNames: id
-        referencedTableName: revinfo
+        referencedTableName: connections
 - changeSet:
-    id: 1539845818495-65
+    id: 1539845818495-67
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1183,7 +1211,21 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorization_types
 - changeSet:
-    id: 1539845818495-66
+    id: 1539845818495-68
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: connector_id
+        baseTableName: connections
+        constraintName: fkg5o9h9difjte55kqtv0cpgsc1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: connectors
+- changeSet:
+    id: 1539845818495-69
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1197,49 +1239,21 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorizations
 - changeSet:
-    id: 1539845818495-67
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: authorization_type_id
-        baseTableName: stls
-        constraintName: fkhx2k0vpwht2ch1etuccx5h4li
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: authorization_types
-- changeSet:
-    id: 1539845818495-68
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: type_id
-        baseTableName: stls
-        constraintName: fki1kg8u75gh2bgdlip6nt2hd1y
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: stl_types
-- changeSet:
-    id: 1539845818495-69
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: stl_instance_id
-        baseTableName: authorizations
-        constraintName: fkjolbhktk3vpaouod92b26qn8k
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: stl_instances
-- changeSet:
     id: 1539845818495-70
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: connections_aud
+        constraintName: fkhmqaimhfa3l79dgxy713w21me
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-71
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1253,13 +1267,13 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-71
+    id: 1539845818495-72
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: rev
-        baseTableName: stls_aud
-        constraintName: fkjxd6b7vl4kqeww3eqkm8pvarg
+        baseTableName: connections_aud
+        constraintName: fkk4yt0ymo69vriljvdc8b86qyf
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
@@ -1267,27 +1281,13 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-72
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: stl_id
-        baseTableName: stl_instances
-        constraintName: fkky76bj4dd4x65fhmm00jn08r2
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: stls
-- changeSet:
     id: 1539845818495-73
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: revend
-        baseTableName: stl_instances_aud
-        constraintName: fkm2j78b6x9c85w9d3lalt5r687
+        baseTableName: connectors_aud
+        constraintName: fkl7ytg32vbqh4whniil8jluyl7
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
@@ -1299,15 +1299,15 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: revend
-        baseTableName: stls_aud
-        constraintName: fkn5ln7fc7sqmo188ul4dnsr2c8
+        baseColumnNames: authorization_type_id
+        baseTableName: connectors
+        constraintName: fkqrblo5cx3k825yfmnbbamox7r
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
         onUpdate: NO ACTION
         referencedColumnNames: id
-        referencedTableName: revinfo
+        referencedTableName: authorization_types
 - changeSet:
     id: 1539845818495-75
     author: aleks (generated)

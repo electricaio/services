@@ -6,25 +6,25 @@ import java.util.stream.Stream;
 
 public final class ERNUtils {
 
-    private static final String PROTOCOL = "stl://";
+    private static final String PROTOCOL = "ern://connector:";
 
     private ERNUtils() {
     }
 
     /**
-     * Given the STL's name, resource and version it,
-     * builds up an ERN of stl://<name>:<resource>:<version> format.
+     * Given the Connector's name, resource and version it,
+     * builds up an ERN of ern://connector:<name>:<resource>:<version> format.
      * <p>
      * If resource is not provided, the ERN format follows this format:
-     * stl://<name>:<version>
+     * ern://connector:<name>:<version>
      * <p>
      * In case any of the provided strings consists of multiple words, they are split by underscore.
      * <p>
      * Examples:
      * <p>
-     * - stl://hackerrank:applicants:1.0
-     * - stl://mysql:5.6
-     * - stl://greenhouse:1.0
+     * - ern://connector:hackerrank:applicants:1.0
+     * - ern://connector:mysql:5.6
+     * - ern://connector:greenhouse:1.0
      */
     public static String createERN(String name, Optional<String> resource, String version) {
         final String ernUrl = Stream

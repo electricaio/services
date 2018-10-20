@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(
         name = "authorizations",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"type_id", "stl_instance_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"type_id", "connection_id"})
 )
 public class Authorization extends AbstractEntity {
 
@@ -30,6 +30,6 @@ public class Authorization extends AbstractEntity {
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stl_instance_id", nullable = false)
-    private STLInstance stlInstance;
+    @JoinColumn(name = "connection_id", nullable = false)
+    private Connection connection;
 }

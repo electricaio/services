@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSTLInstanceDto {
+public class ConnectDto {
 
     @NotNull
-    public Long stlId;
+    public Long connectorId;
 
     @NotNull
     public Long accessKeyId;

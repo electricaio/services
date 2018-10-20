@@ -7,7 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateSTLDto extends STLDto {
-
-    private static final long serialVersionUID = 1L;
+public class CreateConnectorDto extends ConnectorDto {
 }

@@ -1,16 +1,16 @@
 package io.electrica.stl.util;
 
 import io.electrica.stl.model.AuthorizationType;
-import io.electrica.stl.model.STLType;
+import io.electrica.stl.model.ConnectorType;
 import io.electrica.stl.model.enums.AuthorizationTypeName;
 import io.electrica.stl.repository.AuthorizationTypeRepository;
-import io.electrica.stl.repository.STLTypeRepository;
-import io.electrica.stl.rest.dto.CreateSTLDto;
+import io.electrica.stl.repository.ConnectorTypeRepository;
+import io.electrica.stl.rest.dto.CreateConnectorDto;
 
 public interface Fixture {
 
-    default CreateSTLDto createHackerRankSTLDto(Long typeId, Long authTypeId) {
-        final CreateSTLDto dto = new CreateSTLDto();
+    default CreateConnectorDto createHackerRankConnectorDto(Long typeId, Long authTypeId) {
+        final CreateConnectorDto dto = new CreateConnectorDto();
         dto.setName("HackerRank");
         dto.setResource("Applications");
         dto.setNamespace("com.hackerrank");
@@ -20,8 +20,8 @@ public interface Fixture {
         return dto;
     }
 
-    default CreateSTLDto createGreenhouseSTLDto(Long typeId, Long authTypeId) {
-        final CreateSTLDto dto = new CreateSTLDto();
+    default CreateConnectorDto createGreenhouseConnectorDto(Long typeId, Long authTypeId) {
+        final CreateConnectorDto dto = new CreateConnectorDto();
         dto.setName("Greenhouse");
         dto.setNamespace("com.greenhouse");
         dto.setTypeId(typeId);
@@ -41,17 +41,17 @@ public interface Fixture {
                 );
     }
 
-    default STLType findSTLType(String name) {
-        return getSTLTypeRepository().findAll()
+    default ConnectorType findConnectorType(String name) {
+        return getConnectorTypeRepository().findAll()
                 .stream()
                 .filter(st -> st.getName().equals(name))
                 .findAny()
                 .orElseThrow(() ->
-                        new IllegalArgumentException("STL type with passed name does not exist.")
+                        new IllegalArgumentException("Connector type with passed name does not exist.")
                 );
     }
 
-    STLTypeRepository getSTLTypeRepository();
+    ConnectorTypeRepository getConnectorTypeRepository();
 
     AuthorizationTypeRepository getAuthorizationTypeRepository();
 }
