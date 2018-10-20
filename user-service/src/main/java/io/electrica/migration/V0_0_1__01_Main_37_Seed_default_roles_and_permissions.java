@@ -43,7 +43,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission updateOrg = savePermission(PermissionType.UpdateOrg, "Update organization", "UpdateOrg");
         Permission activateOrg = savePermission(PermissionType.ActivateOrg, "Activate organization", "ActivateOrg");
         Permission createAccessKey = savePermission(PermissionType.CreateAccessKey, "Create access key", "CreateAccessKey");
-        Permission listAccessKeys = savePermission(PermissionType.ListAccessKeys, "List access keys", "ListAccessKey");
         Permission readAccessKey = savePermission(PermissionType.ReadAccessKey, "Read access key", "ReadAccessKey");
         Permission createSTL = savePermission(PermissionType.CreateSTL, "Create STL", "CreateSTL");
         Permission stlDeActivate = savePermission(PermissionType.STLDeActivate, "Disable STL", "STLDeActivate");
@@ -59,7 +58,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 readUser,
                 readOrg,
                 createAccessKey,
-                listAccessKeys,
                 readAccessKey,
                 associateAccessKeyToSTL,
                 listActiveSTLs
@@ -76,7 +74,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 updateOrg,
                 activateOrg,
                 createAccessKey,
-                listAccessKeys,
                 readAccessKey,
                 listActiveSTLs,
                 addPermission,
@@ -95,7 +92,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 updateOrg,
                 activateOrg,
                 createAccessKey,
-                listAccessKeys,
                 readAccessKey,
                 createSTL,
                 stlDeActivate,

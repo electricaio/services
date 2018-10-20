@@ -85,7 +85,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
         AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.CreateAccessKey, PermissionType.ListAccessKeys),
+                EnumSet.of(PermissionType.CreateAccessKey, PermissionType.ReadAccessKey),
                 () -> {
                     accessKeyController.createAccessKey(accessKeyDto1).getBody();
                     accessKeyController.createAccessKey(accessKeyDto2).getBody();
@@ -104,7 +104,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     public void findAllNonArchivedByUserNoKeys() {
         UserDto user = createAndSaveUser();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ListAccessKeys),
+                EnumSet.of(PermissionType.ReadAccessKey),
                 () -> {
                     List<AccessKeyDto> resList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
 

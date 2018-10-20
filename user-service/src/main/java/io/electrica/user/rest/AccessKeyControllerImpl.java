@@ -44,7 +44,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("" +
-            "#common.hasPermission('ListAccessKeys') AND " +
+            "#common.hasPermission('ReadAccessKey') AND " +
             "(" +
             "    #common.isSuperAdmin() OR" +
             "    #common.haveOneOfRoles('OrgUser', 'OrgAdmin') AND #common.isUser(#userId)" +
