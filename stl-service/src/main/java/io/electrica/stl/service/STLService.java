@@ -3,13 +3,14 @@ package io.electrica.stl.service;
 import io.electrica.common.helper.ERNUtils;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.stl.model.STL;
+import io.electrica.stl.model.STLType;
 import io.electrica.stl.repository.STLRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class STLService extends AbstractService<STL> {
 
     private final STLRepository stlRepository;
@@ -30,6 +31,9 @@ public class STLService extends AbstractService<STL> {
                 model.getVersion()
         );
         model.setErn(ern);
+
+        final STLType type = getReference(STLType.class, model.getType().getId());
+        model.setType(type);
 
         return stlRepository.save(model);
     }

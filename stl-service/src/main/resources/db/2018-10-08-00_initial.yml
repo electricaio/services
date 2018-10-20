@@ -953,11 +953,19 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
+        columnNames: name
+        constraintName: uk_r23li3fpvqnp5xs5n8a84unf9
+        tableName: stl_types
+- changeSet:
+    id: 1539845818495-49
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
         columnNames: name, resource, version
         constraintName: ukqnv56x400nwuhr8eis190f0oo
         tableName: stls
 - changeSet:
-    id: 1539845818495-49
+    id: 1539845818495-50
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -971,7 +979,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-50
+    id: 1539845818495-51
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -985,7 +993,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-51
+    id: 1539845818495-52
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -999,7 +1007,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-52
+    id: 1539845818495-53
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1013,7 +1021,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-53
+    id: 1539845818495-54
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1027,7 +1035,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-54
+    id: 1539845818495-55
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1041,7 +1049,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-55
+    id: 1539845818495-56
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1055,7 +1063,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-56
+    id: 1539845818495-57
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1069,7 +1077,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorization_types
 - changeSet:
-    id: 1539845818495-57
+    id: 1539845818495-58
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1083,7 +1091,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorizations
 - changeSet:
-    id: 1539845818495-58
+    id: 1539845818495-59
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1097,7 +1105,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-59
+    id: 1539845818495-60
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1111,7 +1119,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorizations
 - changeSet:
-    id: 1539845818495-60
+    id: 1539845818495-61
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1125,7 +1133,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-61
+    id: 1539845818495-62
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1139,7 +1147,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-62
+    id: 1539845818495-63
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1153,7 +1161,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-63
+    id: 1539845818495-64
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1167,7 +1175,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-64
+    id: 1539845818495-65
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1181,7 +1189,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorization_types
 - changeSet:
-    id: 1539845818495-65
+    id: 1539845818495-66
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1195,7 +1203,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorizations
 - changeSet:
-    id: 1539845818495-66
+    id: 1539845818495-67
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1209,7 +1217,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: stl_types
 - changeSet:
-    id: 1539845818495-67
+    id: 1539845818495-68
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1223,7 +1231,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: stl_instances
 - changeSet:
-    id: 1539845818495-68
+    id: 1539845818495-69
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1237,7 +1245,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-69
+    id: 1539845818495-70
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1251,7 +1259,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-70
+    id: 1539845818495-71
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1265,7 +1273,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: stls
 - changeSet:
-    id: 1539845818495-71
+    id: 1539845818495-72
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1279,7 +1287,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-72
+    id: 1539845818495-73
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -1293,7 +1301,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1539845818495-73
+    id: 1539845818495-74
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
