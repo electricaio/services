@@ -113,6 +113,19 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     /**
+     * Getting list of keys - access denied case.
+     */
+    @Test(expected = AccessDeniedException.class)
+    public void findAllNonArchivedNoAccess() {
+        UserDto user = createAndSaveUser();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg),
+                () -> {
+                    accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
+                });
+    }
+
+    /**
      * Getting access key value success flow.
      */
     @Test
@@ -153,6 +166,19 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         UserDto user = createAndSaveUser();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadAccessKey),
+                () -> {
+                    accessKeyController.getAccessKey(0L, user.getId()).getBody();
+                });
+    }
+
+    /**
+     * Getting access key no permission.
+     */
+    @Test(expected = AccessDeniedException.class)
+    public void getAccessKeyNoPermission() {
+        UserDto user = createAndSaveUser();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadOrg),
                 () -> {
                     accessKeyController.getAccessKey(0L, user.getId()).getBody();
                 });
