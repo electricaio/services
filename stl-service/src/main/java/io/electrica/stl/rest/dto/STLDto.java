@@ -20,6 +20,9 @@ public class STLDto implements Serializable {
     private Long typeId;
 
     @NotNull
+    private Long authorizationTypeId;
+
+    @NotNull
     @NotBlank
     @Max(255)
     private String name;
