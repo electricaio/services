@@ -122,14 +122,14 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();
         AccessKeyDto accessKeyDto = createAccessKeyDto(user);
-        AccessKeyDto accessKeyDto_copy = createAccessKeyDto(user2);
-        accessKeyDto_copy.setName(accessKeyDto.getName());
+        AccessKeyDto accessKeyDto2 = createAccessKeyDto(user2);
+        accessKeyDto2.setName(accessKeyDto.getName());
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
                 () -> {
                     AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
                     assertTestAccessKey(user, accessKeyDto, result);
-                    accessKeyController.createAccessKey(accessKeyDto_copy).getBody();
+                    accessKeyController.createAccessKey(accessKeyDto2).getBody();
                 });
         accessKeyRepository.flush();
     }
