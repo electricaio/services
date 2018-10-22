@@ -30,7 +30,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     AccessKey findByIdAndUser(Long accessKeyId) {
         return accessKeyRepository.findById(accessKeyId).
                 orElseThrow(() -> new EntityNotFoundServiceException(
-                        String.format("No access key found:%s for user %s", accessKeyId)));
+                        String.format("No access key found:%s for user.", accessKeyId)));
     }
 
     @Override
