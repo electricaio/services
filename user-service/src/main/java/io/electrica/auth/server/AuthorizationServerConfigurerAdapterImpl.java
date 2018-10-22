@@ -57,7 +57,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 // ToDo change secret
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds(USER_SERVICE_RESOURCE_ID, STL_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
                 .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60)
@@ -65,7 +65,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .and()
                 .withClient(ACCESS_KEY_CLIENT_ID)
                 .secret("{none}" + UUID.randomUUID())
-                .resourceIds(USER_SERVICE_RESOURCE_ID, STL_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
                 .scopes(READ_SCOPE, INVOKE_SCOPE)
                 .accessTokenValiditySeconds(Integer.MAX_VALUE);
     }
