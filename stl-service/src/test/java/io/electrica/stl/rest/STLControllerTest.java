@@ -2,10 +2,13 @@ package io.electrica.stl.rest;
 
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
+import io.electrica.stl.model.AuthorizationType;
 import io.electrica.stl.model.STLType;
+import io.electrica.stl.model.enums.AuthorizationTypeName;
 import io.electrica.stl.repository.AbstractDatabaseTest;
 import io.electrica.stl.rest.dto.CreateSTLDto;
 import io.electrica.stl.rest.dto.ReadSTLDto;
+import io.electrica.stl.service.STLService;
 import io.electrica.test.context.ForUser;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,15 +26,18 @@ public class STLControllerTest extends AbstractDatabaseTest {
     @Inject
     private STLController stlController;
 
+    @Inject
+    private STLService stlService;
+
     private STLType stlType;
+
+    private AuthorizationType authorizationType;
 
     @Before
     public void setup() {
-        stlType = stlTypeRepository.findAll()
-                .stream()
-                .filter(st -> st.getName().equals("Foundation"))
-                .findAny()
-                .orElse(null);
+        super.setup();
+        stlType = findSTLType("Talent");
+        authorizationType = findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION);
     }
 
     @Test
@@ -41,8 +47,8 @@ public class STLControllerTest extends AbstractDatabaseTest {
             roles = RoleType.SuperAdmin,
             permissions = PermissionType.CreateSTL
     )
-    public void testCreateSTLWithSuperAdminRole() {
-        final CreateSTLDto dto = createHackerRankDto();
+    public void testCreateSTLWithSuccess() {
+        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
         final ReadSTLDto actual = stlController.create(dto).getBody();
 
         Assert.assertNotNull(actual.getId());
@@ -67,8 +73,22 @@ public class STLControllerTest extends AbstractDatabaseTest {
             permissions = PermissionType.CreateSTL
     )
     public void testCreateSTLWithNonExistingSTLType() {
-        final CreateSTLDto dto = createHackerRankDto();
+        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
         dto.setTypeId(-1L);
+        stlController.create(dto).getBody();
+        stlRepository.flush();
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = PermissionType.CreateSTL
+    )
+    public void testCreateSTLWithNonExistingAuthType() {
+        final CreateSTLDto dto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
+        dto.setAuthorizationTypeId(-1L);
         stlController.create(dto).getBody();
         stlRepository.flush();
     }
@@ -81,7 +101,7 @@ public class STLControllerTest extends AbstractDatabaseTest {
             permissions = PermissionType.CreateOrg
     )
     public void testCreateSTLWithWrongPermission() {
-        stlController.create(createHackerRankDto());
+        stlController.create(createHackerRankSTLDto(stlType.getId(), authorizationType.getId()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -92,7 +112,7 @@ public class STLControllerTest extends AbstractDatabaseTest {
             permissions = PermissionType.CreateSTL
     )
     public void testCreateSTLWithWrongRole() {
-        stlController.create(createHackerRankDto());
+        stlController.create(createHackerRankSTLDto(stlType.getId(), authorizationType.getId()));
     }
 
     @Test
@@ -102,21 +122,17 @@ public class STLControllerTest extends AbstractDatabaseTest {
             roles = RoleType.SuperAdmin,
             permissions = PermissionType.CreateSTL
     )
-    public void testFindAll() {
-        stlController.create(createHackerRankDto());
+    public void testFindAllNonArchived() {
+        final CreateSTLDto createHackerRankSTLDto = createHackerRankSTLDto(stlType.getId(), authorizationType.getId());
+        stlController.create(createHackerRankSTLDto);
+
+        final ReadSTLDto greenHouseDto = stlController.create(createGreenhouseSTLDto(stlType.getId(), authorizationType
+                .getId())).getBody();
+        stlService.archive(greenHouseDto.getId());
 
         final List<ReadSTLDto> actual = stlController.findAll().getBody();
 
         assertEquals(1, actual.size());
-    }
-
-    public CreateSTLDto createHackerRankDto() {
-        final CreateSTLDto dto = new CreateSTLDto();
-        dto.setName("HackerRank");
-        dto.setResource("Applications");
-        dto.setNamespace("com.hackerrank");
-        dto.setTypeId(stlType.getId());
-        dto.setVersion("1.0");
-        return dto;
+        assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());
     }
 }

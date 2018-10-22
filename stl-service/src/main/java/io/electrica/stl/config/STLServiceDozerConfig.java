@@ -16,9 +16,11 @@ public class STLServiceDozerConfig {
             @Override
             protected void configure() {
                 mapping(CreateSTLDto.class, STL.class)
-                        .fields("typeId", "type.id");
+                        .fields("typeId", "type.id")
+                        .fields("authorizationTypeId", "authorizationType.id");
                 mapping(ReadSTLDto.class, STL.class)
-                        .fields("typeId", "type.id");
+                        .fields("typeId", "type.id")
+                        .fields("authorizationTypeId", "authorizationType.id");;
             }
         };
     }
