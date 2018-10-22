@@ -6,8 +6,9 @@ import io.electrica.stl.model.STLType;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
-public class STLRepositoryTest extends AbstractDatabaseTest {
+import static io.electrica.stl.model.enums.AuthorizationTypeName.BASIC_AUTHORIZATION;
 
+public class STLRepositoryTest extends AbstractDatabaseTest {
 
     /**
      * Tests a case when resource is not provided and adding
@@ -17,7 +18,7 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void testSaveSTLWithoutResourceResultingInSameERN() {
 
-        final STLType type = createSTLType("Foundation");
+        final STLType type = findSTLType("Foundation");
 
         final String name = "MySQL";
         final String namespace = "com.mysql";
@@ -30,6 +31,9 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         first.setVersion(version);
         first.setNamespace(namespace);
         first.setErn(ern);
+        first.setAuthorizationType(
+                findAuthorizationType(BASIC_AUTHORIZATION)
+        );
         stlRepository.saveAndFlush(first);
 
         final STL second = new STL();
@@ -38,6 +42,9 @@ public class STLRepositoryTest extends AbstractDatabaseTest {
         second.setVersion(version);
         second.setNamespace(namespace);
         second.setErn(ern);
+        second.setAuthorizationType(
+                findAuthorizationType(BASIC_AUTHORIZATION)
+        );
         stlRepository.saveAndFlush(second);
     }
 }

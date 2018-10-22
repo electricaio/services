@@ -30,6 +30,11 @@ public class STL extends AbstractEntity {
     private STLType type;
 
     @NotNull
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "authorization_type_id", nullable = false)
+    private AuthorizationType authorizationType;
+
+    @NotNull
     @Size(max = 255)
     @Column(nullable = false)
     private String name;
@@ -53,8 +58,9 @@ public class STL extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String ern;
 
-    public STL(STLType type, String name, String version, String namespace) {
+    public STL(STLType type, AuthorizationType authorizationType, String name, String version, String namespace) {
         this.type = type;
+        this.authorizationType = authorizationType;
         this.name = name;
         this.version = version;
         this.namespace = namespace;
