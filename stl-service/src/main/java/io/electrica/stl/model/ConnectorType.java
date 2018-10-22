@@ -20,15 +20,15 @@ import javax.validation.constraints.Size;
 
 @Audited
 @Entity
-@Table(name = "stl_types")
-public class STLType extends AbstractEntity {
+@Table(name = "connector_types")
+public class ConnectorType extends AbstractEntity {
 
     @NotNull
     @Size(max = 255)
     @Column(nullable = false, unique = true)
     private String name;
 
-    public STLType(String name) {
+    public ConnectorType(String name) {
         this.name = name;
     }
 }

@@ -5,7 +5,7 @@ spring:
   application:
     name: stl-service
   datasource:
-    name: pool-to-stl-db
-    url: jdbc:postgresql://localhost:5432/stl_db
+    name: pool-to-connector-hub-db
+    url: jdbc:postgresql://localhost:5432/connector_hub_db
   flyway:
     enabled: true

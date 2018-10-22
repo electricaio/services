@@ -9,21 +9,21 @@ public class ERNUtilsTest {
 
     @Test
     public void testCreateERNWithResource() {
-        Assert.assertEquals("stl://hackerrank:applications:1_0",
+        Assert.assertEquals("ern://connector:hackerrank:applications:1_0",
                 ERNUtils.createERN("HackerRank", Optional.of("Applications"), "1.0")
         );
     }
 
     @Test
     public void testCreateERNWith2WordsResource() {
-        Assert.assertEquals("stl://stripe:payments_api:1_0",
+        Assert.assertEquals("ern://connector:stripe:payments_api:1_0",
                 ERNUtils.createERN("Stripe", Optional.of("Payments Api"), "1.0")
         );
     }
 
     @Test
     public void testCreateERNWithoutResource() {
-        Assert.assertEquals("stl://mysql:5_6",
+        Assert.assertEquals("ern://connector:mysql:5_6",
                 ERNUtils.createERN("MySQL", "5.6")
         );
 
@@ -31,14 +31,14 @@ public class ERNUtilsTest {
 
     @Test
     public void testCreateERNPassingEmptyResource() {
-        Assert.assertEquals("stl://mysql:5_6",
+        Assert.assertEquals("ern://connector:mysql:5_6",
                 ERNUtils.createERN("MySQL", Optional.empty(), "5.6")
         );
     }
 
     @Test
     public void testCreateERNContainingDotsOrColons() {
-        Assert.assertEquals("stl://test_funky_stl_name:5_6_1",
+        Assert.assertEquals("ern://connector:test_funky_stl_name:5_6_1",
                 ERNUtils.createERN("Test.funky.STL Name", Optional.empty(), "5:6:1")
         );
     }

@@ -17,22 +17,22 @@ import javax.validation.constraints.NotNull;
 
 @Audited
 @Entity
-@Table(name = "stl_instances",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"stl_id", "access_key_id"})
+@Table(name = "connections",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"connector_id", "access_key_id"})
 )
-public class STLInstance extends AbstractEntity {
+public class Connection extends AbstractEntity {
 
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stl_id", nullable = false)
-    private STL stl;
+    @JoinColumn(name = "connector_id", nullable = false)
+    private Connector connector;
 
     @NotNull
     @Column(name = "access_key_id", nullable = false)
     private Long accessKeyId;
 
-    public STLInstance(@NotNull STL stl, @NotNull Long accessKeyId) {
-        this.stl = stl;
+    public Connection(@NotNull Connector connector, @NotNull Long accessKeyId) {
+        this.connector = connector;
         this.accessKeyId = accessKeyId;
     }
 }

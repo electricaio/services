@@ -1,9 +1,9 @@
 package io.electrica.stl.config;
 
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
-import io.electrica.stl.model.STL;
-import io.electrica.stl.rest.dto.CreateSTLDto;
-import io.electrica.stl.rest.dto.ReadSTLDto;
+import io.electrica.stl.model.Connector;
+import io.electrica.stl.rest.dto.CreateConnectorDto;
+import io.electrica.stl.rest.dto.ReadConnectorDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,12 +15,12 @@ public class STLServiceDozerConfig {
         return new BeanMappingBuilder() {
             @Override
             protected void configure() {
-                mapping(CreateSTLDto.class, STL.class)
+                mapping(CreateConnectorDto.class, Connector.class)
                         .fields("typeId", "type.id")
                         .fields("authorizationTypeId", "authorizationType.id");
-                mapping(ReadSTLDto.class, STL.class)
+                mapping(ReadConnectorDto.class, Connector.class)
                         .fields("typeId", "type.id")
-                        .fields("authorizationTypeId", "authorizationType.id");;
+                        .fields("authorizationTypeId", "authorizationType.id");
             }
         };
     }

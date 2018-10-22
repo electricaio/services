@@ -19,15 +19,15 @@ import java.util.Optional;
 
 @Audited
 @Entity
-@Table(name = "stls",
+@Table(name = "connectors",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource", "version"})
 )
-public class STL extends AbstractEntity {
+public class Connector extends AbstractEntity {
 
     @NotNull
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
-    private STLType type;
+    private ConnectorType type;
 
     @NotNull
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
@@ -57,14 +57,6 @@ public class STL extends AbstractEntity {
     @Size(max = 255)
     @Column(nullable = false, unique = true)
     private String ern;
-
-    public STL(STLType type, AuthorizationType authorizationType, String name, String version, String namespace) {
-        this.type = type;
-        this.authorizationType = authorizationType;
-        this.name = name;
-        this.version = version;
-        this.namespace = namespace;
-    }
 
     public Optional<String> getResourceOpt() {
         return Optional.ofNullable(resource);
