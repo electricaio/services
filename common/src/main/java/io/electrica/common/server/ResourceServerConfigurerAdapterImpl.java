@@ -36,8 +36,8 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
             case "user-service":
                 resourceId = AuthorityConstants.USER_SERVICE_RESOURCE_ID;
                 break;
-            case "stl-service":
-                resourceId = AuthorityConstants.STL_SERVICE_RESOURCE_ID;
+            case "connector-hub-service":
+                resourceId = AuthorityConstants.CONNECTOR_HUB_SERVICE_RESOURCE_ID;
                 break;
             case "invoker-service":
                 resourceId = AuthorityConstants.INVOKER_SERVICE_RESOURCE_ID;

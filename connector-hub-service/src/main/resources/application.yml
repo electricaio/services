@@ -1,0 +1,11 @@
+server:
+  port: 22023
+
+spring:
+  application:
+    name: connector-hub-service
+  datasource:
+    name: pool-to-connector-hub-db
+    url: jdbc:postgresql://localhost:5432/connector_hub_db
+  flyway:
+    enabled: true

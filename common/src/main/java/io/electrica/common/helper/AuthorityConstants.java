@@ -10,7 +10,7 @@ public interface AuthorityConstants {
     String INVOKE_SCOPE = "i";
 
     String USER_SERVICE_RESOURCE_ID = "u";
-    String STL_SERVICE_RESOURCE_ID = "s";
+    String CONNECTOR_HUB_SERVICE_RESOURCE_ID = "c";
     String INVOKER_SERVICE_RESOURCE_ID = "i";
 
     String ACCESS_KEY_CLIENT_ID = "accessKey";
