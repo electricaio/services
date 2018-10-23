@@ -39,7 +39,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadAccessKey') AND #common.isUser(#userId)")
+    @PreAuthorize("#common.hasPermission('ReadAccessKey') AND  ( #common.isSuperAdmin() OR #common.isUser(#userId) )")
     public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId) {
         List<AccessKeyDto> result = accessKeyDtoService.findByUser(userId);
         return ResponseEntity.ok(result);
@@ -47,7 +47,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId())")
+    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()")
     public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }
