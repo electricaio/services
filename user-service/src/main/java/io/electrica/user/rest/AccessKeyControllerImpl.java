@@ -41,7 +41,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey') AND #common.isUser(#userId)")
     public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId) {
-        List<AccessKeyDto> result = accessKeyDtoService.findAllNonArchivedByUser(userId);
+        List<AccessKeyDto> result = accessKeyDtoService.findByUser(userId);
         return ResponseEntity.ok(result);
     }
 

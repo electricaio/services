@@ -19,8 +19,8 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         this.accessKeyService = accessKeyService;
     }
 
-    public List<AccessKeyDto> findAllNonArchivedByUser(Long userId) {
-        return toDto(accessKeyService.findAllNonArchivedByUser(userId));
+    public List<AccessKeyDto> findByUser(Long userId) {
+        return toDto(accessKeyService.findByUser(userId));
     }
 
     public FullAccessKeyDto findByKey(Long accessKeyId) {

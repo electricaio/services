@@ -23,7 +23,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    List<AccessKey> findAllNonArchivedByUser(Long userId) {
+    List<AccessKey> findByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
