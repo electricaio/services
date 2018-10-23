@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
@@ -267,7 +269,6 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     @Test(expected = AccessDeniedException.class)
     public void getAccessKeyWrongKeyIdWithNoReadPermissionForOrgUser() {
         UserDto user = createAndSaveUser();
-        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.AddPermission),
                 () -> accessKeyController.getAccessKey(1L));
@@ -276,12 +277,86 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     @Test(expected = AccessDeniedException.class)
     public void getAccessKeyWrongKeyIdWithNoReadPermissionForOrgAdmin() {
         UserDto user = createAndSaveUser();
-        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgAdmin),
                 EnumSet.of(PermissionType.AddPermission),
                 () -> accessKeyController.getAccessKey(1L));
     }
 
+
+    @Test
+    public void testRefreshKey() {
+        UserDto user = createAndSaveUser();
+        Long accessKeyId = createAndSaveAccessKey(user);
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
+
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    FullAccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
+                    assertNotEquals(key.get().getKey(), result.getKey());
+                    assertNotEquals(key.get().getJti(), result.getJti());
+                    assertEquals(key.get().getId(), result.getId());
+                    assertEquals(key.get().getName(), result.getName());
+                    assertNotEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
+                });
+
+    }
+
+    @Test(expected = ActionForbiddenServiceException.class)
+    public void testRefreshKeyBelongToDiffUser() {
+        UserDto user = createAndSaveUser();
+        UserDto user2 = createAndSaveUser();
+        Long accessKeyId = createAndSaveAccessKey(user);
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
+
+        executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    FullAccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
+                    assertNotEquals(key.get().getKey(), result.getKey());
+                    assertNotEquals(key.get().getJti(), result.getJti());
+                    assertEquals(key.get().getId(), result.getId());
+                    assertEquals(key.get().getName(), result.getName());
+                    assertNotEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testRefreshKeyWithWrongPermission() {
+        UserDto user = createAndSaveUser();
+        UserDto user2 = createAndSaveUser();
+        Long accessKeyId = createAndSaveAccessKey(user);
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
+
+        executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadAccessKey),
+                () -> accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody());
+    }
+
+    private AtomicReference<FullAccessKeyDto> getFullAccessKeyDtoForKey(UserDto user, Long accessKeyId) {
+        AtomicReference<FullAccessKeyDto> key = new AtomicReference<>();
+
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadAccessKey),
+                () -> {
+                    FullAccessKeyDto result = accessKeyController.getAccessKey(accessKeyId.longValue()).getBody();
+                    key.set(result);
+
+                });
+        return key;
+    }
+
+    private Long createAndSaveAccessKey(UserDto user) {
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                });
+        return accessKeyId.longValue();
+    }
 
     private void assertTestAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {
         assertAccessKey(user, accessKeyDto, result, TEST_ACCESS_KEY);

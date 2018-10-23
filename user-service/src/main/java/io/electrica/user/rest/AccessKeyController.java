@@ -27,4 +27,7 @@ public interface AccessKeyController {
     @GetMapping(V1 + "/access-keys/{accessKeyId}")
     ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId);
 
+    @GetMapping(V1 + "/access-keys/{accessKeyId}/refresh")
+    ResponseEntity<FullAccessKeyDto> refreshAccessKey(@PathVariable Long accessKeyId);
+
 }

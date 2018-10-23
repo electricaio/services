@@ -1,11 +1,15 @@
 package io.electrica.user.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.exception.ActionForbiddenServiceException;
+import io.electrica.common.helper.TokenHelper;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,13 +30,26 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
+    AccessKey refreshKey(Long accessKeyId) {
+        long userId = TokenHelper.extractIdFromTokenUsername(SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal().toString());
+        AccessKey accessKey = findById(accessKeyId, true);
+        if (!(accessKey.getUser().getId().longValue() == userId)) {
+            throw new ActionForbiddenServiceException(
+                    String.format("AccessKey %s belongs to another user", accessKeyId));
+        }
+        fillAccessKeyInfo(accessKey);
+        return accessKeyRepository.saveAndFlush(accessKey);
+    }
+
     @Override
     protected AccessKey executeCreate(AccessKey newEntity) {
         Long userId = newEntity.getUser().getId();
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
 
-        fillAccessKeyInfo(userId, newEntity);
+        fillAccessKeyInfo(newEntity);
         return getRepository().save(newEntity);
     }
 
@@ -56,8 +73,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         };
     }
 
-    private void fillAccessKeyInfo(Long userID, AccessKey accessKey) {
-        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(userID);
+    private void fillAccessKeyInfo(AccessKey accessKey) {
+        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(accessKey.getUser().getId());
         accessKey.setJti(key.getJti());
         accessKey.setKey(key.getValue());
     }

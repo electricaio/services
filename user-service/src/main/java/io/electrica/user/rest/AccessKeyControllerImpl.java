@@ -53,4 +53,9 @@ public class AccessKeyControllerImpl implements AccessKeyController {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }
 
+    @Override
+    @PreAuthorize("#common.hasPermission('CreateAccessKey')")
+    public ResponseEntity<FullAccessKeyDto> refreshAccessKey(Long accessKeyId) {
+        return ResponseEntity.ok(accessKeyDtoService.refreshKey(accessKeyId));
+    }
 }
