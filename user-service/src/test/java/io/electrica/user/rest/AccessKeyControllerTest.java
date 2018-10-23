@@ -118,7 +118,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         accessKeyRepository.flush();
     }
 
-    @Test
+    @Test(expected = AccessDeniedException.class)
     public void createAccessKeyByOrgUserHasCreateAccessKeyPermissionWithAccessKeyCreatedByOtherUser() {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();

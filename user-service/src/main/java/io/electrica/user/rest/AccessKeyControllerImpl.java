@@ -32,7 +32,8 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('CreateAccessKey')")
+    @PreAuthorize("#common.hasPermission('CreateAccessKey') AND  ( #common.isSuperAdmin() OR " +
+            "#common.isUser(#accessKey.getUserId()) )")
     public ResponseEntity<AccessKeyDto> createAccessKey(@RequestBody CreateAccessKeyDto accessKey) {
         AccessKeyDto result = accessKeyDtoService.create(accessKey);
         return ResponseEntity.ok(result);
@@ -47,8 +48,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR " +
-            "#common.isSuperAdmin()")
+    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()")
     public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }
