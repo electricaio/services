@@ -182,7 +182,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     public void findAllNonArchivedByUserNoKeysHasWrongPermissionWithOrgUser() {
         UserDto user = createAndSaveUser();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.CreateSTL),
+                EnumSet.of(PermissionType.AddPermission),
                 () -> {
                     accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
                 });
@@ -192,7 +192,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     public void findAllNonArchivedByUserNoKeysHasWrongPermissionWithOrgAdmin() {
         UserDto user = createAndSaveUser();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgAdmin),
-                EnumSet.of(PermissionType.CreateSTL),
+                EnumSet.of(PermissionType.AddPermission),
                 () -> {
                     accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
                 });
