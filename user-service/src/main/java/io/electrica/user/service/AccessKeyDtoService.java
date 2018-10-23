@@ -24,7 +24,7 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     }
 
     public FullAccessKeyDto findByKey(Long accessKeyId) {
-        AccessKey entity = accessKeyService.findById(accessKeyId, false);
+        AccessKey entity = accessKeyService.findById(accessKeyId, true);
         return mapper.map(entity, FullAccessKeyDto.class);
     }
 
