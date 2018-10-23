@@ -19,12 +19,12 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         this.accessKeyService = accessKeyService;
     }
 
-    public List<AccessKeyDto> findAllNonArchivedByUser(Long userId) {
-        return toDto(accessKeyService.findAllNonArchivedByUser(userId));
+    public List<AccessKeyDto> findByUser(Long userId) {
+        return toDto(accessKeyService.findByUser(userId));
     }
 
-    public FullAccessKeyDto findByKeyAndUser(Long accessKeyId, Long userId) {
-        AccessKey entity = accessKeyService.findByIdAndUser(accessKeyId, userId);
+    public FullAccessKeyDto findByKey(Long accessKeyId) {
+        AccessKey entity = accessKeyService.findById(accessKeyId, true);
         return mapper.map(entity, FullAccessKeyDto.class);
     }
 
