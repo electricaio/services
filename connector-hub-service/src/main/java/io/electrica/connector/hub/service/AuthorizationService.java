@@ -19,8 +19,6 @@ import javax.persistence.EntityNotFoundException;
 @Component
 public class AuthorizationService {
 
-    private final ConnectionService connectionService;
-
     private final AuthorizationRepository authorizationRepository;
 
     private final AuthorizationTypeRepository authorizationTypeRepository;
@@ -31,13 +29,11 @@ public class AuthorizationService {
 
     private final EntityManager em;
 
-    public AuthorizationService(ConnectionService connectionService,
-                                AuthorizationRepository authorizationRepository,
+    public AuthorizationService(AuthorizationRepository authorizationRepository,
                                 AuthorizationTypeRepository authorizationTypeRepository,
                                 BasicAuthorizationRepository basicAuthorizationRepository,
                                 Mapper mapper,
                                 EntityManager em) {
-        this.connectionService = connectionService;
         this.authorizationRepository = authorizationRepository;
         this.authorizationTypeRepository = authorizationTypeRepository;
         this.basicAuthorizationRepository = basicAuthorizationRepository;
@@ -46,9 +42,8 @@ public class AuthorizationService {
     }
 
     public ReadAuthorizationDto createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
-        final Connection connection = connectionService.findById(connectionId, true);
 
-        final Authorization authorization = authorizationRepository.findOneByConnectionId(connection.getId())
+        final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
                 .orElseGet(() -> createAuthorization(AuthorizationTypeName.BASIC_AUTHORIZATION, connectionId));
 
         basicAuthorizationRepository.findOneByAuthorizationId(authorization.getId())

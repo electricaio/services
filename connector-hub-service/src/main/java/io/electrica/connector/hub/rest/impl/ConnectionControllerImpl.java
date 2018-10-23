@@ -36,8 +36,10 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector')")
-    public ResponseEntity<ReadAuthorizationDto> authorize(Long connectionId, CreateBasicAuthorizationDto request) {
+    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') " +
+            "AND #connection.canUserAccess(#connectionId)")
+    public ResponseEntity<ReadAuthorizationDto> authorize(Long connectionId,
+                                                          @Valid @RequestBody CreateBasicAuthorizationDto request) {
         final ReadAuthorizationDto dto = authorizationService.createBasicAuth(connectionId, request);
         return ResponseEntity.ok().body(dto);
     }

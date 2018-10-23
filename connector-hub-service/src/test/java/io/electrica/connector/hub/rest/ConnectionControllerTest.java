@@ -1,6 +1,6 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.common.exception.EntityNotFoundServiceException;
+import com.google.common.collect.Sets;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.model.*;
@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
 
@@ -68,6 +69,8 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertNotNull(actual.getId());
 
         assertEquals(connectorId, connection.getConnector().getId());
+        assertEquals(Long.valueOf(1), connection.getUserId());
+        assertEquals(Long.valueOf(1), connection.getOrganizationId());
         assertEquals(accessKeyId, connection.getAccessKeyId());
     }
 
@@ -88,7 +91,6 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 .getId();
 
         final Long accessKeyId = 12L;
-
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
         connectionController.connect(dto);
 
@@ -112,7 +114,6 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 .getId();
 
         final Long accessKeyId = 12L;
-
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
         connectionController.connect(dto);
     }
@@ -166,7 +167,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         connectionController.authorize(1L, dto).getBody();
     }
 
-    @Test(expected = EntityNotFoundServiceException.class)
+    @Test(expected = AccessDeniedException.class)
     @ForUser(
             userId = 1,
             organizationId = 1,
@@ -184,6 +185,43 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         );
         connectionController.authorize(connectionId, request);
     }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testBasicAuthWithConnectionFromDiffUser() {
+
+        final AtomicLong wrapper = new AtomicLong();
+
+        executeForUser(
+                -1L,
+                -1L,
+                Sets.newHashSet(RoleType.SuperAdmin),
+                Sets.newHashSet(
+                        PermissionType.CreateConnector,
+                        PermissionType.AssociateAccessKeyToConnector
+                ),
+                () -> {
+                    final Long connectionId = createConnectionToHackerRank();
+                    wrapper.set(connectionId);
+                });
+
+        executeForUser(
+                1L,
+                1L,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.CreateConnector,
+                        PermissionType.AssociateAccessKeyToConnector
+                ),
+                () -> {
+
+                    final Long connectionId = wrapper.get();
+                    final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto(
+                            "user_" + connectionId, "pwd_" + connectionId
+                    );
+                    connectionController.authorize(connectionId, request);
+                });
+    }
+
 
     /**
      * Tests whether if a user provides new credentials to already authorized connection,
