@@ -1,6 +1,7 @@
 package io.electrica.user.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.helper.TokenHelper;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
@@ -8,7 +9,6 @@ import io.electrica.user.model.AccessKey;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
                 getAuthentication().getPrincipal().toString());
         AccessKey accessKey = findById(accessKeyId, true);
         if (!(accessKey.getUser().getId().longValue() == userId)) {
-            throw new AccessDeniedException(
+            throw new ActionForbiddenServiceException(
                     String.format("AccessKey %s belongs to another user", accessKeyId));
         }
         fillAccessKeyInfo(accessKey);

@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
@@ -309,7 +310,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test(expected = ActionForbiddenServiceException.class)
     public void testRefreshKeyBelongToDiffUser() {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();
