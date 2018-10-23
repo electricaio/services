@@ -1,43 +1,44 @@
 package io.electrica.connector.hub.service;
 
-import com.github.dozermapper.core.Mapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.model.Connector;
 import io.electrica.connector.hub.repository.ConnectionRepository;
-import io.electrica.connector.hub.repository.ConnectorRepository;
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
+import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
 
 @Component
-public class ConnectionService {
+public class ConnectionService extends AbstractService<Connection> {
 
-    private final ConnectorRepository connectorRepository;
+    private final ConnectorService connectorService;
 
     private final ConnectionRepository connectionRepository;
 
-    private final Mapper mapper;
-
-    public ConnectionService(ConnectorRepository connectorRepository,
-                             ConnectionRepository connectionRepository,
-                             Mapper mapper) {
-        this.connectorRepository = connectorRepository;
+    public ConnectionService(ConnectorService connectorService,
+                             ConnectionRepository connectionRepository) {
+        this.connectorService = connectorService;
         this.connectionRepository = connectionRepository;
-        this.mapper = mapper;
     }
 
-    @Transactional
-    public ConnectionDto create(ConnectDto dto) {
+    @Override
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
+    protected Connection executeCreate(Connection newEntity) {
 
-        final Connector connector = connectorRepository.findById(dto.getConnectorId())
-                .orElseThrow(EntityNotFoundException::new);
+        final Connector connector = connectorService.findById(newEntity.getConnector().getId(), true);
 
-        final Connection model = new Connection(connector, dto.getAccessKeyId());
-        connectionRepository.save(model);
+        newEntity.setConnector(connector);
+        return connectionRepository.save(newEntity);
+    }
 
-        return mapper.map(model, ConnectionDto.class);
+    @Override
+    protected void executeUpdate(Connection merged, Connection update) {
+        throw new NotImplementedException("");
+    }
+
+    @Override
+    protected JpaRepository<Connection, Long> getRepository() {
+        return connectionRepository;
     }
 }

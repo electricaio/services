@@ -1,9 +1,9 @@
 package io.electrica.connector.hub.rest.impl;
 
+import io.electrica.connector.hub.rest.ConnectorController;
 import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
 import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
 import io.electrica.connector.hub.service.ConnectorDtoService;
-import io.electrica.connector.hub.rest.ConnectorController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;

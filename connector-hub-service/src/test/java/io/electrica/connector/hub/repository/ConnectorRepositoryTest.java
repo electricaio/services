@@ -14,7 +14,7 @@ public class ConnectorRepositoryTest extends AbstractDatabaseTest {
      * Tests a case when resource is not provided and adding
      * 2 Connectors with same name should raise constraint exception on ERN,
      * since they would end up being same.
-     * */
+     */
     @Test(expected = DataIntegrityViolationException.class)
     public void testSaveConnectorWithoutResourceResultingInSameERN() {
 
