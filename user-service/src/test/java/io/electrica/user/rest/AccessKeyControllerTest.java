@@ -1,6 +1,5 @@
 package io.electrica.user.rest;
 
-import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
@@ -292,17 +291,18 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
                 () -> {
-                    FullAccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
-                    assertNotEquals(key.get().getKey(), result.getKey());
-                    assertNotEquals(key.get().getJti(), result.getJti());
+                    AccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
                     assertEquals(key.get().getId(), result.getId());
                     assertEquals(key.get().getName(), result.getName());
                     assertNotEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
                 });
+        AtomicReference<FullAccessKeyDto> key2 = getFullAccessKeyDtoForKey(user, accessKeyId);
+        assertNotEquals(key.get().getKey(), key2.get().getKey());
+        assertNotEquals(key.get().getJti(), key2.get().getJti());
 
     }
 
-    @Test(expected = ActionForbiddenServiceException.class)
+    @Test(expected = AccessDeniedException.class)
     public void testRefreshKeyBelongToDiffUser() {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();
@@ -311,14 +311,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
         executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
-                () -> {
-                    FullAccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
-                    assertNotEquals(key.get().getKey(), result.getKey());
-                    assertNotEquals(key.get().getJti(), result.getJti());
-                    assertEquals(key.get().getId(), result.getId());
-                    assertEquals(key.get().getName(), result.getName());
-                    assertNotEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
-                });
+                () -> accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody());
     }
 
     @Test(expected = AccessDeniedException.class)

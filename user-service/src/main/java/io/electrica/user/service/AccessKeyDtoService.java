@@ -28,9 +28,9 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         return mapper.map(entity, FullAccessKeyDto.class);
     }
 
-    public FullAccessKeyDto refreshKey(long accessKeyId) {
+    public AccessKeyDto refreshKey(long accessKeyId) {
 
-        return mapper.map(accessKeyService.refreshKey(accessKeyId), FullAccessKeyDto.class);
+        return toDto(accessKeyService.refreshKey(accessKeyId));
     }
 
     @Override

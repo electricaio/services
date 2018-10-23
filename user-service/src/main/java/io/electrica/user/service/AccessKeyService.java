@@ -11,6 +11,7 @@ import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +31,11 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
+    @Transactional
     AccessKey refreshKey(Long accessKeyId) {
-        long userId = TokenHelper.extractIdFromTokenUsername(SecurityContextHolder.getContext().
-                getAuthentication().getPrincipal().toString());
         AccessKey accessKey = findById(accessKeyId, true);
-        if (!(accessKey.getUser().getId().longValue() == userId)) {
-            throw new ActionForbiddenServiceException(
-                    String.format("AccessKey %s belongs to another user", accessKeyId));
-        }
         fillAccessKeyInfo(accessKey);
-        return accessKeyRepository.saveAndFlush(accessKey);
+        return update(accessKeyId,accessKey);
     }
 
     @Override
@@ -81,7 +76,9 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     @Override
     protected void executeUpdate(AccessKey merged, AccessKey update) {
-        throw new UnsupportedOperationException();
+         merged.setKey(update.getKey());
+         merged.setJti(update.getJti());
+         getRepository().saveAndFlush(merged);
     }
 
     @Override
