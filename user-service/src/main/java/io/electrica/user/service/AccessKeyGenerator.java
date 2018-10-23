@@ -38,8 +38,15 @@ public class AccessKeyGenerator {
                 userId,
                 ACCESS_KEY_CLIENT_ID,
                 null,
-                Sets.newHashSet(READ_SCOPE, INVOKE_SCOPE),
-                Sets.newHashSet(USER_SERVICE_RESOURCE_ID, STL_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                Sets.newHashSet(
+                        READ_SCOPE,
+                        INVOKE_SCOPE
+                ),
+                Sets.newHashSet(
+                        USER_SERVICE_RESOURCE_ID,
+                        CONNECTOR_HUB_SERVICE_RESOURCE_ID,
+                        INVOKER_SERVICE_RESOURCE_ID
+                )
         );
         Object jti = accessToken.getAdditionalInformation().get(TokenHelper.JWT_TOKEN_IDENTIFIER);
         checkArgument(jti != null, "Token identifier required");

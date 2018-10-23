@@ -1,0 +1,1325 @@
+databaseChangeLog:
+- changeSet:
+    id: 1539845818495-1
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: authorization_id_seq
+- changeSet:
+    id: 1539845818495-2
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: authorization_type_id_seq
+- changeSet:
+    id: 1539845818495-3
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: aws_iam_authorization_id_seq
+- changeSet:
+    id: 1539845818495-4
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: basic_authorization_id_seq
+- changeSet:
+    id: 1539845818495-5
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: connection_id_seq
+- changeSet:
+    id: 1539845818495-6
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: connector_id_seq
+- changeSet:
+    id: 1539845818495-7
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: connector_type_id_seq
+- changeSet:
+    id: 1539845818495-8
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: revinfo_id_seq
+- changeSet:
+    id: 1539845818495-9
+    author: aleks (generated)
+    changes:
+    - createSequence:
+        sequenceName: token_authorization_id_seq
+- changeSet:
+    id: 1539845818495-10
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        tableName: authorization_types
+- changeSet:
+    id: 1539845818495-11
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        tableName: authorization_types_aud
+- changeSet:
+    id: 1539845818495-12
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connection_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: type_id
+            type: BIGINT
+        tableName: authorizations
+- changeSet:
+    id: 1539845818495-13
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: connection_id
+            type: BIGINT
+        - column:
+            name: connection_mod
+            type: BOOLEAN
+        - column:
+            name: type_id
+            type: BIGINT
+        - column:
+            name: type_mod
+            type: BOOLEAN
+        tableName: authorizations_aud
+- changeSet:
+    id: 1539845818495-14
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: details
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: authorization_id
+            type: BIGINT
+        tableName: aws_iam_authorizations
+- changeSet:
+    id: 1539845818495-15
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: details
+            type: VARCHAR(255)
+        - column:
+            name: details_mod
+            type: BOOLEAN
+        - column:
+            name: authorization_id
+            type: BIGINT
+        - column:
+            name: authorization_mod
+            type: BOOLEAN
+        tableName: aws_iam_authorizations_aud
+- changeSet:
+    id: 1539845818495-16
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: password_hash
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: user_hash
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: authorization_id
+            type: BIGINT
+        tableName: basic_authorizations
+- changeSet:
+    id: 1539845818495-17
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: password_hash
+            type: VARCHAR(255)
+        - column:
+            name: password_hash_mod
+            type: BOOLEAN
+        - column:
+            name: user_hash
+            type: VARCHAR(255)
+        - column:
+            name: user_hash_mod
+            type: BOOLEAN
+        - column:
+            name: authorization_id
+            type: BIGINT
+        - column:
+            name: authorization_mod
+            type: BOOLEAN
+        tableName: basic_authorizations_aud
+- changeSet:
+    id: 1539845818495-18
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: access_key_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connector_id
+            type: BIGINT
+        tableName: connections
+- changeSet:
+    id: 1539845818495-19
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: access_key_id
+            type: BIGINT
+        - column:
+            name: access_key_id_mod
+            type: BOOLEAN
+        - column:
+            name: connector_id
+            type: BIGINT
+        - column:
+            name: connector_mod
+            type: BOOLEAN
+        tableName: connections_aud
+- changeSet:
+    id: 1539845818495-20
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        tableName: connector_types
+- changeSet:
+    id: 1539845818495-21
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        tableName: connector_types_aud
+- changeSet:
+    id: 1539845818495-22
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: ern
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: namespace
+            type: VARCHAR(255)
+        - column:
+            name: resource
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: version
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: authorization_type_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: type_id
+            type: BIGINT
+        tableName: connectors
+- changeSet:
+    id: 1539845818495-23
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: ern
+            type: VARCHAR(255)
+        - column:
+            name: ern_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: namespace
+            type: VARCHAR(255)
+        - column:
+            name: namespace_mod
+            type: BOOLEAN
+        - column:
+            name: resource
+            type: VARCHAR(255)
+        - column:
+            name: resource_mod
+            type: BOOLEAN
+        - column:
+            name: version
+            type: VARCHAR(255)
+        - column:
+            name: version_mod
+            type: BOOLEAN
+        - column:
+            name: authorization_type_id
+            type: BIGINT
+        - column:
+            name: authorization_type_mod
+            type: BOOLEAN
+        - column:
+            name: type_id
+            type: BIGINT
+        - column:
+            name: type_mod
+            type: BOOLEAN
+        tableName: connectors_aud
+- changeSet:
+    id: 1539845818495-24
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: entityname
+            type: VARCHAR(255)
+        tableName: revchanges
+- changeSet:
+    id: 1539845818495-25
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: timestamp
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: revinfo
+- changeSet:
+    id: 1539845818495-26
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: token_hash
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: authorization_id
+            type: BIGINT
+        tableName: token_authorizations
+- changeSet:
+    id: 1539845818495-27
+    author: aleks (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: revtype
+            type: SMALLINT
+        - column:
+            name: revend
+            type: BIGINT
+        - column:
+            name: revend_tstmp
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: archived
+            type: BOOLEAN
+        - column:
+            name: archived_mod
+            type: BOOLEAN
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: token_hash
+            type: VARCHAR(255)
+        - column:
+            name: token_hash_mod
+            type: BOOLEAN
+        - column:
+            name: authorization_id
+            type: BIGINT
+        - column:
+            name: authorization_mod
+            type: BOOLEAN
+        tableName: token_authorizations_aud
+- changeSet:
+    id: 1539845818495-28
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: authorization_types_aud_pkey
+        tableName: authorization_types_aud
+- changeSet:
+    id: 1539845818495-29
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: authorization_types_pkey
+        tableName: authorization_types
+- changeSet:
+    id: 1539845818495-30
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: authorizations_aud_pkey
+        tableName: authorizations_aud
+- changeSet:
+    id: 1539845818495-31
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: authorizations_pkey
+        tableName: authorizations
+- changeSet:
+    id: 1539845818495-32
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: aws_iam_authorizations_aud_pkey
+        tableName: aws_iam_authorizations_aud
+- changeSet:
+    id: 1539845818495-33
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: aws_iam_authorizations_pkey
+        tableName: aws_iam_authorizations
+- changeSet:
+    id: 1539845818495-34
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: basic_authorizations_aud_pkey
+        tableName: basic_authorizations_aud
+- changeSet:
+    id: 1539845818495-35
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: basic_authorizations_pkey
+        tableName: basic_authorizations
+- changeSet:
+    id: 1539845818495-36
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: connections_aud_pkey
+        tableName: connections_aud
+- changeSet:
+    id: 1539845818495-37
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: connections_pkey
+        tableName: connections
+- changeSet:
+    id: 1539845818495-38
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: connector_types_aud_pkey
+        tableName: connector_types_aud
+- changeSet:
+    id: 1539845818495-39
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: connector_types_pkey
+        tableName: connector_types
+- changeSet:
+    id: 1539845818495-40
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: connectors_aud_pkey
+        tableName: connectors_aud
+- changeSet:
+    id: 1539845818495-41
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: connectors_pkey
+        tableName: connectors
+- changeSet:
+    id: 1539845818495-42
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: revinfo_pkey
+        tableName: revinfo
+- changeSet:
+    id: 1539845818495-43
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id, rev
+        constraintName: token_authorizations_aud_pkey
+        tableName: token_authorizations_aud
+- changeSet:
+    id: 1539845818495-44
+    author: aleks (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: token_authorizations_pkey
+        tableName: token_authorizations
+- changeSet:
+    id: 1539845818495-45
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: type_id, connection_id
+        constraintName: uk5oq678f65ekeg6sgo87mtqkg9
+        tableName: authorizations
+- changeSet:
+    id: 1539845818495-46
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: connector_id, access_key_id
+        constraintName: uk8hw4mlak7oax43t0vh16qb8rx
+        tableName: connections
+- changeSet:
+    id: 1539845818495-47
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: uk_al6moyh0f4xf9ir8dn31brcng
+        tableName: authorization_types
+- changeSet:
+    id: 1539845818495-48
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: ern
+        constraintName: uk_bgs68g10coch77da3uc4grj21
+        tableName: connectors
+- changeSet:
+    id: 1539845818495-49
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: uk_gvmefa9y8i3sbh79ei0xayjby
+        tableName: connector_types
+- changeSet:
+    id: 1539845818495-50
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name, resource, version
+        constraintName: ukn064y686je7wg091hqwvasdnc
+        tableName: connectors
+- changeSet:
+    id: 1539845818495-51
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: authorizations_aud
+        constraintName: fk2cl28leq2l23eut57viqk4rd7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-52
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: authorization_types_aud
+        constraintName: fk2vbsbov9jrspd65c38dwy7qdf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-53
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: aws_iam_authorizations_aud
+        constraintName: fk31jexnhgoaflkn2atbhifgsd8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-54
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: authorization_types_aud
+        constraintName: fk4ljtii189hx2eetswwsm46hst
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-55
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: authorizations_aud
+        constraintName: fk4xojf5da1awl2x72xrmxf7ip
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-56
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: connectors_aud
+        constraintName: fk55xdqlhiesan1k49doy61gg7t
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-57
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: authorization_id
+        baseTableName: token_authorizations
+        constraintName: fk6w21uvdu63isqiog1oh57rpan
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: authorizations
+- changeSet:
+    id: 1539845818495-58
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: connector_types_aud
+        constraintName: fk78ys2lfimynod2g6nl8fxi5l8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-59
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: basic_authorizations_aud
+        constraintName: fk7k43l5m0ql5lkrsjbl26u4kvk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-60
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: authorization_id
+        baseTableName: basic_authorizations
+        constraintName: fk81nd1fdwnjbspb4vcfbjw3wld
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: authorizations
+- changeSet:
+    id: 1539845818495-61
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: type_id
+        baseTableName: connectors
+        constraintName: fk83t40y7lewdlffaea1qql8tdc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: connector_types
+- changeSet:
+    id: 1539845818495-62
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: basic_authorizations_aud
+        constraintName: fk9hqk0lbk07wjx08eh0cdjp484
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-63
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: revchanges
+        constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-64
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: connector_types_aud
+        constraintName: fkalflpmhpu610it5aewlrhyw58
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-65
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: token_authorizations_aud
+        constraintName: fkays3juwq0pikkbmqcd2mkqx8k
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-66
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: connection_id
+        baseTableName: authorizations
+        constraintName: fkb7vnjvxvl74epnm6axvpp0mfo
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: connections
+- changeSet:
+    id: 1539845818495-67
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: type_id
+        baseTableName: authorizations
+        constraintName: fkf2mijxehe0ae73dx2ggfn1mdh
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: authorization_types
+- changeSet:
+    id: 1539845818495-68
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: connector_id
+        baseTableName: connections
+        constraintName: fkg5o9h9difjte55kqtv0cpgsc1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: connectors
+- changeSet:
+    id: 1539845818495-69
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: authorization_id
+        baseTableName: aws_iam_authorizations
+        constraintName: fkhciu3scicfye8u2042m4ub9yc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: authorizations
+- changeSet:
+    id: 1539845818495-70
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: connections_aud
+        constraintName: fkhmqaimhfa3l79dgxy713w21me
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-71
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: token_authorizations_aud
+        constraintName: fkjq3s9nat9prhdo8oi7hpctk7c
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-72
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: connections_aud
+        constraintName: fkk4yt0ymo69vriljvdc8b86qyf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-73
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: connectors_aud
+        constraintName: fkl7ytg32vbqh4whniil8jluyl7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+- changeSet:
+    id: 1539845818495-74
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: authorization_type_id
+        baseTableName: connectors
+        constraintName: fkqrblo5cx3k825yfmnbbamox7r
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: authorization_types
+- changeSet:
+    id: 1539845818495-75
+    author: aleks (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: revend
+        baseTableName: aws_iam_authorizations_aud
+        constraintName: fkrghuotv7aao5vudcv2e4g6opm
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+

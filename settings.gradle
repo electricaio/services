@@ -2,6 +2,6 @@ rootProject.name = 'electrica-services'
 include 'common-jpa'
 include 'user-service'
 include 'common'
-include 'stl-service'
+include 'connector-hub-service'
 include 'common-test'
 
