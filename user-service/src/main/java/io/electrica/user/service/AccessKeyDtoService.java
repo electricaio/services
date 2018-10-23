@@ -6,9 +6,6 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.model.AccessKey;
-import io.electrica.user.model.User;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

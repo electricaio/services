@@ -1,6 +1,7 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.EntityNotFoundServiceException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.electrica.common.helper.TokenHelper;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
@@ -29,11 +30,12 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     AccessKey refreshKey(Long accessKeyId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+        long userId = TokenHelper.extractIdFromTokenUsername(SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal().toString());
         AccessKey accessKey = findById(accessKeyId, true);
-        if (!(user.getId().equals(accessKey.getUser().getId()))) {
+        if (!(accessKey.getUser().getId().longValue() == userId)) {
             throw new AccessDeniedException(
                     String.format("AccessKey %s belongs to another user", accessKeyId));
         }

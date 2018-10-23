@@ -1,6 +1,5 @@
 package io.electrica.user.rest;
 
-import io.electrica.common.security.PermissionType;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
@@ -48,7 +47,8 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()AccessKeyDtoService.java")
+    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR " +
+            "#common.isSuperAdmin()")
     public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }
