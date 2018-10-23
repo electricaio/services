@@ -25,14 +25,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    List<AccessKey> findAllNonArchivedByUser(Long userId) {
+    List<AccessKey> findByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
-    }
-
-    AccessKey findByIdAndUser(Long accessKeyId, Long userId) {
-        return accessKeyRepository.findByKeyAndUser(accessKeyId, userId).
-                orElseThrow(() -> new EntityNotFoundServiceException(
-                        String.format("No access key %s for user %s", accessKeyId, userId)));
     }
 
     AccessKey refreshKey(Long accessKeyId) {

@@ -24,8 +24,8 @@ public interface AccessKeyController {
     @GetMapping(V1 + "/users/{userId}/access-keys")
     ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId);
 
-    @GetMapping(V1 + "/users/{userId}/access-keys/{accessKeyId}")
-    ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId, @PathVariable Long userId);
+    @GetMapping(V1 + "/access-keys/{accessKeyId}")
+    ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId);
 
     @GetMapping(V1 + "/access-keys/{accessKeyId}/refresh")
     ResponseEntity<FullAccessKeyDto> refreshAccessKey(@PathVariable Long accessKeyId);
