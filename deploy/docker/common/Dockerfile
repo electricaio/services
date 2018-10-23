@@ -1,4 +1,4 @@
-FROM sgrio/java-oracle:server_jre_8
+FROM openjdk:8-alpine
 
 ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
 
