@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.security.PermissionType;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
@@ -65,4 +66,9 @@ public class AccessKeyControllerImpl implements AccessKeyController {
         return ResponseEntity.ok(accessKeyDtoService.findByKeyAndUser(accessKeyId, userId));
     }
 
+    @Override
+    @PreAuthorize("#common.hasPermission('CreateAccessKey')")
+    public ResponseEntity<FullAccessKeyDto> refreshAccessKey(Long accessKeyId) {
+        return ResponseEntity.ok(accessKeyDtoService.refreshKey(accessKeyId));
+    }
 }

@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
 
@@ -182,6 +183,31 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                 () -> {
                     accessKeyController.getAccessKey(0L, user.getId()).getBody();
                 });
+    }
+
+    @Test
+    public void testRefreshKey() {
+        UserDto user = createAndSaveUser();
+        Long accessKeyId = createAndSaveAccessKey(user);
+
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    FullAccessKeyDto result = accessKeyController.getAccessKey(accessKeyId.longValue(),3L).getBody();
+                });
+
+    }
+
+    private Long createAndSaveAccessKey( UserDto user){
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                });
+        return accessKeyId.longValue();
     }
 
     private void assertTestAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {

@@ -6,6 +6,9 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.model.AccessKey;
+import io.electrica.user.model.User;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,6 +29,11 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     public FullAccessKeyDto findByKeyAndUser(Long accessKeyId, Long userId) {
         AccessKey entity = accessKeyService.findByIdAndUser(accessKeyId, userId);
         return mapper.map(entity, FullAccessKeyDto.class);
+    }
+
+    public FullAccessKeyDto refreshKey(long accessKeyId) {
+
+        return mapper.map(accessKeyService.refreshKey(accessKeyId), FullAccessKeyDto.class);
     }
 
     @Override
