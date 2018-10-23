@@ -1,6 +1,5 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
@@ -23,14 +22,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    List<AccessKey> findAllNonArchivedByUser(Long userId) {
+    List<AccessKey> findByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
-    }
-
-    AccessKey findByIdAndUser(Long accessKeyId, Long userId) {
-        return accessKeyRepository.findByKeyAndUser(accessKeyId, userId).
-                orElseThrow(() -> new EntityNotFoundServiceException(
-                        String.format("No access key %s for user %s", accessKeyId, userId)));
     }
 
     @Override
