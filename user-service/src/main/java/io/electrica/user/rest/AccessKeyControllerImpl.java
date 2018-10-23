@@ -47,7 +47,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()AccessKeyDtoService.java")
+    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()")
     public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }

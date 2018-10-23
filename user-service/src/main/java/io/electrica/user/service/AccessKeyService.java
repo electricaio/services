@@ -1,6 +1,5 @@
 package io.electrica.user.service;
 
-import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
