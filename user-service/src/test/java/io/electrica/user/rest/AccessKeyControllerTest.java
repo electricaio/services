@@ -1,5 +1,6 @@
 package io.electrica.user.rest;
 
+import io.electrica.common.exception.ActionForbiddenServiceException;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
@@ -286,15 +287,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     public void testRefreshKey() {
         UserDto user = createAndSaveUser();
         Long accessKeyId = createAndSaveAccessKey(user);
-        AtomicReference<FullAccessKeyDto> key = new AtomicReference<>();
-
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> {
-                    FullAccessKeyDto result = accessKeyController.getAccessKey(accessKeyId.longValue()).getBody();
-                    key.set(result);
-
-                });
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
 
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
@@ -309,20 +302,12 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test(expected = ActionForbiddenServiceException.class)
     public void testRefreshKeyBelongToDiffUser() {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();
         Long accessKeyId = createAndSaveAccessKey(user);
-        AtomicReference<FullAccessKeyDto> key = new AtomicReference<>();
-
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> {
-                    FullAccessKeyDto result = accessKeyController.getAccessKey(accessKeyId.longValue()).getBody();
-                    key.set(result);
-
-                });
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
 
         executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
@@ -341,6 +326,14 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         UserDto user = createAndSaveUser();
         UserDto user2 = createAndSaveUser();
         Long accessKeyId = createAndSaveAccessKey(user);
+        AtomicReference<FullAccessKeyDto> key = getFullAccessKeyDtoForKey(user, accessKeyId);
+
+        executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadAccessKey),
+                () -> accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody());
+    }
+
+    private AtomicReference<FullAccessKeyDto> getFullAccessKeyDtoForKey(UserDto user, Long accessKeyId) {
         AtomicReference<FullAccessKeyDto> key = new AtomicReference<>();
 
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
@@ -350,10 +343,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                     key.set(result);
 
                 });
-
-        executeForUser(user2.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody());
+        return key;
     }
 
     private Long createAndSaveAccessKey(UserDto user) {
