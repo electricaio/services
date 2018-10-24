@@ -7,6 +7,7 @@ import io.electrica.user.model.User;
 import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,20 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
+    @Transactional
+    AccessKey refreshKey(Long accessKeyId) {
+        AccessKey accessKey = findById(accessKeyId, true);
+        fillAccessKeyInfo(accessKey);
+        return accessKey;
+    }
+
     @Override
     protected AccessKey executeCreate(AccessKey newEntity) {
         Long userId = newEntity.getUser().getId();
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
 
-        fillAccessKeyInfo(userId, newEntity);
+        fillAccessKeyInfo(newEntity);
         return getRepository().save(newEntity);
     }
 
@@ -56,8 +64,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         };
     }
 
-    private void fillAccessKeyInfo(Long userID, AccessKey accessKey) {
-        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(userID);
+    private void fillAccessKeyInfo(AccessKey accessKey) {
+        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(accessKey.getUser().getId());
         accessKey.setJti(key.getJti());
         accessKey.setKey(key.getValue());
     }

@@ -28,6 +28,11 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         return mapper.map(entity, FullAccessKeyDto.class);
     }
 
+    public AccessKeyDto refreshKey(long accessKeyId) {
+
+        return toDto(accessKeyService.refreshKey(accessKeyId));
+    }
+
     @Override
     protected AbstractService<AccessKey> getService() {
         return accessKeyService;
