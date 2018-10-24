@@ -8,9 +8,7 @@ phases:
   build:
     commands:
     - echo Build started on `date`
-    - export APP_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    - export APP_PROFILE=$APP_BRANCH
-    - echo Execute build for profile $APP_PROFILE
+    - sh deploy/codebuild/aws-codebuild-extra.sh
     - chmod +x gradlew
     - sh deploy/docker/build.sh -p dev
     - docker tag electrica/postgres:dev 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica/postgres:dev
