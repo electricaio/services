@@ -17,7 +17,7 @@ done
 
 # Validate args
 if [ ! ${profile} ]; then
-  echo "Profile required: -p dev|staging|prod OR --profile=dev|staging|prod"
+  echo "Profile required: -p dev|stage|prod OR --profile=dev|staging|prod"
   exit -1
 fi
 

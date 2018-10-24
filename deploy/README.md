@@ -7,7 +7,7 @@ OR
 ```
 sh deploy/docker/build.sh --profile=dev
 ```
-Possible profiles are: `dev`, `staging`, `prod`.
+Possible profiles are: `dev`, `stage`, `prod`.
 
 ## Env variables
 - `JAVA_OPTS` - specify java options to start micro-service
