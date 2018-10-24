@@ -48,7 +48,7 @@
         </root>
     </springProfile>
 
-    <springProfile name="staging">
+    <springProfile name="stage">
 
         <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/${SERVICE_NAME}.log</file>

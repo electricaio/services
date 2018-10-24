@@ -1,5 +1,6 @@
 package io.electrica.test;
 
+import io.electrica.common.config.EnvironmentTypeConfig;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.context.IdentityImpl;
 import io.electrica.common.security.PermissionType;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 import static io.electrica.test.context.IdentityContextTestHelper.createAuthentication;
 
-@ActiveProfiles("test")
+@ActiveProfiles(EnvironmentTypeConfig.TEST_ENV_PROFILE_NAME)
 @TestExecutionListeners(ForUserTestExecutionListener.class)
 @TestPropertySource(locations = "classpath:common-test.properties")
 public abstract class AbstractJpaApplicationTest extends AbstractTransactionalJUnit4SpringContextTests {
