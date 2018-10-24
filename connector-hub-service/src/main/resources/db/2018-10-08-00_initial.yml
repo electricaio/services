@@ -410,6 +410,16 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
+            name: organization_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
             name: connector_id
             type: BIGINT
         tableName: connections
@@ -455,6 +465,18 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: access_key_id_mod
+            type: BOOLEAN
+        - column:
+            name: organization_id
+            type: BIGINT
+        - column:
+            name: organization_id_mod
+            type: BOOLEAN
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: user_id_mod
             type: BOOLEAN
         - column:
             name: connector_id

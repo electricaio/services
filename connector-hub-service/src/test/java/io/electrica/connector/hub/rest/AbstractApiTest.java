@@ -1,8 +1,8 @@
 package io.electrica.connector.hub.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.electrica.connector.hub.util.TestApiHelper;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
+import io.electrica.connector.hub.util.TestApiHelper;
 import org.junit.Before;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;

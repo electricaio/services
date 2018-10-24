@@ -18,6 +18,12 @@ public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicatio
     protected ConnectorTypeRepository connectorTypeRepository;
 
     @Inject
+    protected AuthorizationRepository authorizationRepository;
+
+    @Inject
+    protected BasicAuthorizationRepository basicAuthorizationRepository;
+
+    @Inject
     protected AuthorizationTypeRepository authorizationTypeRepository;
 
     @Inject

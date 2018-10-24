@@ -2,10 +2,10 @@ package io.electrica.connector.hub.util;
 
 import io.electrica.connector.hub.model.AuthorizationType;
 import io.electrica.connector.hub.model.ConnectorType;
+import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AuthorizationTypeRepository;
 import io.electrica.connector.hub.repository.ConnectorTypeRepository;
 import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
-import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 
 public interface Fixture {
 

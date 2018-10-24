@@ -9,16 +9,11 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ConnectDto {
+public class ReadAuthorizationDto {
 
     @NotNull
-    public Long connectorId;
+    private Long id;
 
     @NotNull
-    public Long accessKeyId;
-
-    public ConnectDto(Long connectorId, Long accessKeyId) {
-        this.connectorId = connectorId;
-        this.accessKeyId = accessKeyId;
-    }
+    private Long revisionVersion;
 }

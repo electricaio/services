@@ -28,11 +28,24 @@ public class Connection extends AbstractEntity {
     private Connector connector;
 
     @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @NotNull
+    @Column(name = "organization_id", nullable = false)
+    private Long organizationId;
+
+    @NotNull
     @Column(name = "access_key_id", nullable = false)
     private Long accessKeyId;
 
-    public Connection(@NotNull Connector connector, @NotNull Long accessKeyId) {
+    public Connection(Connector connector,
+                      Long userId,
+                      Long organizationId,
+                      Long accessKeyId) {
         this.connector = connector;
+        this.userId = userId;
+        this.organizationId = organizationId;
         this.accessKeyId = accessKeyId;
     }
 }
