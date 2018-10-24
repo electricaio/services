@@ -1,10 +1,7 @@
 package io.electrica.connector.hub.rest.impl;
 
 import io.electrica.connector.hub.rest.ConnectionController;
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
-import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
+import io.electrica.connector.hub.rest.dto.*;
 import io.electrica.connector.hub.service.AuthorizationService;
 import io.electrica.connector.hub.service.ConnectionDtoService;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +35,18 @@ public class ConnectionControllerImpl implements ConnectionController {
     @Override
     @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') " +
             "AND #connection.canUserAccess(#connectionId)")
-    public ResponseEntity<ReadAuthorizationDto> authorize(Long connectionId,
-                                                          @Valid @RequestBody CreateBasicAuthorizationDto request) {
+    public ResponseEntity<ReadAuthorizationDto> authorizeWithUserAndPassword(Long connectionId, @Valid @RequestBody
+            CreateBasicAuthorizationDto request) {
         final ReadAuthorizationDto dto = authorizationService.createBasicAuth(connectionId, request);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') " +
+            "AND #connection.canUserAccess(#connectionId)")
+    public ResponseEntity<ReadAuthorizationDto> authorizeWithToken(Long connectionId,  @Valid @RequestBody
+            CreateTokenAuthorizationDto request) {
+        final ReadAuthorizationDto dto = authorizationService.createTokenAuth(connectionId, request);
         return ResponseEntity.ok().body(dto);
     }
 }

@@ -1,9 +1,6 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
-import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
+import io.electrica.connector.hub.rest.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +27,17 @@ public interface ConnectionController {
      * they will replace the old one.
      */
     @PostMapping("/{connectionId}/authorizations/basic")
-    ResponseEntity<ReadAuthorizationDto> authorize(@PathVariable("connectionId") Long connectionId,
+    ResponseEntity<ReadAuthorizationDto> authorizeWithUserAndPassword(@PathVariable("connectionId") Long connectionId,
                                                    CreateBasicAuthorizationDto request);
+
+    /**
+     * Given the authorization data,
+     * we are persisting authorization details required to do a token auth on our behalf.
+     * <p>
+     * If a user has already provided details and invokes authorization with new credentials,
+     * they will replace the old one.
+     */
+    @PostMapping("/{connectionId}/authorizations/token")
+    ResponseEntity<ReadAuthorizationDto> authorizeWithToken(@PathVariable("connectionId") Long connectionId,
+                                                   CreateTokenAuthorizationDto request);
 }
