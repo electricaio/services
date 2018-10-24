@@ -27,4 +27,7 @@ public interface AccessKeyController {
     @PutMapping(V1 + "/access-keys/{accessKeyId}/refresh")
     ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable Long accessKeyId);
 
+    @PutMapping(V1 + "/access-keys/{accessKeyId}/validate")
+    ResponseEntity<Boolean> validateAccessKey(@PathVariable Long accessKeyId);
+
 }

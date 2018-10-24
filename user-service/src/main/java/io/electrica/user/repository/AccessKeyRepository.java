@@ -21,7 +21,7 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Long> {
             "SELECT EXISTS(" +
                     "SELECT 1 " +
                     "FROM access_keys ak " +
-                    "WHERE ak.id=:accessKeyId and ak.user_id = :userId)", nativeQuery = true)
+                    "WHERE ak.id=:accessKeyId and ak.user_id = :userId and ak.archived = FALSE)", nativeQuery = true)
     Boolean exists(@Param("accessKeyId") Long accessKeyId, @Param("userId") Long userId);
 
 }

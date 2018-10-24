@@ -33,6 +33,10 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         return toDto(accessKeyService.refreshKey(accessKeyId));
     }
 
+    public Boolean validateAccessKey(long accessKeyId) {
+        return accessKeyService.validate(accessKeyId);
+    }
+
     @Override
     protected AbstractService<AccessKey> getService() {
         return accessKeyService;
