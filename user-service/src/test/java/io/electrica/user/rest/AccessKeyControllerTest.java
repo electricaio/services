@@ -294,7 +294,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                     AccessKeyDto result = accessKeyController.refreshAccessKey(accessKeyId.longValue()).getBody();
                     assertEquals(key.get().getId(), result.getId());
                     assertEquals(key.get().getName(), result.getName());
-                    assertNotEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
+                    assertEquals(key.get().getRevisionVersion(), result.getRevisionVersion());
                 });
         AtomicReference<FullAccessKeyDto> key2 = getFullAccessKeyDtoForKey(user, accessKeyId);
         assertNotEquals(key.get().getKey(), key2.get().getKey());

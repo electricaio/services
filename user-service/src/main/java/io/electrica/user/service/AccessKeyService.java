@@ -31,7 +31,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     AccessKey refreshKey(Long accessKeyId) {
         AccessKey accessKey = findById(accessKeyId, true);
         fillAccessKeyInfo(accessKey);
-        return update(accessKeyId, accessKey);
+        return accessKey;
     }
 
     @Override
@@ -72,9 +72,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     @Override
     protected void executeUpdate(AccessKey merged, AccessKey update) {
-        merged.setKey(update.getKey());
-        merged.setJti(update.getJti());
-        getRepository().saveAndFlush(merged);
+        throw new UnsupportedOperationException();
     }
 
     @Override

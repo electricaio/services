@@ -2,9 +2,8 @@ package io.electrica.user.security;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
-import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
-import io.electrica.user.service.AccessKeyDtoService;
+import io.electrica.user.repository.AccessKeyRepository;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -15,13 +14,13 @@ public class UserExpressionMethods {
 
     private final Authentication authentication;
     private final MethodInvocation mi;
-    private final AccessKeyDtoService accessKeyDtoService;
+    private final AccessKeyRepository accessKeyRepository;
 
     public UserExpressionMethods(Authentication authentication, MethodInvocation mi,
-                                 AccessKeyDtoService accessKeyDtoService) {
+                                 AccessKeyRepository accessKeyRepository) {
         this.authentication = authentication;
         this.mi = mi;
-        this.accessKeyDtoService = accessKeyDtoService;
+        this.accessKeyRepository = accessKeyRepository;
     }
 
     public Identity getIdentity() {
@@ -29,17 +28,17 @@ public class UserExpressionMethods {
     }
 
     public boolean isUserAccessKey(Long accessKeyId) {
-        return accessKeyDtoService.findByKey(accessKeyId).getUserId().longValue() == getIdentity().getUserId();
+        return accessKeyRepository.exists(accessKeyId,getIdentity().getUserId());
     }
 
     /**
-     * Component that register {@link CommonExpressionMethods} factory in 'user' namespace.
+     * Component that register {@link UserExpressionMethods} factory in 'user' namespace.
      */
     @Component
     public static class Factory implements ExpressionMethodsFactory {
 
         @Inject
-        private AccessKeyDtoService accessKeyDtoService;
+        private AccessKeyRepository accessKeyRepository;
 
         @Override
         public String getNamespace() {
@@ -48,7 +47,7 @@ public class UserExpressionMethods {
 
         @Override
         public Object create(Authentication authentication, MethodInvocation mi) {
-            return new UserExpressionMethods(authentication, mi, accessKeyDtoService);
+            return new UserExpressionMethods(authentication, mi, accessKeyRepository);
         }
     }
 
