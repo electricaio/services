@@ -37,7 +37,7 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     }
 
     public Boolean validateAccessKey(long accessKeyId) {
-        return accessKeyService.validate(accessKeyId,identityContextHolder.getIdentity().getUserId());
+        return accessKeyService.validate(accessKeyId, identityContextHolder.getIdentity().getUserId());
     }
 
     @Override
