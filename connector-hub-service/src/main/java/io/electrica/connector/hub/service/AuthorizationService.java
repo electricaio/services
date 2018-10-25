@@ -9,7 +9,6 @@ import io.electrica.connector.hub.repository.BasicAuthorizationRepository;
 import io.electrica.connector.hub.repository.TokenAuthorizationRepository;
 import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
 import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -41,7 +40,7 @@ public class AuthorizationService {
         this.em = em;
     }
 
-    public ReadAuthorizationDto createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
+    public Authorization createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
 
         final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
                 .orElseGet(() -> createAuthorization(AuthorizationTypeName.BASIC_AUTHORIZATION, connectionId));
@@ -56,10 +55,10 @@ public class AuthorizationService {
                     return basicAuthorizationRepository.save(model);
                 });
 
-        return mapper.map(authorization, ReadAuthorizationDto.class);
+        return authorization;
     }
 
-    public ReadAuthorizationDto createTokenAuth(Long connectionId, CreateTokenAuthorizationDto authorizationDto) {
+    public Authorization createTokenAuth(Long connectionId, CreateTokenAuthorizationDto authorizationDto) {
 
         final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
                 .orElseGet(() -> createAuthorization(AuthorizationTypeName.TOKEN_AUTHORIZATION, connectionId));
@@ -72,7 +71,7 @@ public class AuthorizationService {
                     return tokenAuthorizationRepository.save(model);
                 });
 
-        return mapper.map(authorization, ReadAuthorizationDto.class);
+        return authorization;
     }
 
     private Authorization createAuthorization(AuthorizationTypeName typeName, Long connectionId) {
