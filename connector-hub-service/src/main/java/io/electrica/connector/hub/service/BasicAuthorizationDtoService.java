@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BasicAuthorizationDtoService {
-    AuthorizationService authorizationService;
+
+    private final AuthorizationService authorizationService;
 
     public BasicAuthorizationDtoService(AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
