@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface TokenAuthorizationRepository extends JpaRepository<TokenAuthorization, Long> {
 
-    @Query("FROM TokenAuthorization ba WHERE ba.authorization.id=:authorizationId AND ba.archived=FALSE")
+    @Query("FROM TokenAuthorization ta WHERE ta.authorization.id=:authorizationId AND ta.archived=FALSE")
     Optional<TokenAuthorization> findOneByAuthorizationId(@Param("authorizationId") Long authorizationId);
 
 }
