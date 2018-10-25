@@ -752,7 +752,7 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: token_hash
+            name: token
             type: VARCHAR(255)
         - column:
             constraints:
@@ -798,10 +798,10 @@ databaseChangeLog:
             name: revision_version_mod
             type: BOOLEAN
         - column:
-            name: token_hash
+            name: token
             type: VARCHAR(255)
         - column:
-            name: token_hash_mod
+            name: token_mod
             type: BOOLEAN
         - column:
             name: authorization_id

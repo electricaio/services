@@ -67,7 +67,7 @@ public class AuthorizationService {
         tokenAuthorizationRepository.findOneByAuthorizationId(authorization.getId())
                 .orElseGet(() -> {
                     final TokenAuthorization model = new TokenAuthorization();
-                    model.setTokenHash(authorizationDto.getToken());
+                    model.setToken(authorizationDto.getToken());
                     model.setAuthorization(authorization);
                     return tokenAuthorizationRepository.save(model);
                 });

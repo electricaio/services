@@ -24,7 +24,7 @@ public class TokenAuthorization extends AbstractEntity {
     @NotNull
     @Size(max = 255)
     @Column(nullable = false)
-    private String tokenHash;
+    private String token;
 
     @NotNull
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

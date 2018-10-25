@@ -254,7 +254,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final TokenAuthorization basicAuthorization = tokenAuthorizationRepository.findAll().get(0);
         assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
-        assertEquals(token, basicAuthorization.getTokenHash());
+        assertEquals(token, basicAuthorization.getToken());
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -337,7 +337,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertEquals(1, tokenAuthorizations.size());
         final TokenAuthorization tokenAuthorization = tokenAuthorizations.get(0);
         assertEquals(authorization.getId(), tokenAuthorization.getAuthorization().getId());
-        assertEquals(token, tokenAuthorization.getTokenHash());
+        assertEquals(token, tokenAuthorization.getToken());
     }
 
 
