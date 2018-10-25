@@ -1,16 +1,14 @@
 package io.electrica.connector.hub.service;
 
 import com.github.dozermapper.core.Mapper;
-import io.electrica.connector.hub.model.Authorization;
-import io.electrica.connector.hub.model.AuthorizationType;
-import io.electrica.connector.hub.model.BasicAuthorization;
-import io.electrica.connector.hub.model.Connection;
+import io.electrica.connector.hub.model.*;
 import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AuthorizationRepository;
 import io.electrica.connector.hub.repository.AuthorizationTypeRepository;
 import io.electrica.connector.hub.repository.BasicAuthorizationRepository;
+import io.electrica.connector.hub.repository.TokenAuthorizationRepository;
 import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
+import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -25,23 +23,24 @@ public class AuthorizationService {
 
     private final BasicAuthorizationRepository basicAuthorizationRepository;
 
+    private final TokenAuthorizationRepository tokenAuthorizationRepository;
+
     private final Mapper mapper;
 
     private final EntityManager em;
 
-    public AuthorizationService(AuthorizationRepository authorizationRepository,
-                                AuthorizationTypeRepository authorizationTypeRepository,
-                                BasicAuthorizationRepository basicAuthorizationRepository,
-                                Mapper mapper,
-                                EntityManager em) {
+    public AuthorizationService(AuthorizationRepository authorizationRepository, AuthorizationTypeRepository
+            authorizationTypeRepository, BasicAuthorizationRepository basicAuthorizationRepository,
+            TokenAuthorizationRepository tokenAuthorizationRepository, Mapper mapper, EntityManager em) {
         this.authorizationRepository = authorizationRepository;
         this.authorizationTypeRepository = authorizationTypeRepository;
         this.basicAuthorizationRepository = basicAuthorizationRepository;
-        this.em = em;
+        this.tokenAuthorizationRepository = tokenAuthorizationRepository;
         this.mapper = mapper;
+        this.em = em;
     }
 
-    public ReadAuthorizationDto createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
+    public Authorization createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
 
         final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
                 .orElseGet(() -> createAuthorization(AuthorizationTypeName.BASIC_AUTHORIZATION, connectionId));
@@ -56,7 +55,23 @@ public class AuthorizationService {
                     return basicAuthorizationRepository.save(model);
                 });
 
-        return mapper.map(authorization, ReadAuthorizationDto.class);
+        return authorization;
+    }
+
+    public Authorization createTokenAuth(Long connectionId, CreateTokenAuthorizationDto authorizationDto) {
+
+        final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
+                .orElseGet(() -> createAuthorization(AuthorizationTypeName.TOKEN_AUTHORIZATION, connectionId));
+
+        tokenAuthorizationRepository.findOneByAuthorizationId(authorization.getId())
+                .orElseGet(() -> {
+                    final TokenAuthorization model = new TokenAuthorization();
+                    model.setToken(authorizationDto.getToken());
+                    model.setAuthorization(authorization);
+                    return tokenAuthorizationRepository.save(model);
+                });
+
+        return authorization;
     }
 
     private Authorization createAuthorization(AuthorizationTypeName typeName, Long connectionId) {

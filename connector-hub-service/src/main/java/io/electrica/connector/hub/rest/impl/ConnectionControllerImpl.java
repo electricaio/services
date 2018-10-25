@@ -1,12 +1,10 @@
 package io.electrica.connector.hub.rest.impl;
 
 import io.electrica.connector.hub.rest.ConnectionController;
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
-import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
-import io.electrica.connector.hub.service.AuthorizationService;
+import io.electrica.connector.hub.rest.dto.*;
+import io.electrica.connector.hub.service.BasicAuthorizationDtoService;
 import io.electrica.connector.hub.service.ConnectionDtoService;
+import io.electrica.connector.hub.service.TokenAuthorizationDtoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +16,14 @@ import javax.validation.Valid;
 public class ConnectionControllerImpl implements ConnectionController {
 
     private final ConnectionDtoService connectionDtoService;
+    private final TokenAuthorizationDtoService tokenAuthorizationDtoService;
+    private final BasicAuthorizationDtoService basicAuthorizationDtoService;
 
-    private final AuthorizationService authorizationService;
-
-    public ConnectionControllerImpl(
-            ConnectionDtoService connectionDtoService,
-            AuthorizationService authorizationService) {
+    public ConnectionControllerImpl(ConnectionDtoService connectionDtoService, TokenAuthorizationDtoService
+            tokenAuthorizationDtoService, BasicAuthorizationDtoService basicAuthorizationDtoService) {
         this.connectionDtoService = connectionDtoService;
-        this.authorizationService = authorizationService;
+        this.tokenAuthorizationDtoService = tokenAuthorizationDtoService;
+        this.basicAuthorizationDtoService = basicAuthorizationDtoService;
     }
 
     @Override
@@ -38,9 +36,18 @@ public class ConnectionControllerImpl implements ConnectionController {
     @Override
     @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') " +
             "AND #connection.canUserAccess(#connectionId)")
-    public ResponseEntity<ReadAuthorizationDto> authorize(Long connectionId,
-                                                          @Valid @RequestBody CreateBasicAuthorizationDto request) {
-        final ReadAuthorizationDto dto = authorizationService.createBasicAuth(connectionId, request);
+    public ResponseEntity<ReadAuthorizationDto> authorizeWithUserAndPassword(Long connectionId, @Valid @RequestBody
+            CreateBasicAuthorizationDto request) {
+        final ReadAuthorizationDto dto = basicAuthorizationDtoService.create(connectionId, request);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') " +
+            "AND #connection.canUserAccess(#connectionId)")
+    public ResponseEntity<ReadAuthorizationDto> authorizeWithToken(Long connectionId, @Valid @RequestBody
+            CreateTokenAuthorizationDto request) {
+        final ReadAuthorizationDto dto = tokenAuthorizationDtoService.create(connectionId, request);
         return ResponseEntity.ok().body(dto);
     }
 }
