@@ -1,5 +1,6 @@
 package io.electrica.user.service;
 
+import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.user.dto.AccessKeyDto;
@@ -14,9 +15,11 @@ import java.util.List;
 public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAccessKeyDto, AccessKeyDto> {
 
     private final AccessKeyService accessKeyService;
+    private final IdentityContextHolder identityContextHolder;
 
-    public AccessKeyDtoService(AccessKeyService accessKeyService) {
+    public AccessKeyDtoService(AccessKeyService accessKeyService, IdentityContextHolder identityContextHolder) {
         this.accessKeyService = accessKeyService;
+        this.identityContextHolder = identityContextHolder;
     }
 
     public List<AccessKeyDto> findByUser(Long userId) {
@@ -34,7 +37,7 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     }
 
     public Boolean validateAccessKey(long accessKeyId) {
-        return accessKeyService.validate(accessKeyId);
+        return accessKeyService.validate(accessKeyId,identityContextHolder.getIdentity().getUserId());
     }
 
     @Override

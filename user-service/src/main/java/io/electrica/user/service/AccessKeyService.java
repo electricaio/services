@@ -1,6 +1,5 @@
 package io.electrica.user.service;
 
-import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
@@ -18,13 +17,10 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     private final AccessKeyRepository accessKeyRepository;
     private final AccessKeyGenerator accessKeyGenerator;
-    private final IdentityContextHolder identityContextHolder;
 
-    public AccessKeyService(AccessKeyRepository accessKeyRepository, AccessKeyGenerator accessKeyGenerator,
-                            IdentityContextHolder identityContextHolder) {
+    public AccessKeyService(AccessKeyRepository accessKeyRepository, AccessKeyGenerator accessKeyGenerator) {
         this.accessKeyRepository = accessKeyRepository;
         this.accessKeyGenerator = accessKeyGenerator;
-        this.identityContextHolder = identityContextHolder;
     }
 
     List<AccessKey> findByUser(Long userId) {
@@ -38,9 +34,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKey;
     }
 
-    public Boolean validate(long accessKeyId) {
-        Long loginUserId = identityContextHolder.getIdentity().getUserId();
-        return accessKeyRepository.exists(accessKeyId, loginUserId);
+    public Boolean validate(Long accessKeyId, Long userId) {
+        return accessKeyRepository.exists(accessKeyId, userId);
     }
 
     @Override
