@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class AccessKeyService extends AbstractService<AccessKey> {
@@ -36,6 +37,10 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     public Boolean validate(Long accessKeyId, Long userId) {
         return accessKeyRepository.exists(accessKeyId, userId);
+    }
+
+    public Boolean validateJti(UUID jti) {
+        return accessKeyRepository.validateJti(jti);
     }
 
     @Override

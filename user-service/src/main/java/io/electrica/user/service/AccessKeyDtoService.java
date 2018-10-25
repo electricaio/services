@@ -10,6 +10,7 @@ import io.electrica.user.model.AccessKey;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAccessKeyDto, AccessKeyDto> {
@@ -38,6 +39,10 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
 
     public Boolean validateAccessKey(long accessKeyId) {
         return accessKeyService.validate(accessKeyId, identityContextHolder.getIdentity().getUserId());
+    }
+
+    public Boolean validateJti(UUID jti) {
+        return accessKeyService.validateJti(jti);
     }
 
     @Override
