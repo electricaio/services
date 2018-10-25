@@ -1,13 +1,12 @@
 package io.electrica.user.service;
 
-import io.electrica.common.helper.TokenHelper;
+import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
 import io.electrica.user.model.User;
 import io.electrica.user.repository.AccessKeyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +18,13 @@ public class AccessKeyService extends AbstractService<AccessKey> {
 
     private final AccessKeyRepository accessKeyRepository;
     private final AccessKeyGenerator accessKeyGenerator;
+    private final IdentityContextHolder identityContextHolder;
 
-    public AccessKeyService(AccessKeyRepository accessKeyRepository, AccessKeyGenerator accessKeyGenerator) {
+    public AccessKeyService(AccessKeyRepository accessKeyRepository, AccessKeyGenerator accessKeyGenerator,
+                            IdentityContextHolder identityContextHolder) {
         this.accessKeyRepository = accessKeyRepository;
         this.accessKeyGenerator = accessKeyGenerator;
+        this.identityContextHolder = identityContextHolder;
     }
 
     List<AccessKey> findByUser(Long userId) {
@@ -37,8 +39,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     }
 
     public Boolean validate(long accessKeyId) {
-        Long loginUserId = TokenHelper.extractIdFromTokenUsername(SecurityContextHolder.getContext().
-                getAuthentication().getPrincipal().toString());
+        Long loginUserId = identityContextHolder.getIdentity().getUserId();
         return accessKeyRepository.exists(accessKeyId, loginUserId);
     }
 
