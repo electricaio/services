@@ -30,7 +30,7 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Long> {
             "SELECT EXISTS(" +
                     "SELECT 1 " +
                     "FROM access_keys ak " +
-                    "WHERE ak.jti= :jti  and ak.archived = FALSE)", nativeQuery = true)
-    Boolean validateJti(@Param("jti") UUID jti);
+                    "WHERE ak.jti= :jti and ak.user_id = :userId and ak.archived = FALSE)", nativeQuery = true)
+    Boolean validateJti(@Param("jti") UUID jti, @Param("userId") Long userId);
 
 }

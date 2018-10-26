@@ -42,7 +42,7 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     }
 
     public Boolean validateJti(UUID jti) {
-        return accessKeyService.validateJti(jti);
+        return accessKeyService.validateJti(jti, identityContextHolder.getIdentity().getUserId());
     }
 
     @Override

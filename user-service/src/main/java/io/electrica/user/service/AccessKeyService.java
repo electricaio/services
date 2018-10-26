@@ -39,8 +39,8 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKeyRepository.exists(accessKeyId, userId);
     }
 
-    public Boolean validateJti(UUID jti) {
-        return accessKeyRepository.validateJti(jti);
+    public Boolean validateJti(UUID jti, Long userId) {
+        return accessKeyRepository.validateJti(jti, userId);
     }
 
     @Override
