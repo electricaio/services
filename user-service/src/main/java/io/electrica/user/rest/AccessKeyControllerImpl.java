@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Access key controller implementation.
@@ -57,5 +58,17 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     @PreAuthorize("#common.hasPermission('CreateAccessKey') and  #user.isUserAccessKey(#accessKeyId)")
     public ResponseEntity<AccessKeyDto> refreshAccessKey(Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.refreshKey(accessKeyId));
+    }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('ReadAccessKey')")
+    public ResponseEntity<Boolean> validateAccessKey(Long accessKeyId) {
+        return ResponseEntity.ok(accessKeyDtoService.validateAccessKey(accessKeyId));
+    }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('ReadAccessKey')")
+    public ResponseEntity<Boolean> validateJti(UUID jti) {
+        return ResponseEntity.ok(accessKeyDtoService.validateJti(jti));
     }
 }
