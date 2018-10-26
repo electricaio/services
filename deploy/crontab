@@ -1,0 +1,2 @@
+# Start at 16:00 UTC
+00 16 * * * /home/ubuntu/services/deploy/deploy-dev.sh >> /home/ubuntu/deploy-dev.log 2>&1
