@@ -8,6 +8,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ConnectionService extends AbstractService<Connection> {
 
@@ -22,6 +24,10 @@ public class ConnectionService extends AbstractService<Connection> {
         final Connector connector = getReference(Connector.class, newEntity.getConnector().getId());
         newEntity.setConnector(connector);
         return connectionRepository.save(newEntity);
+    }
+
+    public List<Connection> findAllByUser(Long userId) {
+        return connectionRepository.findAllByUser(userId);
     }
 
     @Override

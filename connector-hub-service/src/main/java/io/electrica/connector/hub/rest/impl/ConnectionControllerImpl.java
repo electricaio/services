@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class ConnectionControllerImpl implements ConnectionController {
@@ -24,6 +25,13 @@ public class ConnectionControllerImpl implements ConnectionController {
         this.connectionDtoService = connectionDtoService;
         this.tokenAuthorizationDtoService = tokenAuthorizationDtoService;
         this.basicAuthorizationDtoService = basicAuthorizationDtoService;
+    }
+
+    @Override
+    @PreAuthorize("#common.isUser(#userId) AND #common.hasPermission('ReadActiveConnection')")
+    public ResponseEntity<List<ConnectionDto>> findAllByUser(Long userId) {
+        final List<ConnectionDto> dto = connectionDtoService.findAllByUser(userId);
+        return ResponseEntity.ok().body(dto);
     }
 
     @Override

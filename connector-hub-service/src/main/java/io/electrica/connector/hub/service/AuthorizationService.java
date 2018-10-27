@@ -1,6 +1,5 @@
 package io.electrica.connector.hub.service;
 
-import com.github.dozermapper.core.Mapper;
 import io.electrica.connector.hub.model.*;
 import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AuthorizationRepository;
@@ -25,18 +24,15 @@ public class AuthorizationService {
 
     private final TokenAuthorizationRepository tokenAuthorizationRepository;
 
-    private final Mapper mapper;
-
     private final EntityManager em;
 
     public AuthorizationService(AuthorizationRepository authorizationRepository, AuthorizationTypeRepository
             authorizationTypeRepository, BasicAuthorizationRepository basicAuthorizationRepository,
-            TokenAuthorizationRepository tokenAuthorizationRepository, Mapper mapper, EntityManager em) {
+            TokenAuthorizationRepository tokenAuthorizationRepository, EntityManager em) {
         this.authorizationRepository = authorizationRepository;
         this.authorizationTypeRepository = authorizationTypeRepository;
         this.basicAuthorizationRepository = basicAuthorizationRepository;
         this.tokenAuthorizationRepository = tokenAuthorizationRepository;
-        this.mapper = mapper;
         this.em = em;
     }
 

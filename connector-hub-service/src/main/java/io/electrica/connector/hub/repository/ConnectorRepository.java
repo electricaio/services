@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ConnectorRepository extends JpaRepository<Connector, Long> {
 
-    @Query(value = "FROM Connector c WHERE c.archived = FALSE")
+    @Query(value = "FROM Connector c WHERE c.archived = FALSE ORDER BY c.name")
     List<Connector> findAllNonArchived();
 }
