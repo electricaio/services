@@ -14,7 +14,8 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         Identity identity = IdentityContextHolder.getInstance().getIdentity();
-        if (identity != null)
+        if (identity != null) {
             template.header(AUTHORIZATION_HEADER, String.format("%s %s", BEARER_TOKEN_TYPE, identity.getToken()));
+        }
     }
 }
