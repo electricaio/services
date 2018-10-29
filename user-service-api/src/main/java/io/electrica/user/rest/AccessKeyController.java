@@ -21,18 +21,18 @@ public interface AccessKeyController {
     ResponseEntity<AccessKeyDto> createAccessKey(@RequestBody CreateAccessKeyDto accessKey);
 
     @GetMapping(V1 + "/users/{userId}/access-keys")
-    ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId);
+    ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable("userId") Long userId);
 
     @GetMapping(V1 + "/access-keys/{accessKeyId}")
-    ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId);
+    ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
     @PostMapping(V1 + "/access-keys/{accessKeyId}/refresh")
-    ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable Long accessKeyId);
+    ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
     @PostMapping(PRIVATE + V1 + "/access-keys/{accessKeyId}/validate")
-    ResponseEntity<Boolean> validateAccessKey(@PathVariable Long accessKeyId);
+    ResponseEntity<Boolean> validateAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
     @PostMapping(PRIVATE + V1 + "/access-keys/jti/{jti}/validate")
-    ResponseEntity<Boolean> validateJti(@PathVariable UUID jti);
+    ResponseEntity<Boolean> validateJti(@PathVariable("jti") UUID jti);
 
 }

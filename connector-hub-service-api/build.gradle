@@ -10,7 +10,6 @@ buildscript {
 apply plugin: 'io.spring.dependency-management'
 
 dependencies {
-    compile "org.projectlombok:lombok:${lombokVersion}"
     compile project(':common-api')
 }
 
