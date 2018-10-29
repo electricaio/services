@@ -26,6 +26,9 @@ echo "Specified profile: $profile"
 echo "==================== Building postgres docker image ===================="
 docker build -t electrica/postgres:${profile} ./deploy/docker/postgres
 
+echo "==================== Building gateway docker image ===================="
+docker build -t electrica/gateway:${profile} ./deploy/docker/gateway
+
 echo "==================== Building common docker image ===================="
 docker build -t electrica/common:${profile} ./deploy/docker/common
 

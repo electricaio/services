@@ -45,10 +45,10 @@ phases:
     - >
       docker tag electrica/postgres:${APP_PROFILE} ${ECR_HOST}/electrica/postgres:${APP_PROFILE} &&
       docker push ${ECR_HOST}/electrica/postgres:${APP_PROFILE}
-#   Tag and push common
-#    - >
-#      docker tag electrica/common:${APP_PROFILE} ${ECR_HOST}/electrica/common:${APP_PROFILE} &&
-#      docker push ${ECR_HOST}/electrica/common:${APP_PROFILE}
+#   Tag and push gateway
+    - >
+      docker tag electrica/gateway:${APP_PROFILE} ${ECR_HOST}/electrica/gateway:${APP_PROFILE} &&
+      docker push ${ECR_HOST}/electrica/gateway:${APP_PROFILE}
 #   Tag and push user-service
     - >
       docker tag electrica/user-service:${APP_PROFILE} ${ECR_HOST}/electrica/user-service:${APP_PROFILE} &&
