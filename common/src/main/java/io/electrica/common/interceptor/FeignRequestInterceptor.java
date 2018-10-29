@@ -4,6 +4,7 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +15,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         Identity identity = IdentityContextHolder.getInstance().getIdentity();
-        if (identity != null) {
+        if (identity != null && identity.getAuthentication() instanceof OAuth2AuthenticationDetails) {
             template.header(AUTHORIZATION_HEADER, String.format("%s %s", BEARER_TOKEN_TYPE, identity.getToken()));
         }
     }
