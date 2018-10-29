@@ -114,8 +114,10 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto();
         final String user = "user_" + connectorId;
         final String password = "pwd_" + connectorId;
+        final String tokenName = "token_name" + connectorId;
         request.setUser(user);
         request.setPassword(password);
+        request.setName(tokenName);
 
         assertTrue(authorizationRepository.findAll().isEmpty());
         assertTrue(basicAuthorizationRepository.findAll().isEmpty());
@@ -129,6 +131,8 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Authorization authorization = authorizationRepository.findById(result.getId()).orElse(null);
         assertEquals(connectorId, authorization.getConnection().getId());
         assertEquals(basicAuthType.getId(), authorization.getType().getId());
+        assertEquals(tokenName, authorization.getName());
+        assertNull(authorization.getTenantRefId());
 
         final BasicAuthorization basicAuthorization = basicAuthorizationRepository.findAll().get(0);
         assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
@@ -198,8 +202,10 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto();
         final String user = "user_" + connectionId;
         final String password = "pwd_" + connectionId;
+        final String tokenName = "token_name" + connectionId;
         request.setUser(user);
         request.setPassword(password);
+        request.setName(tokenName);
 
         assertTrue(authorizationRepository.findAll().isEmpty());
         assertTrue(basicAuthorizationRepository.findAll().isEmpty());
@@ -221,6 +227,8 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertEquals(result.getId(), authorization.getId());
         assertEquals(connectionId, authorization.getConnection().getId());
         assertEquals(basicAuthType.getId(), authorization.getType().getId());
+        assertEquals(tokenName, authorization.getName());
+        assertNull(authorization.getTenantRefId());
 
         final List<BasicAuthorization> basicAuthorizations = basicAuthorizationRepository.findAll();
         assertEquals(1, basicAuthorizations.size());
@@ -239,6 +247,8 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
         final String token = "token" + connectorId;
         request.setToken(token);
+        final String tokenName = "token_name" + connectorId;
+        request.setName(tokenName);
 
         assertTrue(authorizationRepository.findAll().isEmpty());
         assertTrue(tokenAuthorizationRepository.findAll().isEmpty());
@@ -252,10 +262,66 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Authorization authorization = authorizationRepository.findById(result.getId()).orElse(null);
         assertEquals(connectorId, authorization.getConnection().getId());
         assertEquals(tokenAuthType.getId(), authorization.getType().getId());
+        assertEquals(tokenName, authorization.getName());
+        assertNull(authorization.getTenantRefId());
 
         final TokenAuthorization basicAuthorization = tokenAuthorizationRepository.findAll().get(0);
         assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
         assertEquals(token, basicAuthorization.getToken());
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            PermissionType.AssociateAccessKeyToConnector, PermissionType.CreateConnector})
+    public void testTokenAuthWith2Authorizations() {
+        final Long connectorId = createConnectionToHackerRank();
+        final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
+        final String token = "token" + connectorId;
+        request.setToken(token);
+        final String tokenName = "token_name" + connectorId;
+        request.setName(tokenName);
+
+        assertTrue(authorizationRepository.findAll().isEmpty());
+        assertTrue(tokenAuthorizationRepository.findAll().isEmpty());
+
+        connectionController.authorizeWithToken(connectorId, request);
+
+        final String otherToken = "other_token" + connectorId;
+        request.setToken(otherToken);
+        final String otherTokenName = "other_token_name" + connectorId;
+        request.setName(otherTokenName);
+
+        final ReadAuthorizationDto result = connectionController.authorizeWithToken(connectorId, request).getBody();
+
+        assertNotNull(result.getId());
+        assertNotNull(result.getRevisionVersion());
+
+        final List<Authorization> authorizations = authorizationRepository.findAll();
+        assertEquals(2, authorizations.size());
+
+        // auth 1
+        final Authorization authorization1 = authorizations.get(0);
+        assertEquals(connectorId, authorization1.getConnection().getId());
+        assertEquals(tokenAuthType.getId(), authorization1.getType().getId());
+        assertEquals(tokenName, authorization1.getName());
+        assertNull(authorization1.getTenantRefId());
+
+        final List<TokenAuthorization> tokenAuth = tokenAuthorizationRepository.findAll();
+
+        final TokenAuthorization tokenAuth1 = tokenAuth.get(0);
+        assertEquals(authorization1.getId(), tokenAuth1.getAuthorization().getId());
+        assertEquals(token, tokenAuth1.getToken());
+
+        // auth 2
+        final Authorization authorization2 = authorizations.get(1);
+        assertEquals(connectorId, authorization2.getConnection().getId());
+        assertEquals(tokenAuthType.getId(), authorization2.getType().getId());
+        assertEquals(otherTokenName, authorization2.getName());
+        assertNull(authorization2.getTenantRefId());
+
+        final TokenAuthorization tokenAuth2 = tokenAuth.get(1);
+        assertEquals(authorization2.getId(), tokenAuth2.getAuthorization().getId());
+        assertEquals(otherToken, tokenAuth2.getToken());
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -315,6 +381,9 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
         final String token = "token" + connectionId;
         request.setToken(token);
+        final String tokenName = "token_name" + connectionId;
+        request.setName(tokenName);
+
         assertTrue(authorizationRepository.findAll().isEmpty());
         assertTrue(basicAuthorizationRepository.findAll().isEmpty());
 
@@ -333,6 +402,8 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertEquals(result.getId(), authorization.getId());
         assertEquals(connectionId, authorization.getConnection().getId());
         assertEquals(tokenAuthType.getId(), authorization.getType().getId());
+        assertEquals(tokenName, authorization.getName());
+        assertNull(authorization.getTenantRefId());
 
         final List<TokenAuthorization> tokenAuthorizations = tokenAuthorizationRepository.findAll();
         assertEquals(1, tokenAuthorizations.size());

@@ -58,11 +58,4 @@ public class ConnectionControllerImpl implements ConnectionController {
         final ReadAuthorizationDto dto = tokenAuthorizationDtoService.create(connectionId, request);
         return ResponseEntity.ok().body(dto);
     }
-
-    @Override
-    @PreAuthorize("#common.hasPermission('ReadActiveConnection')")
-    public ResponseEntity<List<ConnectionDto>> findAllByUser() {
-        final List<ConnectionDto> dto = connectionDtoService.findAllByUser();
-        return ResponseEntity.ok().body(dto);
-    }
 }
