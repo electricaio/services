@@ -9,6 +9,8 @@ import io.electrica.connector.hub.rest.dto.ConnectDto;
 import io.electrica.connector.hub.rest.dto.ConnectionDto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ConnectionDtoService extends AbstractDtoService<Connection, ConnectDto, ConnectionDto> {
 
@@ -32,6 +34,10 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, Connect
         return toDto(
                 getService().create(connection)
         );
+    }
+
+    public List<ConnectionDto> findAllByUser(Long userId) {
+        return toDto(connectionService.findAllByUser(userId));
     }
 
     @Override

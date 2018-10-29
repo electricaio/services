@@ -15,5 +15,11 @@ public class ConnectionDto {
     private Long id;
 
     @NotNull
+    private Long accessKeyId;
+
+    @NotNull
+    private Long connectorId;
+
+    @NotNull
     private Long revisionVersion;
 }

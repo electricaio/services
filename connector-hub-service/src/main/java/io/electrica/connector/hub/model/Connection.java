@@ -18,7 +18,10 @@ import javax.validation.constraints.NotNull;
 @Audited
 @Entity
 @Table(name = "connections",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"connector_id", "access_key_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"connector_id", "access_key_id"}),
+        indexes = {
+            @Index(name = "idx_connections_user_id", columnList = "user_id")
+        }
 )
 public class Connection extends AbstractEntity {
 

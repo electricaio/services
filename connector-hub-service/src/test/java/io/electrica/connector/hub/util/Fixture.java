@@ -9,27 +9,48 @@ import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
 
 public interface Fixture {
 
-    default CreateConnectorDto createHackerRankConnectorDto(Long typeId, Long authTypeId) {
+    default CreateConnectorDto createHackerRankConnectorDto() {
         final CreateConnectorDto dto = new CreateConnectorDto();
         dto.setName("HackerRank");
         dto.setResource("Applications");
         dto.setNamespace("com.hackerrank");
-        dto.setTypeId(typeId);
-        dto.setAuthorizationTypeId(authTypeId);
+        dto.setTypeId(
+                findConnectorType("Talent").getId()
+        );
+        dto.setAuthorizationTypeId(
+                findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION).getId()
+        );
         dto.setVersion("1.0");
         return dto;
     }
 
-    default CreateConnectorDto createGreenhouseConnectorDto(Long typeId, Long authTypeId) {
+    default CreateConnectorDto createGreenhouseConnectorDto() {
         final CreateConnectorDto dto = new CreateConnectorDto();
         dto.setName("Greenhouse");
         dto.setNamespace("com.greenhouse");
-        dto.setTypeId(typeId);
-        dto.setAuthorizationTypeId(authTypeId);
+        dto.setTypeId(
+                findConnectorType("Talent").getId()
+        );
+        dto.setAuthorizationTypeId(
+                findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION).getId()
+        );
         dto.setVersion("1.1");
         return dto;
     }
 
+    default CreateConnectorDto createMySQLConnectorDto() {
+        final CreateConnectorDto dto = new CreateConnectorDto();
+        dto.setName("MySQL");
+        dto.setNamespace("com.mysql");
+        dto.setTypeId(
+                findConnectorType("Foundation").getId()
+        );
+        dto.setAuthorizationTypeId(
+                findAuthorizationType(AuthorizationTypeName.BASIC_AUTHORIZATION).getId()
+        );
+        dto.setVersion("5.6");
+        return dto;
+    }
 
     default AuthorizationType findAuthorizationType(AuthorizationTypeName name) {
         return getAuthorizationTypeRepository().findAll()

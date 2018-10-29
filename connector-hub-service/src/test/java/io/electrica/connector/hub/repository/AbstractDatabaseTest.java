@@ -7,9 +7,14 @@ import io.electrica.connector.hub.util.Fixture;
 import org.junit.Before;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicationTest implements Fixture {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Inject
     protected ConnectionRepository connectionRepository;
@@ -50,5 +55,10 @@ public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicatio
     @Override
     public AuthorizationTypeRepository getAuthorizationTypeRepository() {
         return authorizationTypeRepository;
+    }
+
+    public void flushAndClear() {
+        em.flush();
+        em.clear();
     }
 }
