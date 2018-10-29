@@ -13,9 +13,9 @@ import java.util.stream.Stream;
 public class AuthorityHelper {
 
     private static final String DEFINED_ROLES_PREFIX = "dr:";
-    private static final String DEFINED_PERMISSIONS_PREFIX = "dp:";
-    private static final String ORGANIZATION_PREFIX = "org:";
-    private static final String SEPARATOR = ",";
+    private static final String DEFINED_PERMISSIONS_PREFIX = "dp$";
+    private static final String ORGANIZATION_PREFIX = "org$";
+    private static final String SEPARATOR = ";";
 
     private AuthorityHelper() {
     }
