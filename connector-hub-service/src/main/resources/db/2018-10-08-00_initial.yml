@@ -148,6 +148,14 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: tenant_ref_id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
             name: connection_id
             type: BIGINT
         - column:
@@ -192,6 +200,18 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: revision_version_mod
+            type: BOOLEAN
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: name_mod
+            type: BOOLEAN
+        - column:
+            name: tenant_ref_id
+            type: VARCHAR(255)
+        - column:
+            name: tenant_ref_id_mod
             type: BOOLEAN
         - column:
             name: connection_id
@@ -951,19 +971,11 @@ databaseChangeLog:
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
-        columnNames: type_id, connection_id
-        constraintName: uk5oq678f65ekeg6sgo87mtqkg9
-        tableName: authorizations
-- changeSet:
-    id: 1539845818495-46
-    author: aleks (generated)
-    changes:
-    - addUniqueConstraint:
         columnNames: connector_id, access_key_id
         constraintName: uk8hw4mlak7oax43t0vh16qb8rx
         tableName: connections
 - changeSet:
-    id: 1539845818495-47
+    id: 1539845818495-46
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
@@ -971,7 +983,7 @@ databaseChangeLog:
         constraintName: uk_al6moyh0f4xf9ir8dn31brcng
         tableName: authorization_types
 - changeSet:
-    id: 1539845818495-48
+    id: 1539845818495-47
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
@@ -979,13 +991,21 @@ databaseChangeLog:
         constraintName: uk_bgs68g10coch77da3uc4grj21
         tableName: connectors
 - changeSet:
-    id: 1539845818495-49
+    id: 1539845818495-48
     author: aleks (generated)
     changes:
     - addUniqueConstraint:
         columnNames: name
         constraintName: uk_gvmefa9y8i3sbh79ei0xayjby
         tableName: connector_types
+- changeSet:
+    id: 1539845818495-49
+    author: aleks (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name, connection_id
+        constraintName: ukelpi6nnlo7l0k9gxrkohdwoys
+        tableName: authorizations
 - changeSet:
     id: 1539845818495-50
     author: aleks (generated)

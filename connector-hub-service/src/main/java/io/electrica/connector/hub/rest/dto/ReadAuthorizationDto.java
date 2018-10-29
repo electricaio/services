@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReadAuthorizationDto {
+public class ReadAuthorizationDto extends AuthorizationDto {
 
     @NotNull
     private Long id;

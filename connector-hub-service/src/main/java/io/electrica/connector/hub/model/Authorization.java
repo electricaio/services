@@ -8,7 +8,9 @@ import lombok.ToString;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -19,9 +21,20 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(
         name = "authorizations",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"type_id", "connection_id"})
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"name", "connection_id"})
+        }
 )
 public class Authorization extends AbstractEntity {
+
+    @NotBlank
+    @Size(max = 255)
+    @Column(nullable = false)
+    private String name;
+
+    @Size(max = 255)
+    @Column(name = "tenant_ref_id", nullable = true)
+    private String tenantRefId;
 
     @NotNull
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
@@ -29,7 +42,7 @@ public class Authorization extends AbstractEntity {
     private AuthorizationType type;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "connection_id", nullable = false)
     private Connection connection;
 }
