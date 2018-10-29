@@ -11,4 +11,9 @@ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/clu
 
 git pull
 
+docker pull ${ECR_HOST}electrica/postgres:dev
+docker pull ${ECR_HOST}electrica/gateway:dev
+docker pull ${ECR_HOST}electrica/user-service:dev
+docker pull ${ECR_HOST}electrica/connector-hub-service:dev
+
 docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up -d
