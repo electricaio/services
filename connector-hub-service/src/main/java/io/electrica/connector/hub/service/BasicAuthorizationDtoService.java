@@ -21,7 +21,7 @@ public class BasicAuthorizationDtoService {
     }
 
     public ReadAuthorizationDto create(Long connectionId, CreateBasicAuthorizationDto request) {
-        Authorization authorization = authorizationService.createBasicAuth(connectionId, request);
+        final Authorization authorization = authorizationService.createBasicAuth(connectionId, request);
         return mapper.map(authorization, ReadAuthorizationDto.class);
     }
 }

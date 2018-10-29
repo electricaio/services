@@ -7,14 +7,22 @@ import lombok.Setter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateTokenAuthorizationDto extends AuthorizationDto {
+public class AuthorizationDto {
 
     @NotBlank
     @Max(255)
-    private String token;
+    private String name;
+
+    @Max(255)
+    private String tenantRefId;
+
+    public Optional<String> getTenantRefIdOpt() {
+        return Optional.ofNullable(tenantRefId);
+    }
 }

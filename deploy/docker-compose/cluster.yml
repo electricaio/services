@@ -7,8 +7,6 @@ services:
       - ARGS=--spring.datasource.url=jdbc:postgresql://postgres-db:5432/user_db
     ports:
       - 22022:22022
-    links:
-      - postgres-db
 
   connector-hub-service:
     environment:
@@ -16,8 +14,6 @@ services:
       - ARGS=--spring.datasource.url=jdbc:postgresql://postgres-db:5432/connector_hub_db
     ports:
       - 22023:22023
-    links:
-      - postgres-db
 
   postgres-db:
     environment:
@@ -25,3 +21,17 @@ services:
       - POSTGRES_PASSWORD=
     ports:
       - 5432:5432
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    environment:
+      - "API_URLS=[{url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}]"
+      - BASE_URL=/swagger
+    ports:
+      - 8080:8080
+
+  gateway:
+    environment:
+      - "HOST_NAME=${HOST_NAME:-localhost}"
+    ports:
+      - 80:80

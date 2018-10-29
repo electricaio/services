@@ -15,6 +15,10 @@ public final class RequestHelper {
 
     public static boolean isSecuredResource(HttpServletRequest request) {
         String path = getFullPath(request);
+        return isSecuredResource(path);
+    }
+
+    public static boolean isSecuredResource(String path) {
         return !isAuthPath(path) &&
                 !isHealthPath(path) &&
                 !isSwaggerApiDoc(path) &&
@@ -39,6 +43,10 @@ public final class RequestHelper {
 
     public static boolean isHealthPath(String path) {
         return path.startsWith("/health");
+    }
+
+    public static boolean isErrorPath(String path) {
+        return path.startsWith("/error");
     }
 
 }

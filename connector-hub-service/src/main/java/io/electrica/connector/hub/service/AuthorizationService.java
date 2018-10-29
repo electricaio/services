@@ -6,6 +6,7 @@ import io.electrica.connector.hub.repository.AuthorizationRepository;
 import io.electrica.connector.hub.repository.AuthorizationTypeRepository;
 import io.electrica.connector.hub.repository.BasicAuthorizationRepository;
 import io.electrica.connector.hub.repository.TokenAuthorizationRepository;
+import io.electrica.connector.hub.rest.dto.AuthorizationDto;
 import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
 import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
 import org.springframework.stereotype.Component;
@@ -36,16 +37,21 @@ public class AuthorizationService {
         this.em = em;
     }
 
-    public Authorization createBasicAuth(Long connectionId, CreateBasicAuthorizationDto authorizationDto) {
+    public Authorization createBasicAuth(Long connectionId, CreateBasicAuthorizationDto dto) {
 
-        final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
-                .orElseGet(() -> createAuthorization(AuthorizationTypeName.BASIC_AUTHORIZATION, connectionId));
+        final Authorization authorization = authorizationRepository
+                .findOneByNameAndConnectionId(dto.getName(), connectionId)
+                .orElseGet(() -> createAuthorization(
+                        connectionId,
+                        AuthorizationTypeName.BASIC_AUTHORIZATION,
+                        dto
+                ));
 
         basicAuthorizationRepository.findOneByAuthorizationId(authorization.getId())
                 .orElseGet(() -> {
                     final BasicAuthorization model = new BasicAuthorization();
-                    model.setUserHash(authorizationDto.getUser());
-                    model.setPasswordHash(authorizationDto.getPassword());
+                    model.setUserHash(dto.getUser());
+                    model.setPasswordHash(dto.getPassword());
                     model.setAuthorization(authorization);
 
                     return basicAuthorizationRepository.save(model);
@@ -54,15 +60,19 @@ public class AuthorizationService {
         return authorization;
     }
 
-    public Authorization createTokenAuth(Long connectionId, CreateTokenAuthorizationDto authorizationDto) {
+    public Authorization createTokenAuth(Long connectionId, CreateTokenAuthorizationDto dto) {
 
-        final Authorization authorization = authorizationRepository.findOneByConnectionId(connectionId)
-                .orElseGet(() -> createAuthorization(AuthorizationTypeName.TOKEN_AUTHORIZATION, connectionId));
+        final Authorization authorization = authorizationRepository
+                .findOneByNameAndConnectionId(dto.getName(), connectionId)
+                .orElseGet(() -> createAuthorization(
+                        connectionId,
+                        AuthorizationTypeName.TOKEN_AUTHORIZATION,
+                        dto));
 
         tokenAuthorizationRepository.findOneByAuthorizationId(authorization.getId())
                 .orElseGet(() -> {
                     final TokenAuthorization model = new TokenAuthorization();
-                    model.setToken(authorizationDto.getToken());
+                    model.setToken(dto.getToken());
                     model.setAuthorization(authorization);
                     return tokenAuthorizationRepository.save(model);
                 });
@@ -70,8 +80,10 @@ public class AuthorizationService {
         return authorization;
     }
 
-    private Authorization createAuthorization(AuthorizationTypeName typeName, Long connectionId) {
+    private Authorization createAuthorization(Long connectionId, AuthorizationTypeName typeName, AuthorizationDto dto) {
         final Authorization model = new Authorization();
+        model.setName(dto.getName());
+        dto.getTenantRefIdOpt().ifPresent(model::setTenantRefId);
 
         final AuthorizationType type = authorizationTypeRepository.findOneByName(typeName)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Entity not found by name %s", typeName)));

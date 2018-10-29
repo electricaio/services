@@ -9,3 +9,6 @@ services:
 
   postgres-db:
     image: ${ECR_HOST}electrica/postgres:dev
+
+  gateway:
+    image: ${ECR_HOST}electrica/gateway:dev
