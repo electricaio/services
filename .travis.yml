@@ -7,7 +7,7 @@ addons:
 language: java
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 before_script:
   - psql -c 'create database user_db encoding=UTF8;' -U postgres
