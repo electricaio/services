@@ -48,6 +48,11 @@ public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicatio
     }
 
     @Override
+    public ConnectionRepository getConnectionRepository() {
+        return connectionRepository;
+    }
+
+    @Override
     public ConnectorTypeRepository getConnectorTypeRepository() {
         return connectorTypeRepository;
     }

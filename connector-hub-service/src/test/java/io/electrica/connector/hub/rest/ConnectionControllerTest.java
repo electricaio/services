@@ -3,10 +3,12 @@ package io.electrica.connector.hub.rest;
 import com.google.common.collect.Sets;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
-import io.electrica.connector.hub.model.*;
+import io.electrica.connector.hub.model.AuthorizationType;
+import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
-import io.electrica.connector.hub.rest.dto.*;
+import io.electrica.connector.hub.rest.dto.ConnectDto;
+import io.electrica.connector.hub.rest.dto.ConnectionDto;
 import io.electrica.test.context.ForUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,20 +17,18 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ConnectionControllerTest extends AbstractDatabaseTest {
 
     @Inject
-    private ConnectorController connectorController;
+    private ConnectorControllerImpl connectorController;
 
     @Inject
-    private ConnectionController connectionController;
-
-    private ConnectorType connectorType;
+    private ConnectionControllerImpl connectionController;
 
     private AuthorizationType tokenAuthType;
 
@@ -37,7 +37,6 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
     @Before
     public void setup() {
         super.setup();
-        connectorType = findConnectorType("Talent");
         tokenAuthType = findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION);
         basicAuthType = findAuthorizationType(AuthorizationTypeName.BASIC_AUTHORIZATION);
     }
@@ -97,332 +96,6 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Long accessKeyId = 12L;
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
         connectionController.connect(dto);
-    }
-
-    @Test
-    @ForUser(
-            userId = 1,
-            organizationId = 1,
-            roles = RoleType.SuperAdmin,
-            permissions = {
-                    PermissionType.CreateConnector,
-                    PermissionType.AssociateAccessKeyToConnector
-            }
-    )
-    public void testBasicAuthWithSuccess() {
-        final Long connectorId = createConnectionToHackerRank();
-        final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto();
-        final String user = "user_" + connectorId;
-        final String password = "pwd_" + connectorId;
-        final String tokenName = "token_name" + connectorId;
-        request.setUser(user);
-        request.setPassword(password);
-        request.setName(tokenName);
-
-        assertTrue(authorizationRepository.findAll().isEmpty());
-        assertTrue(basicAuthorizationRepository.findAll().isEmpty());
-
-        final ReadAuthorizationDto result = connectionController.authorizeWithUserAndPassword(
-                connectorId, request).getBody();
-
-        assertNotNull(result.getId());
-        assertNotNull(result.getRevisionVersion());
-
-        final Authorization authorization = authorizationRepository.findById(result.getId()).orElse(null);
-        assertEquals(connectorId, authorization.getConnection().getId());
-        assertEquals(basicAuthType.getId(), authorization.getType().getId());
-        assertEquals(tokenName, authorization.getName());
-        assertNull(authorization.getTenantRefId());
-
-        final BasicAuthorization basicAuthorization = basicAuthorizationRepository.findAll().get(0);
-        assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
-        assertEquals(user, basicAuthorization.getUserHash());
-        assertEquals(password, basicAuthorization.getPasswordHash());
-    }
-
-
-    @Test(expected = AccessDeniedException.class)
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.CreateConnector)
-    public void testBasicAuthWithWrongPermission() {
-        final CreateBasicAuthorizationDto dto = new CreateBasicAuthorizationDto("user", "password");
-        connectionController.authorizeWithUserAndPassword(1L, dto).getBody();
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgAdmin, permissions = {
-            PermissionType.CreateConnector,
-            PermissionType.AssociateAccessKeyToConnector
-    })
-    public void testBasicAuthWithNonExistingConnection() {
-        final Long connectionId = -1L;
-
-        final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto(
-                "user_" + connectionId, "pwd_" + connectionId
-        );
-        connectionController.authorizeWithUserAndPassword(connectionId, request);
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void testBasicAuthWithConnectionFromDiffUser() {
-
-        final AtomicLong wrapper = new AtomicLong();
-
-        executeForUser(-1L, -1L, Sets.newHashSet(RoleType.SuperAdmin), Sets.newHashSet(
-                PermissionType.CreateConnector,
-                PermissionType.AssociateAccessKeyToConnector),
-                () -> {
-                    final Long connectionId = createConnectionToHackerRank();
-                    wrapper.set(connectionId);
-                });
-
-        executeForUser(1L, 1L, Sets.newHashSet(RoleType.OrgAdmin), Sets.newHashSet(
-                PermissionType.CreateConnector,
-                PermissionType.AssociateAccessKeyToConnector),
-                () -> {
-
-                    final Long connectionId = wrapper.get();
-                    final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto(
-                            "user_" + connectionId, "pwd_" + connectionId
-                    );
-                    connectionController.authorizeWithUserAndPassword(connectionId, request);
-                });
-    }
-
-    /**
-     * Tests whether if a user provides new credentials to already authorized connection,
-     * it sets new credentials in
-     * the current authorization entities.
-     */
-    @Test
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
-            PermissionType.AssociateAccessKeyToConnector, PermissionType.CreateConnector})
-    public void testBasicAuthWithAlreadyExistingAuth() {
-        final Long connectionId = createConnectionToHackerRank();
-
-        final CreateBasicAuthorizationDto request = new CreateBasicAuthorizationDto();
-        final String user = "user_" + connectionId;
-        final String password = "pwd_" + connectionId;
-        final String tokenName = "token_name" + connectionId;
-        request.setUser(user);
-        request.setPassword(password);
-        request.setName(tokenName);
-
-        assertTrue(authorizationRepository.findAll().isEmpty());
-        assertTrue(basicAuthorizationRepository.findAll().isEmpty());
-
-        connectionController.authorizeWithUserAndPassword(connectionId, request);
-
-        request.setUser("new_user_" + connectionId);
-        request.setPassword("new_pwd_" + connectionId);
-
-        final ReadAuthorizationDto result = connectionController.authorizeWithUserAndPassword(
-                connectionId, request).getBody();
-
-        assertNotNull(result.getId());
-        assertNotNull(result.getRevisionVersion());
-
-        final List<Authorization> authorizations = authorizationRepository.findAll();
-        assertEquals(1, authorizations.size());
-        final Authorization authorization = authorizations.get(0);
-        assertEquals(result.getId(), authorization.getId());
-        assertEquals(connectionId, authorization.getConnection().getId());
-        assertEquals(basicAuthType.getId(), authorization.getType().getId());
-        assertEquals(tokenName, authorization.getName());
-        assertNull(authorization.getTenantRefId());
-
-        final List<BasicAuthorization> basicAuthorizations = basicAuthorizationRepository.findAll();
-        assertEquals(1, basicAuthorizations.size());
-        final BasicAuthorization basicAuthorization = basicAuthorizations.get(0);
-        assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
-        assertEquals(user, basicAuthorization.getUserHash());
-        assertEquals(password, basicAuthorization.getPasswordHash());
-    }
-
-
-    @Test
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
-            PermissionType.AssociateAccessKeyToConnector, PermissionType.CreateConnector})
-    public void testTokenAuthWithSuccess() {
-        final Long connectorId = createConnectionToHackerRank();
-        final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
-        final String token = "token" + connectorId;
-        request.setToken(token);
-        final String tokenName = "token_name" + connectorId;
-        request.setName(tokenName);
-
-        assertTrue(authorizationRepository.findAll().isEmpty());
-        assertTrue(tokenAuthorizationRepository.findAll().isEmpty());
-
-        final ReadAuthorizationDto result = connectionController.authorizeWithToken(
-                connectorId, request).getBody();
-
-        assertNotNull(result.getId());
-        assertNotNull(result.getRevisionVersion());
-
-        final Authorization authorization = authorizationRepository.findById(result.getId()).orElse(null);
-        assertEquals(connectorId, authorization.getConnection().getId());
-        assertEquals(tokenAuthType.getId(), authorization.getType().getId());
-        assertEquals(tokenName, authorization.getName());
-        assertNull(authorization.getTenantRefId());
-
-        final TokenAuthorization basicAuthorization = tokenAuthorizationRepository.findAll().get(0);
-        assertEquals(authorization.getId(), basicAuthorization.getAuthorization().getId());
-        assertEquals(token, basicAuthorization.getToken());
-    }
-
-    @Test
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
-            PermissionType.AssociateAccessKeyToConnector, PermissionType.CreateConnector})
-    public void testTokenAuthWith2Authorizations() {
-        final Long connectorId = createConnectionToHackerRank();
-        final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
-        final String token = "token" + connectorId;
-        request.setToken(token);
-        final String tokenName = "token_name" + connectorId;
-        request.setName(tokenName);
-
-        assertTrue(authorizationRepository.findAll().isEmpty());
-        assertTrue(tokenAuthorizationRepository.findAll().isEmpty());
-
-        connectionController.authorizeWithToken(connectorId, request);
-
-        final String otherToken = "other_token" + connectorId;
-        request.setToken(otherToken);
-        final String otherTokenName = "other_token_name" + connectorId;
-        request.setName(otherTokenName);
-
-        final ReadAuthorizationDto result = connectionController.authorizeWithToken(connectorId, request).getBody();
-
-        assertNotNull(result.getId());
-        assertNotNull(result.getRevisionVersion());
-
-        final List<Authorization> authorizations = authorizationRepository.findAll();
-        assertEquals(2, authorizations.size());
-
-        // auth 1
-        final Authorization authorization1 = authorizations.get(0);
-        assertEquals(connectorId, authorization1.getConnection().getId());
-        assertEquals(tokenAuthType.getId(), authorization1.getType().getId());
-        assertEquals(tokenName, authorization1.getName());
-        assertNull(authorization1.getTenantRefId());
-
-        final List<TokenAuthorization> tokenAuth = tokenAuthorizationRepository.findAll();
-
-        final TokenAuthorization tokenAuth1 = tokenAuth.get(0);
-        assertEquals(authorization1.getId(), tokenAuth1.getAuthorization().getId());
-        assertEquals(token, tokenAuth1.getToken());
-
-        // auth 2
-        final Authorization authorization2 = authorizations.get(1);
-        assertEquals(connectorId, authorization2.getConnection().getId());
-        assertEquals(tokenAuthType.getId(), authorization2.getType().getId());
-        assertEquals(otherTokenName, authorization2.getName());
-        assertNull(authorization2.getTenantRefId());
-
-        final TokenAuthorization tokenAuth2 = tokenAuth.get(1);
-        assertEquals(authorization2.getId(), tokenAuth2.getAuthorization().getId());
-        assertEquals(otherToken, tokenAuth2.getToken());
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.CreateConnector)
-    public void testTokenAuthWithWrongPermission() {
-        final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
-        dto.setToken("token");
-        connectionController.authorizeWithToken(1L, dto).getBody();
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgAdmin, permissions = {
-            PermissionType.CreateConnector,
-            PermissionType.AssociateAccessKeyToConnector
-    })
-    public void testTokenAuthWithNonExistingConnection() {
-        final Long connectionId = -1L;
-        final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
-        request.setToken("token");
-        connectionController.authorizeWithToken(connectionId, request);
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void testTokenAuthWithConnectionFromDiffUser() {
-
-        final AtomicLong wrapper = new AtomicLong();
-
-        executeForUser(-1L, -1L, Sets.newHashSet(RoleType.SuperAdmin), Sets.newHashSet(
-                PermissionType.CreateConnector,
-                PermissionType.AssociateAccessKeyToConnector),
-                () -> {
-                    final Long connectionId = createConnectionToHackerRank();
-                    wrapper.set(connectionId);
-                });
-
-        executeForUser(1L, 1L, Sets.newHashSet(RoleType.OrgAdmin), Sets.newHashSet(
-                PermissionType.CreateConnector,
-                PermissionType.AssociateAccessKeyToConnector), () -> {
-            final Long connectionId = wrapper.get();
-            final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
-            request.setToken("token");
-            connectionController.authorizeWithToken(connectionId, request);
-        });
-    }
-
-    /**
-     * Tests whether if a user provides new credentials to already authorized connection,
-     * it sets new credentials in
-     * the current authorization entities.
-     */
-    @Test
-    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
-            PermissionType.AssociateAccessKeyToConnector, PermissionType.CreateConnector})
-    public void testTokenAuthWithAlreadyExistingAuth() {
-        final Long connectionId = createConnectionToHackerRank();
-
-        final CreateTokenAuthorizationDto request = new CreateTokenAuthorizationDto();
-        final String token = "token" + connectionId;
-        request.setToken(token);
-        final String tokenName = "token_name" + connectionId;
-        request.setName(tokenName);
-
-        assertTrue(authorizationRepository.findAll().isEmpty());
-        assertTrue(basicAuthorizationRepository.findAll().isEmpty());
-
-        connectionController.authorizeWithToken(connectionId, request);
-
-        request.setToken("newtoken_" + connectionId);
-
-        final ReadAuthorizationDto result = connectionController.authorizeWithToken(connectionId, request).getBody();
-
-        assertNotNull(result.getId());
-        assertNotNull(result.getRevisionVersion());
-
-        final List<Authorization> authorizations = authorizationRepository.findAll();
-        assertEquals(1, authorizations.size());
-        final Authorization authorization = authorizations.get(0);
-        assertEquals(result.getId(), authorization.getId());
-        assertEquals(connectionId, authorization.getConnection().getId());
-        assertEquals(tokenAuthType.getId(), authorization.getType().getId());
-        assertEquals(tokenName, authorization.getName());
-        assertNull(authorization.getTenantRefId());
-
-        final List<TokenAuthorization> tokenAuthorizations = tokenAuthorizationRepository.findAll();
-        assertEquals(1, tokenAuthorizations.size());
-        final TokenAuthorization tokenAuthorization = tokenAuthorizations.get(0);
-        assertEquals(authorization.getId(), tokenAuthorization.getAuthorization().getId());
-        assertEquals(token, tokenAuthorization.getToken());
-    }
-
-
-    private Long createConnectionToHackerRank() {
-        final Long connectorId = connectorController
-                .create(createHackerRankConnectorDto())
-                .getBody()
-                .getId();
-
-        final ConnectDto dto = new ConnectDto();
-        dto.setConnectorId(connectorId);
-        dto.setAccessKeyId(-1L);
-        return connectionController.connect(dto).getBody().getId();
     }
 
     /**

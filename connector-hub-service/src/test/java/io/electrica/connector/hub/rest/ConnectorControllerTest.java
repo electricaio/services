@@ -22,10 +22,10 @@ import static org.junit.Assert.assertNotNull;
 public class ConnectorControllerTest extends AbstractDatabaseTest {
 
     @Inject
-    private ConnectorController connectorController;
+    private ConnectorControllerImpl connectorController;
 
     @Inject
-    private ConnectionController connectionController;
+    private ConnectionControllerImpl connectionController;
 
     @Inject
     private ConnectorService connectorService;

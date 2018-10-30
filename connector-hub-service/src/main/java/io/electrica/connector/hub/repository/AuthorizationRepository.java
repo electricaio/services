@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AuthorizationRepository extends JpaRepository<Authorization, Long> {
@@ -16,4 +17,10 @@ public interface AuthorizationRepository extends JpaRepository<Authorization, Lo
     Optional<Authorization> findOneByNameAndConnectionId(
             @Param("name") String name,
             @Param("connectionId") Long connectionId);
+
+    @Query("SELECT a " +
+            "FROM Authorization a " +
+            "WHERE a.connection.id=:connectionId " +
+            "AND a.archived = FALSE")
+    List<Authorization> findAllByConnectionId(@Param("connectionId") Long connectionId);
 }

@@ -4,6 +4,7 @@ import io.electrica.connector.hub.model.AuthorizationType;
 import io.electrica.connector.hub.model.ConnectorType;
 import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AuthorizationTypeRepository;
+import io.electrica.connector.hub.repository.ConnectionRepository;
 import io.electrica.connector.hub.repository.ConnectorTypeRepository;
 import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
 
@@ -71,6 +72,8 @@ public interface Fixture {
                         new IllegalArgumentException("Connector type with passed name does not exist.")
                 );
     }
+
+    ConnectionRepository getConnectionRepository();
 
     ConnectorTypeRepository getConnectorTypeRepository();
 

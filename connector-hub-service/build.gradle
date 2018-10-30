@@ -14,7 +14,8 @@ apply plugin: "org.liquibase.gradle"
 
 dependencies {
     compile project(':common-jpa')
-
+    compile project(':user-service-api')
+    compile project(':connector-hub-service-api')
     testCompile project(':common-test')
 
     liquibaseRuntime "org.liquibase:liquibase-core"

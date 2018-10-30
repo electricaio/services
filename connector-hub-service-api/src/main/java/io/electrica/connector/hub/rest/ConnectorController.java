@@ -18,4 +18,5 @@ public interface ConnectorController {
 
     @PostMapping(V1 + "/connectors")
     ResponseEntity<ReadConnectorDto> create(CreateConnectorDto request);
+
 }
