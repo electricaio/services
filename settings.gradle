@@ -4,4 +4,7 @@ include 'user-service'
 include 'common'
 include 'connector-hub-service'
 include 'common-test'
+include 'common-api'
+include 'user-service-api'
+include 'connector-hub-service-api'
 
