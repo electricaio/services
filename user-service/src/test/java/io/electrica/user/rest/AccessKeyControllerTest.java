@@ -31,7 +31,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     private static final String TEST_ACCESS_KEY2 = "TestAccessKey2";
 
     @Inject
-    private AccessKeyController accessKeyController;
+    private AccessKeyControllerImpl accessKeyController;
 
     @Inject
     private AccessKeyRepository accessKeyRepository;
