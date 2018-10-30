@@ -24,6 +24,10 @@ public interface Identity {
         return false;
     }
 
+    default boolean isFeignRequest() {
+        return false;
+    }
+
     default String getToken() {
         throw new UnsupportedOperationException();
     }
@@ -47,5 +51,7 @@ public interface Identity {
     default long getOrganizationId() {
         throw new UnsupportedOperationException();
     }
+
+
 
 }

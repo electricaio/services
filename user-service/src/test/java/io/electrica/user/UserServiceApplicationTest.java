@@ -6,8 +6,8 @@ import io.electrica.user.dto.CreateOrganizationDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.rest.OrganizationControllerImpl;
-import io.electrica.user.rest.UserControllerImpl;
+import io.electrica.user.rest.OrganizationController;
+import io.electrica.user.rest.UserController;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.inject.Inject;
@@ -24,10 +24,10 @@ public abstract class UserServiceApplicationTest extends AbstractJpaApplicationT
     protected OrganizationDto defaultOrganization;
 
     @Inject
-    protected UserControllerImpl userController;
+    protected UserController userController;
 
     @Inject
-    protected OrganizationControllerImpl organizationController;
+    protected OrganizationController organizationController;
 
 
     protected void initBaseClass() {

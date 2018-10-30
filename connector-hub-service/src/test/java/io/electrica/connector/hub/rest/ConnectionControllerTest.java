@@ -7,8 +7,6 @@ import io.electrica.connector.hub.model.*;
 import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.connector.hub.rest.dto.*;
-import io.electrica.connector.hub.rest.impl.ConnectionControllerImpl;
-import io.electrica.connector.hub.rest.impl.ConnectorControllerImpl;
 import io.electrica.test.context.ForUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +23,10 @@ import static org.junit.Assert.*;
 public class ConnectionControllerTest extends AbstractDatabaseTest {
 
     @Inject
-    private ConnectorControllerImpl connectorController;
+    private ConnectorController connectorController;
 
     @Inject
-    private ConnectionControllerImpl connectionController;
+    private ConnectionController connectionController;
 
     private ConnectorType connectorType;
 

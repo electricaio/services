@@ -43,6 +43,11 @@ public class IdentityImpl implements Identity {
     }
 
     @Override
+    public boolean isFeignRequest() {
+        return authentication instanceof OAuth2AuthenticationDetails ? true : false;
+    }
+
+    @Override
     public String getToken() {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) getAuthentication().getDetails();
         return details.getTokenValue();
