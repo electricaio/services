@@ -48,3 +48,10 @@ docker build -t electrica/connector-hub-service:${profile} \
   --build-arg PROFILE=${profile} \
   ./deploy/docker/connector-hub-service
 rm -rf ./deploy/docker/connector-hub-service/service.jar
+
+echo "==================== Building invoker-service docker image ===================="
+cp ./invoker-service/build/libs/invoker-service-*.jar ./deploy/docker/invoker-service/service.jar
+docker build -t electrica/invoker-service:${profile} \
+  --build-arg PROFILE=${profile} \
+  ./deploy/docker/invoker-service
+rm -rf ./deploy/docker/invoker-service/service.jar

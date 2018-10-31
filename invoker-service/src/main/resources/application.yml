@@ -1,0 +1,6 @@
+server:
+  port: 22024
+
+spring:
+  application:
+    name: invoker-service

@@ -7,4 +7,6 @@ include 'common-test'
 include 'common-api'
 include 'user-service-api'
 include 'connector-hub-service-api'
+include 'invoker-service'
+include 'invoker-service-api'
 

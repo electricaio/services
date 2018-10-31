@@ -7,6 +7,9 @@ services:
   connector-hub-service:
     image: ${ECR_HOST}electrica/connector-hub-service:dev
 
+  invoker-service:
+    image: ${ECR_HOST}electrica/invoker-service:dev
+
   postgres-db:
     image: ${ECR_HOST}electrica/postgres:dev
 

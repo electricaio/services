@@ -15,6 +15,12 @@ services:
     ports:
       - 22023:22023
 
+  invoker-service:
+    environment:
+    - JAVA_OPTS=-Xmx128m
+    ports:
+    - 22024:22024
+
   postgres-db:
     environment:
       - POSTGRES_USER=postgres
@@ -25,7 +31,7 @@ services:
   swagger-ui:
     image: swaggerapi/swagger-ui
     environment:
-      - "API_URLS=[{url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}]"
+      - "API_URLS=[{url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}]"
       - BASE_URL=/swagger
     ports:
       - 8080:8080
