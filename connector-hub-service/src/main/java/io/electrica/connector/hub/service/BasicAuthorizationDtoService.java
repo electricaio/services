@@ -12,16 +12,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class BasicAuthorizationDtoService {
 
-    private final AuthorizationService authorizationService;
+    private final BasicAuthorizationService basicAuthorizationService;
     private final Mapper mapper;
 
-    public BasicAuthorizationDtoService(AuthorizationService authorizationService, Mapper mapper) {
-        this.authorizationService = authorizationService;
+    public BasicAuthorizationDtoService(BasicAuthorizationService basicAuthorizationService, Mapper mapper) {
+        this.basicAuthorizationService = basicAuthorizationService;
         this.mapper = mapper;
     }
 
     public ReadAuthorizationDto create(Long connectionId, CreateBasicAuthorizationDto request) {
-        final Authorization authorization = authorizationService.createBasicAuth(connectionId, request);
+        final Authorization authorization = basicAuthorizationService.upsert(connectionId, request);
         return mapper.map(authorization, ReadAuthorizationDto.class);
     }
 }

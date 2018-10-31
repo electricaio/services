@@ -1,6 +1,5 @@
-package io.electrica.connector.hub.rest.impl;
+package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.ConnectorController;
 import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
 import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
 import io.electrica.connector.hub.service.ConnectorDtoService;
