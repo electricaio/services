@@ -18,7 +18,6 @@ public interface ConnectionController {
 
     /**
      * Given the connection id and access key id,
-     * TODO we are validating if the access key is in the ownership of the session user, via user-service.
      * After that, connection is created containing information about the user and organization as well.
      */
     @PostMapping(V1 + "/connections")

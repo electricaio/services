@@ -28,7 +28,8 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector')")
+    @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') AND " +
+            "#connection.accessKeyBelongsUser(#request.getAccessKeyId())")
     public ResponseEntity<ConnectionDto> connect(@Valid @RequestBody ConnectDto request) {
         final ConnectionDto dto = connectionDtoService.create(request);
         return ResponseEntity.ok().body(dto);

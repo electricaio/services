@@ -14,8 +14,11 @@ import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
 import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
 import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
 import io.electrica.test.context.ForUser;
+import io.electrica.user.feign.AccessKeyClient;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
@@ -24,6 +27,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
 
 public class AuthorizationControllerTest extends AbstractDatabaseTest {
 
@@ -35,6 +39,10 @@ public class AuthorizationControllerTest extends AbstractDatabaseTest {
 
     @Inject
     private AuthorizationControllerImpl authorizationController;
+
+    @MockBean
+    @Inject
+    private AccessKeyClient accessKeyClient;
 
     private AuthorizationType basicAuthType;
     private AuthorizationType tokenAuthType;
@@ -371,6 +379,7 @@ public class AuthorizationControllerTest extends AbstractDatabaseTest {
         final ConnectDto dto = new ConnectDto();
         dto.setConnectorId(connectorId);
         dto.setAccessKeyId(-1L);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(dto.getAccessKeyId());
         return connectionController.connect(dto).getBody().getId();
     }
 

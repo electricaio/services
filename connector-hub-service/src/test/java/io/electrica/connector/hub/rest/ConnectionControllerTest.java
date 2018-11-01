@@ -3,16 +3,18 @@ package io.electrica.connector.hub.rest;
 import com.google.common.collect.Sets;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
-import io.electrica.connector.hub.model.AuthorizationType;
 import io.electrica.connector.hub.model.Connection;
-import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.connector.hub.rest.dto.ConnectDto;
 import io.electrica.connector.hub.rest.dto.ConnectionDto;
 import io.electrica.test.context.ForUser;
+import io.electrica.user.feign.AccessKeyClient;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
@@ -21,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
 
 public class ConnectionControllerTest extends AbstractDatabaseTest {
 
@@ -30,15 +33,14 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
     @Inject
     private ConnectionControllerImpl connectionController;
 
-    private AuthorizationType tokenAuthType;
+    @MockBean
+    @Inject
+    private AccessKeyClient accessKeyClient;
 
-    private AuthorizationType basicAuthType;
 
     @Before
     public void setup() {
         super.setup();
-        tokenAuthType = findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION);
-        basicAuthType = findAuthorizationType(AuthorizationTypeName.BASIC_AUTHORIZATION);
     }
 
     @Test
@@ -55,6 +57,33 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Long accessKeyId = 12L;
 
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
+        final ConnectionDto actual = connectionController.connect(dto).getBody();
+
+        final Connection connection = connectionRepository.findById(actual.getId()).orElse(null);
+        assertNotNull(actual.getId());
+
+        assertEquals(connectorId, connection.getConnector().getId());
+        assertEquals(Long.valueOf(1), connection.getUserId());
+        assertEquals(Long.valueOf(1), connection.getOrganizationId());
+        assertEquals(accessKeyId, connection.getAccessKeyId());
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            PermissionType.CreateConnector,
+            PermissionType.AssociateAccessKeyToConnector
+    })
+    public void testConnectWithUserClientReturnFalse() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
+        doReturn(ResponseEntity.ok(false)).when(accessKeyClient).validateAccessKey(accessKeyId);
         final ConnectionDto actual = connectionController.connect(dto).getBody();
 
         final Connection connection = connectionRepository.findById(actual.getId()).orElse(null);
@@ -77,6 +106,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
         connectionController.connect(dto);
 
         // assert
@@ -95,6 +125,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
         connectionController.connect(dto);
     }
 
@@ -138,7 +169,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     );
                 }
         );
-
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(Mockito.anyLong());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(
