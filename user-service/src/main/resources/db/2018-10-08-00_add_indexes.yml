@@ -1,0 +1,15 @@
+databaseChangeLog:
+- changeSet:
+    id: addFuctionalIndexForOrgName
+    author: munish
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: upper(name)
+            type: text
+            computed: true
+        indexName: organization_upper_name_idx
+        schemaName: public
+        tableName: organizations
+        unique: true

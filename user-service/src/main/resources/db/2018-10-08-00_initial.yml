@@ -1006,14 +1006,6 @@ databaseChangeLog:
         constraintName: uk_mvhxqf2hk0ophq3s7byxlii44
         tableName: permissions
 - changeSet:
-    id: 1539845835761-50
-    author: aleks (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: name
-        constraintName: uk_p9pbw3flq9hkay8hdx3ypsldy
-        tableName: organizations
-- changeSet:
     id: 1539845835761-51
     author: aleks (generated)
     changes:
