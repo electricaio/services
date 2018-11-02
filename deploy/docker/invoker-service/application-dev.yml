@@ -1,2 +1,3 @@
-#feign.userService.client.url=user-service:22022
-#feign.connectorHubService.client.url=connector-hub-service:22023
+feign:
+  userService.url: user-service:22022
+  connectorHubService.url: connector-hub-service:22023
