@@ -1,4 +1,4 @@
-package io.electrica.user.service;
+package io.electrica.user.service.dto;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
@@ -8,6 +8,7 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.model.AccessKey;
+import io.electrica.user.service.AccessKeyService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

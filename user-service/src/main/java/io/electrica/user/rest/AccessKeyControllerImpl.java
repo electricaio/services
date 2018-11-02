@@ -3,7 +3,7 @@ package io.electrica.user.rest;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
-import io.electrica.user.service.AccessKeyDtoService;
+import io.electrica.user.service.dto.AccessKeyDtoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

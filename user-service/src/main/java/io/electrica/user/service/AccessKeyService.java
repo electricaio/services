@@ -24,7 +24,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    List<AccessKey> findByUser(Long userId) {
+    public List<AccessKey> findByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
@@ -35,11 +35,11 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         return accessKey;
     }
 
-    Boolean validateUserAccessKeyById(Long accessKeyId, Long userId) {
+    public Boolean validateUserAccessKeyById(Long accessKeyId, Long userId) {
         return accessKeyRepository.isUserAccessKeyWithIdExists(accessKeyId, userId);
     }
 
-    Boolean validateUserAccessKeyByJti(UUID jti, Long userId) {
+    public Boolean validateUserAccessKeyByJti(UUID jti, Long userId) {
         return accessKeyRepository.isUserAccessKeyWithJtiExists(jti, userId);
     }
 
