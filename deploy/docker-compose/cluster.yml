@@ -3,23 +3,19 @@ version: '3.1'
 services:
   user-service:
     environment:
-      - JAVA_OPTS=-Xmx128m
       - ARGS=--spring.datasource.url=jdbc:postgresql://postgres-db:5432/user_db
     ports:
       - 22022:22022
 
   connector-hub-service:
     environment:
-      - JAVA_OPTS=-Xmx128m
       - ARGS=--spring.datasource.url=jdbc:postgresql://postgres-db:5432/connector_hub_db
     ports:
       - 22023:22023
 
   invoker-service:
-    environment:
-    - JAVA_OPTS=-Xmx128m
     ports:
-    - 22024:22024
+      - 22024:22024
 
   postgres-db:
     environment:
