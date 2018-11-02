@@ -5,6 +5,7 @@ import io.electrica.common.security.RoleType;
 import org.springframework.security.core.Authentication;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Adds to {@link Authentication} some useful extra staff.
@@ -25,6 +26,10 @@ public interface Identity {
     }
 
     default String getToken() {
+        throw new UnsupportedOperationException();
+    }
+
+    default UUID getTokenJti() {
         throw new UnsupportedOperationException();
     }
 

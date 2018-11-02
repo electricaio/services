@@ -334,7 +334,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertTrue(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
+                () -> assertTrue(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
     @Test
@@ -344,7 +344,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user2).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertFalse(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
+                () -> assertFalse(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -353,7 +353,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.AddPermission),
-                () -> assertTrue(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
+                () -> assertTrue(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
 

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Access key controller implementation.
@@ -33,8 +32,8 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('CreateAccessKey') AND  ( #common.isSuperAdmin() OR " +
-            "#common.isUser(#accessKey.getUserId()) )")
+    @PreAuthorize("#common.hasPermission('CreateAccessKey') AND  " +
+            "( #common.isSuperAdmin() OR #common.isUser(#accessKey.getUserId()) )")
     public ResponseEntity<AccessKeyDto> createAccessKey(@RequestBody CreateAccessKeyDto accessKey) {
         AccessKeyDto result = accessKeyDtoService.create(accessKey);
         return ResponseEntity.ok(result);
@@ -42,7 +41,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey') AND  ( #common.isSuperAdmin() OR #common.isUser(#userId) )")
-    public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<AccessKeyDto>> findAllNonArchivedByUser(@PathVariable("userId") Long userId) {
         List<AccessKeyDto> result = accessKeyDtoService.findByUser(userId);
         return ResponseEntity.ok(result);
     }
@@ -50,25 +49,27 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
     @PostAuthorize("#common.isUser(returnObject.getBody().getUserId()) OR #common.isSuperAdmin()")
-    public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable Long accessKeyId) {
+    public ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable("accessKeyId") Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.findByKey(accessKeyId));
     }
 
     @Override
     @PreAuthorize("#common.hasPermission('CreateAccessKey') and  #user.isUserAccessKey(#accessKeyId)")
-    public ResponseEntity<AccessKeyDto> refreshAccessKey(Long accessKeyId) {
+    public ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable("accessKeyId") Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.refreshKey(accessKeyId));
     }
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    public ResponseEntity<Boolean> validateAccessKey(Long accessKeyId) {
-        return ResponseEntity.ok(accessKeyDtoService.validateAccessKey(accessKeyId));
+    public ResponseEntity<Boolean> validateMyAccessKeyById(@PathVariable("accessKeyId") Long accessKeyId) {
+        Boolean result = accessKeyDtoService.validateMyAccessKeyById(accessKeyId);
+        return ResponseEntity.ok(result);
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadAccessKey')")
-    public ResponseEntity<Boolean> validateJti(UUID jti) {
-        return ResponseEntity.ok(accessKeyDtoService.validateJti(jti));
+    @PreAuthorize("#oauth2.hasScope('sdk')")
+    public ResponseEntity<Boolean> validateMyAccessKey() {
+        Boolean result = accessKeyDtoService.validateMyAccessKey();
+        return ResponseEntity.ok(result);
     }
 }

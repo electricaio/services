@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -18,13 +19,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class TokenHelper {
 
+    public static final String JWT_TOKEN_IDENTIFIER = "jti";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     private static final String ID_INDICATOR = "@id:";
     private static final String EMAIL_INDICATOR = "@e:";
-
     private static final String ISSUED_AT_ID = "iat";
-    public static final String JWT_TOKEN_IDENTIFIER = "jti";
 
     private TokenHelper() {
     }
@@ -65,14 +64,31 @@ public class TokenHelper {
         return result;
     }
 
-    @SneakyThrows
     public static long getIssuedAt(String token) {
-        Jwt jwt = JwtHelper.decode(token);
-        Object iat = OBJECT_MAPPER.readValue(jwt.getClaims(), Map.class).get(ISSUED_AT_ID);
+        return getIssuedAt(getClaims(token));
+    }
+
+    public static long getIssuedAt(Map<String, String> claims) {
+        String iat = claims.get(ISSUED_AT_ID);
         if (iat == null) {
-            throw new IllegalStateException("iat absent in token");
+            throw new IllegalStateException(ISSUED_AT_ID + " absent in token");
         }
-        return Long.parseLong(iat.toString());
+        return Long.parseLong(iat);
+    }
+
+    public static UUID getJti(Map<String, String> claims) {
+        String jti = claims.get(JWT_TOKEN_IDENTIFIER);
+        if (jti == null) {
+            throw new IllegalStateException(JWT_TOKEN_IDENTIFIER + " absent in token");
+        }
+        return UUID.fromString(jti);
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    public static Map<String, String> getClaims(String token) {
+        Jwt jwt = JwtHelper.decode(token);
+        return OBJECT_MAPPER.readValue(jwt.getClaims(), Map.class);
     }
 
 }

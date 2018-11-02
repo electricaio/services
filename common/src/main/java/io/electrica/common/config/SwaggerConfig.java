@@ -83,7 +83,7 @@ public class SwaggerConfig {
                 new AuthorizationScope(AuthorityConstants.UPDATE_SCOPE, "for update operations"),
                 new AuthorizationScope(AuthorityConstants.DELETE_SCOPE, "for delete operations"),
                 new AuthorizationScope(AuthorityConstants.DO_SCOPE, "for change state operations"),
-                new AuthorizationScope(AuthorityConstants.INVOKE_SCOPE, "for SDK invoke operations")
+                new AuthorizationScope(AuthorityConstants.SDK_SCOPE, "for SDK operations")
         };
     }
 

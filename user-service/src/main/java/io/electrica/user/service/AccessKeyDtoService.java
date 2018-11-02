@@ -1,5 +1,6 @@
 package io.electrica.user.service;
 
+import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
@@ -10,7 +11,6 @@ import io.electrica.user.model.AccessKey;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAccessKeyDto, AccessKeyDto> {
@@ -37,12 +37,14 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
         return toDto(accessKeyService.refreshKey(accessKeyId));
     }
 
-    public Boolean validateAccessKey(long accessKeyId) {
-        return accessKeyService.validate(accessKeyId, identityContextHolder.getIdentity().getUserId());
+    public Boolean validateMyAccessKeyById(long accessKeyId) {
+        Identity identity = identityContextHolder.getIdentity();
+        return accessKeyService.validateUserAccessKeyById(accessKeyId, identity.getUserId());
     }
 
-    public Boolean validateJti(UUID jti) {
-        return accessKeyService.validateJti(jti, identityContextHolder.getIdentity().getUserId());
+    public Boolean validateMyAccessKey() {
+        Identity identity = identityContextHolder.getIdentity();
+        return accessKeyService.validateUserAccessKeyByJti(identity.getTokenJti(), identity.getUserId());
     }
 
     @Override

@@ -66,7 +66,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .withClient(ACCESS_KEY_CLIENT_ID)
                 .secret("{none}" + UUID.randomUUID())
                 .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
-                .scopes(READ_SCOPE, INVOKE_SCOPE)
+                .scopes(READ_SCOPE, SDK_SCOPE)
                 .accessTokenValiditySeconds(Integer.MAX_VALUE);
     }
 
