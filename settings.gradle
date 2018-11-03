@@ -9,4 +9,6 @@ include 'user-service-api'
 include 'connector-hub-service-api'
 include 'invoker-service'
 include 'invoker-service-api'
+include 'connector-service-api'
+include 'connector-service'
 

@@ -1,3 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-db:5432/connector_hub_db
+
 feign:
   userService.url: user-service:22022
   connectorHubService.url: connector-hub-service:22023
+  invokerService.url: invoker-service:22024
+  connectorService.url: connector-service:22025

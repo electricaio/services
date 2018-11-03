@@ -96,6 +96,28 @@ server {
         proxy_pass http://invoker-service/v2/api-docs;
     }
 
+    # Swagger file for connector-service
+    location /connector-service/swagger/ {
+        include /etc/nginx/cors.conf;
+
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size    1m;
+        client_body_buffer_size 64k;
+
+        proxy_send_timeout   30;
+        proxy_read_timeout   30;
+        proxy_connect_timeout 30s;
+
+        proxy_buffers 16 16k;
+        proxy_buffer_size 4k;
+
+        proxy_pass http://connector-service/v2/api-docs;
+    }
+
     # Proxy to user-service
     location ~* ^/(v[1-9]|public/v[1-9])/(users|organizations|access-keys) {
         include /etc/nginx/cors.conf;

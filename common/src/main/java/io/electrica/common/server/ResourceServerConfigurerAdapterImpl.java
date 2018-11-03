@@ -42,6 +42,9 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
             case "invoker-service":
                 resourceId = AuthorityConstants.INVOKER_SERVICE_RESOURCE_ID;
                 break;
+            case "connector-service":
+                resourceId = AuthorityConstants.CONNECTOR_SERVICE_RESOURCE_ID;
+                break;
             default:
                 throw new UnsupportedOperationException(
                         "Unknown service name to resolve oauth resourceId: " + applicationName
