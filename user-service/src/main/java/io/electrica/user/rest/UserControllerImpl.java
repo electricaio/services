@@ -2,7 +2,7 @@ package io.electrica.user.rest;
 
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.service.UserDtoService;
+import io.electrica.user.service.dto.UserDtoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

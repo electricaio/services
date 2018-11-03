@@ -24,23 +24,23 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         this.accessKeyGenerator = accessKeyGenerator;
     }
 
-    List<AccessKey> findByUser(Long userId) {
+    public List<AccessKey> findByUser(Long userId) {
         return accessKeyRepository.findAllNonArchivedByUser(userId);
     }
 
     @Transactional
-    AccessKey refreshKey(Long accessKeyId) {
+    public AccessKey refreshKey(Long accessKeyId) {
         AccessKey accessKey = findById(accessKeyId, true);
         fillAccessKeyInfo(accessKey);
         return accessKey;
     }
 
-    public Boolean validate(Long accessKeyId, Long userId) {
-        return accessKeyRepository.exists(accessKeyId, userId);
+    public Boolean validateUserAccessKeyById(Long accessKeyId, Long userId) {
+        return accessKeyRepository.isUserAccessKeyWithIdExists(accessKeyId, userId);
     }
 
-    public Boolean validateJti(UUID jti, Long userId) {
-        return accessKeyRepository.validateJti(jti, userId);
+    public Boolean validateUserAccessKeyByJti(UUID jti, Long userId) {
+        return accessKeyRepository.isUserAccessKeyWithJtiExists(jti, userId);
     }
 
     @Override

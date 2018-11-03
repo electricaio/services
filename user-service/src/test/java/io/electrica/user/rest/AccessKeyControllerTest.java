@@ -16,7 +16,6 @@ import org.springframework.security.access.AccessDeniedException;
 import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -334,7 +333,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertTrue(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
+                () -> assertTrue(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
     @Test
@@ -344,7 +343,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user2).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertFalse(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
+                () -> assertFalse(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -353,43 +352,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
         Long accessKeyId = createAndSaveAccessKey(user).getId();
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.AddPermission),
-                () -> assertTrue(accessKeyController.validateAccessKey(accessKeyId.longValue()).getBody()));
-    }
-
-
-
-    @Test
-    public void testValidateJti() {
-        UserDto user = createAndSaveUser();
-        Long accessKeyId = createAndSaveAccessKey(user).getId();
-        AtomicReference<UUID> jti = new AtomicReference<>();
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> {
-                    FullAccessKeyDto res = accessKeyController.getAccessKey(accessKeyId)
-                            .getBody();
-                    jti.set(res.getJti());
-                });
-
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertTrue(accessKeyController.validateJti(jti.get()).getBody()));
-    }
-
-    @Test
-    public void testValidateJtiThatDontExist() {
-        UserDto user = createAndSaveUser();
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.ReadAccessKey),
-                () -> assertFalse(accessKeyController.validateJti(UUID.randomUUID()).getBody()));
-    }
-
-    @Test(expected = AccessDeniedException.class)
-    public void testValidateJtiWithoutReadPermission() {
-        UserDto user = createAndSaveUser();
-        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
-                EnumSet.of(PermissionType.AddPermission),
-                () -> assertFalse(accessKeyController.validateJti(UUID.randomUUID()).getBody()));
+                () -> assertTrue(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
     private AtomicReference<FullAccessKeyDto> getFullAccessKeyDtoForKey(UserDto user, Long accessKeyId) {

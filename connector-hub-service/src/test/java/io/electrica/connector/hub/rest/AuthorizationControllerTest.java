@@ -379,7 +379,7 @@ public class AuthorizationControllerTest extends AbstractDatabaseTest {
         final ConnectDto dto = new ConnectDto();
         dto.setConnectorId(connectorId);
         dto.setAccessKeyId(-1L);
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(dto.getAccessKeyId());
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(dto.getAccessKeyId());
         return connectionController.connect(dto).getBody().getId();
     }
 

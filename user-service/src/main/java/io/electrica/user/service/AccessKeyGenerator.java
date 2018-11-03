@@ -40,7 +40,7 @@ public class AccessKeyGenerator {
                 null,
                 Sets.newHashSet(
                         READ_SCOPE,
-                        INVOKE_SCOPE
+                        SDK_SCOPE
                 ),
                 Sets.newHashSet(
                         USER_SERVICE_RESOURCE_ID,

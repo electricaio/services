@@ -4,10 +4,12 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.UUID;
 
 import static io.electrica.common.rest.PathConstants.PRIVATE;
 import static io.electrica.common.rest.PathConstants.V1;
@@ -29,10 +31,17 @@ public interface AccessKeyController {
     @PostMapping(V1 + "/access-keys/{accessKeyId}/refresh")
     ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
-    @PostMapping(PRIVATE + V1 + "/access-keys/{accessKeyId}/validate")
-    ResponseEntity<Boolean> validateAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
+    /**
+     * Check if specified {@code accessKeyId} belongs session user.
+     */
+    @PostMapping(PRIVATE + V1 + "/me/access-keys/{accessKeyId}/validate")
+    ResponseEntity<Boolean> validateMyAccessKeyById(@PathVariable("accessKeyId") Long accessKeyId);
 
-    @PostMapping(PRIVATE + V1 + "/access-keys/jti/{jti}/validate")
-    ResponseEntity<Boolean> validateJti(@PathVariable("jti") UUID jti);
+    /**
+     * Check if session access key belongs session user and hasn't been revoked.
+     * Access key identified by oauth2 token JTI.
+     */
+    @PostMapping(PRIVATE + V1 + "/me/access-keys/validate")
+    ResponseEntity<Boolean> validateMyAccessKey();
 
 }

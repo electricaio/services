@@ -8,18 +8,13 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-
 public class UserExpressionMethods {
 
     private final Authentication authentication;
-    private final MethodInvocation mi;
     private final AccessKeyRepository accessKeyRepository;
 
-    public UserExpressionMethods(Authentication authentication, MethodInvocation mi,
-                                 AccessKeyRepository accessKeyRepository) {
+    private UserExpressionMethods(Authentication authentication, AccessKeyRepository accessKeyRepository) {
         this.authentication = authentication;
-        this.mi = mi;
         this.accessKeyRepository = accessKeyRepository;
     }
 
@@ -28,7 +23,7 @@ public class UserExpressionMethods {
     }
 
     public boolean isUserAccessKey(Long accessKeyId) {
-        return accessKeyRepository.exists(accessKeyId, getIdentity().getUserId());
+        return accessKeyRepository.isUserAccessKeyWithIdExists(accessKeyId, getIdentity().getUserId());
     }
 
     /**
@@ -37,8 +32,11 @@ public class UserExpressionMethods {
     @Component
     public static class Factory implements ExpressionMethodsFactory {
 
-        @Inject
-        private AccessKeyRepository accessKeyRepository;
+        private final AccessKeyRepository accessKeyRepository;
+
+        public Factory(AccessKeyRepository accessKeyRepository) {
+            this.accessKeyRepository = accessKeyRepository;
+        }
 
         @Override
         public String getNamespace() {
@@ -47,9 +45,8 @@ public class UserExpressionMethods {
 
         @Override
         public Object create(Authentication authentication, MethodInvocation mi) {
-            return new UserExpressionMethods(authentication, mi, accessKeyRepository);
+            return new UserExpressionMethods(authentication, accessKeyRepository);
         }
     }
-
 
 }

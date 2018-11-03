@@ -7,7 +7,7 @@ public interface AuthorityConstants {
     String UPDATE_SCOPE = "u";
     String DELETE_SCOPE = "d";
     String DO_SCOPE = "do";
-    String INVOKE_SCOPE = "i";
+    String SDK_SCOPE = "sdk";
 
     String USER_SERVICE_RESOURCE_ID = "u";
     String CONNECTOR_HUB_SERVICE_RESOURCE_ID = "c";

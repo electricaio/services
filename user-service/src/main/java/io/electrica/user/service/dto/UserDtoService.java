@@ -1,4 +1,4 @@
-package io.electrica.user.service;
+package io.electrica.user.service.dto;
 
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
@@ -6,6 +6,8 @@ import io.electrica.common.security.RoleType;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.user.model.User;
+import io.electrica.user.service.UserService;
+import io.electrica.user.service.UserToRoleService;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

@@ -57,7 +57,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Long accessKeyId = 12L;
 
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto actual = connectionController.connect(dto).getBody();
 
         final Connection connection = connectionRepository.findById(actual.getId()).orElse(null);
@@ -83,7 +83,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         final Long accessKeyId = 12L;
 
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
-        doReturn(ResponseEntity.ok(false)).when(accessKeyClient).validateAccessKey(accessKeyId);
+        doReturn(ResponseEntity.ok(false)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto actual = connectionController.connect(dto).getBody();
 
         final Connection connection = connectionRepository.findById(actual.getId()).orElse(null);
@@ -106,7 +106,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         connectionController.connect(dto);
 
         // assert
@@ -125,7 +125,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
         final ConnectDto dto = new ConnectDto(connectorId, accessKeyId);
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(accessKeyId);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         connectionController.connect(dto);
     }
 
@@ -169,7 +169,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     );
                 }
         );
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateAccessKey(Mockito.anyLong());
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(

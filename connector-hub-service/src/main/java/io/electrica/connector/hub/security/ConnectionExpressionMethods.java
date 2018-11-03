@@ -1,6 +1,5 @@
 package io.electrica.connector.hub.security;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
 import io.electrica.common.security.ExpressionMethodsFactory;
@@ -10,19 +9,22 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-public class ConnectionExpressionHandler {
+import static io.electrica.common.helper.CollectionUtils.nullToFalse;
+
+public class ConnectionExpressionMethods {
 
     private final ConnectionRepository connectionRepository;
     private final AccessKeyClient accessKeyClient;
     private final Authentication authentication;
-    private final MethodInvocation mi;
 
-    public ConnectionExpressionHandler(ConnectionRepository connectionRepository, AccessKeyClient accessKeyClient,
-                                       Authentication authentication, MethodInvocation mi) {
+    private ConnectionExpressionMethods(
+            ConnectionRepository connectionRepository,
+            AccessKeyClient accessKeyClient,
+            Authentication authentication
+    ) {
         this.connectionRepository = connectionRepository;
         this.accessKeyClient = accessKeyClient;
         this.authentication = authentication;
-        this.mi = mi;
     }
 
     public Identity getIdentity() {
@@ -34,9 +36,9 @@ public class ConnectionExpressionHandler {
         return connectionRepository.exists(connectionId, userId);
     }
 
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
     public boolean accessKeyBelongsUser(Long accessKey) {
-        return accessKeyClient.validateAccessKey(accessKey).getBody();
+        Boolean result = accessKeyClient.validateMyAccessKeyById(accessKey).getBody();
+        return nullToFalse(result);
     }
 
     @Component
@@ -57,7 +59,7 @@ public class ConnectionExpressionHandler {
 
         @Override
         public Object create(Authentication authentication, MethodInvocation mi) {
-            return new ConnectionExpressionHandler(connectionRepository, accessKeyClient, authentication, mi);
+            return new ConnectionExpressionMethods(connectionRepository, accessKeyClient, authentication);
         }
     }
 
