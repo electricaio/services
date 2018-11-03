@@ -13,6 +13,7 @@ apply plugin: 'org.springframework.boot'
 dependencies {
     compile project(':common')
     compile project(':invoker-service-api')
+    compile project(':user-service-api')
     
     testCompile project(':common-test')
 }
