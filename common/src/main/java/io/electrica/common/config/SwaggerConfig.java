@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(input -> input != null &&
-                        !RequestHelper.isPrivateApi(input) &&
+                        (environmentType.isSafe() || !RequestHelper.isPrivateApi(input)) &&
                         !RequestHelper.isAuthPath(input) &&
                         !RequestHelper.isErrorPath(input)
                 )
