@@ -1,0 +1,6 @@
+server:
+  port: 22025
+
+spring:
+  application:
+    name: connector-service

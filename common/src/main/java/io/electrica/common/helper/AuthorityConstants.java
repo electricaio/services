@@ -10,8 +10,9 @@ public interface AuthorityConstants {
     String SDK_SCOPE = "sdk";
 
     String USER_SERVICE_RESOURCE_ID = "u";
-    String CONNECTOR_HUB_SERVICE_RESOURCE_ID = "c";
+    String CONNECTOR_HUB_SERVICE_RESOURCE_ID = "ch";
     String INVOKER_SERVICE_RESOURCE_ID = "i";
+    String CONNECTOR_SERVICE_RESOURCE_ID = "c";
 
     String ACCESS_KEY_CLIENT_ID = "accessKey";
     String FRONTEND_CLIENT_ID = "frontend";

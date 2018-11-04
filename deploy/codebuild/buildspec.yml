@@ -61,6 +61,10 @@ phases:
     - >
       docker tag electrica/invoker-service:${APP_PROFILE} ${ECR_HOST}/electrica/invoker-service:${APP_PROFILE} &&
       docker push ${ECR_HOST}/electrica/invoker-service:${APP_PROFILE}
+    #   Tag and push connector-service
+    - >
+      docker tag electrica/connector-service:${APP_PROFILE} ${ECR_HOST}/electrica/connector-service:${APP_PROFILE} &&
+      docker push ${ECR_HOST}/electrica/connector-service:${APP_PROFILE}
   post_build:
     commands:
     - echo Build completed on `date`
