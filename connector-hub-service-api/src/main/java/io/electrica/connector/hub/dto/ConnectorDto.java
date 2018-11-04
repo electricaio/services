@@ -1,23 +1,23 @@
-package io.electrica.connector.hub.rest.dto;
+package io.electrica.connector.hub.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReadConnectorDto extends ConnectorDto {
+public class ConnectorDto extends CreateConnectorDto {
 
     @NotNull
     private Long id;
 
     @NotBlank
-    @Max(255)
+    @Size(max = 255)
     private String ern;
 
     @NotNull

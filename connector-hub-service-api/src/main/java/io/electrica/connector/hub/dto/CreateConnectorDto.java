@@ -1,39 +1,39 @@
-package io.electrica.connector.hub.rest.dto;
+package io.electrica.connector.hub.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ConnectorDto {
+public class CreateConnectorDto {
 
     @NotNull
     private Long typeId;
 
     @NotNull
-    private Long authorizationTypeId;
+    private AuthorizationType authorizationType;
 
     @NotNull
     @NotBlank
-    @Max(255)
+    @Size(max = 255)
     private String name;
 
-    @Max(255)
+    @Size(max = 255)
     private String resource;
 
     @NotNull
     @NotBlank
-    @Max(255)
+    @Size(max = 255)
     private String version;
 
     @NotNull
     @NotBlank
-    @Max(255)
+    @Size(max = 255)
     private String namespace;
 }

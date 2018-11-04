@@ -9,13 +9,29 @@ import java.util.List;
 
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
-    @Query(value =
-            "SELECT EXISTS(" +
-            "SELECT TRUE " +
-            "FROM connections c " +
-            "WHERE c.id=:connectionId AND c.user_id=:userId AND c.archived=FALSE)", nativeQuery = true)
-    Boolean exists(@Param("connectionId") Long connectionId, @Param("userId") Long userId);
+    @Query(
+            value = "" +
+                    " SELECT EXISTS (" +
+                    "   SELECT TRUE" +
+                    "   FROM connections c" +
+                    "   WHERE c.id=:connectionId AND c.user_id=:userId AND c.archived=FALSE" +
+                    ")",
+            nativeQuery = true
+    )
+    Boolean canUserAccessConnection(@Param("connectionId") Long connectionId, @Param("userId") Long userId);
 
-    @Query("FROM Connection c WHERE c.userId=:userId AND c.archived=FALSE")
+    @Query(
+            value = "" +
+                    " SELECT EXISTS (" +
+                    "   SELECT TRUE" +
+                    "   FROM connections c" +
+                    "   WHERE c.authorization_id = :authorizationId AND c.user_id = :userId AND c.archived=FALSE" +
+                    " )",
+            nativeQuery = true
+    )
+    Boolean canUserAccessAuthorization(@Param("authorizationId") Long authorizationId, @Param("userId") Long userId);
+
+
+    @Query("FROM Connection c WHERE c.userId=:userId AND c.archived=FALSE order by c.name")
     List<Connection> findAllByUser(@Param("userId") Long userId);
 }

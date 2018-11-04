@@ -1,10 +1,11 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
-import io.electrica.connector.hub.service.ConnectionDtoService;
+import io.electrica.connector.hub.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.service.dto.ConnectionDtoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,16 +23,23 @@ public class ConnectionControllerImpl implements ConnectionController {
 
     @Override
     @PreAuthorize("#common.isUser(#userId) AND #common.hasPermission('ReadActiveConnection')")
-    public ResponseEntity<List<ConnectionDto>> findAllByUser(Long userId) {
-        final List<ConnectionDto> dto = connectionDtoService.findAllByUser(userId);
-        return ResponseEntity.ok().body(dto);
+    public ResponseEntity<List<ConnectionDto>> findAllByUser(@PathVariable("userId") Long userId) {
+        final List<ConnectionDto> result = connectionDtoService.findAllByUser(userId);
+        return ResponseEntity.ok(result);
     }
 
     @Override
     @PreAuthorize("#common.hasPermission('AssociateAccessKeyToConnector') AND " +
             "#connection.accessKeyBelongsUser(#request.getAccessKeyId())")
-    public ResponseEntity<ConnectionDto> connect(@Valid @RequestBody ConnectDto request) {
-        final ConnectionDto dto = connectionDtoService.create(request);
-        return ResponseEntity.ok().body(dto);
+    public ResponseEntity<ConnectionDto> create(@Valid @RequestBody CreateConnectionDto request) {
+        final ConnectionDto result = connectionDtoService.create(request);
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND #connection.canUserAccess(#id)")
+    public ResponseEntity<ConnectionDto> get(@PathVariable("id") Long id) {
+        ConnectionDto result = connectionDtoService.findById(id, true);
+        return ResponseEntity.ok(result);
     }
 }

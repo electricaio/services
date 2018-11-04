@@ -2,7 +2,6 @@ package io.electrica.connector.hub.service;
 
 import io.electrica.common.helper.ERNUtils;
 import io.electrica.common.jpa.service.AbstractService;
-import io.electrica.connector.hub.model.AuthorizationType;
 import io.electrica.connector.hub.model.Connector;
 import io.electrica.connector.hub.model.ConnectorType;
 import io.electrica.connector.hub.repository.ConnectorRepository;
@@ -33,15 +32,8 @@ public class ConnectorService extends AbstractService<Connector> {
         );
         model.setErn(ern);
 
-        final ConnectorType type = getReference(
-                ConnectorType.class, model.getType().getId()
-        );
+        final ConnectorType type = getReference(ConnectorType.class, model.getType().getId());
         model.setType(type);
-
-        final AuthorizationType authorizationType = getReference(
-                AuthorizationType.class, model.getAuthorizationType().getId()
-        );
-        model.setAuthorizationType(authorizationType);
 
         return connectorRepository.save(model);
     }

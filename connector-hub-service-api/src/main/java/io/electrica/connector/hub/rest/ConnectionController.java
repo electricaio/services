@@ -1,11 +1,12 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.CreateConnectionDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,5 +22,9 @@ public interface ConnectionController {
      * After that, connection is created containing information about the user and organization as well.
      */
     @PostMapping(V1 + "/connections")
-    ResponseEntity<ConnectionDto> connect(ConnectDto request);
+    ResponseEntity<ConnectionDto> create(@RequestBody CreateConnectionDto dto);
+
+    @GetMapping(V1 + "/connections/{id}")
+    ResponseEntity<ConnectionDto> get(@PathVariable("id") Long id);
+
 }

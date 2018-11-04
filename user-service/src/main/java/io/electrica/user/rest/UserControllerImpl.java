@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         logger.debug("REST request to save User : {}", createUserDto);
         UserDto result = userDtoService.create(createUserDto);
         return ResponseEntity.ok(result);

@@ -3,10 +3,10 @@ package io.electrica.connector.hub.config;
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
 import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.model.Connector;
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
-import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
-import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
+import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
+import io.electrica.connector.hub.dto.ConnectorDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,15 +19,17 @@ public class ConnectorHubDozerConfig {
             @Override
             protected void configure() {
                 mapping(CreateConnectorDto.class, Connector.class)
-                        .fields("typeId", "type.id")
-                        .fields("authorizationTypeId", "authorizationType.id");
-                mapping(ReadConnectorDto.class, Connector.class)
-                        .fields("typeId", "type.id")
-                        .fields("authorizationTypeId", "authorizationType.id");
-                mapping(ConnectDto.class, Connection.class)
+                        .fields("typeId", "type.id");
+
+                mapping(ConnectorDto.class, Connector.class)
+                        .fields("typeId", "type.id");
+
+                mapping(CreateConnectionDto.class, Connection.class)
                         .fields("connectorId", "connector.id");
+
                 mapping(ConnectionDto.class, Connection.class)
-                        .fields("connectorId", "connector.id");
+                        .fields("connectorId", "connector.id")
+                        .fields("authorizationId", "authorization.id");
             }
         };
     }

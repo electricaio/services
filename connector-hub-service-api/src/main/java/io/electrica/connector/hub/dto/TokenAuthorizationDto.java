@@ -1,15 +1,13 @@
-package io.electrica.connector.hub.rest.dto;
+package io.electrica.connector.hub.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class ReadAuthorizationDto extends AuthorizationDto {
+public class TokenAuthorizationDto extends CreateTokenAuthorizationDto {
 
     @NotNull
     private Long id;
