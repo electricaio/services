@@ -15,6 +15,7 @@ public class AuthorityHelper {
     private static final String DEFINED_ROLES_PREFIX = "dr:";
     private static final String DEFINED_PERMISSIONS_PREFIX = "dp:";
     private static final String ORGANIZATION_PREFIX = "org:";
+    private static final String ACCESS_KEY_PREFIX = "key:";
     private static final String SEPARATOR = ";";
 
     private AuthorityHelper() {
@@ -29,6 +30,14 @@ public class AuthorityHelper {
         String permissionsAuthority = AuthorityHelper.writePermissions(permissions);
         String organizationAuthority = AuthorityHelper.writeOrganization(organizationId);
         return Stream.of(rolesAuthority, permissionsAuthority, organizationAuthority)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+    }
+
+    public static Collection<? extends GrantedAuthority> buildGrantedAuthoritiesForAccessKey(Long accessKeyId) {
+        String accessKeyAuthority = AuthorityHelper.writeAccessKeyId(accessKeyId);
+        return Stream.of(accessKeyAuthority)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
@@ -80,5 +89,16 @@ public class AuthorityHelper {
                 )
                 .orElse(Collections.emptySet());
     }
+
+    public static long readAccessKeyId(Collection<? extends GrantedAuthority> authorities) {
+        return findByPrefix(authorities, ACCESS_KEY_PREFIX)
+                .map(Long::valueOf)
+                .orElseThrow(() -> new ActionForbiddenServiceException("Access key authority required in token"));
+    }
+
+    private static String writeAccessKeyId(Long accessKeyId) {
+        return ACCESS_KEY_PREFIX + accessKeyId;
+    }
+
 
 }

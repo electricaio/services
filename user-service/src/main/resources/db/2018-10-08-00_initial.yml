@@ -75,13 +75,9 @@ databaseChangeLog:
             name: revision_version
             type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: jti
             type: UUID
         - column:
-            constraints:
-              nullable: false
             name: key
             type: VARCHAR(1023)
         - column:

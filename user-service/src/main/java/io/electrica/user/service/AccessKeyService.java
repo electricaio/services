@@ -48,9 +48,9 @@ public class AccessKeyService extends AbstractService<AccessKey> {
         Long userId = newEntity.getUser().getId();
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
-
-        fillAccessKeyInfo(newEntity);
-        return getRepository().save(newEntity);
+        AccessKey newAccessKey = getRepository().save(newEntity);
+        fillAccessKeyInfo(newAccessKey);
+        return newAccessKey;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     }
 
     private void fillAccessKeyInfo(AccessKey accessKey) {
-        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(accessKey.getUser().getId());
+        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(accessKey.getUser().getId(), accessKey.getId());
         accessKey.setJti(key.getJti());
         accessKey.setKey(key.getValue());
     }
