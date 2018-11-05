@@ -29,12 +29,12 @@ public class AccessKey extends AbstractEntity {
     private String name;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private UUID jti;
 
     @NotNull
     @Size(max = 1023)
-    @Column(nullable = false, length = 1023)
+    @Column(nullable = true, length = 1023)
     private String key;
 
     @NotNull

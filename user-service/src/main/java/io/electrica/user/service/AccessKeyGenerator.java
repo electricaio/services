@@ -1,6 +1,7 @@
 package io.electrica.user.service;
 
 import com.google.common.collect.Sets;
+import io.electrica.common.helper.AuthorityHelper;
 import io.electrica.common.helper.TokenHelper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,11 +34,11 @@ public class AccessKeyGenerator {
         this.tokenServices = tokenServices;
     }
 
-    Key createAccessKey(Long userId) {
+    Key createAccessKey(Long userId, Long accessKeyId) {
         OAuth2AccessToken accessToken = createAccessToken(
                 userId,
                 ACCESS_KEY_CLIENT_ID,
-                null,
+                AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId),
                 Sets.newHashSet(
                         READ_SCOPE,
                         SDK_SCOPE
