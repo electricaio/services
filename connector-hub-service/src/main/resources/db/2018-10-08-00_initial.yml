@@ -56,9 +56,6 @@ databaseChangeLog:
             name: revision_version
             type: BIGINT
         - column:
-            name: tenant_ref_id
-            type: VARCHAR(255)
-        - column:
             name: details
             type: VARCHAR(255)
         - column:
@@ -112,12 +109,6 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: revision_version_mod
-            type: BOOLEAN
-        - column:
-            name: tenant_ref_id
-            type: VARCHAR(255)
-        - column:
-            name: tenant_ref_id_mod
             type: BOOLEAN
         - column:
             name: connection_mod
@@ -183,6 +174,9 @@ databaseChangeLog:
               nullable: false
             name: organization_id
             type: BIGINT
+        - column:
+            name: tenant_ref_id
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -251,6 +245,12 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: organization_id_mod
+            type: BOOLEAN
+        - column:
+            name: tenant_ref_id
+            type: VARCHAR(255)
+        - column:
+            name: tenant_ref_id_mod
             type: BOOLEAN
         - column:
             name: user_id

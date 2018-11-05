@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateBasicAuthorizationDto extends CreateAuthorizationDto {
+public class CreateBasicAuthorizationDto {
 
     @NotBlank
     @Size(max = 255)
