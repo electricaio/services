@@ -19,6 +19,9 @@ public class CreateConnectionDto {
     @Size(max = 255)
     public String name;
 
+    @Size(max = 255)
+    private String tenantRefId;
+
     @NotNull
     public Long connectorId;
 

@@ -27,6 +27,10 @@ public class Connection extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 
+    @Size(max = 255)
+    @Column(name = "tenant_ref_id")
+    private String tenantRefId;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "connector_id", nullable = false)

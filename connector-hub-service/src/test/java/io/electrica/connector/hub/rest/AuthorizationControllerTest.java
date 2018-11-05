@@ -56,7 +56,6 @@ public class AuthorizationControllerTest extends AbstractDatabaseTest {
 
         assertNotNull(result.getId());
         assertNotNull(result.getRevisionVersion());
-        assertNull(result.getTenantRefId());
 
         ConnectionDto connection = connectionController.get(connectionId).getBody();
         assertEquals(connection.getAuthorizationId(), result.getId());
@@ -163,7 +162,6 @@ public class AuthorizationControllerTest extends AbstractDatabaseTest {
 
         assertNotNull(result.getId());
         assertNotNull(result.getRevisionVersion());
-        assertNull(result.getTenantRefId());
 
         ConnectionDto connection = connectionController.get(connectionId).getBody();
         assertEquals(connection.getAuthorizationId(), result.getId());

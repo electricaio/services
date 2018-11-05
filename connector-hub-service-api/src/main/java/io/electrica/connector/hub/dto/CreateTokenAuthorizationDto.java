@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class CreateTokenAuthorizationDto extends CreateAuthorizationDto {
+public class CreateTokenAuthorizationDto {
 
     @NotBlank
     @Size(max = 255)
