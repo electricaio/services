@@ -27,6 +27,9 @@ public class IdentityImpl implements Identity {
     private final ValueCache<Long> organizationId = new ValueCache<>(() ->
             AuthorityHelper.readOrganization(getAuthentication().getAuthorities())
     );
+    private final ValueCache<Long> accessKeyId = new ValueCache<>(() ->
+            AuthorityHelper.readAccessKeyId(getAuthentication().getAuthorities())
+    );
     private final ValueCache<Map<String, String>> tokenClaims = new ValueCache<>(() ->
             TokenHelper.getClaims(getToken())
     );
@@ -57,6 +60,11 @@ public class IdentityImpl implements Identity {
     @Override
     public UUID getTokenJti() {
         return TokenHelper.getJti(tokenClaims.get());
+    }
+
+    @Override
+    public Long getAccessKeyId() {
+        return accessKeyId.get();
     }
 
     @Override
