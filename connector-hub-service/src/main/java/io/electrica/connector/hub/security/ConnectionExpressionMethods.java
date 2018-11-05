@@ -9,6 +9,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 import static io.electrica.common.helper.CollectionUtils.nullToFalse;
 
 public class ConnectionExpressionMethods {
@@ -41,8 +43,13 @@ public class ConnectionExpressionMethods {
         return connectionRepository.canUserAccessAuthorization(authorizationId, userId);
     }
 
-    public boolean accessKeyBelongsUser(Long accessKey) {
-        Boolean result = accessKeyClient.validateMyAccessKeyById(accessKey).getBody();
+    public boolean isSessionAccessKey(Long accessKeyId) {
+        Long sessionAccessKeyId = getIdentity().getAccessKeyId();
+        return Objects.equals(accessKeyId, sessionAccessKeyId);
+    }
+
+    public boolean accessKeyBelongsUser(Long accessKeyId) {
+        Boolean result = accessKeyClient.validateMyAccessKeyById(accessKeyId).getBody();
         return nullToFalse(result);
     }
 

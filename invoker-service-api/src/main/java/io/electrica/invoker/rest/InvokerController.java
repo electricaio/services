@@ -13,6 +13,6 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface InvokerController {
 
     @PostMapping(V1 + "/invokers/sync")
-    ResponseEntity<Boolean> invokeSync(@RequestBody InvocationContext context);
+    ResponseEntity<Object> invokeSync(@RequestBody InvocationContext context);
 
 }

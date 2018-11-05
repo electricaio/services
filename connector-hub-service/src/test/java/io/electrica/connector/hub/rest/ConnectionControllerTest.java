@@ -4,7 +4,12 @@ import com.google.common.collect.Sets;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.ConnectorDto;
 import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.CreateTokenAuthorizationDto;
+import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
+import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
+import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
 import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.test.context.ForUser;
@@ -19,10 +24,10 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 
 public class ConnectionControllerTest extends AbstractDatabaseTest {
@@ -32,6 +37,9 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
     @Inject
     private ConnectionControllerImpl connectionController;
+
+    @Inject
+    private AuthorizationControllerImpl authorizationController;
 
     @MockBean
     @Inject
@@ -223,5 +231,68 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     final List<ConnectionDto> result = connectionController.findAllByUser(3L).getBody();
                     assertEquals(0, result.size());
                 });
+    }
+
+    @Test
+    public void getFullConnectionTest() {
+
+        long accessKeyId = 12L;
+        AtomicLong connectionId = new AtomicLong();
+
+        createFullConnection(accessKeyId, connectionId);
+
+        executeForAccessKey(1, accessKeyId, () -> {
+            FullConnectionDto connectionDto = connectionController.getFull(connectionId.get()).getBody();
+
+            ConnectionDto connection = connectionDto.getConnection();
+            assertNotNull(connection);
+            assertEquals(connectionId.get(), connection.getId().longValue());
+            assertEquals(accessKeyId, connection.getAccessKeyId().longValue());
+
+            ConnectorDto connector = connectionDto.getConnector();
+            assertNotNull(connector);
+            assertEquals("HackerRank", connector.getName());
+
+            TypedAuthorizationDto authorization = connectionDto.getAuthorization();
+            assertNotNull(authorization);
+            assertTrue(authorization instanceof TokenTypedAuthorizationDto);
+            assertEquals("test", ((TokenTypedAuthorizationDto) authorization).getData().getToken());
+        });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getFullConnectionForAnotherAccessKeyDeniedTest() {
+
+        long accessKeyId = 12L;
+        AtomicLong connectionId = new AtomicLong();
+
+        createFullConnection(accessKeyId, connectionId);
+
+        executeForAccessKey(1, accessKeyId + 1, () -> {
+            connectionController.getFull(connectionId.get()).getBody();
+        });
+    }
+
+    private void createFullConnection(long accessKeyId, AtomicLong connectionId) {
+        executeForUser(
+                1,
+                1,
+                Sets.newHashSet(RoleType.SuperAdmin),
+                Sets.newHashSet(PermissionType.CreateConnector, PermissionType.AssociateAccessKeyToConnector),
+                () -> {
+                    Long connectorId = connectorController
+                            .create(createHackerRankConnectorDto())
+                            .getBody()
+                            .getId();
+
+                    CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId);
+                    doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+                    connectionId.set(connectionController.create(dto).getBody().getId());
+
+                    CreateTokenAuthorizationDto token = new CreateTokenAuthorizationDto();
+                    token.setToken("test");
+                    authorizationController.authorizeWithToken(connectionId.get(), token);
+                }
+        );
     }
 }

@@ -14,6 +14,7 @@ dependencies {
     compile project(':common')
     compile project(':invoker-service-api')
     compile project(':user-service-api')
+    compile project(':connector-hub-service-api')
     
     testCompile project(':common-test')
 }

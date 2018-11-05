@@ -1,5 +1,6 @@
 package io.electrica.connector.hub.service;
 
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.connector.hub.model.Authorization;
 import io.electrica.connector.hub.model.Connection;
@@ -24,6 +25,11 @@ public class ConnectionService extends AbstractService<Connection> {
         final Connector connector = getReference(Connector.class, newEntity.getConnector().getId());
         newEntity.setConnector(connector);
         return connectionRepository.save(newEntity);
+    }
+
+    public Connection findByIdWithConnectorAndAuthorization(Long connectionId) {
+        return connectionRepository.findByIdWithConnectorAndAuthorization(connectionId)
+                .orElseThrow(() -> new BadRequestServiceException("Connection not found: " + connectionId));
     }
 
     public List<Connection> findAllByUser(Long userId) {

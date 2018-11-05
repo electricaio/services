@@ -2,8 +2,11 @@ package io.electrica.connector.hub.rest;
 
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.service.dto.ConnectionDtoService;
+import io.electrica.connector.hub.service.dto.FullConnectionDtoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +19,14 @@ import java.util.List;
 public class ConnectionControllerImpl implements ConnectionController {
 
     private final ConnectionDtoService connectionDtoService;
+    private final FullConnectionDtoService fullConnectionDtoService;
 
-    public ConnectionControllerImpl(ConnectionDtoService connectionDtoService) {
+    public ConnectionControllerImpl(
+            ConnectionDtoService connectionDtoService,
+            FullConnectionDtoService fullConnectionDtoService
+    ) {
         this.connectionDtoService = connectionDtoService;
+        this.fullConnectionDtoService = fullConnectionDtoService;
     }
 
     @Override
@@ -40,6 +48,14 @@ public class ConnectionControllerImpl implements ConnectionController {
     @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND #connection.canUserAccess(#id)")
     public ResponseEntity<ConnectionDto> get(@PathVariable("id") Long id) {
         ConnectionDto result = connectionDtoService.findById(id, true);
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @PreAuthorize("#oauth2.hasScope('sdk')")
+    @PostAuthorize("#connection.isSessionAccessKey(returnObject.getBody().getConnection().getAccessKeyId())")
+    public ResponseEntity<FullConnectionDto> getFull(@PathVariable("id") Long id) {
+        FullConnectionDto result = fullConnectionDtoService.findById(id);
         return ResponseEntity.ok(result);
     }
 }
