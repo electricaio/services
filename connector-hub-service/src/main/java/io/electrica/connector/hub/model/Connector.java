@@ -1,6 +1,7 @@
 package io.electrica.connector.hub.model;
 
 import io.electrica.common.jpa.model.AbstractEntity;
+import io.electrica.connector.hub.dto.AuthorizationType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,13 +26,13 @@ import java.util.Optional;
 public class Connector extends AbstractEntity {
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "type_id", nullable = false)
     private ConnectorType type;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorization_type_id", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AuthorizationType authorizationType;
 
     @NotNull
@@ -40,7 +41,7 @@ public class Connector extends AbstractEntity {
     private String name;
 
     @Size(max = 255)
-    @Column(nullable = true)
+    @Column
     private String resource;
 
     @NotNull

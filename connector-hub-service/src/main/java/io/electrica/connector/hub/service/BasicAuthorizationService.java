@@ -1,50 +1,61 @@
 package io.electrica.connector.hub.service;
 
-import io.electrica.connector.hub.model.Authorization;
+import io.electrica.common.exception.BadRequestServiceException;
+import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.connector.hub.dto.AuthorizationType;
 import io.electrica.connector.hub.model.BasicAuthorization;
-import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
+import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.repository.BasicAuthorizationRepository;
-import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class BasicAuthorizationService {
+public class BasicAuthorizationService extends AbstractService<BasicAuthorization> {
 
-    private final AuthorizationService authorizationService;
     private final BasicAuthorizationRepository basicAuthorizationRepository;
+    private final ConnectionService connectionService;
 
-    public BasicAuthorizationService(AuthorizationService authorizationRepository,
-                                     BasicAuthorizationRepository basicAuthorizationRepository) {
-        this.authorizationService = authorizationRepository;
+    public BasicAuthorizationService(
+            BasicAuthorizationRepository basicAuthorizationRepository,
+            ConnectionService connectionService
+    ) {
         this.basicAuthorizationRepository = basicAuthorizationRepository;
+        this.connectionService = connectionService;
     }
 
-    /**
-     * Given the connection id,
-     * it fetches or creates authorization if not exists.
-     * <p>
-     * For that authorization id,
-     * it fetches the corresponding basic authorization if exists
-     * and sets the new credentials if they have changed.
-     * <p>
-     * If basic authorization does not exists, it creates a new one.
-     */
     @Transactional
-    public Authorization upsert(Long connectionId, CreateBasicAuthorizationDto dto) {
+    public BasicAuthorization createAndAssignToConnection(Long connectionId, BasicAuthorization authorization) {
+        Connection connection = connectionService.findById(connectionId, true);
+        if (connection.getAuthorization() != null) {
+            throw new BadRequestServiceException("Authorization already exist, use update");
+        }
 
-        final Authorization authorization = authorizationService
-                .createIfAbsent(connectionId, AuthorizationTypeName.BASIC_AUTHORIZATION, dto);
+        // ToDo can be optimized fetching connector
+        AuthorizationType authorizationType = connection.getConnector().getAuthorizationType();
+        if (authorizationType != AuthorizationType.Basic) {
+            throw new BadRequestServiceException("Connector has another authorization type: " + authorizationType);
+        }
 
-        final BasicAuthorization basicAuthorization = basicAuthorizationRepository
-                .findOneByAuthorizationId(authorization.getId())
-                .orElse(new BasicAuthorization());
+        BasicAuthorization result = create(authorization);
+        connection.setAuthorization(result);
+        connectionService.update(connectionId, connection);
+        return result;
+    }
 
-        basicAuthorization.setAuthorization(authorization);
-        basicAuthorization.setUserHash(dto.getUser());
-        basicAuthorization.setPasswordHash(dto.getPassword());
-        basicAuthorizationRepository.save(basicAuthorization);
+    @Override
+    protected BasicAuthorization executeCreate(BasicAuthorization newEntity) {
+        return basicAuthorizationRepository.save(newEntity);
+    }
 
-        return authorization;
+    @Override
+    protected void executeUpdate(BasicAuthorization merged, BasicAuthorization update) {
+        merged.setUsername(update.getUsername());
+        merged.setPassword(update.getPassword());
+    }
+
+    @Override
+    protected JpaRepository<BasicAuthorization, Long> getRepository() {
+        return basicAuthorizationRepository;
     }
 }

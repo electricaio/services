@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 /**
  * Organization controller implementation.
@@ -27,7 +28,7 @@ public class OrganizationControllerImpl implements OrganizationController {
     }
 
     @Override
-    public ResponseEntity<OrganizationDto> createIfAbsent(@RequestBody CreateOrganizationDto dto) {
+    public ResponseEntity<OrganizationDto> createIfAbsent(@Valid @RequestBody CreateOrganizationDto dto) {
         logger.debug("REST request to save User : {}", dto);
         OrganizationDto result = organizationDtoService.createIfAbsent(dto);
         return ResponseEntity.ok(result);

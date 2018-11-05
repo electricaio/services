@@ -1,33 +1,27 @@
 package io.electrica.connector.hub.model;
 
-import io.electrica.common.jpa.model.AbstractEntity;
+import io.electrica.connector.hub.dto.AuthorizationType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
 
-@Audited
 @Entity
-@Table(name = "token_authorizations")
-public class TokenAuthorization extends AbstractEntity {
+@Audited
+@DiscriminatorValue(AuthorizationType.TOKEN)
+public class TokenAuthorization extends Authorization {
 
     @NotNull
     @Size(max = 255)
-    @Column(nullable = false)
+    @Column
     private String token;
 
-    @NotNull
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorization_id", nullable = false)
-    private Authorization authorization;
 }

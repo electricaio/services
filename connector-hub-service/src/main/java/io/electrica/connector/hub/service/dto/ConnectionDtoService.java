@@ -1,18 +1,19 @@
-package io.electrica.connector.hub.service;
+package io.electrica.connector.hub.service.dto;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.connector.hub.model.Connection;
-import io.electrica.connector.hub.rest.dto.ConnectDto;
-import io.electrica.connector.hub.rest.dto.ConnectionDto;
+import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.ConnectionDto;
+import io.electrica.connector.hub.service.ConnectionService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ConnectionDtoService extends AbstractDtoService<Connection, ConnectDto, ConnectionDto> {
+public class ConnectionDtoService extends AbstractDtoService<Connection, CreateConnectionDto, ConnectionDto> {
 
     private final IdentityContextHolder identityContextHolder;
 
@@ -24,7 +25,7 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, Connect
     }
 
     @Override
-    public ConnectionDto create(ConnectDto persistentDto) {
+    public ConnectionDto create(CreateConnectionDto persistentDto) {
         final Connection connection = toCreateEntity(persistentDto);
 
         final Identity identity = identityContextHolder.getIdentity();

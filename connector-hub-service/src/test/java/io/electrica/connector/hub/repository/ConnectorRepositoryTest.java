@@ -1,12 +1,11 @@
 package io.electrica.connector.hub.repository;
 
 import io.electrica.common.helper.ERNUtils;
+import io.electrica.connector.hub.dto.AuthorizationType;
 import io.electrica.connector.hub.model.Connector;
 import io.electrica.connector.hub.model.ConnectorType;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import static io.electrica.connector.hub.model.enums.AuthorizationTypeName.BASIC_AUTHORIZATION;
 
 public class ConnectorRepositoryTest extends AbstractDatabaseTest {
 
@@ -31,9 +30,7 @@ public class ConnectorRepositoryTest extends AbstractDatabaseTest {
         first.setVersion(version);
         first.setNamespace(namespace);
         first.setErn(ern);
-        first.setAuthorizationType(
-                findAuthorizationType(BASIC_AUTHORIZATION)
-        );
+        first.setAuthorizationType(AuthorizationType.Basic);
         connectorRepository.saveAndFlush(first);
 
         final Connector second = new Connector();
@@ -42,9 +39,7 @@ public class ConnectorRepositoryTest extends AbstractDatabaseTest {
         second.setVersion(version);
         second.setNamespace(namespace);
         second.setErn(ern);
-        second.setAuthorizationType(
-                findAuthorizationType(BASIC_AUTHORIZATION)
-        );
+        second.setAuthorizationType(AuthorizationType.Basic);
         connectorRepository.saveAndFlush(second);
     }
 }

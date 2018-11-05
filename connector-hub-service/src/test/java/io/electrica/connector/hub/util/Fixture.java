@@ -1,12 +1,9 @@
 package io.electrica.connector.hub.util;
 
-import io.electrica.connector.hub.model.AuthorizationType;
+import io.electrica.connector.hub.dto.AuthorizationType;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
 import io.electrica.connector.hub.model.ConnectorType;
-import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
-import io.electrica.connector.hub.repository.AuthorizationTypeRepository;
-import io.electrica.connector.hub.repository.ConnectionRepository;
 import io.electrica.connector.hub.repository.ConnectorTypeRepository;
-import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
 
 public interface Fixture {
 
@@ -18,9 +15,7 @@ public interface Fixture {
         dto.setTypeId(
                 findConnectorType("Talent").getId()
         );
-        dto.setAuthorizationTypeId(
-                findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION).getId()
-        );
+        dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.0");
         return dto;
     }
@@ -32,9 +27,7 @@ public interface Fixture {
         dto.setTypeId(
                 findConnectorType("Talent").getId()
         );
-        dto.setAuthorizationTypeId(
-                findAuthorizationType(AuthorizationTypeName.TOKEN_AUTHORIZATION).getId()
-        );
+        dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.1");
         return dto;
     }
@@ -46,21 +39,9 @@ public interface Fixture {
         dto.setTypeId(
                 findConnectorType("Foundation").getId()
         );
-        dto.setAuthorizationTypeId(
-                findAuthorizationType(AuthorizationTypeName.BASIC_AUTHORIZATION).getId()
-        );
+        dto.setAuthorizationType(AuthorizationType.Basic);
         dto.setVersion("5.6");
         return dto;
-    }
-
-    default AuthorizationType findAuthorizationType(AuthorizationTypeName name) {
-        return getAuthorizationTypeRepository().findAll()
-                .stream()
-                .filter(at -> at.getName().equals(name))
-                .findAny()
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Authorization type with passed name does not exist.")
-                );
     }
 
     default ConnectorType findConnectorType(String name) {
@@ -73,9 +54,6 @@ public interface Fixture {
                 );
     }
 
-    ConnectionRepository getConnectionRepository();
-
     ConnectorTypeRepository getConnectorTypeRepository();
 
-    AuthorizationTypeRepository getAuthorizationTypeRepository();
 }

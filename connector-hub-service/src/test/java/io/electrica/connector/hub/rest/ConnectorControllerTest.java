@@ -2,10 +2,10 @@ package io.electrica.connector.hub.rest;
 
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
+import io.electrica.connector.hub.dto.ConnectorDto;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
 import io.electrica.connector.hub.model.ConnectorType;
 import io.electrica.connector.hub.repository.AbstractDatabaseTest;
-import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
-import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
 import io.electrica.connector.hub.service.ConnectorService;
 import io.electrica.test.context.ForUser;
 import org.junit.Before;
@@ -23,9 +23,6 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
     @Inject
     private ConnectorControllerImpl connectorController;
-
-    @Inject
-    private ConnectionControllerImpl connectionController;
 
     @Inject
     private ConnectorService connectorService;
@@ -47,7 +44,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
     )
     public void testCreateConnectorWithSuccess() {
         final CreateConnectorDto dto = createHackerRankConnectorDto();
-        final ReadConnectorDto actual = connectorController.create(dto).getBody();
+        final ConnectorDto actual = connectorController.create(dto).getBody();
 
         assertNotNull(actual.getId());
         assertNotNull(actual.getRevisionVersion());
@@ -73,20 +70,6 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
     public void testCreateConnectorWithNonExistingSTLType() {
         final CreateConnectorDto dto = createHackerRankConnectorDto();
         dto.setTypeId(-1L);
-        connectorController.create(dto).getBody();
-        connectorRepository.flush();
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    @ForUser(
-            userId = 1,
-            organizationId = 1,
-            roles = RoleType.SuperAdmin,
-            permissions = PermissionType.CreateConnector
-    )
-    public void testCreateConnectorWithNonExistingAuthType() {
-        final CreateConnectorDto dto = createHackerRankConnectorDto();
-        dto.setAuthorizationTypeId(-1L);
         connectorController.create(dto).getBody();
         connectorRepository.flush();
     }
@@ -124,10 +107,10 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
         final CreateConnectorDto createHackerRankSTLDto = createHackerRankConnectorDto();
         connectorController.create(createHackerRankSTLDto);
 
-        final ReadConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
+        final ConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
         connectorService.archive(greenHouseDto.getId());
 
-        final List<ReadConnectorDto> actual = connectorController.findAll().getBody();
+        final List<ConnectorDto> actual = connectorController.findAll().getBody();
 
         assertEquals(1, actual.size());
         assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());

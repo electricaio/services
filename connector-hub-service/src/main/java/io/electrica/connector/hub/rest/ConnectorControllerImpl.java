@@ -1,8 +1,8 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
-import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
-import io.electrica.connector.hub.service.ConnectorDtoService;
+import io.electrica.connector.hub.dto.ConnectorDto;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
+import io.electrica.connector.hub.service.dto.ConnectorDtoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +21,15 @@ public class ConnectorControllerImpl implements ConnectorController {
     }
 
     @Override
-    public ResponseEntity<List<ReadConnectorDto>> findAll() {
-        final List<ReadConnectorDto> result = connectorDtoService.findAll();
-        return ResponseEntity.ok().body(result);
+    public ResponseEntity<List<ConnectorDto>> findAll() {
+        final List<ConnectorDto> result = connectorDtoService.findAll();
+        return ResponseEntity.ok(result);
     }
 
     @Override
     @PreAuthorize(" #common.hasPermission('CreateConnector') AND #common.isSuperAdmin() ")
-    public ResponseEntity<ReadConnectorDto> create(@Valid @RequestBody CreateConnectorDto dto) {
-        final ReadConnectorDto result = connectorDtoService.create(dto);
-        return ResponseEntity.ok().body(result);
+    public ResponseEntity<ConnectorDto> create(@Valid @RequestBody CreateConnectorDto dto) {
+        final ConnectorDto result = connectorDtoService.create(dto);
+        return ResponseEntity.ok(result);
     }
 }

@@ -1,48 +1,60 @@
 package io.electrica.connector.hub.service;
 
-import io.electrica.connector.hub.model.Authorization;
+import io.electrica.common.exception.BadRequestServiceException;
+import io.electrica.common.jpa.service.AbstractService;
+import io.electrica.connector.hub.dto.AuthorizationType;
+import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.model.TokenAuthorization;
-import io.electrica.connector.hub.model.enums.AuthorizationTypeName;
 import io.electrica.connector.hub.repository.TokenAuthorizationRepository;
-import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class TokenAuthorizationService {
+public class TokenAuthorizationService extends AbstractService<TokenAuthorization> {
 
-    private final AuthorizationService authorizationService;
     private final TokenAuthorizationRepository tokenAuthorizationRepository;
+    private final ConnectionService connectionService;
 
-    public TokenAuthorizationService(AuthorizationService authorizationService,
-                                     TokenAuthorizationRepository tokenAuthorizationRepository) {
-        this.authorizationService = authorizationService;
+    public TokenAuthorizationService(
+            TokenAuthorizationRepository tokenAuthorizationRepository,
+            ConnectionService connectionService
+    ) {
         this.tokenAuthorizationRepository = tokenAuthorizationRepository;
+        this.connectionService = connectionService;
     }
 
-    /**
-     * Given the connection id,
-     * it fetches or creates authorization if not exists.
-     * <p>
-     * For that authorization id,
-     * it fetches the corresponding token authorization if exists
-     * and sets the token if it has changed.
-     * <p>
-     * If token authorization does not exists, it creates a new one.
-     */
     @Transactional
-    public Authorization upsert(Long connectionId, CreateTokenAuthorizationDto dto) {
+    public TokenAuthorization createAndAssignToConnection(Long connectionId, TokenAuthorization authorization) {
+        Connection connection = connectionService.findById(connectionId, true);
+        if (connection.getAuthorization() != null) {
+            throw new BadRequestServiceException("Authorization already exist, use update");
+        }
 
-        final Authorization authorization =
-                authorizationService.createIfAbsent(connectionId, AuthorizationTypeName.TOKEN_AUTHORIZATION, dto);
+        // ToDo can be optimized fetching connector
+        AuthorizationType authorizationType = connection.getConnector().getAuthorizationType();
+        if (authorizationType != AuthorizationType.Token) {
+            throw new BadRequestServiceException("Connector has another authorization type: " + authorizationType);
+        }
 
-        final TokenAuthorization tokenAuthorization = tokenAuthorizationRepository
-                .findOneByAuthorizationId(authorization.getId())
-                .orElse(new TokenAuthorization());
+        TokenAuthorization result = create(authorization);
+        connection.setAuthorization(result);
+        connectionService.update(connectionId, connection);
+        return result;
+    }
 
-        tokenAuthorization.setToken(dto.getToken());
-        tokenAuthorization.setAuthorization(authorization);
-        tokenAuthorizationRepository.save(tokenAuthorization);
-        return authorization;
+    @Override
+    protected TokenAuthorization executeCreate(TokenAuthorization newEntity) {
+        return tokenAuthorizationRepository.save(newEntity);
+    }
+
+    @Override
+    protected void executeUpdate(TokenAuthorization merged, TokenAuthorization update) {
+        merged.setToken(update.getToken());
+    }
+
+    @Override
+    protected JpaRepository<TokenAuthorization, Long> getRepository() {
+        return tokenAuthorizationRepository;
     }
 }

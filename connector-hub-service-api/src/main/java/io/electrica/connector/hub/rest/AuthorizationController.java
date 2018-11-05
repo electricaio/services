@@ -1,21 +1,15 @@
 package io.electrica.connector.hub.rest;
 
-import io.electrica.connector.hub.rest.dto.CreateBasicAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.CreateTokenAuthorizationDto;
-import io.electrica.connector.hub.rest.dto.ReadAuthorizationDto;
+import io.electrica.connector.hub.dto.BasicAuthorizationDto;
+import io.electrica.connector.hub.dto.CreateBasicAuthorizationDto;
+import io.electrica.connector.hub.dto.CreateTokenAuthorizationDto;
+import io.electrica.connector.hub.dto.TokenAuthorizationDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 import static io.electrica.common.rest.PathConstants.V1;
 
 public interface AuthorizationController {
-
-    @GetMapping(V1 + "/connections/{connectionId}/authorizations")
-    ResponseEntity<List<ReadAuthorizationDto>> findAll(@PathVariable("connectionId") Long connectionId);
 
     /**
      * Given the authorization data,
@@ -25,8 +19,10 @@ public interface AuthorizationController {
      * they will replace the old one.
      */
     @PostMapping(V1 + "/connections/{connectionId}/authorizations/basic")
-    ResponseEntity<ReadAuthorizationDto> authorizeWithUserAndPassword(@PathVariable("connectionId") Long connectionId,
-                                                                      CreateBasicAuthorizationDto request);
+    ResponseEntity<BasicAuthorizationDto> authorizeWithBasic(
+            @PathVariable("connectionId") Long connectionId,
+            @RequestBody CreateBasicAuthorizationDto dto
+    );
 
     /**
      * Given the authorization data,
@@ -36,6 +32,26 @@ public interface AuthorizationController {
      * they will replace the old one.
      */
     @PostMapping(V1 + "/connections/{connectionId}/authorizations/token")
-    ResponseEntity<ReadAuthorizationDto> authorizeWithToken(@PathVariable("connectionId") Long connectionId,
-                                                            CreateTokenAuthorizationDto request);
+    ResponseEntity<TokenAuthorizationDto> authorizeWithToken(
+            @PathVariable("connectionId") Long connectionId,
+            @RequestBody CreateTokenAuthorizationDto dto
+    );
+
+    @GetMapping(V1 + "/authorizations/{id}/basic")
+    ResponseEntity<BasicAuthorizationDto> getBasic(@PathVariable("id") Long id);
+
+    @GetMapping(V1 + "/authorizations/{id}/token")
+    ResponseEntity<TokenAuthorizationDto> getToken(@PathVariable("id") Long id);
+
+    @PutMapping(V1 + "/authorizations/{id}/basic")
+    ResponseEntity<BasicAuthorizationDto> updateBasic(
+            @PathVariable("id") Long id,
+            @RequestBody BasicAuthorizationDto dto
+    );
+
+    @PutMapping(V1 + "/authorizations/{id}/token")
+    ResponseEntity<TokenAuthorizationDto> updateToken(
+            @PathVariable("id") Long id,
+            @RequestBody TokenAuthorizationDto dto
+    );
 }

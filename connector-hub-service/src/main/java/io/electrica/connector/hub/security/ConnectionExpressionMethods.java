@@ -33,7 +33,12 @@ public class ConnectionExpressionMethods {
 
     public boolean canUserAccess(Long connectionId) {
         final Long userId = getIdentity().getUserId();
-        return connectionRepository.exists(connectionId, userId);
+        return connectionRepository.canUserAccessConnection(connectionId, userId);
+    }
+
+    public boolean canUserAccessAuthorization(Long authorizationId) {
+        final Long userId = getIdentity().getUserId();
+        return connectionRepository.canUserAccessAuthorization(authorizationId, userId);
     }
 
     public boolean accessKeyBelongsUser(Long accessKey) {

@@ -1,17 +1,18 @@
-package io.electrica.connector.hub.service;
+package io.electrica.connector.hub.service.dto;
 
 import com.github.dozermapper.core.Mapper;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.connector.hub.model.Connector;
-import io.electrica.connector.hub.rest.dto.CreateConnectorDto;
-import io.electrica.connector.hub.rest.dto.ReadConnectorDto;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
+import io.electrica.connector.hub.dto.ConnectorDto;
+import io.electrica.connector.hub.service.ConnectorService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ConnectorDtoService extends AbstractDtoService<Connector, CreateConnectorDto, ReadConnectorDto> {
+public class ConnectorDtoService extends AbstractDtoService<Connector, CreateConnectorDto, ConnectorDto> {
 
     private final ConnectorService connectorService;
 
@@ -20,7 +21,7 @@ public class ConnectorDtoService extends AbstractDtoService<Connector, CreateCon
         this.connectorService = connectorService;
     }
 
-    public List<ReadConnectorDto> findAll() {
+    public List<ConnectorDto> findAll() {
         return toDto(connectorService.findAll());
     }
 
@@ -35,7 +36,7 @@ public class ConnectorDtoService extends AbstractDtoService<Connector, CreateCon
     }
 
     @Override
-    protected Class<ReadConnectorDto> getDtoClass() {
-        return ReadConnectorDto.class;
+    protected Class<ConnectorDto> getDtoClass() {
+        return ConnectorDto.class;
     }
 }

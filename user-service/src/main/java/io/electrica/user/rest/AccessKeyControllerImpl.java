@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     @Override
     @PreAuthorize("#common.hasPermission('CreateAccessKey') AND  " +
             "( #common.isSuperAdmin() OR #common.isUser(#accessKey.getUserId()) )")
-    public ResponseEntity<AccessKeyDto> createAccessKey(@RequestBody CreateAccessKeyDto accessKey) {
+    public ResponseEntity<AccessKeyDto> createAccessKey(@Valid @RequestBody CreateAccessKeyDto accessKey) {
         AccessKeyDto result = accessKeyDtoService.create(accessKey);
         return ResponseEntity.ok(result);
     }

@@ -25,7 +25,7 @@ public class PermissionCategories extends AbstractEntity {
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "permission_id", nullable = false)
     private Permission permission;
 
