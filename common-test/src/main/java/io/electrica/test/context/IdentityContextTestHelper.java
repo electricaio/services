@@ -16,15 +16,26 @@ public class IdentityContextTestHelper {
     private IdentityContextTestHelper() {
     }
 
+    private static Authentication createAuthentication(
+            long userId,
+            Collection<? extends GrantedAuthority> authorities
+    ) {
+        String tokenUsername = TokenHelper.buildIdTokenUsername(userId);
+        return new UsernamePasswordAuthenticationToken(tokenUsername, null, authorities);
+    }
+
     public static Authentication createAuthentication(
             long userId,
             Long organizationId,
             Set<RoleType> roles,
             Set<PermissionType> permissions
     ) {
-        String tokenUsername = TokenHelper.buildIdTokenUsername(userId);
         Collection<? extends GrantedAuthority> authorities =
                 AuthorityHelper.buildGrantedAuthorities(organizationId, roles, permissions);
-        return new UsernamePasswordAuthenticationToken(tokenUsername, null, authorities);
+        return createAuthentication(userId, authorities);
+    }
+
+    public static Authentication createAccessKeyAuthentication(long userId, Long accessKeyId) {
+        return createAuthentication(userId, AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId));
     }
 }

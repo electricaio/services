@@ -33,6 +33,10 @@ public interface Identity {
         throw new UnsupportedOperationException();
     }
 
+    default Long getAccessKeyId() {
+        throw new UnsupportedOperationException();
+    }
+
     default long getTokenIssuedAt() {
         throw new UnsupportedOperationException();
     }
