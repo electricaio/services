@@ -1,6 +1,6 @@
-package io.electrica.invoker.dto;
+package io.electrica.connector.dto;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,11 +18,8 @@ public class InvocationContext {
     private Long connectionId;
 
     @NotNull
-    @JsonRawValue
-    private String parameters;
+    private JsonNode parameters;
 
-    @NotNull
-    @JsonRawValue
-    private String data;
+    private JsonNode payload;
 
 }

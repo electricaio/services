@@ -11,6 +11,7 @@ apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     compile project(':common-api')
+    compile project(':connector-service-api')
 }
 
 dependencyManagement {
