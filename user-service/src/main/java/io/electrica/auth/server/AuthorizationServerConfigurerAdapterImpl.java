@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import java.util.UUID;
 
 import static io.electrica.common.helper.AuthorityConstants.*;
+import static io.electrica.common.helper.AuthorityConstants.FRONTEND_CLIENT_ID;
 
 /**
  * AuthorizationServerConfigurerAdapterImpl provides implementation for Authorization server.

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
@@ -31,6 +32,13 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
     )
     Boolean canUserAccessAuthorization(@Param("authorizationId") Long authorizationId, @Param("userId") Long userId);
 
+    @Query("" +
+            " from Connection c" +
+            "   left join fetch c.connector cn" +
+            "   left join fetch c.authorization a" +
+            " where c.id = :connectionId and c.archived is false"
+    )
+    Optional<Connection> findByIdWithConnectorAndAuthorization(@Param("connectionId") Long connectionId);
 
     @Query("FROM Connection c WHERE c.userId=:userId AND c.archived=FALSE order by c.name")
     List<Connection> findAllByUser(@Param("userId") Long userId);
