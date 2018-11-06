@@ -3,10 +3,7 @@ package io.electrica.connector.hub.rest;
 import com.google.common.collect.Sets;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
-import io.electrica.connector.hub.dto.ConnectionDto;
-import io.electrica.connector.hub.dto.ConnectorDto;
-import io.electrica.connector.hub.dto.CreateConnectionDto;
-import io.electrica.connector.hub.dto.CreateTokenAuthorizationDto;
+import io.electrica.connector.hub.dto.*;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
 import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
@@ -151,32 +148,10 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
     @Test
     public void testFindAllByUser() {
 
-        final AtomicReference<Long> cnHackerRank =
-                new AtomicReference<>();
-        final AtomicReference<Long> cnGreenhouse =
-                new AtomicReference<>();
-        final AtomicReference<Long> cnMySQL =
-                new AtomicReference<>();
+        final AtomicReference<Long> cnHackerRank = createHackerRankConnector();
+        final AtomicReference<Long> cnGreenhouse = createGreenHousekConnector();
+        final AtomicReference<Long> cnMySQL = createMySQLConnector();
 
-        // create connectors as super admin
-        executeForUser(-1, -1,
-                Sets.newHashSet(RoleType.SuperAdmin),
-                Sets.newHashSet(PermissionType.CreateConnector),
-                () -> {
-                    cnHackerRank.set(connectorController
-                            .create(createHackerRankConnectorDto())
-                            .getBody().getId()
-                    );
-                    cnGreenhouse.set(connectorController
-                            .create(createGreenhouseConnectorDto())
-                            .getBody().getId()
-                    );
-                    cnMySQL.set(connectorController
-                            .create(createMySQLConnectorDto())
-                            .getBody().getId()
-                    );
-                }
-        );
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgAdmin),
@@ -294,5 +269,70 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     authorizationController.authorizeWithToken(connectionId.get(), token);
                 }
         );
+    }
+
+    @Test
+    public void testForGetConnectionsForMeSuccess() {
+        final AtomicReference<Long> cnHackerRank = createHackerRankConnector();
+        final AtomicReference<Long> cnGreenhouse = createGreenHousekConnector();
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKey();
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.AssociateAccessKeyToConnector,
+                        PermissionType.ReadActiveConnection), () -> {
+                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L));
+                    connectionController.create(new CreateConnectionDto("Test1", null, cnHackerRank.get(), 1L));
+                    connectionController.create(new CreateConnectionDto("Test2", null, cnHackerRank.get(), 2L));
+                });
+        executeForUser(2, 2,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.AssociateAccessKeyToConnector,
+                        PermissionType.ReadActiveConnection), () -> {
+                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 3L));
+                });
+        executeForAccessKey(1, 1, () -> {
+            List<ConnectionDto> result = connectionController.findAllByMe(null).getBody();
+            assertEquals(2, result.size());
+            assertEquals("Default", result.get(0).name);
+            assertEquals("Test1", result.get(1).name);
+            result = connectionController.findAllByMe("Test1").getBody();
+            assertEquals(1, result.size());
+            assertEquals("Test1", result.get(0).name);
+            result = connectionController.findAllByMe("Default").getBody();
+            assertEquals(1, result.size());
+            assertEquals("Default", result.get(0).name);
+            result = connectionController.findAllByMe("Test4").getBody();
+            assertEquals(0, result.size());
+        });
+    }
+
+    private AtomicReference<Long> createHackerRankConnector() {
+        return createConnector(createHackerRankConnectorDto());
+    }
+
+    private AtomicReference<Long> createGreenHousekConnector() {
+        return createConnector(createGreenhouseConnectorDto());
+    }
+
+    private AtomicReference<Long> createMySQLConnector() {
+        return createConnector(createMySQLConnectorDto());
+    }
+
+    private AtomicReference<Long> createConnector(CreateConnectorDto dto) {
+        final AtomicReference<Long> connector = new AtomicReference<>();
+        executeForUser(-1, -1,
+                Sets.newHashSet(RoleType.SuperAdmin),
+                Sets.newHashSet(PermissionType.CreateConnector),
+                () -> {
+                    connector.set(connectorController
+                            .create(dto)
+                            .getBody().getId()
+                    );
+                }
+        );
+        return connector;
     }
 }

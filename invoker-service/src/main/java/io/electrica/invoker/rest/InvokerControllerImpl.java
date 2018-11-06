@@ -26,4 +26,10 @@ public class InvokerControllerImpl implements InvokerController {
         Object result = invokerService.invokeSync(context);
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    @PreAuthorize("#invoker.validateAccessKey()")
+    public ResponseEntity<Object> getConnections(String connectionName) {
+        return ResponseEntity.ok(invokerService.getConnection(connectionName));
+    }
 }

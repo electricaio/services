@@ -58,4 +58,10 @@ public class ConnectionControllerImpl implements ConnectionController {
         FullConnectionDto result = fullConnectionDtoService.findById(id);
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    public ResponseEntity<List<ConnectionDto>> findAllByMe(String connectionName) {
+        final List<ConnectionDto> result = connectionDtoService.findAllByMe(connectionName);
+        return ResponseEntity.ok(result);
+    }
 }

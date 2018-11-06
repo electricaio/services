@@ -47,6 +47,10 @@ public class ConnectionService extends AbstractService<Connection> {
         }
     }
 
+    public List<Connection> findAllByMe(Long accessKeyId, String connectionName) {
+        return connectionRepository.findAllWithSearch(accessKeyId, connectionName);
+    }
+
     @Override
     protected JpaRepository<Connection, Long> getRepository() {
         return connectionRepository;

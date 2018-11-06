@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ConnectionRepository extends JpaRepository<Connection, Long> {
+public interface ConnectionRepository extends JpaRepository<Connection, Long>, ConnectionRepositoryCustom {
 
     @Query(
             value = "" +
