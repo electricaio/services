@@ -33,6 +33,10 @@ public class SwaggerConfig {
     @Inject
     private EnvironmentType environmentType;
 
+    @Inject
+    @Value("${common.swagger.host:}")
+    private String swaggerHost;
+
     @Bean
     public Docket apiDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -44,6 +48,7 @@ public class SwaggerConfig {
                         !RequestHelper.isErrorPath(input)
                 )
                 .build()
+                .host(swaggerHost)
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, Arrays.asList(

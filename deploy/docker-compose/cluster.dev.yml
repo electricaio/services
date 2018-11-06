@@ -5,6 +5,7 @@ services:
     image: ${ECR_HOST}electrica/user-service:dev
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
       - 25022:5005
 
@@ -12,6 +13,7 @@ services:
     image: ${ECR_HOST}electrica/connector-hub-service:dev
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
       - 25023:5005
 
@@ -19,6 +21,7 @@ services:
     image: ${ECR_HOST}electrica/invoker-service:dev
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
       - 25024:5005
 
@@ -26,6 +29,7 @@ services:
     image: ${ECR_HOST}electrica/connector-service:dev
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
       - 25025:5005
 
