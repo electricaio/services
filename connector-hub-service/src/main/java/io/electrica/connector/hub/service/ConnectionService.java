@@ -7,6 +7,7 @@ import io.electrica.connector.hub.model.Connection;
 import io.electrica.connector.hub.model.Connector;
 import io.electrica.connector.hub.repository.ConnectionRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -47,8 +48,10 @@ public class ConnectionService extends AbstractService<Connection> {
         }
     }
 
-    public List<Connection> findAllByMe(Long accessKeyId, String connectionName) {
-        return connectionRepository.findAllWithSearch(accessKeyId, connectionName);
+    public List<Connection> findAllByAccessKey(Long accessKeyId,
+                                               @Nullable String connectionName,
+                                               @Nullable String ern) {
+        return connectionRepository.findByAccessKeyWithFilter(accessKeyId, connectionName, ern);
     }
 
     @Override

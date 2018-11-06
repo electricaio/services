@@ -149,7 +149,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
     public void testFindAllByUser() {
 
         final AtomicReference<Long> cnHackerRank = createHackerRankConnector();
-        final AtomicReference<Long> cnGreenhouse = createGreenHousekConnector();
+        final AtomicReference<Long> cnGreenhouse = createGreenHouseConnector();
         final AtomicReference<Long> cnMySQL = createMySQLConnector();
 
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
@@ -274,9 +274,10 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
     @Test
     public void testForGetConnectionsForMeSuccess() {
         final AtomicReference<Long> cnHackerRank = createHackerRankConnector();
-        final AtomicReference<Long> cnGreenhouse = createGreenHousekConnector();
+        final AtomicReference<Long> cnGreenhouse = createGreenHouseConnector();
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKey();
+
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(
@@ -291,21 +292,27 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 3L));
+                    connectionController.create(new CreateConnectionDto("Default", null,
+                            cnGreenhouse.get(), 3L));
                 });
         executeForAccessKey(1, 1, () -> {
-            List<ConnectionDto> result = connectionController.findAllByMe(null).getBody();
+            List<ConnectionDto> result = connectionController.findAllByAccessKey(null, null).getBody();
             assertEquals(2, result.size());
             assertEquals("Default", result.get(0).name);
             assertEquals("Test1", result.get(1).name);
-            result = connectionController.findAllByMe("Test1").getBody();
+            result = connectionController.findAllByAccessKey("Test1", null).getBody();
             assertEquals(1, result.size());
             assertEquals("Test1", result.get(0).name);
-            result = connectionController.findAllByMe("Default").getBody();
+            result = connectionController.findAllByAccessKey("Default", null).getBody();
             assertEquals(1, result.size());
             assertEquals("Default", result.get(0).name);
-            result = connectionController.findAllByMe("Test4").getBody();
-            assertEquals(0, result.size());
+        });
+
+        executeForAccessKey(1, 1, () -> {
+            List<ConnectorDto> connectorDtoList = connectorController.findAll().getBody();
+            List<ConnectionDto> result = connectionController.findAllByAccessKey(null,
+                    connectorDtoList.get(0).getErn()).getBody();
+            assertEquals(1, result.size());
         });
     }
 
@@ -313,7 +320,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         return createConnector(createHackerRankConnectorDto());
     }
 
-    private AtomicReference<Long> createGreenHousekConnector() {
+    private AtomicReference<Long> createGreenHouseConnector() {
         return createConnector(createGreenhouseConnectorDto());
     }
 

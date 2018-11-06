@@ -6,10 +6,12 @@ import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.service.dto.ConnectionDtoService;
 import io.electrica.connector.hub.service.dto.FullConnectionDtoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -60,8 +62,11 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    public ResponseEntity<List<ConnectionDto>> findAllByMe(String connectionName) {
-        final List<ConnectionDto> result = connectionDtoService.findAllByMe(connectionName);
+    @PreAuthorize("#oauth2.hasScope('sdk')")
+    public ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
+            @RequestParam("connectionName") @Nullable String connectionName,
+            @RequestParam("connector") @Nullable String ern) {
+        final List<ConnectionDto> result = connectionDtoService.findAllByAccessKey(connectionName, ern);
         return ResponseEntity.ok(result);
     }
 }

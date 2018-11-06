@@ -29,9 +29,10 @@ public interface ConnectionController {
     @GetMapping(PRIVATE + V1 + "/connections/{id}")
     ResponseEntity<FullConnectionDto> getFull(@PathVariable("id") Long id);
 
-    @GetMapping(PRIVATE + V1 + "/connections/me")
-    ResponseEntity<List<ConnectionDto>> findAllByMe(
-            @RequestParam(value = "connectionName", required = false) String connectionName
+    @GetMapping(PRIVATE + V1 + "/connections/accessKey")
+    ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
+            @RequestParam(value = "connectionName", required = false) String connectionName,
+            @RequestParam(value = "connector", required = false) String connector
     );
 
 }
