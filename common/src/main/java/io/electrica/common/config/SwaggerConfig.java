@@ -34,8 +34,12 @@ public class SwaggerConfig {
     private EnvironmentType environmentType;
 
     @Inject
-    @Value("${common.swagger.host:}")
+    @Value("${common.swagger.host}")
     private String swaggerHost;
+
+    @Inject
+    @Value("${common.swagger.protocol}")
+    private String swaggerProtocol;
 
     @Bean
     public Docket apiDocket() {
@@ -49,6 +53,7 @@ public class SwaggerConfig {
                 )
                 .build()
                 .host(swaggerHost)
+                .protocols(Collections.singleton(swaggerProtocol))
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, Arrays.asList(
