@@ -1,6 +1,7 @@
 package io.electrica.invoker.rest;
 
-import io.electrica.invoker.dto.InvocationContext;
+import io.electrica.connector.dto.ConnectorExecutorResult;
+import io.electrica.connector.dto.InvocationContext;
 import io.electrica.invoker.service.InvokerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +23,8 @@ public class InvokerControllerImpl implements InvokerController {
 
     @Override
     @PreAuthorize("#oauth2.hasScope('sdk') and #invoker.validateAccessKey()")
-    public ResponseEntity<Object> invokeSync(@Valid @RequestBody InvocationContext context) {
-        Object result = invokerService.invokeSync(context);
+    public ResponseEntity<ConnectorExecutorResult> invokeSync(@Valid @RequestBody InvocationContext context) {
+        ConnectorExecutorResult result = invokerService.invokeSync(context);
         return ResponseEntity.ok(result);
     }
 }
