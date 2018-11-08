@@ -4,6 +4,7 @@ import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.CreateConnectionDto;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +32,8 @@ public interface ConnectionController {
 
     @GetMapping(PRIVATE + V1 + "/connections/accessKey")
     ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
-            @RequestParam(value = "connectionName", required = false) String connectionName,
-            @RequestParam(value = "connector", required = false) String connector
+            @RequestParam(value = "connectionName", required = false)@Nullable String connectionName,
+            @RequestParam(value = "connector", required = false)@Nullable  String connector
     );
 
 }

@@ -27,12 +27,10 @@ public class AccessKey extends AbstractEntity {
     @Size(max = 255)
     @Column(nullable = false)
     private String name;
-
-    @NotNull
+    
     @Column(nullable = true, unique = true)
     private UUID jti;
 
-    @NotNull
     @Size(max = 1023)
     @Column(nullable = true, length = 1023)
     private String key;
