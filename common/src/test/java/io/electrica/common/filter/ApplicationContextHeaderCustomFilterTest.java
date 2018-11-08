@@ -1,28 +1,28 @@
 package io.electrica.common.filter;
 
+import io.electrica.common.EnvironmentType;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static io.electrica.common.filter.ApplicationContextHeaderCustomFilter.buildHeaderValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 public class ApplicationContextHeaderCustomFilterTest {
 
     @Test
     public void doFilterInternal() throws Exception {
-        String contextId = "auth-service:dev";
-        String nodeId = "123123123";
+        String applicationName = "auth-service";
+        String nodeId = "817d88b8-eb38-4da7-839f-930d83d99e6f";
+        EnvironmentType environmentType = EnvironmentType.Development;
         String version = "0.0.1";
-
-        ApplicationContext context = mock(ApplicationContext.class);
-        when(context.getId()).thenReturn(contextId);
 
         AtomicBoolean checked = new AtomicBoolean();
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -31,12 +31,14 @@ public class ApplicationContextHeaderCustomFilterTest {
             assertEquals(headerName, ApplicationContextHeaderCustomFilter.HEADER_NAME);
 
             String headerValue = invocation.getArgument(1);
-            assertEquals(headerValue, version + ":" + contextId + ":" + nodeId);
+            String expectedValue = buildHeaderValue(environmentType, version, nodeId, applicationName);
+            assertEquals(expectedValue, headerValue);
             checked.set(true);
             return null;
         }).when(response).addHeader(any(String.class), any(String.class));
 
-        ApplicationContextHeaderCustomFilter f = new ApplicationContextHeaderCustomFilter(context, version, nodeId);
+        ApplicationContextHeaderCustomFilter f =
+                new ApplicationContextHeaderCustomFilter(environmentType, version, nodeId, applicationName);
         f.doFilterInternal(mock(HttpServletRequest.class), response, mock(FilterChain.class));
 
         assertTrue(checked.get());

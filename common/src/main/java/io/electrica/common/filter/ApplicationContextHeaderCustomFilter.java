@@ -1,11 +1,12 @@
 package io.electrica.common.filter;
 
 import com.google.common.annotations.VisibleForTesting;
+import io.electrica.common.EnvironmentType;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,12 +25,24 @@ public class ApplicationContextHeaderCustomFilter extends OncePerRequestFilter {
 
     private final String headerValue;
 
+    @Inject
     public ApplicationContextHeaderCustomFilter(
-            ApplicationContext context,
+            EnvironmentType environmentType,
             @Value("${common.service.version}") String version,
-            @Value("${common.service.id}") String nodeId
+            @Value("${common.service.id}") String nodeId,
+            @Value("${spring.application.name}") String applicationName
     ) {
-        headerValue = version + ":" + context.getId() + ":" + nodeId;
+        headerValue = buildHeaderValue(environmentType, version, nodeId, applicationName);
+    }
+
+    @VisibleForTesting
+    static String buildHeaderValue(
+            EnvironmentType environmentType,
+            String version,
+            String nodeId,
+            String applicationName
+    ) {
+        return String.format("%s:%s:%s:%s", environmentType, applicationName, version, nodeId);
     }
 
     @Override
