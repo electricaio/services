@@ -18,7 +18,9 @@ import javax.validation.constraints.Size;
 @Table(
         name = "connections",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name", "access_key_id"}),
-        indexes = @Index(name = "connections_user_id_idx", columnList = "user_id")
+        indexes = {@Index(name = "connections_user_id_idx", columnList = "user_id"),
+                @Index(name = "connections_access_key_id_idx", columnList = "access_key_id")
+        }
 )
 public class Connection extends AbstractEntity {
 

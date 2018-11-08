@@ -2,6 +2,7 @@ package io.electrica.invoker.rest;
 
 import io.electrica.connector.dto.ConnectorExecutorResult;
 import io.electrica.connector.dto.InvocationContext;
+import io.electrica.invoker.dto.TinyConnectionDto;
 import io.electrica.invoker.service.InvokerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class InvokerControllerImpl implements InvokerController {
@@ -26,5 +28,11 @@ public class InvokerControllerImpl implements InvokerController {
     public ResponseEntity<ConnectorExecutorResult> invokeSync(@Valid @RequestBody InvocationContext context) {
         ConnectorExecutorResult result = invokerService.invokeSync(context);
         return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @PreAuthorize("#oauth2.hasScope('sdk') and #invoker.validateAccessKey()")
+    public ResponseEntity<List<TinyConnectionDto>> getConnections(String connectionName, String ern) {
+        return ResponseEntity.ok(invokerService.getConnection(connectionName, ern));
     }
 }
