@@ -40,6 +40,19 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
     )
     Optional<Connection> findByIdWithConnectorAndAuthorization(@Param("connectionId") Long connectionId);
 
+    @Query("" +
+            " from Connection c " +
+            " left join fetch c.connector cn" +
+            " where c.accessKeyId = :accessKeyId and c.archived is false and " +
+            "(:connectionName is null or c.name = :connectionName)  and" +
+            " (:ern is null or cn.ern = :ern)" +
+            " order by c.name "
+    )
+    List<Connection> findByAccessKeyWithFilter(@Param("accessKeyId") Long accessKeyId,
+                                               @Param("connectionName") String connectionName,
+                                               @Param("ern") String ern);
+
+
     @Query("FROM Connection c WHERE c.userId=:userId AND c.archived=FALSE order by c.name")
     List<Connection> findAllByUser(@Param("userId") Long userId);
 }

@@ -804,4 +804,14 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: revinfo
+- changeSet:
+      id: 1541364491707-43
+      author: aleks (generated)
+      changes:
+      - createIndex:
+            columns:
+            - column:
+                  name: access_key_id
+            indexName: connections_access_key_id_idx
+            tableName: connections
 
