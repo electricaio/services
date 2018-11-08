@@ -65,7 +65,7 @@ public class ConnectionControllerImpl implements ConnectionController {
     @PreAuthorize("#oauth2.hasScope('sdk')")
     public ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
             @RequestParam("connectionName") @Nullable String connectionName,
-            @RequestParam("connector") @Nullable String ern) {
+            @RequestParam("ern") String ern) {
         final List<ConnectionDto> result = connectionDtoService.findAllByAccessKey(connectionName, ern);
         return ResponseEntity.ok(result);
     }

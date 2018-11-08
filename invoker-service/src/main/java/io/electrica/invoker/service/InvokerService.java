@@ -47,8 +47,8 @@ public class InvokerService {
     }
 
     @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
-    public List<TinyConnectionDto> getConnection(String connectionName, String connector) {
-        return toDto(connectionClient.findAllByAccessKey(connectionName, connector).getBody());
+    public List<TinyConnectionDto> getConnection(String connectionName, String ern) {
+        return toDto(connectionClient.findAllByAccessKey(connectionName, ern).getBody());
     }
 
     private List<TinyConnectionDto> toDto(List<ConnectionDto> fromList) {

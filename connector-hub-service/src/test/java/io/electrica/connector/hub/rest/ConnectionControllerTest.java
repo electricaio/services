@@ -296,23 +296,14 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                             cnGreenhouse.get(), 3L));
                 });
         executeForAccessKey(1, 1, () -> {
-            List<ConnectionDto> result = connectionController.findAllByAccessKey(null, null).getBody();
-            assertEquals(2, result.size());
-            assertEquals("Default", result.get(0).name);
-            assertEquals("Test1", result.get(1).name);
-            result = connectionController.findAllByAccessKey("Test1", null).getBody();
-            assertEquals(1, result.size());
-            assertEquals("Test1", result.get(0).name);
-            result = connectionController.findAllByAccessKey("Default", null).getBody();
-            assertEquals(1, result.size());
-            assertEquals("Default", result.get(0).name);
-        });
-
-        executeForAccessKey(1, 1, () -> {
             List<ConnectorDto> connectorDtoList = connectorController.findAll().getBody();
             List<ConnectionDto> result = connectionController.findAllByAccessKey(null,
                     connectorDtoList.get(0).getErn()).getBody();
             assertEquals(1, result.size());
+            result = connectionController.findAllByAccessKey("Default",
+                    connectorDtoList.get(0).getErn()).getBody();
+            assertEquals(1, result.size());
+            assertEquals("Default", result.get(0).name);
         });
     }
 

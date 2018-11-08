@@ -24,5 +24,5 @@ public interface InvokerController {
     @GetMapping(V1 + "/sdk/connections")
     ResponseEntity<List<TinyConnectionDto>> getConnections(
             @RequestParam(value = "connectionName", required = false) String connectionName,
-            @RequestParam(value = "connector", required = true) String connector);
+            @RequestParam(value = "ern", required = true) String ern);
 }

@@ -32,7 +32,7 @@ public class InvokerControllerImpl implements InvokerController {
 
     @Override
     @PreAuthorize("#oauth2.hasScope('sdk') and #invoker.validateAccessKey()")
-    public ResponseEntity<List<TinyConnectionDto>> getConnections(String connectionName, String connector) {
-        return ResponseEntity.ok(invokerService.getConnection(connectionName, connector));
+    public ResponseEntity<List<TinyConnectionDto>> getConnections(String connectionName, String ern) {
+        return ResponseEntity.ok(invokerService.getConnection(connectionName, ern));
     }
 }

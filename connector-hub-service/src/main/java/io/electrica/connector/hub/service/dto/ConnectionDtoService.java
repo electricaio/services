@@ -38,7 +38,7 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, CreateC
         );
     }
 
-    public List<ConnectionDto> findAllByAccessKey(@Nullable String connectionName, @Nullable String ern) {
+    public List<ConnectionDto> findAllByAccessKey(@Nullable String connectionName, String ern) {
         return toDto(connectionService.findAllByAccessKey(identityContextHolder.getIdentity().getAccessKeyId(),
                 connectionName, ern));
     }

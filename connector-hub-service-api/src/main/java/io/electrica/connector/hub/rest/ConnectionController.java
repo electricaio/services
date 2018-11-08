@@ -33,7 +33,7 @@ public interface ConnectionController {
     @GetMapping(PRIVATE + V1 + "/connections/accessKey")
     ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
             @RequestParam(value = "connectionName", required = false)@Nullable String connectionName,
-            @RequestParam(value = "connector", required = false)@Nullable  String connector
+            @RequestParam(value = "ern", required = true)  String ern
     );
 
 }
