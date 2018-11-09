@@ -14,7 +14,7 @@ allprojects {
         mavenCentral()
     }
 
-    group = 'io.electrica'
+    group = 'io.electrica.services'
     version = '0.0.1'
 }
 
@@ -29,6 +29,7 @@ subprojects {
         springCloudVersion = 'Finchley.SR1'
 
         // Other
+        electricaIntegrationVersion = '0.0.1'
         postgresqlDriverVersion = '42.2.5'
         javaxInjectVersion = '1'
         dozerVersion = '6.4.1'

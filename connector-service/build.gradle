@@ -12,10 +12,29 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 apply plugin: "org.liquibase.gradle"
 
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "http://maven-repo.electrica.io"
+    }
+}
+
+// Force Gradle to update dependencies with 'changing = true' flag
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
+}
+
 dependencies {
     compile project(':common')
     compile project(':connector-service-api')
-    
+
+    compile ("io.electrica.integration:core:${electricaIntegrationVersion}") { changing = true }
+    runtime ("io.electrica.integration:expose:${electricaIntegrationVersion}") {
+        changing = true
+        exclude group: 'com.google.auto.service'
+    }
+
     testCompile project(':common-test')
 }
 
