@@ -18,19 +18,16 @@ repositories {
     }
 }
 
-// Force Gradle to update dependencies with 'changing = true' flag
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
-}
-
 dependencies {
     compile project(':common')
     compile project(':connector-service-api')
 
-    compile ("io.electrica.integration:core:${electricaIntegrationVersion}") { changing = true }
-    runtime ("io.electrica.integration:expose:${electricaIntegrationVersion}") {
-        changing = true
-        exclude group: 'com.google.auto.service'
+    compile ("io.electrica.integration:core:${electricaIntegrationVersion}") {
+        // ToDo use you own dependencies
+        // transitive = false
+    }
+    runtime ("io.electrica.integration:slack:${electricaIntegrationVersion}") {
+        transitive = false
     }
 
     testCompile project(':common-test')

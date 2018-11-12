@@ -84,7 +84,12 @@ public class IdentityContextTestHelper {
             Set<PermissionType> permissions,
             Runnable work
     ) {
-        Authentication authentication = IdentityContextTestHelper.createAuthentication(userId, organizationId, roles, permissions);
+        Authentication authentication = IdentityContextTestHelper.createAuthentication(
+                userId,
+                organizationId,
+                roles,
+                permissions
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         try {
             IdentityImpl identity = new IdentityImpl(authentication);

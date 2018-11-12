@@ -1,5 +1,6 @@
 package io.electrica.connector.dto;
 
+import com.google.common.base.MoreObjects;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +25,14 @@ public class ConnectorExecutorContext {
     @NotNull
     private FullConnectionDto connection;
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("invocationId", invocationId)
+                .add("instanceId", invocationContext.getInstanceId())
+                .add("connectionId", invocationContext.getConnectionId())
+                .add("parameters", invocationContext.getParameters().asText())
+                .add("connectorId", connection.getConnector().getId())
+                .toString();
+    }
 }
