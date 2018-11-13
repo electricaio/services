@@ -30,8 +30,7 @@ dependencies {
     compile "org.apache.commons:commons-io:${commonsioVersion}"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
 
-    testCompile 'junit:junit'
-    testCompile 'org.mockito:mockito-core'
+    testCompile project(':common-test')
 }
 
 dependencyManagement {

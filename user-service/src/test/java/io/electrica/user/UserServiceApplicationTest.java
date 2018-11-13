@@ -1,7 +1,7 @@
 package io.electrica.user;
 
 import io.electrica.UserServiceApplication;
-import io.electrica.test.AbstractJpaApplicationTest;
+import io.electrica.common.jpa.test.AbstractJpaApplicationTest;
 import io.electrica.user.dto.CreateOrganizationDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;

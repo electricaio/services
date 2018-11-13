@@ -16,7 +16,9 @@ dependencies {
     compile project(':common-jpa')
     compile project(':user-service-api')
     compile project(':connector-hub-service-api')
+
     testCompile project(':common-test')
+    testCompile project(':common-jpa').sourceSets.test.output
 
     liquibaseRuntime "org.liquibase:liquibase-core"
     liquibaseRuntime "org.postgresql:postgresql:${postgresqlDriverVersion}"

@@ -1,6 +1,6 @@
 package io.electrica;
 
-import io.electrica.test.AbstractJpaApplicationTest;
+import io.electrica.common.jpa.test.AbstractJpaApplicationTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = ConnectorHubServiceApplication.class)

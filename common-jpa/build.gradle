@@ -18,7 +18,7 @@ dependencies {
     compile "org.hibernate:hibernate-java8"
     runtime("org.postgresql:postgresql:${postgresqlDriverVersion}")
 
-    testCompile 'junit:junit'
+    testCompile project(':common-test')
 }
 
 dependencyManagement {
