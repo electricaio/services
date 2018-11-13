@@ -75,7 +75,7 @@ public class ConnectionControllerImpl implements ConnectionController {
             "  #connection.accessKeyBelongsUser(#accessKeyId) " +
             " ) ")
     public ResponseEntity<List<ConnectionDto>> findAllByAccessKeyId(
-            @RequestParam("accessKeyId")  Long accessKeyId) {
+            @PathVariable("accessKeyId")  Long accessKeyId) {
         final List<ConnectionDto> result = connectionDtoService.findAllByAccessKeyId(accessKeyId);
         return ResponseEntity.ok(result);
     }

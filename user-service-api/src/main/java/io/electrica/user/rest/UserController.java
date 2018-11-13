@@ -27,7 +27,7 @@ public interface UserController {
     @GetMapping(V1 + "/users/{id}")
     ResponseEntity<UserDto> getUser(@PathVariable("id") Long id);
 
-    @GetMapping(V1 + "/v1/me/user")
+    @GetMapping(V1 + "/me/user")
     ResponseEntity<UserDto> getUser();
 
 }
