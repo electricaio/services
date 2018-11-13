@@ -11,11 +11,13 @@ import io.electrica.user.repository.AccessKeyRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -142,8 +144,8 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     @Test
     public void findAllNonArchivedByUser() {
         UserDto user = createAndSaveUser();
-        AccessKeyDto accessKeyDto1 = createAccessKeyDto(user);
-        AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, TEST_ACCESS_KEY2);
+        AccessKeyDto accessKeyDto1 = createAccessKeyDto(user, "Key1");
+        AccessKeyDto accessKeyDto2 = createAccessKeyDto(user, "Key2");
         executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.CreateAccessKey),
                 () -> {
@@ -159,7 +161,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
 
                     assertEquals(2, resList.size());
                     assertTestAccessKey(user, accessKeyDto1, resList.get(0));
-                    assertAccessKey(user, accessKeyDto2, resList.get(1), TEST_ACCESS_KEY2);
+                    assertAccessKey(user, accessKeyDto2, resList.get(1));
                 });
     }
 
@@ -354,6 +356,98 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                 () -> assertTrue(accessKeyController.validateMyAccessKeyById(accessKeyId.longValue()).getBody()));
     }
 
+    @Test
+    public void testDeleteAccessKeySuccess() {
+        UserDto user = createAndSaveUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AccessKeyDto accessKeyDto2 = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                    assertTestAccessKey(user, accessKeyDto, result);
+                    accessKeyController.createAccessKey(accessKeyDto2).getBody();
+                });
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.DeleteAccessKey),
+                () -> {
+                    HttpStatus statusCode = accessKeyController.deleteAccessKey(accessKeyId.get()).getStatusCode();
+                    assertEquals(statusCode, HttpStatus.OK);
+                });
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadAccessKey),
+                () -> {
+                    List<AccessKeyDto> accessKeyDtoList = accessKeyController.findAllNonArchivedByUser(
+                            user.getId()).getBody();
+                    assertEquals(accessKeyDtoList.size(), 1);
+                    AccessKeyDto result = accessKeyDtoList.get(0);
+                    assertEquals(accessKeyDto2.getName(), result.getName());
+                    assertEquals(accessKeyDto2.getUserId(), result.getUserId());
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testDeleteAccessKeyWithoutDeleteAccessKeyPermission() {
+        UserDto user = createAndSaveUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                    assertTestAccessKey(user, accessKeyDto, result);
+                });
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.AddPermission),
+                () -> {
+                    HttpStatus statusCode = accessKeyController.deleteAccessKey(accessKeyId.get()).getStatusCode();
+                    assertEquals(statusCode, HttpStatus.OK);
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testDeleteAccessKeyBelongtoDiffUser() {
+        UserDto user = createAndSaveUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                    assertTestAccessKey(user, accessKeyDto, result);
+                });
+        executeForUser(2, user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.DeleteAccessKey),
+                () -> {
+                    HttpStatus statusCode = accessKeyController.deleteAccessKey(accessKeyId.get()).getStatusCode();
+                    assertEquals(statusCode, HttpStatus.OK);
+                });
+    }
+
+    @Test
+    public void testDeleteAccessKeyBelongtoDiffUserButSuperAdmin() {
+        UserDto user = createAndSaveUser();
+        AccessKeyDto accessKeyDto = createAccessKeyDto(user);
+        AtomicLong accessKeyId = new AtomicLong();
+        executeForUser(user.getId(), user.getOrganizationId(), EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateAccessKey),
+                () -> {
+                    AccessKeyDto result = accessKeyController.createAccessKey(accessKeyDto).getBody();
+                    accessKeyId.set(result.getId());
+                    assertTestAccessKey(user, accessKeyDto, result);
+                });
+        executeForUser(2, user.getOrganizationId(), EnumSet.of(RoleType.SuperAdmin),
+                EnumSet.of(PermissionType.DeleteAccessKey),
+                () -> {
+                    HttpStatus statusCode = accessKeyController.deleteAccessKey(accessKeyId.get()).getStatusCode();
+                    assertEquals(statusCode, HttpStatus.OK);
+                });
+    }
+
     private AtomicReference<FullAccessKeyDto> getFullAccessKeyDtoForKey(UserDto user, Long accessKeyId) {
         AtomicReference<FullAccessKeyDto> key = new AtomicReference<>();
 
@@ -380,12 +474,12 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     private void assertTestAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {
-        assertAccessKey(user, accessKeyDto, result, TEST_ACCESS_KEY);
+        assertAccessKey(user, accessKeyDto, result);
     }
 
-    private void assertAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result, String keyName) {
+    private void assertAccessKey(UserDto user, AccessKeyDto accessKeyDto, AccessKeyDto result) {
         assertNotSame(accessKeyDto, result);
-        assertEquals(accessKeyDto.getName(), keyName);
+        assertEquals(accessKeyDto.getName(), result.getName());
         assertEquals(accessKeyDto.getUserId(), user.getId());
         if (result instanceof FullAccessKeyDto) {
             FullAccessKeyDto fullKey = (FullAccessKeyDto) result;
@@ -395,7 +489,7 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
     }
 
     private AccessKeyDto createAccessKeyDto(UserDto user) {
-        return createAccessKeyDto(user, TEST_ACCESS_KEY);
+        return createAccessKeyDto(user, TEST_ACCESS_KEY + new Random().nextInt(100));
     }
 
     private AccessKeyDto createAccessKeyDto(UserDto user, String keyName) {

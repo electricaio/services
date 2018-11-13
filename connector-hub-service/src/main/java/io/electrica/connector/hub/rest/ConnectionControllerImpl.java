@@ -62,11 +62,23 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    @PreAuthorize("#oauth2.hasScope('sdk')")
+    @PreAuthorize("#oauth2.hasScope('sdk') ")
     public ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
             @RequestParam("connectionName") @Nullable String connectionName,
             @RequestParam("ern") String ern) {
         final List<ConnectionDto> result = connectionDtoService.findAllByAccessKey(connectionName, ern);
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    @PreAuthorize("( #common.hasPermission('ReadActiveConnection') AND " +
+            "  #connection.accessKeyBelongsUser(#accessKeyId) " +
+            " ) ")
+    public ResponseEntity<List<ConnectionDto>> findAllByAccessKeyId(
+            @RequestParam("accessKeyId")  Long accessKeyId) {
+        final List<ConnectionDto> result = connectionDtoService.findAllByAccessKeyId(accessKeyId);
+        return ResponseEntity.ok(result);
+    }
+
+
 }

@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -305,6 +306,73 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
             assertEquals(1, result.size());
             assertEquals("Default", result.get(0).name);
         });
+    }
+
+    @Test
+    public void testFindAllByAccessKeySuccess() {
+        final AtomicReference<Long> cnHackerRank = createHackerRankConnector();
+        final AtomicReference<Long> cnGreenhouse = createGreenHouseConnector();
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
+
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.AssociateAccessKeyToConnector,
+                        PermissionType.ReadActiveConnection), () -> {
+                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L));
+                    connectionController.create(new CreateConnectionDto("Test1", null, cnHackerRank.get(), 1L));
+                    connectionController.create(new CreateConnectionDto("Test2", null, cnHackerRank.get(), 2L));
+                });
+        executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,
+                PermissionType.ReadActiveConnection),
+                () -> {
+                    List<ConnectionDto> result = connectionController.findAllByAccessKeyId(1L).getBody();
+                    assertEquals(2, result.size());
+                    assertEquals("Default", result.get(0).name);
+                    assertEquals("Test1", result.get(1).name);
+
+                    result = connectionController.findAllByAccessKeyId(2L).getBody();
+                    assertEquals(1, result.size());
+                    assertEquals("Test2", result.get(0).name);
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testFindAllByAccessKeyWithoutReadActiveConnectionPermission() {
+        final AtomicReference<Long> cnGreenhouse = createGreenHouseConnector();
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
+
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.AssociateAccessKeyToConnector,
+                        PermissionType.ReadActiveConnection), () -> {
+                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L));
+                });
+        executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,
+                PermissionType.ReadAccessKey),
+                () -> {
+                    List<ConnectionDto> result = connectionController.findAllByAccessKeyId(1L).getBody();
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testFindAllByAccessKeyBelongToDiffUser() {
+        final AtomicReference<Long> cnGreenhouse = createGreenHouseConnector();
+        doReturn(ResponseEntity.ok(false)).when(accessKeyClient).validateMyAccessKeyById(Mockito.anyLong());
+
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(
+                        PermissionType.AssociateAccessKeyToConnector,
+                        PermissionType.ReadActiveConnection), () -> {
+                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L));
+                });
+        executeForUser(-1L, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,
+                PermissionType.ReadActiveConnection),
+                () -> {
+                    List<ConnectionDto> result = connectionController.findAllByAccessKeyId(1L).getBody();
+                });
     }
 
     private AtomicReference<Long> createHackerRankConnector() {

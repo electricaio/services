@@ -73,4 +73,11 @@ public class AccessKeyControllerImpl implements AccessKeyController {
         Boolean result = accessKeyDtoService.validateMyAccessKey();
         return ResponseEntity.ok(result);
     }
+
+    @Override
+    @PreAuthorize("#common.hasPermission('DeleteAccessKey') AND  " +
+            "( #common.isSuperAdmin() OR #user.isUserAccessKey(#accessKeyId) )")
+    public ResponseEntity<AccessKeyDto> deleteAccessKey(Long accessKeyId) {
+        return ResponseEntity.ok(accessKeyDtoService.archive(accessKeyId));
+    }
 }

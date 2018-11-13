@@ -190,4 +190,26 @@ public class UserControllerTest extends UserServiceApplicationTest {
         return response.getBody();
     }
 
+    @Test
+    public void getUserForMeTest() {
+        UserDto userDto = createAndSaveUser();
+        executeForUser(userDto.getId(), 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadUser),
+                () -> {
+                    UserDto actual = userController.getUser().getBody();
+                    equals(userDto, actual);
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void getUserForMeTestWithoutReadUserPermissions() {
+        UserDto userDto = createAndSaveUser();
+        executeForUser(userDto.getId(), 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.AddPermission),
+                () -> {
+                    UserDto actual = userController.getUser().getBody();
+                    equals(userDto, actual);
+                });
+    }
+
 }
