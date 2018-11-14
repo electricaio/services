@@ -59,4 +59,10 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(users);
     }
 
+    @Override
+    @PreAuthorize(" #common.hasPermission('ReadUser') ")
+    public ResponseEntity<UserDto> getUser() {
+        UserDto userDto = userDtoService.findByMe();
+        return ResponseEntity.ok(userDto);
+    }
 }

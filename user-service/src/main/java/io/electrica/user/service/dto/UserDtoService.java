@@ -1,5 +1,6 @@
 package io.electrica.user.service.dto;
 
+import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.dto.AbstractDtoService;
 import io.electrica.common.security.RoleType;
@@ -21,11 +22,14 @@ public class UserDtoService extends AbstractDtoService<User, CreateUserDto, User
 
     private final UserService userService;
     private final UserToRoleService userToRoleService;
+    private final IdentityContextHolder identityContextHolder;
 
     @Inject
-    public UserDtoService(UserService userService, UserToRoleService userToRoleService) {
+    public UserDtoService(UserService userService, UserToRoleService userToRoleService,
+                          IdentityContextHolder identityContextHolder) {
         this.userService = userService;
         this.userToRoleService = userToRoleService;
+        this.identityContextHolder = identityContextHolder;
     }
 
     @Override
@@ -38,6 +42,10 @@ public class UserDtoService extends AbstractDtoService<User, CreateUserDto, User
 
     public List<UserDto> getUsersForOrg(Long orgId) {
         return toDto(userService.getUsersForOrg(orgId));
+    }
+
+    public UserDto findByMe() {
+        return toDto(userService.findById(identityContextHolder.getIdentity().getUserId(), true));
     }
 
     @Override

@@ -4,10 +4,7 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public interface AccessKeyController {
     @GetMapping(V1 + "/access-keys/{accessKeyId}")
     ResponseEntity<FullAccessKeyDto> getAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
-    @PostMapping(V1 + "/access-keys/{accessKeyId}/refresh")
+    @PutMapping(V1 + "/access-keys/{accessKeyId}/refresh")
     ResponseEntity<AccessKeyDto> refreshAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
     /**
@@ -43,5 +40,8 @@ public interface AccessKeyController {
      */
     @PostMapping(PRIVATE + V1 + "/me/access-keys/validate")
     ResponseEntity<Boolean> validateMyAccessKey();
+
+    @DeleteMapping(V1 + "/access-keys/{accessKeyId}")
+    ResponseEntity<AccessKeyDto> deleteAccessKey(@PathVariable("accessKeyId") Long accessKeyId);
 
 }

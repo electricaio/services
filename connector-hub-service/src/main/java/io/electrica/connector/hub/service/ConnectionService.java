@@ -49,7 +49,7 @@ public class ConnectionService extends AbstractService<Connection> {
     }
 
     public List<Connection> findAllByAccessKey(Long accessKeyId,
-                                               @Nullable String connectionName, String ern) {
+                                               @Nullable String connectionName, @Nullable String ern) {
         return connectionRepository.findByAccessKeyWithFilter(accessKeyId, connectionName, ern);
     }
 

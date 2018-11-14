@@ -30,10 +30,15 @@ public interface ConnectionController {
     @GetMapping(PRIVATE + V1 + "/connections/{id}")
     ResponseEntity<FullConnectionDto> getFull(@PathVariable("id") Long id);
 
-    @GetMapping(PRIVATE + V1 + "/connections/accessKey")
+    @GetMapping(PRIVATE + V1 + "/me/connections")
     ResponseEntity<List<ConnectionDto>> findAllByAccessKey(
-            @RequestParam(value = "connectionName", required = false)@Nullable String connectionName,
-            @RequestParam(value = "ern", required = true)  String ern
+            @RequestParam(value = "connectionName", required = false) @Nullable String connectionName,
+            @RequestParam(value = "ern", required = true) String ern
     );
+
+    @GetMapping(V1 + "/access-keys/{accessKeyId}/connections")
+    ResponseEntity<List<ConnectionDto>> findAllByAccessKeyId(
+            @PathVariable("accessKeyId") Long accessKeyId);
+
 
 }

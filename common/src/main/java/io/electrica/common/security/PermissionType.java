@@ -33,7 +33,8 @@ public enum PermissionType {
     AssociateAccessKeyToConnector(16),
     ReadActiveConnection(17),
     AddPermission(18),
-    RemovePermission(19);
+    RemovePermission(19),
+    DeleteAccessKey(20);
 
     private static final Map<Integer, PermissionType> ALL = Arrays.stream(PermissionType.values())
             .collect(Collectors.toMap(PermissionType::getCode, Function.identity()));
