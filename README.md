@@ -1,14 +1,14 @@
 # services
 
 # Setup your dev environment
-1.) Make sure you have a Postgres database running locally (or somewhere). Configure your Postgres settings under: ./common/src/main/resources/common.properties
+1.) Make sure you have a Postgres database running locally (or somewhere). Configure your Postgres settings under: `common/src/main/resources/common.properties`
 
-2.) Create two databases in Postgres - user_db and connector_hub_db
+2.) Create two databases in Postgres - `user_db` and `connector_hub_db`
 
 3.) Install Docker from https://docs.docker.com/docker-for-mac/install/
 
 # Building your environment
-1.) gradlew clean build
+1.) `gradlew clean build`
 
 2.) Best Practices for committing code are documented on the [wiki](https://electricaio.atlassian.net/wiki/spaces/EA/pages/30703619/Commits+and+PRs)
 
@@ -21,14 +21,19 @@
 
 # Running the services cluster locally
 ## Start the cluster
-$ ./deploy/docker/build.sh -p dev
+`$ ./deploy/docker/build.sh -p dev`
 
-$ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up
+`$ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up`
 
 You will be able to access the services using the url: [http://localhost:8080/swagger](http://localhost:8080/swagger)
 
 ## Remove containers and drop db
-$ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml down
+`$ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml down`
+
+# Micro services
+This is a multi-module gradle build with each microservice running in it's own module. Each microservice has 3 major sub-modules and can be found in the root folder:<br/>
+`<service-name>-service-api`<br/>
+`<service-name>-service`<br/>
 
 # Questions?
 Head to slack channel [dev-backend](https://electricaio.slack.com/messages/CDAG9KTUN/) to get your questions answered.
