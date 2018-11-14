@@ -45,7 +45,8 @@ public class UserDtoService extends AbstractDtoService<User, CreateUserDto, User
     }
 
     public UserDto findByMe() {
-        return toDto(userService.findById(identityContextHolder.getIdentity().getUserId(), true));
+        long userId = identityContextHolder.getIdentity().getUserId();
+        return findById(userId, true);
     }
 
     @Override

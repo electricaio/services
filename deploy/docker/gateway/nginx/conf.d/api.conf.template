@@ -141,7 +141,7 @@ server {
         }
 
     # Proxy to user-service
-    location ~* ^/(v[1-9]|public/v[1-9])/(users|organizations|access-keys|me) {
+    location ~* ^/(v[1-9]|public/v[1-9])/(users|organizations|access-keys|(me/user)) {
         include /etc/nginx/cors.conf;
 
         proxy_set_header Host $http_host;

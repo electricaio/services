@@ -45,14 +45,13 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     }
 
     @Override
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "Find a better way")
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     protected AccessKey executeCreate(AccessKey newEntity) {
         Long userId = newEntity.getUser().getId();
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
-        AccessKey newAccessKey = getRepository().save(newEntity);
-        refreshKey(newAccessKey.getId());
-        return newAccessKey;
+        AccessKey accessKey = accessKeyRepository.save(newEntity);
+        return refreshKey(accessKey.getId());
     }
 
     @Override
