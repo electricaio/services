@@ -25,13 +25,15 @@ $ ./deploy/docker/build.sh -p dev
 
 $ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up
 
-You will be able to access the services using http://localhost:8080/swagger
+You will be able to access the services using the url: [http://localhost:8080/swagger](http://localhost:8080/swagger)
 
 ## Remove containers and drop db
-docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml down
+$ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml down
 
 # Questions?
 Head to slack channel [dev-backend](https://electricaio.slack.com/messages/CDAG9KTUN/) to get your questions answered.
+
+
 
 [![Build Status](https://travis-ci.com/electricaio/services.svg?token=XaPqFymCCMvmv4mU5F9x&branch=master)](https://travis-ci.com/electricaio/services)
 [![Coverage Status](https://coveralls.io/repos/github/electricaio/services/badge.svg?branch=master&t=RKKuow)](https://coveralls.io/github/electricaio/services?branch=master)
