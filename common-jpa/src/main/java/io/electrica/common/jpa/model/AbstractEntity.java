@@ -1,5 +1,7 @@
 package io.electrica.common.jpa.model;
 
+import io.electrica.common.hibernate.JsonDataUserType;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -9,6 +11,7 @@ import javax.persistence.Version;
 
 @Audited
 @MappedSuperclass
+@TypeDef(name = "jsonb", typeClass = JsonDataUserType.class)
 public abstract class AbstractEntity extends AbstractPersistable<Long> implements CommonEntity {
 
     @Column(nullable = false)

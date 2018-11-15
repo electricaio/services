@@ -16,8 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ConnectorControllerTest extends AbstractDatabaseTest {
 
@@ -58,7 +57,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         final String expectedErn = "ern://connector:hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
-        equals(dto.getProperties(), actual.getProperties());
+        assertTrue(dto.getProperties().equals(actual.getProperties()));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         final String expectedErn = "ern://connector:hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
-        equals(dto.getProperties(), actual.getProperties());
+        assertNull(actual.getProperties());
     }
 
     @Test(expected = DataIntegrityViolationException.class)

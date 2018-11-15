@@ -7,7 +7,6 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.SerializationException;
 import org.hibernate.usertype.UserType;
 import org.postgresql.util.PGobject;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -17,10 +16,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class JsonDataUserType implements UserType {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     public static final String JSONB_TYPE = "jsonb";
 
     @Override
@@ -69,7 +69,7 @@ public class JsonDataUserType implements UserType {
                 return new HibernateException(e);
             }
         }
-        return new HashMap<String, String>();
+        return null;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class JsonDataUserType implements UserType {
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return ObjectUtils.nullSafeEquals(x, y);
+        return Objects.equals(x, y);
     }
 
     @Override

@@ -9,10 +9,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicationTest implements Fixture {
 
@@ -49,17 +45,5 @@ public abstract class AbstractDatabaseTest extends ConnectorHubServiceApplicatio
     public void flushAndClear() {
         em.flush();
         em.clear();
-    }
-
-    public void equals(Map<String, String> expected, Map<String, String> actual) {
-        if (expected == null && actual == null) {
-            return;
-        }
-        assertNotNull(expected);
-        assertNotNull(actual);
-        assertEquals(expected.size(), actual.size());
-        for (String str : expected.keySet()) {
-            assertEquals(expected.get(str), actual.get(str));
-        }
     }
 }

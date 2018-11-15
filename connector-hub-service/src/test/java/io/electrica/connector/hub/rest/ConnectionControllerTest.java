@@ -74,7 +74,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertEquals(Long.valueOf(1), connection.getUserId());
         assertEquals(Long.valueOf(1), connection.getOrganizationId());
         assertEquals(accessKeyId, connection.getAccessKeyId());
-        equals(dto.getProperties(), actual.getProperties());
+        assertTrue(dto.getProperties().equals(connection.getProperties()));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         assertEquals(Long.valueOf(1), connection.getUserId());
         assertEquals(Long.valueOf(1), connection.getOrganizationId());
         assertEquals(accessKeyId, connection.getAccessKeyId());
-        equals(dto.getProperties(), actual.getProperties());
+        assertNull(connection.getProperties());
     }
 
     @Test(expected = AccessDeniedException.class)
