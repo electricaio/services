@@ -54,8 +54,8 @@ public class ExecutorManagerMapper {
                 c.getInvocationId(),
                 context.getInstanceId(),
                 fullConnection.getConnection().getName(),
-                fullConnection.getConnection().getTenantRefId(),
                 toSdkAuthorization(fullConnection.getAuthorization()),
+                context.getAction(),
                 context.getParameters(),
                 context.getPayload()
         );
