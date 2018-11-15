@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -34,4 +35,6 @@ public class CreateConnectorDto {
     @NotBlank
     @Size(max = 255)
     private String namespace;
+
+    private Map<String, String> properties;
 }

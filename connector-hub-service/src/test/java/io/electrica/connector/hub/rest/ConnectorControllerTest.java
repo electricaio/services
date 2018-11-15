@@ -58,6 +58,34 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         final String expectedErn = "ern://connector:hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
+        equals(dto.getProperties(), actual.getProperties());
+    }
+
+    @Test
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = PermissionType.CreateConnector
+    )
+    public void testCreateConnectorWithSuccessWithNullProperties() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        dto.setProperties(null);
+        final ConnectorDto actual = connectorController.create(dto).getBody();
+
+        assertNotNull(actual.getId());
+        assertNotNull(actual.getRevisionVersion());
+
+        assertEquals(dto.getName(), actual.getName());
+        assertEquals(dto.getNamespace(), actual.getNamespace());
+        assertEquals(dto.getVersion(), actual.getVersion());
+        assertEquals(dto.getResource(), actual.getResource());
+
+        assertEquals(connectorType.getId(), actual.getTypeId());
+
+        final String expectedErn = "ern://connector:hackerrank:applications:1_0";
+        assertEquals(expectedErn, actual.getErn());
+        equals(dto.getProperties(), actual.getProperties());
     }
 
     @Test(expected = DataIntegrityViolationException.class)

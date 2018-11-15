@@ -16,7 +16,8 @@ dependencies {
     compile "org.liquibase:liquibase-core"
     compile "org.hibernate:hibernate-envers"
     compile "org.hibernate:hibernate-java8"
-    runtime("org.postgresql:postgresql:${postgresqlDriverVersion}")
+    compile("org.postgresql:postgresql:${postgresqlDriverVersion}")
+    compile("com.google.code.gson:gson:${googleGsonVersion}")
 
     testCompile project(':common-test')
 }

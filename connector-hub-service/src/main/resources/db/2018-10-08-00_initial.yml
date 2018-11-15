@@ -186,6 +186,9 @@ databaseChangeLog:
             name: authorization_id
             type: BIGINT
         - column:
+            name: properties
+            type: JSON
+        - column:
             constraints:
               nullable: false
             name: connector_id
@@ -257,6 +260,12 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: user_id_mod
+            type: BOOLEAN
+        - column:
+            name: properties
+            type: JSON
+        - column:
+            name: properties_mod
             type: BOOLEAN
         - column:
             name: authorization_id
@@ -384,6 +393,9 @@ databaseChangeLog:
             name: namespace
             type: VARCHAR(255)
         - column:
+            name: properties
+            type: JSON
+        - column:
             name: resource
             type: VARCHAR(255)
         - column:
@@ -457,6 +469,12 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: namespace_mod
+            type: BOOLEAN
+        - column:
+            name: properties
+            type: JSON
+        - column:
+            name: properties_mod
             type: BOOLEAN
         - column:
             name: resource

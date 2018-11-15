@@ -1,16 +1,20 @@
 package io.electrica.connector.hub.model;
 
+import io.electrica.common.hibernate.JsonDataUserType;
 import io.electrica.common.jpa.model.AbstractEntity;
 import io.electrica.connector.hub.dto.AuthorizationType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 import java.util.Optional;
 
 @Getter
@@ -23,6 +27,7 @@ import java.util.Optional;
 @Table(name = "connectors",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource", "version"})
 )
+@TypeDef(name = "json", typeClass = JsonDataUserType.class)
 public class Connector extends AbstractEntity {
 
     @NotNull
@@ -62,4 +67,8 @@ public class Connector extends AbstractEntity {
     public Optional<String> getResourceOpt() {
         return Optional.ofNullable(resource);
     }
+
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private Map<String, String> properties;
 }
