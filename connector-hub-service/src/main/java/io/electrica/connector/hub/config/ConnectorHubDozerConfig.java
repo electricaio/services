@@ -32,7 +32,6 @@ public class ConnectorHubDozerConfig {
 
                 mapping(CreateConnectionDto.class, Connection.class)
                         .fields("connectorId", "connector.id")
-                        .fields("properties", "properties")
                         .fields("properties", "properties",
                                 copyByReference(), hintA(HashMap.class));
 

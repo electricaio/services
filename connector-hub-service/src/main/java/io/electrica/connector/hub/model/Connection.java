@@ -60,7 +60,7 @@ public class Connection extends AbstractEntity {
     private Authorization authorization;
 
     @Type(type = "json")
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "jsonb")
     private Map<String, String> properties;
 
 }

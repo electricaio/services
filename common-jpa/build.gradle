@@ -17,7 +17,6 @@ dependencies {
     compile "org.hibernate:hibernate-envers"
     compile "org.hibernate:hibernate-java8"
     compile("org.postgresql:postgresql:${postgresqlDriverVersion}")
-    compile("com.google.code.gson:gson:${googleGsonVersion}")
 
     testCompile project(':common-test')
 }

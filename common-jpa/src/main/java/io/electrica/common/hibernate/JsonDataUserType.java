@@ -1,7 +1,7 @@
 package io.electrica.common.hibernate;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.SerializationException;
@@ -9,6 +9,7 @@ import org.hibernate.usertype.UserType;
 import org.postgresql.util.PGobject;
 import org.springframework.util.ObjectUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,15 +20,23 @@ import java.util.Map;
 
 public class JsonDataUserType implements UserType {
 
-    private final Gson gson = new GsonBuilder().serializeNulls().create();
+    private ObjectMapper objectMapper = new ObjectMapper();
+    public static final String JSONB_TYPE = "jsonb";
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
             throws HibernateException, SQLException {
-        if (value == null) {
-            st.setNull(index, Types.OTHER);
-        } else {
-            st.setObject(index, gson.toJson(value, Map.class), Types.OTHER);
+        try {
+            if (value == null) {
+                st.setNull(index, Types.OTHER);
+            } else {
+                PGobject pgo = new PGobject();
+                pgo.setType(JSONB_TYPE);
+                pgo.setValue(objectMapper.writeValueAsString(value));
+                st.setObject(index, pgo);
+            }
+        } catch (JsonProcessingException e) {
+            throw new HibernateException(e);
         }
     }
 
@@ -54,9 +63,12 @@ public class JsonDataUserType implements UserType {
             throws HibernateException, SQLException {
         PGobject o = (PGobject) rs.getObject(names[0]);
         if (o != null && o.getValue() != null) {
-            return gson.fromJson(o.getValue(), Map.class);
+            try {
+                objectMapper.readValue(o.getValue(), Map.class);
+            } catch (IOException e) {
+                return new HibernateException(e);
+            }
         }
-
         return new HashMap<String, String>();
     }
 

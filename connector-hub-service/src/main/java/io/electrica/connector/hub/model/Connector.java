@@ -69,6 +69,6 @@ public class Connector extends AbstractEntity {
     }
 
     @Type(type = "json")
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "jsonb")
     private Map<String, String> properties;
 }

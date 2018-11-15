@@ -187,7 +187,7 @@ databaseChangeLog:
             type: BIGINT
         - column:
             name: properties
-            type: JSON
+            type: JSONB
         - column:
             constraints:
               nullable: false
@@ -263,7 +263,7 @@ databaseChangeLog:
             type: BOOLEAN
         - column:
             name: properties
-            type: JSON
+            type: JSONB
         - column:
             name: properties_mod
             type: BOOLEAN
@@ -394,7 +394,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: properties
-            type: JSON
+            type: JSONB
         - column:
             name: resource
             type: VARCHAR(255)
@@ -472,7 +472,7 @@ databaseChangeLog:
             type: BOOLEAN
         - column:
             name: properties
-            type: JSON
+            type: JSONB
         - column:
             name: properties_mod
             type: BOOLEAN
