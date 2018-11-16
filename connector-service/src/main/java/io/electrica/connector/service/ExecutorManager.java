@@ -37,13 +37,12 @@ public class ExecutorManager {
     public ConnectorExecutorResult execute(ConnectorExecutorContext context) {
         try {
             String ern = context.getConnection().getConnector().getErn();
-            ConnectorExecutorFactory executorFactory = executorFactoryStorage.getFactory(ern)
-                    .orElseThrow(() -> new IllegalStateException("Connector executor not found by ERN: " + ern));
+            ConnectorExecutorFactory executorFactory = executorFactoryStorage.getFactory(ern);
 
             ExecutionContext sdkContext = executorManagerMapper.toSdkContext(context);
-            ServiceFacade serviceFacade = serviceFacadeFactory.create(context, executorFactory);
+            ServiceFacade serviceFacade = serviceFacadeFactory.create(context, sdkContext);
 
-            ConnectorExecutor executor = executorFactory.create(sdkContext, serviceFacade);
+            ConnectorExecutor executor = executorFactory.create(serviceFacade);
             Object result = executor.run();
             return executorManagerMapper.toResult(context, result);
         } catch (Exception e) {

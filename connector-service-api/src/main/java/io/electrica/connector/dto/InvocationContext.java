@@ -18,6 +18,8 @@ public class InvocationContext {
     private Long connectionId;
 
     @NotNull
+    private String action;
+
     private JsonNode parameters;
 
     private JsonNode payload;

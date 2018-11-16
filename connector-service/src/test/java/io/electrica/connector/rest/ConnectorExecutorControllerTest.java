@@ -44,7 +44,9 @@ public class ConnectorExecutorControllerTest extends ConnectorServiceApplication
                 new TestGoogleSearchConnectorExecutor.SearchParameters(10),
                 new TestGoogleSearchConnectorExecutor.SearchPayload("test+query")
         );
+
         ConnectorExecutorResult result = connectorExecutorController.executeSync(context).getBody();
+        assertTrue(TestGoogleSearchConnectorExecutor.AFTER_LOAD_METHOD.get());
 
         assertCommonResult(context, result);
         assertEquals(true, result.getSuccess());
@@ -65,7 +67,9 @@ public class ConnectorExecutorControllerTest extends ConnectorServiceApplication
                 new TestGoogleSearchConnectorExecutor.SearchParameters(), // shouldn't be empty
                 new TestGoogleSearchConnectorExecutor.SearchPayload("test+query")
         );
+
         ConnectorExecutorResult result = connectorExecutorController.executeSync(context).getBody();
+        assertTrue(TestGoogleSearchConnectorExecutor.AFTER_LOAD_METHOD.get());
 
         assertCommonResult(context, result);
         assertEquals(false, result.getSuccess());
@@ -74,7 +78,6 @@ public class ConnectorExecutorControllerTest extends ConnectorServiceApplication
         ErrorDto e = result.getError();
         assertNotNull(e);
         assertEquals(ExceptionCodes.VALIDATION, e.getCode());
-        assertEquals(TestGoogleSearchConnectorExecutor.VALIDATION_MESSAGE, e.getMessage());
         assertNotNull(e.getStackTrace());
         assertNull(e.getPayload());
     }

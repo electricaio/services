@@ -22,7 +22,7 @@ dependencies {
     compile project(':common')
     compile project(':connector-service-api')
 
-    compile ("io.electrica.integration:core:${electricaIntegrationVersion}") {
+    compile ("io.electrica.integration:spi:${electricaIntegrationVersion}") {
         // ToDo use you own dependencies
         // transitive = false
     }

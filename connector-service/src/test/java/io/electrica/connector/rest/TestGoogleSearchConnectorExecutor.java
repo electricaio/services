@@ -1,43 +1,45 @@
 package io.electrica.connector.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.auto.service.AutoService;
 import io.electrica.integration.spi.ConnectorExecutor;
 import io.electrica.integration.spi.ConnectorExecutorFactory;
 import io.electrica.integration.spi.ServiceFacade;
-import io.electrica.integration.spi.ServiceFacadeConfigurer;
-import io.electrica.integration.spi.context.ExecutionContext;
+import io.electrica.integration.spi.context.ConfigurationContext;
 import io.electrica.integration.spi.exception.Exceptions;
 import io.electrica.integration.spi.exception.IntegrationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static io.electrica.integration.spi.Validations.requiredParameter;
+import static io.electrica.integration.spi.Validations.requiredPayload;
 
 public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
 
-    static final String VALIDATION_MESSAGE = "Wrong request data";
     static final String ERN = "ern://test-google:search:1";
     static final AtomicInteger RESPONSE_CODE = new AtomicInteger();
+    static final AtomicBoolean AFTER_LOAD_METHOD = new AtomicBoolean();
 
-    private final ServiceFacade serviceFacade;
+    private final OkHttpClient httpClient;
 
     private final SearchParameters parameters;
     private final SearchPayload payload;
 
     private TestGoogleSearchConnectorExecutor(
-            ServiceFacade serviceFacade,
+            OkHttpClient httpClient,
             SearchParameters parameters,
             SearchPayload payload
     ) {
-        this.serviceFacade = serviceFacade;
+        this.httpClient = httpClient;
         this.parameters = parameters;
         this.payload = payload;
     }
@@ -45,18 +47,17 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
     @Nullable
     @Override
     public Object run() throws IntegrationException {
-        String url = String.format(
-                "https://www.google.ru/search?q=%s&start=%d",
-                payload.getQuery(), parameters.getStart()
-        );
+        Integer start = requiredParameter(parameters.getStart(), "start");
+        String query = requiredPayload(payload.getQuery(), "query");
+
+        String url = String.format("https://www.google.ru/search?q=%s&start=%d", query, start);
 
         try {
-            Response response = serviceFacade.getHttpClient()
-                    .newCall(new Request.Builder()
-                            .url(url)
-                            .get()
-                            .build()
-                    ).execute();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+            Response response = httpClient.newCall(request).execute();
 
             return new SearchResult(
                     response.code(),
@@ -64,13 +65,13 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
             );
         } catch (IOException e) {
             throw Exceptions.io("IO Exception", e);
-        } catch (Exception e) {
-            throw Exceptions.generic("Some generic exception", e);
         }
     }
 
     @AutoService(ConnectorExecutorFactory.class)
     public static class Factory implements ConnectorExecutorFactory {
+
+        private OkHttpClient httpClient;
 
         @Override
         public String getErn() {
@@ -78,30 +79,26 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
         }
 
         @Override
-        public void configureServices(ServiceFacadeConfigurer configurer) {
-            configurer.httpClientBuilder()
+        public void afterLoad() {
+            AFTER_LOAD_METHOD.set(true);
+        }
+
+        @Override
+        public void setup(ConfigurationContext context) {
+            httpClient = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         Response response = chain.proceed(chain.request());
                         RESPONSE_CODE.set(response.code());
                         return response;
-                    });
+                    })
+                    .build();
         }
 
         @Override
-        public ConnectorExecutor create(ExecutionContext context, ServiceFacade facade) throws IntegrationException {
-            try {
-                ObjectReader reader = facade.getObjectReader();
-                SearchParameters parameters = reader.treeToValue(context.getParameters(), SearchParameters.class);
-                SearchPayload payload = reader.treeToValue(context.getPayload(), SearchPayload.class);
-
-                if (parameters.getStart() == null || payload.getQuery() == null) {
-                    throw Exceptions.validation(VALIDATION_MESSAGE);
-                }
-
-                return new TestGoogleSearchConnectorExecutor(facade, parameters, payload);
-            } catch (JsonProcessingException e) {
-                throw Exceptions.deserialization("Can't deserialize google search contest", e);
-            }
+        public ConnectorExecutor create(ServiceFacade facade) throws IntegrationException {
+            SearchParameters parameters = facade.readParameters(SearchParameters.class);
+            SearchPayload payload = facade.readPayload(SearchPayload.class);
+            return new TestGoogleSearchConnectorExecutor(httpClient, parameters, payload);
         }
     }
 
