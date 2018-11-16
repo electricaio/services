@@ -5,7 +5,16 @@ import io.electrica.connector.hub.dto.CreateConnectorDto;
 import io.electrica.connector.hub.model.ConnectorType;
 import io.electrica.connector.hub.repository.ConnectorTypeRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface Fixture {
+
+    Map<String, String> TEST_PROPERTIES = new HashMap<String, String>() {{
+        put("URL", "www.google.com");
+        put("Two", "Two");
+        put("Three", "Three");
+    }};
 
     default CreateConnectorDto createHackerRankConnectorDto() {
         final CreateConnectorDto dto = new CreateConnectorDto();
@@ -17,6 +26,7 @@ public interface Fixture {
         );
         dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.0");
+        dto.setProperties(TEST_PROPERTIES);
         return dto;
     }
 
@@ -29,6 +39,7 @@ public interface Fixture {
         );
         dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.1");
+        dto.setProperties(TEST_PROPERTIES);
         return dto;
     }
 
@@ -41,6 +52,7 @@ public interface Fixture {
         );
         dto.setAuthorizationType(AuthorizationType.Basic);
         dto.setVersion("5.6");
+        dto.setProperties(TEST_PROPERTIES);
         return dto;
     }
 

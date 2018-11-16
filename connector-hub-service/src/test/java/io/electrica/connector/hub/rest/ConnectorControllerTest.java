@@ -16,8 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ConnectorControllerTest extends AbstractDatabaseTest {
 
@@ -58,6 +57,34 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         final String expectedErn = "ern://connector:hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
+        assertTrue(dto.getProperties().equals(actual.getProperties()));
+    }
+
+    @Test
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = PermissionType.CreateConnector
+    )
+    public void testCreateConnectorWithSuccessWithNullProperties() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        dto.setProperties(null);
+        final ConnectorDto actual = connectorController.create(dto).getBody();
+
+        assertNotNull(actual.getId());
+        assertNotNull(actual.getRevisionVersion());
+
+        assertEquals(dto.getName(), actual.getName());
+        assertEquals(dto.getNamespace(), actual.getNamespace());
+        assertEquals(dto.getVersion(), actual.getVersion());
+        assertEquals(dto.getResource(), actual.getResource());
+
+        assertEquals(connectorType.getId(), actual.getTypeId());
+
+        final String expectedErn = "ern://connector:hackerrank:applications:1_0";
+        assertEquals(expectedErn, actual.getErn());
+        assertNull(actual.getProperties());
     }
 
     @Test(expected = DataIntegrityViolationException.class)

@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 import java.util.Optional;
 
 @Getter
@@ -62,4 +64,8 @@ public class Connector extends AbstractEntity {
     public Optional<String> getResourceOpt() {
         return Optional.ofNullable(resource);
     }
+
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    private Map<String, String> properties;
 }

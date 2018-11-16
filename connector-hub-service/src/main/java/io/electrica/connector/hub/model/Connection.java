@@ -3,12 +3,14 @@ package io.electrica.connector.hub.model;
 import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -53,5 +55,9 @@ public class Connection extends AbstractEntity {
     @OneToOne
     @JoinColumn(name = "authorization_id", unique = true)
     private Authorization authorization;
+
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    private Map<String, String> properties;
 
 }
