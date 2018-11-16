@@ -17,6 +17,7 @@ import io.electrica.test.context.ForAccessKey;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -96,6 +97,9 @@ public class ConnectorExecutorControllerTest extends ConnectorServiceApplication
         connector.setRevisionVersion(0L);
         connector.setErn(TestGoogleSearchConnectorExecutor.ERN);
         connector.setAuthorizationType(AuthorizationType.None);
+        connector.setProperties(Collections.singletonMap(
+                TestGoogleSearchConnectorExecutor.SEARCH_ADD_INTERCEPTOR_PROPERTY_KEY, "true"
+        ));
 
         ConnectionDto connection = new ConnectionDto();
         connection.setId(connectionId);

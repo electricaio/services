@@ -3,8 +3,8 @@ package io.electrica.connector.rest;
 import com.google.auto.service.AutoService;
 import io.electrica.integration.spi.ConnectorExecutor;
 import io.electrica.integration.spi.ConnectorExecutorFactory;
+import io.electrica.integration.spi.ConnectorProperties;
 import io.electrica.integration.spi.ServiceFacade;
-import io.electrica.integration.spi.context.ConfigurationContext;
 import io.electrica.integration.spi.exception.Exceptions;
 import io.electrica.integration.spi.exception.IntegrationException;
 import lombok.AllArgsConstructor;
@@ -28,6 +28,7 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
     static final String ERN = "ern://test-google:search:1";
     static final AtomicInteger RESPONSE_CODE = new AtomicInteger();
     static final AtomicBoolean AFTER_LOAD_METHOD = new AtomicBoolean();
+    static final String SEARCH_ADD_INTERCEPTOR_PROPERTY_KEY = "search.add-interceptor";
 
     private final OkHttpClient httpClient;
 
@@ -84,14 +85,17 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
         }
 
         @Override
-        public void setup(ConfigurationContext context) {
-            httpClient = new OkHttpClient.Builder()
-                    .addInterceptor(chain -> {
-                        Response response = chain.proceed(chain.request());
-                        RESPONSE_CODE.set(response.code());
-                        return response;
-                    })
-                    .build();
+        public void setup(ConnectorProperties properties) throws IntegrationException {
+            boolean addInterceptor = properties.getBooleanRequired(SEARCH_ADD_INTERCEPTOR_PROPERTY_KEY);
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            if (addInterceptor) {
+                builder.addInterceptor(chain -> {
+                    Response response = chain.proceed(chain.request());
+                    RESPONSE_CODE.set(response.code());
+                    return response;
+                });
+            }
+            httpClient = builder.build();
         }
 
         @Override

@@ -61,11 +61,11 @@ public class Connector extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String ern;
 
+    @Type(type = JSONB_TYPE)
+    private Map<String, String> properties;
+
     public Optional<String> getResourceOpt() {
         return Optional.ofNullable(resource);
     }
 
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "jsonb")
-    private Map<String, String> properties;
 }

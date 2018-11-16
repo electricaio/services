@@ -3,7 +3,6 @@ package io.electrica.connector.hub.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +36,5 @@ public class CreateConnectorDto {
     @Size(max = 255)
     private String namespace;
 
-    @Nullable
     private Map<String, String> properties;
 }
