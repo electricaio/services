@@ -1,9 +1,11 @@
 package io.electrica.user.service;
 
 import io.electrica.user.UserServiceApplicationTest;
+import io.electrica.user.dto.AccessKeyDto;
+import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
-import io.electrica.user.model.AccessKey;
 import io.electrica.user.model.User;
+import io.electrica.user.service.dto.AccessKeyDtoService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +16,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AccessKeyServiceTest extends UserServiceApplicationTest {
+
+    @Inject
+    private AccessKeyDtoService accessKeyDtoService;
 
     @Inject
     private AccessKeyService accessKeyService;
@@ -27,14 +32,15 @@ public class AccessKeyServiceTest extends UserServiceApplicationTest {
     public void validateUserAccessKeyByJti() {
         UserDto userDto = createAndSaveUser();
 
-        AccessKey accessKey = new AccessKey();
+        AccessKeyDto accessKey = new AccessKeyDto();
         accessKey.setName("test");
         User user = new User();
         user.setId(userDto.getId());
-        accessKey.setUser(user);
-        accessKey = accessKeyService.create(accessKey);
+        accessKey.setUserId(userDto.getId());
+        accessKey = accessKeyDtoService.create(accessKey);
 
-        Boolean exist = accessKeyService.validateUserAccessKeyByJti(accessKey.getJti(), userDto.getId());
+        FullAccessKeyDto fullAccessKeyDto = accessKeyDtoService.findByKey(accessKey.getId());
+        Boolean exist = accessKeyService.validateUserAccessKeyByJti(fullAccessKeyDto.getJti(), userDto.getId());
         assertTrue(exist);
     }
 
