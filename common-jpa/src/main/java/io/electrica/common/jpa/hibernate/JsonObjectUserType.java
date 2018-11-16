@@ -1,4 +1,4 @@
-package io.electrica.common.hibernate;
+package io.electrica.common.jpa.hibernate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,10 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class JsonDataUserType implements UserType {
+public class JsonObjectUserType implements UserType {
+
+    static final String TYPE = "jsonb";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    public static final String JSONB_TYPE = "jsonb";
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
@@ -31,7 +32,7 @@ public class JsonDataUserType implements UserType {
                 st.setNull(index, Types.OTHER);
             } else {
                 PGobject pgo = new PGobject();
-                pgo.setType(JSONB_TYPE);
+                pgo.setType(TYPE);
                 pgo.setValue(objectMapper.writeValueAsString(value));
                 st.setObject(index, pgo);
             }

@@ -7,6 +7,7 @@ import io.electrica.invoker.service.InvokerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -32,7 +33,11 @@ public class InvokerControllerImpl implements InvokerController {
 
     @Override
     @PreAuthorize("#oauth2.hasScope('sdk') and #invoker.validateAccessKey()")
-    public ResponseEntity<List<TinyConnectionDto>> getConnections(String connectionName, String ern) {
-        return ResponseEntity.ok(invokerService.getConnection(connectionName, ern));
+    public ResponseEntity<List<TinyConnectionDto>> getConnections(
+            @RequestParam(value = "connectionName", required = false) String connectionName,
+            @RequestParam(value = "ern") String ern
+    ) {
+        List<TinyConnectionDto> result = invokerService.findConnections(connectionName, ern);
+        return ResponseEntity.ok(result);
     }
 }

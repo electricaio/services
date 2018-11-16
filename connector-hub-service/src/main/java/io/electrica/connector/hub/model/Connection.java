@@ -31,10 +31,6 @@ public class Connection extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 
-    @Size(max = 255)
-    @Column(name = "tenant_ref_id")
-    private String tenantRefId;
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "connector_id", nullable = false)
@@ -56,8 +52,7 @@ public class Connection extends AbstractEntity {
     @JoinColumn(name = "authorization_id", unique = true)
     private Authorization authorization;
 
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "jsonb")
+    @Type(type = JSONB_TYPE)
     private Map<String, String> properties;
 
 }
