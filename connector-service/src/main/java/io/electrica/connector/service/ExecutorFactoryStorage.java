@@ -1,19 +1,20 @@
 package io.electrica.connector.service;
 
+import io.electrica.connector.dto.ConnectorExecutorContext;
 import io.electrica.integration.spi.ConnectorExecutorFactory;
-import io.electrica.integration.spi.context.ConfigurationContext;
+import io.electrica.integration.spi.ConnectorProperties;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -62,14 +63,45 @@ public class ExecutorFactoryStorage {
         });
     }
 
-    ConnectorExecutorFactory getFactory(String ern) {
-        return factories.computeIfAbsent(ern.toLowerCase(), id -> {
-            ConnectorExecutorFactory factory = loaded.get(id);
-            if (factory == null) {
-                throw new IllegalStateException("Connector executor not found: " + id);
+    ConnectorExecutorFactory getFactory(ConnectorExecutorContext context) {
+        String ern = context.getConnection().getConnector().getErn().toLowerCase();
+        return factories.computeIfAbsent(ern, new Function<String, ConnectorExecutorFactory>() {
+            @Override
+            @SneakyThrows
+            public ConnectorExecutorFactory apply(String ern) {
+                ConnectorExecutorFactory factory = loaded.get(ern);
+                if (factory == null) {
+                    throw new IllegalStateException("Connector executor not found: " + ern);
+                }
+                Map<String, String> properties = context.getConnection().getConnector().getProperties();
+                ConnectorProperties connectorProperties = properties == null ?
+                        ConnectorPropertiesImpl.EMPTY :
+                        new ConnectorPropertiesImpl(properties);
+                factory.setup(connectorProperties);
+                return factory;
             }
-            factory.setup(new ConfigurationContext());
-            return factory;
         });
+    }
+
+    private static class ConnectorPropertiesImpl implements ConnectorProperties {
+
+        private static final ConnectorProperties EMPTY = new ConnectorPropertiesImpl(Collections.emptyMap());
+
+        private final Map<String, String> properties;
+
+        private ConnectorPropertiesImpl(Map<String, String> properties) {
+            this.properties = properties;
+        }
+
+        @Override
+        public boolean contains(String key) {
+            return properties.containsKey(key);
+        }
+
+        @Nullable
+        @Override
+        public String getString(String key) {
+            return properties.get(key);
+        }
     }
 }

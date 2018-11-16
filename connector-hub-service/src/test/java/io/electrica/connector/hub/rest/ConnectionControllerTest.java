@@ -62,7 +62,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
 
-        final CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                 TEST_PROPERTIES);
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto actual = connectionController.create(dto).getBody();
@@ -90,7 +90,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
 
-        final CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                 TEST_PROPERTIES);
         dto.setProperties(null);
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
@@ -119,7 +119,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         final Long accessKeyId = 12L;
 
-        final CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                 TEST_PROPERTIES);
         doReturn(ResponseEntity.ok(false)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto actual = connectionController.create(dto).getBody();
@@ -143,7 +143,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 .getId();
 
         final Long accessKeyId = 12L;
-        final CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                 TEST_PROPERTIES);
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         connectionController.create(dto);
@@ -163,7 +163,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 .getId();
 
         final Long accessKeyId = 12L;
-        final CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                 TEST_PROPERTIES);
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         connectionController.create(dto);
@@ -193,11 +193,11 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test1", null, cnHackerRank.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Test1", cnHackerRank.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test2", null, cnHackerRank.get(), 2L,
+                    connectionController.create(new CreateConnectionDto("Test2", cnHackerRank.get(), 2L,
                             TEST_PROPERTIES));
                 });
 
@@ -207,7 +207,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 3L,
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(), 3L,
                             TEST_PROPERTIES));
                 });
 
@@ -299,7 +299,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                             .getBody()
                             .getId();
 
-                    CreateConnectionDto dto = new CreateConnectionDto("Default", null, connectorId, accessKeyId,
+                    CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
                             TEST_PROPERTIES);
                     doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
                     connectionId.set(connectionController.create(dto).getBody().getId());
@@ -323,11 +323,11 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test1", null, cnHackerRank.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Test1", cnHackerRank.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test2", null, cnHackerRank.get(), 2L,
+                    connectionController.create(new CreateConnectionDto("Test2", cnHackerRank.get(), 2L,
                             TEST_PROPERTIES));
                 });
         executeForUser(2, 2,
@@ -335,7 +335,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null,
+                    connectionController.create(new CreateConnectionDto("Default",
                             cnGreenhouse.get(), 3L, TEST_PROPERTIES));
                 });
         executeForAccessKey(1, 1, () -> {
@@ -361,11 +361,11 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test1", null, cnHackerRank.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Test1", cnHackerRank.get(), 1L,
                             TEST_PROPERTIES));
-                    connectionController.create(new CreateConnectionDto("Test2", null, cnHackerRank.get(), 2L,
+                    connectionController.create(new CreateConnectionDto("Test2", cnHackerRank.get(), 2L,
                             TEST_PROPERTIES));
                 });
         executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,
@@ -392,7 +392,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(), 1L,
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(), 1L,
                             TEST_PROPERTIES));
                 });
         executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,
@@ -412,7 +412,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(
                         PermissionType.AssociateAccessKeyToConnector,
                         PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default", null, cnGreenhouse.get(),
+                    connectionController.create(new CreateConnectionDto("Default", cnGreenhouse.get(),
                             1L, TEST_PROPERTIES));
                 });
         executeForUser(-1L, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(PermissionType.DeleteAccessKey,

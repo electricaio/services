@@ -36,15 +36,11 @@ public class ExecutorManager {
 
     public ConnectorExecutorResult execute(ConnectorExecutorContext context) {
         try {
-            String ern = context.getConnection().getConnector().getErn();
-            ConnectorExecutorFactory executorFactory = executorFactoryStorage.getFactory(ern);
-
+            ConnectorExecutorFactory executorFactory = executorFactoryStorage.getFactory(context);
             ExecutionContext sdkContext = executorManagerMapper.toSdkContext(context);
             ServiceFacade serviceFacade = serviceFacadeFactory.create(context, sdkContext);
-
             ConnectorExecutor executor = executorFactory.create(serviceFacade);
-            Object result = executor.run();
-            return executorManagerMapper.toResult(context, result);
+            return executorManagerMapper.toResult(context, executor.run());
         } catch (Exception e) {
             boolean integrationException = e instanceof IntegrationException;
             if (!integrationException) {
