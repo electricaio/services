@@ -1,5 +1,6 @@
 package io.electrica.user.service.dto;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.jpa.service.AbstractService;
@@ -46,6 +47,13 @@ public class AccessKeyDtoService extends AbstractDtoService<AccessKey, CreateAcc
     public Boolean validateMyAccessKey() {
         Identity identity = identityContextHolder.getIdentity();
         return accessKeyService.validateUserAccessKeyByJti(identity.getTokenJti(), identity.getUserId());
+    }
+
+    @Override
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    public AccessKeyDto create(CreateAccessKeyDto createAccessKeyDto) {
+        AccessKey accessKey = accessKeyService.create(toCreateEntity(createAccessKeyDto));
+        return refreshKey(accessKey.getId());
     }
 
     @Override

@@ -1,6 +1,5 @@
 package io.electrica.user.service;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.jpa.service.AbstractService;
 import io.electrica.common.jpa.service.validation.EntityValidator;
 import io.electrica.user.model.AccessKey;
@@ -45,13 +44,11 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     }
 
     @Override
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     protected AccessKey executeCreate(AccessKey newEntity) {
         Long userId = newEntity.getUser().getId();
         User user = getReference(User.class, userId);
         newEntity.setUser(user);
-        AccessKey accessKey = accessKeyRepository.save(newEntity);
-        return refreshKey(accessKey.getId());
+        return accessKeyRepository.save(newEntity);
     }
 
     @Override
