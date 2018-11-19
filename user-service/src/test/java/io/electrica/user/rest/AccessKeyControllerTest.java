@@ -158,10 +158,13 @@ public class AccessKeyControllerTest extends UserServiceApplicationTest {
                 EnumSet.of(PermissionType.ReadAccessKey),
                 () -> {
                     List<AccessKeyDto> resList = accessKeyController.findAllNonArchivedByUser(user.getId()).getBody();
-
                     assertEquals(2, resList.size());
                     assertTestAccessKey(user, accessKeyDto1, resList.get(0));
+                    assertNotNull(resList.get(0).getCreatedAt());
+                    assertNotNull(resList.get(0).getUpdatedAt());
                     assertAccessKey(user, accessKeyDto2, resList.get(1));
+                    assertNotNull(resList.get(1).getCreatedAt());
+                    assertNotNull(resList.get(1).getUpdatedAt());
                 });
     }
 

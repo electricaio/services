@@ -165,6 +165,9 @@ databaseChangeLog:
             name: access_key_id
             type: BIGINT
         - column:
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
             constraints:
               nullable: false
             name: name
@@ -177,6 +180,9 @@ databaseChangeLog:
         - column:
             name: properties
             type: JSONB
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
         - column:
             constraints:
               nullable: false
@@ -235,6 +241,12 @@ databaseChangeLog:
             name: access_key_id_mod
             type: BOOLEAN
         - column:
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: created_at_mod
+            type: BOOLEAN
+        - column:
             name: name
             type: VARCHAR(255)
         - column:
@@ -251,6 +263,12 @@ databaseChangeLog:
             type: JSONB
         - column:
             name: properties_mod
+            type: BOOLEAN
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at_mod
             type: BOOLEAN
         - column:
             name: user_id
