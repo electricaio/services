@@ -75,6 +75,9 @@ databaseChangeLog:
             name: revision_version
             type: BIGINT
         - column:
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
             name: jti
             type: UUID
         - column:
@@ -85,6 +88,9 @@ databaseChangeLog:
               nullable: false
             name: name
             type: VARCHAR(255)
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
         - column:
             constraints:
               nullable: false
@@ -129,6 +135,12 @@ databaseChangeLog:
             name: revision_version_mod
             type: BOOLEAN
         - column:
+            name: created_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: created_at_mod
+            type: BOOLEAN
+        - column:
             name: jti
             type: UUID
         - column:
@@ -145,6 +157,12 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: name_mod
+            type: BOOLEAN
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: updated_at_mod
             type: BOOLEAN
         - column:
             name: user_id

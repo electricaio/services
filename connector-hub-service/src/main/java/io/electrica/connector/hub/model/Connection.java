@@ -3,13 +3,16 @@ package io.electrica.connector.hub.model;
 import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Getter
@@ -54,5 +57,13 @@ public class Connection extends AbstractEntity {
 
     @Type(type = JSONB_TYPE)
     private Map<String, String> properties;
+
+    @Column
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }

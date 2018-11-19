@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,4 +20,8 @@ public class ConnectionDto extends CreateConnectionDto {
 
     @NotNull
     private Long authorizationId;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

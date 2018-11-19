@@ -223,10 +223,16 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     assertEquals(3, result.size());
                     assertEquals(cnGreenhouse.get(), result.get(0).getConnectorId());
                     assertEquals(Long.valueOf(1), result.get(0).getAccessKeyId());
+                    assertNotNull(result.get(0).getCreatedAt());
+                    assertNotNull(result.get(0).getUpdatedAt());
                     assertEquals(cnHackerRank.get(), result.get(1).getConnectorId());
                     assertEquals(Long.valueOf(1), result.get(1).getAccessKeyId());
+                    assertNotNull(result.get(1).getCreatedAt());
+                    assertNotNull(result.get(1).getUpdatedAt());
                     assertEquals(cnHackerRank.get(), result.get(2).getConnectorId());
                     assertEquals(Long.valueOf(2), result.get(2).getAccessKeyId());
+                    assertNotNull(result.get(2).getCreatedAt());
+                    assertNotNull(result.get(2).getUpdatedAt());
                 });
 
         executeForUser(2, 2,

@@ -3,11 +3,14 @@ package io.electrica.user.model;
 import io.electrica.common.jpa.model.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -27,7 +30,7 @@ public class AccessKey extends AbstractEntity {
     @Size(max = 255)
     @Column(nullable = false)
     private String name;
-    
+
     @Column(nullable = true, unique = true)
     private UUID jti;
 
@@ -39,5 +42,13 @@ public class AccessKey extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }
