@@ -22,16 +22,17 @@ dependencies {
     compile project(':common')
     compile project(':connector-service-api')
 
-    compile ("io.electrica.integration:spi:${electricaIntegrationVersion}") {
-        // ToDo use you own dependencies
-        // transitive = false
+    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile("io.electrica.integration:spi:${electricaIntegrationVersion}") {
+        transitive = false
     }
-    runtime ("io.electrica.integration:slack:${electricaIntegrationVersion}") {
+    runtime("io.electrica.integration:slack:${electricaIntegrationVersion}") {
         transitive = false
     }
 
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
+    testCompile 'com.google.auto.service:auto-service:1.0-rc4'
 }
 
 dependencyManagement {

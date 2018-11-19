@@ -58,6 +58,8 @@ public class FullConnectionDtoService {
         } else if (authorization instanceof TokenAuthorization) {
             TokenAuthorizationDto data = tokenAuthorizationDtoService.toDto((TokenAuthorization) authorization);
             return new TokenTypedAuthorizationDto(data);
+        } else if (authorization == null) {
+            return null;
         }
 
         String type = authorization.getClass().getName();

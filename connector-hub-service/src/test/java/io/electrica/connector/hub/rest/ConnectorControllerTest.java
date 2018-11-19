@@ -55,7 +55,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         assertEquals(connectorType.getId(), actual.getTypeId());
 
-        final String expectedErn = "ern://connector:hackerrank:applications:1_0";
+        final String expectedErn = "ern://com_hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertTrue(dto.getProperties().equals(actual.getProperties()));
     }
@@ -82,7 +82,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
 
         assertEquals(connectorType.getId(), actual.getTypeId());
 
-        final String expectedErn = "ern://connector:hackerrank:applications:1_0";
+        final String expectedErn = "ern://com_hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertNull(actual.getProperties());
     }

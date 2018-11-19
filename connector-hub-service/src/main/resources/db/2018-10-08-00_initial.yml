@@ -382,18 +382,18 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: namespace
-            type: VARCHAR(255)
+            type: VARCHAR(127)
         - column:
             name: properties
             type: JSONB
         - column:
             name: resource
-            type: VARCHAR(255)
+            type: VARCHAR(63)
         - column:
             constraints:
               nullable: false
             name: version
-            type: VARCHAR(255)
+            type: VARCHAR(63)
         - column:
             constraints:
               nullable: false
@@ -457,7 +457,7 @@ databaseChangeLog:
             type: BOOLEAN
         - column:
             name: namespace
-            type: VARCHAR(255)
+            type: VARCHAR(127)
         - column:
             name: namespace_mod
             type: BOOLEAN
@@ -469,13 +469,13 @@ databaseChangeLog:
             type: BOOLEAN
         - column:
             name: resource
-            type: VARCHAR(255)
+            type: VARCHAR(63)
         - column:
             name: resource_mod
             type: BOOLEAN
         - column:
             name: version
-            type: VARCHAR(255)
+            type: VARCHAR(63)
         - column:
             name: version_mod
             type: BOOLEAN
@@ -631,14 +631,6 @@ databaseChangeLog:
     id: 1541364491707-29
     author: aleks (generated)
     changes:
-    - addUniqueConstraint:
-        columnNames: name, resource, version
-        constraintName: ukn064y686je7wg091hqwvasdnc
-        tableName: connectors
-- changeSet:
-    id: 1541364491707-30
-    author: aleks (generated)
-    changes:
     - createIndex:
         columns:
         - column:
@@ -646,7 +638,7 @@ databaseChangeLog:
         indexName: connections_access_key_id_idx
         tableName: connections
 - changeSet:
-    id: 1541364491707-31
+    id: 1541364491707-30
     author: aleks (generated)
     changes:
     - createIndex:
@@ -656,7 +648,7 @@ databaseChangeLog:
         indexName: connections_user_id_idx
         tableName: connections
 - changeSet:
-    id: 1541364491707-32
+    id: 1541364491707-31
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -670,7 +662,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-33
+    id: 1541364491707-32
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -684,7 +676,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-34
+    id: 1541364491707-33
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -698,7 +690,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-35
+    id: 1541364491707-34
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -712,7 +704,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-36
+    id: 1541364491707-35
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -726,7 +718,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: connector_types
 - changeSet:
-    id: 1541364491707-37
+    id: 1541364491707-36
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -740,7 +732,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-38
+    id: 1541364491707-37
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -754,7 +746,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-39
+    id: 1541364491707-38
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -768,7 +760,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: authorizations
 - changeSet:
-    id: 1541364491707-40
+    id: 1541364491707-39
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -782,7 +774,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: connectors
 - changeSet:
-    id: 1541364491707-41
+    id: 1541364491707-40
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -796,7 +788,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-42
+    id: 1541364491707-41
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:
@@ -810,7 +802,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: revinfo
 - changeSet:
-    id: 1541364491707-43
+    id: 1541364491707-42
     author: aleks (generated)
     changes:
     - addForeignKeyConstraint:

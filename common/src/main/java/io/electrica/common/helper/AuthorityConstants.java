@@ -1,5 +1,9 @@
 package io.electrica.common.helper;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 public interface AuthorityConstants {
 
     String CREATE_SCOPE = "c";
@@ -16,5 +20,13 @@ public interface AuthorityConstants {
 
     String ACCESS_KEY_CLIENT_ID = "accessKey";
     String FRONTEND_CLIENT_ID = "frontend";
+
+    Set<String> ACCESS_KEY_CLIENT_SCOPES = Sets.newHashSet(READ_SCOPE, SDK_SCOPE);
+    Set<String> ACCESS_KEY_CLIENT_RESOURCE_IDS = Sets.newHashSet(
+            USER_SERVICE_RESOURCE_ID,
+            CONNECTOR_HUB_SERVICE_RESOURCE_ID,
+            INVOKER_SERVICE_RESOURCE_ID,
+            CONNECTOR_SERVICE_RESOURCE_ID
+    );
 
 }

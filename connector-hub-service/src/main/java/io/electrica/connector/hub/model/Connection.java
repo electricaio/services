@@ -33,7 +33,7 @@ public class Connection extends AbstractEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "connector_id", nullable = false)
+    @JoinColumn(name = "connector_id", nullable = false, updatable = false)
     private Connector connector;
 
     @NotNull
@@ -48,7 +48,7 @@ public class Connection extends AbstractEntity {
     @Column(name = "access_key_id", nullable = false)
     private Long accessKeyId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorization_id", unique = true)
     private Authorization authorization;
 
