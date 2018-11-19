@@ -26,8 +26,8 @@ public class ConnectorService extends AbstractService<Connector> {
     @Override
     protected Connector executeCreate(Connector model) {
         final String ern = ERNUtils.createERN(
-                model.getName(),
-                model.getResourceOpt(),
+                model.getNamespace(),
+                model.getResource(),
                 model.getVersion()
         );
         model.setErn(ern);

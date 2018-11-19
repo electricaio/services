@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.UUID;
 
 import static io.electrica.common.helper.AuthorityConstants.*;
-import static io.electrica.common.helper.AuthorityConstants.FRONTEND_CLIENT_ID;
 
 /**
  * AuthorizationServerConfigurerAdapterImpl provides implementation for Authorization server.
@@ -58,7 +57,7 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 // ToDo change secret
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
+                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID)
                 .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60)
@@ -66,8 +65,8 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .and()
                 .withClient(ACCESS_KEY_CLIENT_ID)
                 .secret("{none}" + UUID.randomUUID())
-                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID, INVOKER_SERVICE_RESOURCE_ID)
-                .scopes(READ_SCOPE, SDK_SCOPE)
+                .resourceIds(ACCESS_KEY_CLIENT_RESOURCE_IDS.toArray(new String[0]))
+                .scopes(ACCESS_KEY_CLIENT_SCOPES.toArray(new String[0]))
                 .accessTokenValiditySeconds(Integer.MAX_VALUE);
     }
 

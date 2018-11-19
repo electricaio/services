@@ -3,7 +3,6 @@ package io.electrica.connector.hub.model;
 import io.electrica.common.jpa.model.AbstractEntity;
 import io.electrica.connector.hub.dto.AuthorizationType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
@@ -13,18 +12,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
-import java.util.Optional;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 
 @Audited
 @Entity
-@Table(name = "connectors",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "resource", "version"})
-)
+@Table(name = "connectors")
 public class Connector extends AbstractEntity {
 
     @NotNull
@@ -42,19 +37,19 @@ public class Connector extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 
-    @Size(max = 255)
-    @Column
+    @NotNull
+    @Size(max = 127)
+    @Column(nullable = false, length = 127)
+    private String namespace;
+
+    @Size(max = 63)
+    @Column(length = 63)
     private String resource;
 
     @NotNull
-    @Size(max = 255)
-    @Column(nullable = false)
+    @Size(max = 63)
+    @Column(nullable = false, length = 63)
     private String version;
-
-    @NotNull
-    @Size(max = 255)
-    @Column(nullable = false)
-    private String namespace;
 
     @NotNull
     @Size(max = 255)
@@ -63,9 +58,5 @@ public class Connector extends AbstractEntity {
 
     @Type(type = JSONB_TYPE)
     private Map<String, String> properties;
-
-    public Optional<String> getResourceOpt() {
-        return Optional.ofNullable(resource);
-    }
 
 }

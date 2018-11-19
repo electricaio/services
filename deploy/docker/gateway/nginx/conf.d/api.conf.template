@@ -185,7 +185,7 @@ server {
     }
 
     # Proxy to invoker-service
-    location ~* ^/(v[1-9]|public/v[1-9])/(invokers) {
+    location ~* ^/v[1-9]/(sdk) {
         include /etc/nginx/cors.conf;
 
         proxy_set_header Host $http_host;

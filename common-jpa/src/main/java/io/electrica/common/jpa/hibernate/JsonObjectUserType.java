@@ -51,12 +51,7 @@ public class JsonObjectUserType implements UserType {
             return null;
         }
 
-        Map<String, String> resultMap = new HashMap<>();
-
-        Map<?, ?> tempMap = (Map<?, ?>) originalValue;
-        tempMap.forEach((key, value) -> resultMap.put((String) key, (String) value));
-
-        return resultMap;
+        return new HashMap<>(((Map<?, ?>) originalValue));
     }
 
     @Override
@@ -65,7 +60,7 @@ public class JsonObjectUserType implements UserType {
         PGobject o = (PGobject) rs.getObject(names[0]);
         if (o != null && o.getValue() != null) {
             try {
-                objectMapper.readValue(o.getValue(), Map.class);
+                return objectMapper.readValue(o.getValue(), Map.class);
             } catch (IOException e) {
                 return new HibernateException(e);
             }
