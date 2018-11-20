@@ -62,3 +62,10 @@ docker build -t electrica/connector-service:${profile} \
   --build-arg PROFILE=${profile} \
   ./deploy/docker/connector-service
 rm -rf ./deploy/docker/connector-service/service.jar
+
+echo "==================== Building webhook-service docker image ===================="
+cp ./webhook-service/build/libs/webhook-service-*.jar ./deploy/docker/webhook-service/service.jar
+docker build -t electrica/webhook-service:${profile} \
+  --build-arg PROFILE=${profile} \
+  ./deploy/docker/webhook-service
+rm -rf ./deploy/docker/webhookservice/service.jar

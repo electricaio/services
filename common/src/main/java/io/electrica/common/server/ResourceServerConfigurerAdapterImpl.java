@@ -45,6 +45,9 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
             case "connector-service":
                 resourceId = AuthorityConstants.CONNECTOR_SERVICE_RESOURCE_ID;
                 break;
+            case "webhook-service":
+                resourceId = AuthorityConstants.WEBHOOK_SERVICE_RESOURCE_ID;
+                break;
             default:
                 throw new UnsupportedOperationException(
                         "Unknown service name to resolve oauth resourceId: " + applicationName
