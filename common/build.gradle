@@ -29,6 +29,7 @@ dependencies {
     compile "com.samskivert:jmustache"
     compile "org.apache.commons:commons-io:${commonsioVersion}"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonJsr310Version}"
 
     testCompile project(':common-test')
 }
