@@ -21,8 +21,8 @@ public class TinyConnectionDto {
     private Long id;
 
     @NotNull
-    public String name;
+    private String name;
 
-    public Map<String, String> properties;
+    private Map<String, String> properties;
 
 }

@@ -68,4 +68,4 @@ cp ./webhook-service/build/libs/webhook-service-*.jar ./deploy/docker/webhook-se
 docker build -t electrica/webhook-service:${profile} \
   --build-arg PROFILE=${profile} \
   ./deploy/docker/webhook-service
-rm -rf ./deploy/docker/webhookservice/service.jar
+rm -rf ./deploy/docker/webhook-service/service.jar
