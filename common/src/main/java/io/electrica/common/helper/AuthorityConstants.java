@@ -17,6 +17,7 @@ public interface AuthorityConstants {
     String CONNECTOR_HUB_SERVICE_RESOURCE_ID = "ch";
     String INVOKER_SERVICE_RESOURCE_ID = "i";
     String CONNECTOR_SERVICE_RESOURCE_ID = "c";
+    String WEBHOOK_SERVICE_RESOURCE_ID = "w";
 
     String ACCESS_KEY_CLIENT_ID = "accessKey";
     String FRONTEND_CLIENT_ID = "frontend";

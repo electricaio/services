@@ -3,3 +3,4 @@ feign:
   connectorHubService.url: connector-hub-service:22023
   invokerService.url: invoker-service:22024
   connectorService.url: connector-service:22025
+  webhookService.url: webhook-service:22026

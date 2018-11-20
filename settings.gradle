@@ -11,4 +11,6 @@ include 'invoker-service'
 include 'invoker-service-api'
 include 'connector-service-api'
 include 'connector-service'
+include 'webhook-api'
+include 'webhook-service'
 

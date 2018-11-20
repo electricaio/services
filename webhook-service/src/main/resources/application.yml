@@ -1,0 +1,6 @@
+server:
+  port: 22026
+
+spring:
+  application:
+    name: webhook-service
