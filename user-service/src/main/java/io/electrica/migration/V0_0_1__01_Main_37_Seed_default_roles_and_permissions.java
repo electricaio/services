@@ -44,6 +44,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission activateOrg = savePermission(PermissionType.ActivateOrg, "Activate organization", "ActivateOrg");
         Permission createAccessKey = savePermission(PermissionType.CreateAccessKey, "Create access key", "CreateAccessKey");
         Permission readAccessKey = savePermission(PermissionType.ReadAccessKey, "Read access key", "ReadAccessKey");
+        Permission deleteAccessKey = savePermission(PermissionType.DeleteAccessKey, "Delete access key", "DeleteAccessKey");
         Permission createSTL = savePermission(PermissionType.CreateConnector, "Create Connector", "CreateConnector");
         Permission stlDeActivate = savePermission(PermissionType.DeActivateConnection, "Deactivate Connection",
                 "DeActivateConnection");
@@ -64,6 +65,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 readOrg,
                 createAccessKey,
                 readAccessKey,
+                deleteAccessKey,
                 associateAccessKeyToSTL,
                 listActiveSTLs
         );
@@ -80,6 +82,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 activateOrg,
                 createAccessKey,
                 readAccessKey,
+                deleteAccessKey,
                 listActiveSTLs,
                 addPermission,
                 removePermission
@@ -98,6 +101,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 activateOrg,
                 createAccessKey,
                 readAccessKey,
+                deleteAccessKey,
                 createSTL,
                 stlDeActivate,
                 stlActivate,
