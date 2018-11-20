@@ -77,7 +77,7 @@ public class AccessKeyControllerImpl implements AccessKeyController {
     @Override
     @PreAuthorize("#common.hasPermission('DeleteAccessKey') AND  " +
             "( #common.isSuperAdmin() OR #user.isUserAccessKey(#accessKeyId) )")
-    public ResponseEntity<AccessKeyDto> deleteAccessKey(Long accessKeyId) {
+    public ResponseEntity<AccessKeyDto> deleteAccessKey(@PathVariable("accessKeyId")Long accessKeyId) {
         return ResponseEntity.ok(accessKeyDtoService.archive(accessKeyId));
     }
 }
