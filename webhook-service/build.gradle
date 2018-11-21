@@ -1,13 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
-
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
 dependencies {
@@ -16,13 +6,6 @@ dependencies {
 
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
-}
-
-dependencyManagement {
-    imports {
-        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-    }
 }
 
 bootRun {

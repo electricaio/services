@@ -1,43 +1,25 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
-
-apply plugin: 'io.spring.dependency-management'
-
 dependencies {
-
+    compile project(':common-api')
+    
     compile 'org.springframework.boot:spring-boot-starter-jetty'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-validation'
     compile 'org.springframework.boot:spring-boot-starter-mail'
-    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:${springBootVersion}"
-    compile project(':common-api')
+    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$securityOauth2AutoconfigureVersion"
+    
     compile 'org.flywaydb:flyway-core'
+    compile 'com.samskivert:jmustache'
 
-    compile "javax.inject:javax.inject:${javaxInjectVersion}"
-    compile "com.google.code.findbugs:jsr305:${findbugsJsr305Version}"
-    compile "com.google.code.findbugs:annotations:${findbugsAnnotationsVersion}"
-    compile "org.apache.commons:commons-lang3:${apacheCommonLang3Version}"
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "com.github.dozermapper:dozer-core:${dozerVersion}"
-    compile "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}"
-    compile "com.samskivert:jmustache"
-    compile "org.apache.commons:commons-io:${commonsioVersion}"
-    compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonJsr310Version}"
+    compile "javax.inject:javax.inject:$javaxInjectVersion"
+    compile "com.google.code.findbugs:jsr305:$findbugsJsr305Version"
+    compile "com.google.code.findbugs:annotations:$findbugsAnnotationsVersion"
+    compile "org.apache.commons:commons-lang3:$apacheCommonLang3Version"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "com.github.dozermapper:dozer-core:$dozerVersion"
+    compile "net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion"
+    compile "org.apache.commons:commons-io:$commonsioVersion"
+    compile "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonJsr310Version"
 
     testCompile project(':common-test')
 }
-
-dependencyManagement {
-    imports {
-        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-    }
-}
-

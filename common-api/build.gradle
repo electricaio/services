@@ -1,25 +1,6 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-    }
-}
-
-apply plugin: 'io.spring.dependency-management'
-
 dependencies {
     compile "org.projectlombok:lombok:${lombokVersion}"
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     compile "org.springframework.boot:spring-boot-starter-validation"
     compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
 }
-
-dependencyManagement {
-    imports {
-        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-    }
-}
-
