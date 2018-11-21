@@ -1,5 +1,7 @@
 plugins {
     id 'com.github.kt3k.coveralls' version '2.8.2'
+    id "org.springframework.boot" version '2.0.5.RELEASE' apply false
+    id "org.liquibase.gradle" version '2.0.1' apply false
 }
 
 allprojects {
@@ -21,11 +23,10 @@ allprojects {
 subprojects {
     ext {
         // Plugins
-        liquibaseGradlePlugin = '2.0.1'
         snakeyamlVersion = '1.15'
 
         // Spring
-        springBootVersion = '2.0.5.RELEASE'
+        securityOauth2AutoconfigureVersion = '2.0.5.RELEASE'
         springCloudVersion = 'Finchley.SR1'
 
         // Other
@@ -47,14 +48,16 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    dependencies {
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+        }
     }
 
-    jacocoTestReport {
-        reports {
-            xml.enabled = true // coveralls plugin depends on xml format report
-            html.enabled = true
-        }
+    dependencies {
     }
 
     sourceSets {
@@ -68,6 +71,13 @@ subprojects {
         }
     }
 
+    jacocoTestReport {
+        reports {
+            xml.enabled = true // coveralls plugin depends on xml format report
+            html.enabled = true
+        }
+    }
+    
     // Checkstyle settings
     checkstyle {
         toolVersion '7.8.1'
