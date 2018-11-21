@@ -47,6 +47,10 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, CreateC
         return toDto(connectionService.findAllByAccessKey(accessKeyId, null, null));
     }
 
+    public Boolean validateConnection(Long connectionId) {
+        return connectionService.validate(connectionId, identityContextHolder.getIdentity().getUserId());
+    }
+
 
     public List<ConnectionDto> findAllByUser(Long userId) {
         return toDto(connectionService.findAllByUser(userId));
