@@ -53,10 +53,6 @@ public class ConnectionService extends AbstractService<Connection> {
         return connectionRepository.findByAccessKeyWithFilter(accessKeyId, connectionName, ern);
     }
 
-    public Boolean validate(Long connectionId, Long userId) {
-        return connectionRepository.canUserAccessConnection(connectionId, userId);
-    }
-
     @Override
     protected JpaRepository<Connection, Long> getRepository() {
         return connectionRepository;

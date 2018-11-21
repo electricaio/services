@@ -79,11 +79,9 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND " +
-            "( #common.isSuperAdmin()  OR #connection.canUserAccess(#id) )")
-    public ResponseEntity<Boolean> validate(Long id) {
-        return ResponseEntity.ok(connectionDtoService.validateConnection(id));
+    @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND #connection.canUserAccess(#id)")
+    public ResponseEntity<Boolean> validate(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(true);
     }
-
 
 }
