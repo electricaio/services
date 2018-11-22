@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -28,10 +27,10 @@ import java.util.Set;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final Provider<UserService> userService;
+    private final UserService userService;
 
     @Inject
-    public UserDetailsServiceImpl(Provider<UserService> userService) {
+    public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
@@ -54,10 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> result = Optional.empty();
         if (TokenHelper.isIdTokenUsername(username)) {
             long id = TokenHelper.extractIdFromTokenUsername(username);
-            result = userService.get().findByIdFetchingAuthorities(id);
+            result = userService.findByIdFetchingAuthorities(id);
         } else if (TokenHelper.isEmailTokenUsername(username)) {
             String email = TokenHelper.extractEmailFromTokenUsername(username);
-            result = userService.get().findByEmailFetchingAuthorities(email);
+            result = userService.findByEmailFetchingAuthorities(email);
         }
         return result.orElseThrow(() -> new UsernameNotFoundException(username));
     }

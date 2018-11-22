@@ -8,15 +8,21 @@ repositories {
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("io.electrica.integration:dependencies:${electricaIntegrationVersion}")
+    }
+}
+
 dependencies {
     compile project(':common')
     compile project(':connector-service-api')
 
     compile 'com.squareup.okhttp3:okhttp:3.11.0'
-    compile("io.electrica.integration:spi:${electricaIntegrationVersion}") {
+    compile("io.electrica.integration:spi") {
         transitive = false
     }
-    runtime("io.electrica.integration:slack:${electricaIntegrationVersion}") {
+    runtime("io.electrica.integration:slack") {
         transitive = false
     }
 
