@@ -428,6 +428,82 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 });
     }
 
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            PermissionType.CreateConnector,
+            PermissionType.AssociateAccessKeyToConnector
+    })
+    public void testValidateConnection() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
+                PermissionType.ReadActiveConnection), () -> {
+            assertTrue(connectionController.validate(connection.getId()).getBody());
+        });
+
+    }
+
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            PermissionType.CreateConnector,
+            PermissionType.AssociateAccessKeyToConnector
+    })
+    public void testValidateConnectionWithConnectionBelongToDiffUser() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        executeForUser(2, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
+                PermissionType.ReadActiveConnection), () -> {
+            assertTrue(connectionController.validate(connection.getId()).getBody());
+        });
+
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            PermissionType.CreateConnector,
+            PermissionType.AssociateAccessKeyToConnector
+    })
+    public void testValidateConnectionWithNoReadConnectionPermission() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
+                PermissionType.AddPermission), () -> {
+            assertTrue(connectionController.validate(connection.getId()).getBody());
+        });
+
+    }
+
     private AtomicReference<Long> createHackerRankConnector() {
         return createConnector(createHackerRankConnectorDto());
     }

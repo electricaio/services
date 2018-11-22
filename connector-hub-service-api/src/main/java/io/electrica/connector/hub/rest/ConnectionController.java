@@ -37,8 +37,9 @@ public interface ConnectionController {
     );
 
     @GetMapping(V1 + "/access-keys/{accessKeyId}/connections")
-    ResponseEntity<List<ConnectionDto>> findAllByAccessKeyId(
-            @PathVariable("accessKeyId") Long accessKeyId);
+    ResponseEntity<List<ConnectionDto>> findAllByAccessKeyId(@PathVariable("accessKeyId") Long accessKeyId);
 
+    @GetMapping(PRIVATE + V1 + "/me/connections/{id}/validate")
+    ResponseEntity<Boolean> validate(@PathVariable("id") Long id);
 
 }

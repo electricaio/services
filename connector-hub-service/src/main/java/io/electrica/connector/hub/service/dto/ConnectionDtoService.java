@@ -47,7 +47,6 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, CreateC
         return toDto(connectionService.findAllByAccessKey(accessKeyId, null, null));
     }
 
-
     public List<ConnectionDto> findAllByUser(Long userId) {
         return toDto(connectionService.findAllByUser(userId));
     }
