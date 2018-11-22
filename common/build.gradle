@@ -3,7 +3,6 @@ dependencies {
     
     compile 'org.springframework.boot:spring-boot-starter-jetty'
     compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-starter-validation'
     compile 'org.springframework.boot:spring-boot-starter-mail'
     compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$securityOauth2AutoconfigureVersion"
     
