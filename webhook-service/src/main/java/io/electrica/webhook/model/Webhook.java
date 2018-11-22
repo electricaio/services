@@ -20,44 +20,45 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "webhooks",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "connection_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "connectionId"})
 )
 public class Webhook {
 
     @Id
-    @Column(unique = true)
-    private UUID token;
+    private UUID id;
 
     @NotNull
-    @Size(max = 255)
-    @Column(name = "name")
+    @Size(max = 128)
+    @Column(nullable = false)
     private String name;
 
     @NotNull
-    @Column(name = "connection_id")
+    @Column(nullable = false)
     private Long connectionId;
 
     @NotNull
-    @Column(name = "organization_id")
+    @Column(nullable = false)
     private Long organizationId;
 
     @NotNull
-    @Column(name = "user_id")
+    @Column(nullable = false)
     private Long userId;
 
 
     @NotNull
-    @Column(name = "connector_id")
+    @Column(nullable = false)
     private Long connectorId;
 
     @NotNull
-    @Column(name = "counter", nullable = false, columnDefinition = "int8 default 0")
-    private Long counter;
+    @Column(nullable = false, columnDefinition = "int8 default 0")
+    private Long invocationsCount = 0L;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @NotNull
+    @Size(max = 30)
+    @Column(nullable = false)
     private String hash;
 
 }

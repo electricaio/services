@@ -1,12 +1,12 @@
 databaseChangeLog:
 - changeSet:
-    id: 1542874891768-1
+    id: 1542910866628-1
     author: munishsodhi (generated)
     changes:
     - createSequence:
         sequenceName: revinfo_id_seq
 - changeSet:
-    id: 1542874891768-2
+    id: 1542910866628-2
     author: munishsodhi (generated)
     changes:
     - createTable:
@@ -21,7 +21,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         tableName: revchanges
 - changeSet:
-    id: 1542874891768-3
+    id: 1542910866628-3
     author: munishsodhi (generated)
     changes:
     - createTable:
@@ -43,7 +43,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: revinfo
 - changeSet:
-    id: 1542874891768-4
+    id: 1542910866628-4
     author: munishsodhi (generated)
     changes:
     - createTable:
@@ -51,7 +51,7 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: token
+            name: id
             type: UUID
         - column:
             constraints:
@@ -64,24 +64,24 @@ databaseChangeLog:
             name: connector_id
             type: BIGINT
         - column:
-            constraints:
-              nullable: false
-            defaultValueNumeric: 0
-            name: counter
-            type: BIGINT
-        - column:
             name: created_at
             type: TIMESTAMP(6) WITHOUT TIME ZONE
         - column:
             constraints:
               nullable: false
             name: hash
-            type: VARCHAR(255)
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            defaultValueNumeric: 0
+            name: invocations_count
+            type: BIGINT
         - column:
             constraints:
               nullable: false
             name: name
-            type: VARCHAR(255)
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -94,7 +94,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: webhooks
 - changeSet:
-    id: 1542874891768-5
+    id: 1542910866628-5
     author: munishsodhi (generated)
     changes:
     - addPrimaryKey:
@@ -102,23 +102,23 @@ databaseChangeLog:
         constraintName: revinfo_pkey
         tableName: revinfo
 - changeSet:
-    id: 1542874891768-6
+    id: 1542910866628-6
     author: munishsodhi (generated)
     changes:
     - addPrimaryKey:
-        columnNames: token
+        columnNames: id
         constraintName: webhooks_pkey
         tableName: webhooks
 - changeSet:
-    id: 1542874891768-7
+    id: 1542910866628-7
     author: munishsodhi (generated)
     changes:
     - addUniqueConstraint:
         columnNames: name, connection_id
-        constraintName: ukantkujlrca5dj8q64muysmkh2
+        constraintName: uk89ln6fv6l17n4bxx4ayb8h2a6
         tableName: webhooks
 - changeSet:
-    id: 1542874891768-8
+    id: 1542910866628-8
     author: munishsodhi (generated)
     changes:
     - addForeignKeyConstraint:

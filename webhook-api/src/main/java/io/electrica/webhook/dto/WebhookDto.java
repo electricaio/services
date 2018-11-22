@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,16 +16,13 @@ import java.time.LocalDateTime;
 public class WebhookDto extends CreateWebhookDto {
 
     @NotNull
-    private Long id;
+    private UUID id;
 
     @NotBlank
     @Size(max = 255)
     private String url;
 
-    @NotNull
-    private Long revisionVersion;
-
-    private Long counter;
+    private Long invocationsCount;
 
     private LocalDateTime createdAt;
 }
