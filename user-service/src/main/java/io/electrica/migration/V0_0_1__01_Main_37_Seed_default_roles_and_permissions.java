@@ -69,6 +69,9 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 "ReadActiveConnection");
         Permission addPermission = savePermission(PermissionType.AddPermission, "Add permission", "AddPermission");
         Permission removePermission = savePermission(PermissionType.RemovePermission, "Remove permission", "RemovePermission");
+        Permission createWebhook = savePermission(PermissionType.CreateWebhook, "Create Webhook", "CreateWebhook");
+        Permission deleteWebhook = savePermission(PermissionType.DeleteWebhook, "Delete Webhook", "DeleteWebhook");
+        Permission readWebhook = savePermission(PermissionType.ReadWebhook, "Read Webhook", "ReadWebhook");
 
         assignPermissionsToRole(orgUser,
                 updateUser,
@@ -79,7 +82,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 readAccessKey,
                 deleteAccessKey,
                 associateAccessKeyToSTL,
-                listActiveSTLs
+                listActiveSTLs,
+                createWebhook,
+                deleteWebhook,
+                readWebhook
         );
 
 

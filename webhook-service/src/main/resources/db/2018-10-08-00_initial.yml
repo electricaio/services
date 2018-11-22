@@ -1,0 +1,161 @@
+databaseChangeLog:
+- changeSet:
+        id: 1542795191635-1
+        author: munishsodhi (generated)
+        changes:
+        - createSequence:
+                sequenceName: revinfo_id_seq
+- changeSet:
+        id: 1542795191635-2
+        author: munishsodhi (generated)
+        changes:
+        - createSequence:
+                sequenceName: webhook_id_seq
+- changeSet:
+        id: 1542795191635-3
+        author: munishsodhi (generated)
+        changes:
+        - createTable:
+                columns:
+                - column:
+                        constraints:
+                              nullable: false
+                        name: rev
+                        type: BIGINT
+                - column:
+                        name: entityname
+                        type: VARCHAR(255)
+                tableName: revchanges
+- changeSet:
+        id: 1542795191635-4
+        author: munishsodhi (generated)
+        changes:
+        - createTable:
+                columns:
+                - column:
+                        constraints:
+                              nullable: false
+                        name: id
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        name: timestamp
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        name: user_id
+                        type: BIGINT
+                tableName: revinfo
+- changeSet:
+        id: 1542795191635-5
+        author: munishsodhi (generated)
+        changes:
+        - createTable:
+                columns:
+                - column:
+                        constraints:
+                              nullable: false
+                        name: id
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        name: archived
+                        type: BOOLEAN
+                - column:
+                        constraints:
+                              nullable: false
+                        name: revision_version
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        name: connection_id
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        name: connector_id
+                        type: BIGINT
+                - column:
+                        constraints:
+                              nullable: false
+                        defaultValueNumeric: 0
+                        name: counter
+                        type: BIGINT
+                - column:
+                        name: created_at
+                        type: TIMESTAMP(6) WITHOUT TIME ZONE
+                - column:
+                        constraints:
+                              nullable: false
+                        name: hash
+                        type: VARCHAR(255)
+                - column:
+                        constraints:
+                              nullable: false
+                        name: name
+                        type: VARCHAR(255)
+                - column:
+                        constraints:
+                              nullable: false
+                        name: organization_id
+                        type: BIGINT
+                - column:
+                        name: token
+                        type: UUID
+                - column:
+                        constraints:
+                              nullable: false
+                        name: user_id
+                        type: BIGINT
+                tableName: webhooks
+- changeSet:
+        id: 1542795191635-6
+        author: munishsodhi (generated)
+        changes:
+        - addPrimaryKey:
+                columnNames: id
+                constraintName: revinfo_pkey
+                tableName: revinfo
+- changeSet:
+        id: 1542795191635-7
+        author: munishsodhi (generated)
+        changes:
+        - addPrimaryKey:
+                columnNames: id
+                constraintName: webhooks_pkey
+                tableName: webhooks
+- changeSet:
+        id: 1542795191635-8
+        author: munishsodhi (generated)
+        changes:
+        - addUniqueConstraint:
+                columnNames: token
+                constraintName: uk_6s4o0smi3c1u8lv4tpafk9wbb
+                tableName: webhooks
+- changeSet:
+        id: 1542795191635-9
+        author: munishsodhi (generated)
+        changes:
+        - addUniqueConstraint:
+                columnNames: name, connection_id
+                constraintName: ukantkujlrca5dj8q64muysmkh2
+                tableName: webhooks
+- changeSet:
+        id: 1542795191635-10
+        author: munishsodhi (generated)
+        changes:
+        - addForeignKeyConstraint:
+                baseColumnNames: rev
+                baseTableName: revchanges
+                constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
+                deferrable: false
+                initiallyDeferred: false
+                onDelete: NO ACTION
+                onUpdate: NO ACTION
+                referencedColumnNames: id
+                referencedTableName: revinfo
+

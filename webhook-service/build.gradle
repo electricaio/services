@@ -1,11 +1,17 @@
 apply plugin: 'org.springframework.boot'
+apply plugin: "org.liquibase.gradle"
 
 dependencies {
-    compile project(':common')
+    compile project(':common-jpa')
     compile project(':webhook-api')
+    compile project(':connector-hub-service-api')
 
     testCompile project(':common-test')
-    testCompile project(':common').sourceSets.test.output
+    testCompile project(':common-jpa').sourceSets.test.output
+
+    liquibaseRuntime "org.liquibase:liquibase-core"
+    liquibaseRuntime "org.postgresql:postgresql:${postgresqlDriverVersion}"
+    liquibaseRuntime "org.yaml:snakeyaml:${snakeyamlVersion}"
 }
 
 bootRun {
@@ -13,4 +19,15 @@ bootRun {
         args project.args.split("\\s+")
     }
     jvmArgs = ["-Xmx128m"]
+}
+
+liquibase {
+    activities {
+        main {
+            changeLogFile "src/main/resources/db/generated.yml"
+            url "jdbc:postgresql://localhost:5432/webhook_db"
+            username "postgres"
+            password ""
+        }
+    }
 }

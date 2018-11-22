@@ -33,7 +33,10 @@ public enum PermissionType {
     ReadActiveConnection(16),
     AddPermission(17),
     RemovePermission(18),
-    DeleteAccessKey(19);
+    DeleteAccessKey(19),
+    CreateWebhook(20),
+    ReadWebhook(21),
+    DeleteWebhook(22);
 
     private static final Map<Integer, PermissionType> ALL = Arrays.stream(PermissionType.values())
             .collect(Collectors.toMap(PermissionType::getCode, Function.identity()));
