@@ -1,4 +1,4 @@
-package io.electrica.migration;
+package io.electrica.migration.common;
 
 import io.electrica.common.migration.FlywayApplicationContextBridge;
 import io.electrica.connector.hub.model.ConnectorType;

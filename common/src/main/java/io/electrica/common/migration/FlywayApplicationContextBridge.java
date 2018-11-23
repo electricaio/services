@@ -13,7 +13,8 @@ public class FlywayApplicationContextBridge {
         return APPLICATION_CONTEXT.get();
     }
 
-    static void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    static void setApplicationContext(ApplicationContext applicationContext)
+            throws BeansException {
         APPLICATION_CONTEXT.set(applicationContext);
     }
 

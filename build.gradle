@@ -132,6 +132,11 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     additionalSourceDirs = files(projects.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(projects.sourceSets.main.allSource.srcDirs)
     classDirectories = files(projects.sourceSets.main.output)
+     afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'io/electrica/migration/*')
+        })//this task is excluding the  migration classes
+    }
     executionData jacocoMerge.destinationFile
 
     reports {
