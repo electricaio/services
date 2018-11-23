@@ -3,7 +3,7 @@
 # Setup your dev environment
 1.) Make sure you have a Postgres database running locally (or somewhere). Configure your Postgres settings under: `common/src/main/resources/common.properties`
 
-2.) Create two databases in Postgres - `user_db` and `connector_hub_db`
+2.) Create databases in Postgres - `user_db` , `connector_hub_db` and `webhook_db`
 
 3.) Install Docker from https://docs.docker.com/docker-for-mac/install/
 
