@@ -7,7 +7,6 @@ import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.webhook.dto.CreateWebhookDto;
 import io.electrica.webhook.dto.WebhookDto;
-import io.electrica.webhook.repository.WebhookRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
