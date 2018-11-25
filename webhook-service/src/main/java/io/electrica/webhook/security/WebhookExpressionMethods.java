@@ -8,6 +8,9 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+/**
+ * Register webhook namespace and support methods for Pre and Post authentication.
+ */
 public class WebhookExpressionMethods {
 
     private final ConnectionClient connectionClient;

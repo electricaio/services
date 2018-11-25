@@ -11,8 +11,11 @@ import java.util.Base64;
 public class WebhookHashGenerator {
 
     public String generateHash(Webhook entity) {
-        String inputString = entity.getConnectorId() + StringUtils.COLON + entity.getConnectorId() + StringUtils.COLON +
-                entity.getOrganizationId() + StringUtils.COLON + entity.getUserId();
-        return Base64.getEncoder().withoutPadding().encodeToString(inputString.getBytes(Charset.forName("UTF-8")));
+        StringBuilder inputString = new StringBuilder();
+        inputString.append(entity.getConnectorId()).append(StringUtils.COLON).append(entity.getConnectorId())
+                .append(StringUtils.COLON).append(entity.getOrganizationId()).append(StringUtils.COLON)
+                .append(entity.getUserId());
+        return Base64.getEncoder().withoutPadding().encodeToString(inputString.toString()
+                .getBytes(Charset.forName("UTF-8")));
     }
 }
