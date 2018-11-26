@@ -387,9 +387,18 @@ databaseChangeLog:
             name: authorization_type
             type: VARCHAR(255)
         - column:
+            name: connectorurl
+            type: VARCHAR(255)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
             constraints:
               nullable: false
             name: ern
+            type: VARCHAR(255)
+        - column:
+            name: imageurl
             type: VARCHAR(255)
         - column:
             constraints:
@@ -407,6 +416,12 @@ databaseChangeLog:
         - column:
             name: resource
             type: VARCHAR(63)
+        - column:
+            name: sdkurl
+            type: VARCHAR(255)
+        - column:
+            name: sourceurl
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -462,10 +477,28 @@ databaseChangeLog:
             name: authorization_type_mod
             type: BOOLEAN
         - column:
+            name: connectorurl
+            type: VARCHAR(255)
+        - column:
+            name: connectorurl_mod
+            type: BOOLEAN
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: description_mod
+            type: BOOLEAN
+        - column:
             name: ern
             type: VARCHAR(255)
         - column:
             name: ern_mod
+            type: BOOLEAN
+        - column:
+            name: imageurl
+            type: VARCHAR(255)
+        - column:
+            name: imageurl_mod
             type: BOOLEAN
         - column:
             name: name
@@ -490,6 +523,18 @@ databaseChangeLog:
             type: VARCHAR(63)
         - column:
             name: resource_mod
+            type: BOOLEAN
+        - column:
+            name: sdkurl
+            type: VARCHAR(255)
+        - column:
+            name: sdkurl_mod
+            type: BOOLEAN
+        - column:
+            name: sourceurl
+            type: VARCHAR(255)
+        - column:
+            name: sourceurl_mod
             type: BOOLEAN
         - column:
             name: version

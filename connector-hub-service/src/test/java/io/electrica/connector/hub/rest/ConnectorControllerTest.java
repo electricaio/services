@@ -52,12 +52,15 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
         assertEquals(dto.getNamespace(), actual.getNamespace());
         assertEquals(dto.getVersion(), actual.getVersion());
         assertEquals(dto.getResource(), actual.getResource());
-
         assertEquals(connectorType.getId(), actual.getTypeId());
-
         final String expectedErn = "ern://com_hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertTrue(dto.getProperties().equals(actual.getProperties()));
+        assertEquals(dto.getSourceURL(), actual.getSourceURL());
+        assertEquals(dto.getSdkURL(), actual.getSdkURL());
+        assertEquals(dto.getConnectorURL(), actual.getConnectorURL());
+        assertEquals(dto.getImageURL(), actual.getImageURL());
+        assertEquals(dto.getDescription(), actual.getDescription());
     }
 
     @Test

@@ -59,4 +59,19 @@ public class Connector extends AbstractEntity {
     @Type(type = JSONB_TYPE)
     private Map<String, String> properties;
 
+    @Size(max = 255)
+    private String sourceURL;
+
+    @Size(max = 255)
+    private String connectorURL;
+
+    @Size(max = 255)
+    private String sdkURL;
+
+    @Size(max = 255)
+    private String imageURL;
+
+    @Size(max = 255)
+    private String description;
+
 }
