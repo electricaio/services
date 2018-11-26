@@ -7,3 +7,5 @@ spring:
   datasource:
     name: pool-to-webhook-db
     url: jdbc:postgresql://localhost:5432/webhook_db
+webhook-service:
+    webhookPrefixURL: https://webhooks.electrica.io/
