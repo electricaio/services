@@ -1,15 +1,17 @@
-package io.electrica.migration;
+package io.electrica.migration.common;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.electrica.common.migration.FlywayApplicationContextBridge;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
-import io.electrica.user.model.*;
-import io.electrica.user.repository.*;
+import io.electrica.user.model.Permission;
+import io.electrica.user.model.Role;
+import io.electrica.user.model.RoleToPermission;
+import io.electrica.user.repository.PermissionRepository;
+import io.electrica.user.repository.RoleRepository;
+import io.electrica.user.repository.RoleToPermissionRepository;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 
@@ -18,10 +20,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
     private RoleRepository roleRepository;
     private PermissionRepository permissionRepository;
     private RoleToPermissionRepository roleToPermissionRepository;
-    private OrganizationRepository organizationRepository;
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private UserToRoleRepository userToRoleRepository;
 
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
@@ -30,20 +28,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         roleRepository = context.getBean(RoleRepository.class);
         permissionRepository = context.getBean(PermissionRepository.class);
         roleToPermissionRepository = context.getBean(RoleToPermissionRepository.class);
-        organizationRepository = context.getBean(OrganizationRepository.class);
-        userRepository = context.getBean(UserRepository.class);
-        passwordEncoder = context.getBean(PasswordEncoder.class);
-        userToRoleRepository = context.getBean(UserToRoleRepository.class);
-
-        Organization defaultOrg = saveOrganization("default");
-        Organization electricaOrg = saveOrganization("electrica.io");
 
         Role orgUser = saveRole(RoleType.OrgUser, "Organization user", "Restricted to self entities within organization");
         Role orgAdmin = saveRole(RoleType.OrgAdmin, "Organization admin", "Restricted to self organization");
         Role superAdmin = saveRole(RoleType.SuperAdmin, "Super admin", "Can change any organization");
-
-        saveUser("admin", "admin@electrica.io", "sk8freee", electricaOrg, RoleType.SuperAdmin);
-        saveUser("scott", "scott@electrica.io", "tiger", defaultOrg, RoleType.OrgUser);
 
         Permission updateUser = savePermission(PermissionType.UpdateUser, "Update user", "UpdateUser");
         Permission deleteUser = savePermission(PermissionType.DeleteUser, "Delete user", "DeleteUser");
@@ -148,30 +136,6 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
 
         return permissionRepository.save(p);
 
-    }
-
-    private Organization saveOrganization(String name) {
-        Organization o = new Organization();
-        o.setName(name);
-        return organizationRepository.save(o);
-    }
-
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "")
-    private User saveUser(String username, String email, String password, Organization org, RoleType roleType) {
-        User user = new User();
-        user.setOrganization(org);
-        user.setFirstName(username);
-        user.setEmail(email);
-        user.setLastName(username);
-        user.setSaltedPassword(passwordEncoder.encode(password));
-        User newEntity = userRepository.save(user);
-        User userGet = userRepository.getOne(newEntity.getId());
-        UserToRole userToRole = new UserToRole();
-        userToRole.setUser(userGet);
-        Role role = roleRepository.findOneByType(roleType).get();
-        userToRole.setRole(role);
-        userToRoleRepository.save(userToRole);
-        return newEntity;
     }
 
     private Role saveRole(RoleType type, String name, String description) {
