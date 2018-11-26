@@ -15,6 +15,12 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
 
     private ConnectorDtoService connectorDtoService;
 
+    Map<String, String> SLACK_PROPERTIES = new HashMap<String, String>() {{
+        put("send-message.url-template", "https://hooks.slack.com/services/%s");
+        put("http-client.max-idle-connections", "10");
+        put("http-client.keep-alive-duration-min", "60");
+    }};
+
     Map<String, String> TEST_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
         put("Two", "Two");
@@ -26,13 +32,20 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         final ApplicationContext context = FlywayApplicationContextBridge.getApplicationContext();
         connectorDtoService = context.getBean(ConnectorDtoService.class);
 
-        createConnector("Slack", AuthorizationType.None, 3L, "slack", "Applications", "1.0");
-        createConnector("JDBC", AuthorizationType.Basic, 1L, "jdbc", "Applications", "1.0");
-        createConnector("SalesForce", AuthorizationType.Token, 2L, "salesforce", "Applications", "1.0");
+        createConnector("Slack_V1", AuthorizationType.Token, 3L, "slack", "channel", "v1", SLACK_PROPERTIES);
+        createConnector("Slack_V2", AuthorizationType.Token, 3L, "slack", "channel", "v2", SLACK_PROPERTIES);
+        createConnector("JDBC", AuthorizationType.Basic, 1L, "jdbc", "Applications", "v1");
+        createConnector("SalesForce", AuthorizationType.Token, 2L, "salesforce", "Applications", "v1");
     }
 
     private void createConnector(String name, AuthorizationType authorizationType, Long typeId, String namespace,
                                  String resource, String version) {
+        createConnector(name,authorizationType,typeId,namespace,resource,version,TEST_PROPERTIES);
+
+    }
+
+    private void createConnector(String name, AuthorizationType authorizationType, Long typeId, String namespace,
+                                 String resource, String version,Map<String,String> properties) {
         CreateConnectorDto connectorDto = new CreateConnectorDto();
         connectorDto.setName(name);
         connectorDto.setAuthorizationType(authorizationType);
@@ -40,7 +53,7 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         connectorDto.setNamespace(namespace);
         connectorDto.setResource(resource);
         connectorDto.setVersion(version);
-        connectorDto.setProperties(TEST_PROPERTIES);
+        connectorDto.setProperties(properties);
         connectorDtoService.create(connectorDto);
 
     }
