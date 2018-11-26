@@ -30,7 +30,7 @@ public class IdentityImpl implements Identity {
     private final ValueCache<Long> accessKeyId = new ValueCache<>(() ->
             AuthorityHelper.readAccessKeyId(getAuthentication().getAuthorities())
     );
-    private final ValueCache<Map<String, String>> tokenClaims = new ValueCache<>(() ->
+    private final ValueCache<Map<String, Object>> tokenClaims = new ValueCache<>(() ->
             TokenHelper.getClaims(getToken())
     );
 

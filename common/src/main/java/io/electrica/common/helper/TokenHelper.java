@@ -68,25 +68,25 @@ public class TokenHelper {
         return getIssuedAt(getClaims(token));
     }
 
-    public static long getIssuedAt(Map<String, String> claims) {
-        String iat = claims.get(ISSUED_AT_ID);
+    public static long getIssuedAt(Map<String, Object> claims) {
+        Object iat = claims.get(ISSUED_AT_ID);
         if (iat == null) {
             throw new IllegalStateException(ISSUED_AT_ID + " absent in token");
         }
-        return Long.parseLong(iat);
+        return ((Number) iat).longValue();
     }
 
-    public static UUID getJti(Map<String, String> claims) {
-        String jti = claims.get(JWT_TOKEN_IDENTIFIER);
+    public static UUID getJti(Map<String, Object> claims) {
+        Object jti = claims.get(JWT_TOKEN_IDENTIFIER);
         if (jti == null) {
             throw new IllegalStateException(JWT_TOKEN_IDENTIFIER + " absent in token");
         }
-        return UUID.fromString(jti);
+        return UUID.fromString(jti.toString());
     }
 
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public static Map<String, String> getClaims(String token) {
+    public static Map<String, Object> getClaims(String token) {
         Jwt jwt = JwtHelper.decode(token);
         return OBJECT_MAPPER.readValue(jwt.getClaims(), Map.class);
     }
