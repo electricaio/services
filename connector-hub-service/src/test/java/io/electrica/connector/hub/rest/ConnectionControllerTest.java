@@ -219,7 +219,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(PermissionType.ReadActiveConnection), () -> {
 
-                    final List<ConnectionDto> result = connectionController.findAllByUser(1L).getBody();
+                    final List<ConnectionDto> result = connectionController.findAllByUser(1L, null).getBody();
                     assertEquals(3, result.size());
                     assertEquals(cnGreenhouse.get(), result.get(0).getConnectorId());
                     assertEquals(Long.valueOf(1), result.get(0).getAccessKeyId());
@@ -235,10 +235,41 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     assertNotNull(result.get(2).getUpdatedAt());
                 });
 
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(PermissionType.ReadActiveConnection), () -> {
+
+                    final List<ConnectionDto> result = connectionController.findAllByUser(
+                            1L, cnGreenhouse.get()).getBody();
+                    assertEquals(1, result.size());
+                    assertEquals(cnGreenhouse.get(), result.get(0).getConnectorId());
+                    assertEquals(Long.valueOf(1), result.get(0).getAccessKeyId());
+                    assertNotNull(result.get(0).getCreatedAt());
+                    assertNotNull(result.get(0).getUpdatedAt());
+                });
+
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgAdmin),
+                Sets.newHashSet(PermissionType.ReadActiveConnection), () -> {
+
+                    final List<ConnectionDto> result = connectionController.findAllByUser(
+                            1L, cnHackerRank.get()).getBody();
+                    assertEquals(2, result.size());
+                    assertEquals(cnHackerRank.get(), result.get(0).getConnectorId());
+                    assertEquals(Long.valueOf(1), result.get(0).getAccessKeyId());
+                    assertNotNull(result.get(0).getCreatedAt());
+                    assertNotNull(result.get(0).getUpdatedAt());
+
+                    assertEquals(cnHackerRank.get(), result.get(1).getConnectorId());
+                    assertEquals(Long.valueOf(2), result.get(1).getAccessKeyId());
+                    assertNotNull(result.get(1).getCreatedAt());
+                    assertNotNull(result.get(1).getUpdatedAt());
+                });
+
         executeForUser(2, 2,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(PermissionType.ReadActiveConnection), () -> {
-                    final List<ConnectionDto> result = connectionController.findAllByUser(2L).getBody();
+                    final List<ConnectionDto> result = connectionController.findAllByUser(2L, null).getBody();
                     assertEquals(1, result.size());
                     assertEquals(cnGreenhouse.get(), result.get(0).getConnectorId());
                     assertEquals(Long.valueOf(3), result.get(0).getAccessKeyId());
@@ -248,7 +279,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         executeForUser(3, 3,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(PermissionType.ReadActiveConnection), () -> {
-                    final List<ConnectionDto> result = connectionController.findAllByUser(3L).getBody();
+                    final List<ConnectionDto> result = connectionController.findAllByUser(3L, null).getBody();
                     assertEquals(0, result.size());
                 });
     }

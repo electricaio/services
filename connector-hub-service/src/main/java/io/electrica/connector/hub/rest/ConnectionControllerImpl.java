@@ -33,8 +33,10 @@ public class ConnectionControllerImpl implements ConnectionController {
 
     @Override
     @PreAuthorize("#common.isUser(#userId) AND #common.hasPermission('ReadActiveConnection')")
-    public ResponseEntity<List<ConnectionDto>> findAllByUser(@PathVariable("userId") Long userId) {
-        final List<ConnectionDto> result = connectionDtoService.findAllByUser(userId);
+    public ResponseEntity<List<ConnectionDto>> findAllByUser(
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "connectorId", required = false) @Nullable Long connectorId) {
+        final List<ConnectionDto> result = connectionDtoService.findAllByUser(userId, connectorId);
         return ResponseEntity.ok(result);
     }
 
