@@ -49,7 +49,6 @@ public class Webhook {
     @Column(nullable = false)
     private Long connectorId;
 
-    @NotNull
     @Column(nullable = false, columnDefinition = "int8 default 0")
     private Long invocationsCount = 0L;
 

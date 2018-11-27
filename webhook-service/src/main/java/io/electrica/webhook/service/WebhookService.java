@@ -20,7 +20,6 @@ public class WebhookService {
     public Webhook create(Webhook newEntity) {
         newEntity.setId(UUID.randomUUID());
         newEntity.setHash(webhookHashGenerator.generateHash(newEntity));
-        newEntity.setInvocationsCount(0L);
         return webhookRepository.save(newEntity);
     }
 }

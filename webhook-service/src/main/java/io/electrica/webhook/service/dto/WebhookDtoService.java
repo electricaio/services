@@ -15,17 +15,15 @@ public class WebhookDtoService {
 
     private final WebhookService webhookService;
     private final IdentityContextHolder identityContextHolder;
-    private Mapper mapper;
+    private final Mapper mapper;
+    private final String webhookBaseURL;
 
-    @Value("${webhook-service.webhookPrefixURL}")
-    private String webhookPrefixURL;
-
-
-    public WebhookDtoService(WebhookService webhookService, IdentityContextHolder identityContextHolder,
-                             Mapper mapper) {
+    public WebhookDtoService(WebhookService webhookService, IdentityContextHolder identityContextHolder, Mapper mapper,
+                             @Value("${webhook.base-url}") String webhookBaseURL) {
         this.webhookService = webhookService;
         this.identityContextHolder = identityContextHolder;
         this.mapper = mapper;
+        this.webhookBaseURL = webhookBaseURL;
     }
 
     public WebhookDto create(CreateWebhookDto dto) {
@@ -44,6 +42,6 @@ public class WebhookDtoService {
     }
 
     private String generateWebhookURL(Webhook entity) {
-        return webhookPrefixURL + entity.getId() + StringUtils.URL_SLASH + entity.getHash();
+        return webhookBaseURL + entity.getId() + StringUtils.URL_SLASH + entity.getHash();
     }
 }
