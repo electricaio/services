@@ -18,6 +18,9 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
     private ConnectorDtoService connectorDtoService;
     private ConnectorTypeRepository connectorTypeRepository;
 
+    private static final String CONNECTOR_URL = "http://connector.dev.electrica.io";
+    private static final String SDK_URL = "http://sdk.dev.electrica.io";
+
     Map<String, String> SLACK_PROPERTIES = new HashMap<String, String>() {{
         put("send-message.url-template", "https://hooks.slack.com/services/%s");
         put("http-client.max-idle-connections", "10");
@@ -44,35 +47,29 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
     }
 
     private void createSalesForceConnector(String version) {
-        CreateConnectorDto dto = CreateConnectorDto.builder()
-                .name("SalesForce_" + version).authorizationType(AuthorizationType.Token)
-                .typeId(findConnectorType("CRM").getId()).namespace("salesforce").resource("applications")
-                .version(version.toLowerCase()).properties(TEST_PROPERTIES).sourceUrl("https://localhost:8000/")
-                .connectorUrl("https://localhost:8000/").sdkUrl("https://localhost:8000/")
-                .imageUrl("https://localhost:8000/jdbc.png").description("test").build();
-
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("CRM").getId(),
+                AuthorizationType.Token, "SalesForce " + version, "channel", version.toLowerCase(), "salesforce",
+                "https://developer.salesforce.com/docs", CONNECTOR_URL, SDK_URL,
+                "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102014/salesforce_logo.png", "test desciption",
+                SLACK_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
     private void createSlackConnector(String version) {
-        CreateConnectorDto dto = CreateConnectorDto.builder()
-                .name("Slack_" + version).authorizationType(AuthorizationType.Token)
-                .typeId(findConnectorType("Talent").getId()).namespace("slack").resource("channel")
-                .version(version.toLowerCase()).properties(SLACK_PROPERTIES).sourceUrl("https://api.slack.com/")
-                .connectorUrl("https://api.slack.com/123/123").sdkUrl("https://localhost:8000/")
-                .imageUrl("https://localhost:8000/slack.png").description("test").build();
-
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
+                AuthorizationType.Token, "Slack Channel " + version, "channel", version.toLowerCase(), "slack",
+                "https://api.slack.com/", CONNECTOR_URL, SDK_URL,
+                "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png", "test desciption",
+                SLACK_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-     private void createJDBCConnector(String version) {
-        CreateConnectorDto dto = CreateConnectorDto.builder()
-                .name("JDBC_" + version).authorizationType(AuthorizationType.Basic)
-                .typeId(findConnectorType("Foundation").getId()).namespace("jdbc").resource("applications")
-                .version(version.toLowerCase()).properties(TEST_PROPERTIES).sourceUrl("https://localhost:8000/")
-                .connectorUrl("https://localhost:8000/").sdkUrl("https://localhost:8000/")
-                .imageUrl("https://localhost:8000/jdbc.png").description("test").build();
-
+    private void createJDBCConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
+                AuthorizationType.Basic, "JDBC " + version, "applications", version.toLowerCase(), "jdbc",
+                "http://localhost", CONNECTOR_URL, SDK_URL,
+                "http://d1.awsstatic.com/rdsImages/postgresql_logo.6de4615badd99412268bc6aa8fc958a0f403dd41.png",
+                "test desciption", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 

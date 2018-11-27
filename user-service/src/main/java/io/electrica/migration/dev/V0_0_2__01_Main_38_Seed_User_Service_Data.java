@@ -38,8 +38,8 @@ public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigr
 
         Organization defaultOrg = saveOrganization("default");
         Organization electricaOrg = saveOrganization("electrica.io");
-        saveUser("admin", "admin@electrica.io", "sk8freee", electricaOrg, RoleType.SuperAdmin);
-        saveUser("scott", "scott@electrica.io", "tiger", defaultOrg, RoleType.OrgUser);
+        saveUser("admin", "admin@electrica.io", "admin", electricaOrg, RoleType.SuperAdmin);
+        saveUser("scott", "scott@electrica.io", "scott", defaultOrg, RoleType.OrgUser);
 
     }
 
