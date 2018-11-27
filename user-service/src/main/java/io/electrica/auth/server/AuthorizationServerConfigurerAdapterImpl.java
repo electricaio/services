@@ -62,6 +62,16 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60)
 
+                // ToDo to test refresh token functionality
+                .and()
+                .withClient("frontend-test")
+                .secret(passwordEncoder.encode("change_me"))
+                .authorizedGrantTypes("refresh_token", "password")
+                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID)
+                .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
+                .accessTokenValiditySeconds(60)
+                .refreshTokenValiditySeconds(2 * 60)
+
                 .and()
                 .withClient(ACCESS_KEY_CLIENT_ID)
                 .secret("{none}" + UUID.randomUUID())
