@@ -54,6 +54,8 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
                                                @Nullable @Param("ern") String ern);
 
 
-    @Query("FROM Connection c WHERE c.userId=:userId AND c.archived=FALSE order by c.name")
-    List<Connection> findAllByUser(@Param("userId") Long userId);
+    @Query("FROM Connection c WHERE c.userId=:userId AND " +
+            "(:connectorId is null or c.connector.id = :connectorId)  AND " +
+            " c.archived=FALSE order by c.name")
+    List<Connection> findAllByUser(@Param("userId") Long userId, @Param("connectorId") Long connectorId);
 }

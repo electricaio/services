@@ -33,8 +33,8 @@ public class ConnectionService extends AbstractService<Connection> {
                 .orElseThrow(() -> new BadRequestServiceException("Connection not found: " + connectionId));
     }
 
-    public List<Connection> findAllByUser(Long userId) {
-        return connectionRepository.findAllByUser(userId);
+    public List<Connection> findAllByUser(Long userId, @Nullable Long connectorId) {
+        return connectionRepository.findAllByUser(userId, connectorId);
     }
 
     @Override

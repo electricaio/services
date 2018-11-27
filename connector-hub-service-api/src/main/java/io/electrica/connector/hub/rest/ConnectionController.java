@@ -15,7 +15,10 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface ConnectionController {
 
     @GetMapping(V1 + "/users/{userId}/connections")
-    ResponseEntity<List<ConnectionDto>> findAllByUser(@PathVariable("userId") Long userId);
+    ResponseEntity<List<ConnectionDto>> findAllByUser(
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "connectorId", required = false) @Nullable Long connectorId
+    );
 
     /**
      * Given the connection id and access key id,
