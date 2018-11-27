@@ -8,4 +8,4 @@ spring:
     name: pool-to-webhook-db
     url: jdbc:postgresql://localhost:5432/webhook_db
 webhook:
-  base-url: https://localhost:8080/
+  base-url: http://localhost

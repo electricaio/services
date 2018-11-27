@@ -42,6 +42,6 @@ public class WebhookDtoService {
     }
 
     private String generateWebhookURL(Webhook entity) {
-        return webhookBaseURL + entity.getId() + StringUtils.URL_SLASH + entity.getHash();
+        return webhookBaseURL + StringUtils.URL_SLASH + entity.getId() + StringUtils.URL_SLASH + entity.getHash();
     }
 }
