@@ -27,10 +27,10 @@ public interface Fixture {
         dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.0");
         dto.setProperties(TEST_PROPERTIES);
-        dto.setSourceURL("https://www.hackerrank.com/api/docs");
-        dto.setConnectorURL("https://localhost:9090");
-        dto.setSdkURL("https://localhost:9091");
-        dto.setImageURL("https://localhost:9091/HackerRankConnetor.png");
+        dto.setSourceUrl("https://www.hackerrank.com/api/docs");
+        dto.setConnectorUrl("https://localhost:9090");
+        dto.setSdkUrl("https://localhost:9091");
+        dto.setImageUrl("https://localhost:9091/HackerRankConnetor.png");
         dto.setDescription("Test desc");
         return dto;
     }
@@ -45,10 +45,10 @@ public interface Fixture {
         dto.setAuthorizationType(AuthorizationType.Token);
         dto.setVersion("1.1");
         dto.setProperties(TEST_PROPERTIES);
-        dto.setSourceURL("https://developers.greenhouse.io/harvest.html");
-        dto.setConnectorURL("https://localhost:9090");
-        dto.setSdkURL("https://localhost:9091");
-        dto.setImageURL("https://localhost:9091/GreenHouseConnetor.png");
+        dto.setSourceUrl("https://developers.greenhouse.io/harvest.html");
+        dto.setConnectorUrl("https://localhost:9090");
+        dto.setSdkUrl("https://localhost:9091");
+        dto.setImageUrl("https://localhost:9091/GreenHouseConnetor.png");
         dto.setDescription("Test desc");
         return dto;
     }
@@ -63,10 +63,10 @@ public interface Fixture {
         dto.setAuthorizationType(AuthorizationType.Basic);
         dto.setVersion("5.6");
         dto.setProperties(TEST_PROPERTIES);
-        dto.setSourceURL("https://www.postgresql.org/docs/");
-        dto.setConnectorURL("https://localhost:9090");
-        dto.setSdkURL("https://localhost:9091");
-        dto.setImageURL("https://localhost:9091/PostgresConnetor.png");
+        dto.setSourceUrl("https://www.postgresql.org/docs/");
+        dto.setConnectorUrl("https://localhost:9090");
+        dto.setSdkUrl("https://localhost:9091");
+        dto.setImageUrl("https://localhost:9091/PostgresConnetor.png");
         dto.setDescription("Test desc");
         return dto;
     }

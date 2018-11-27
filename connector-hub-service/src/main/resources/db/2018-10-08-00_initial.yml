@@ -387,7 +387,9 @@ databaseChangeLog:
             name: authorization_type
             type: VARCHAR(255)
         - column:
-            name: connectorurl
+            constraints:
+              nullable: false
+            name: connector_url
             type: VARCHAR(255)
         - column:
             name: description
@@ -398,7 +400,9 @@ databaseChangeLog:
             name: ern
             type: VARCHAR(255)
         - column:
-            name: imageurl
+            constraints:
+              nullable: false
+            name: image_url
             type: VARCHAR(255)
         - column:
             constraints:
@@ -417,10 +421,14 @@ databaseChangeLog:
             name: resource
             type: VARCHAR(63)
         - column:
-            name: sdkurl
+            constraints:
+              nullable: false
+            name: sdk_url
             type: VARCHAR(255)
         - column:
-            name: sourceurl
+            constraints:
+              nullable: false
+            name: source_url
             type: VARCHAR(255)
         - column:
             constraints:
@@ -477,10 +485,10 @@ databaseChangeLog:
             name: authorization_type_mod
             type: BOOLEAN
         - column:
-            name: connectorurl
+            name: connector_url
             type: VARCHAR(255)
         - column:
-            name: connectorurl_mod
+            name: connector_url_mod
             type: BOOLEAN
         - column:
             name: description
@@ -495,10 +503,10 @@ databaseChangeLog:
             name: ern_mod
             type: BOOLEAN
         - column:
-            name: imageurl
+            name: image_url
             type: VARCHAR(255)
         - column:
-            name: imageurl_mod
+            name: image_url_mod
             type: BOOLEAN
         - column:
             name: name
@@ -525,16 +533,16 @@ databaseChangeLog:
             name: resource_mod
             type: BOOLEAN
         - column:
-            name: sdkurl
+            name: sdk_url
             type: VARCHAR(255)
         - column:
-            name: sdkurl_mod
+            name: sdk_url_mod
             type: BOOLEAN
         - column:
-            name: sourceurl
+            name: source_url
             type: VARCHAR(255)
         - column:
-            name: sourceurl_mod
+            name: source_url_mod
             type: BOOLEAN
         - column:
             name: version
