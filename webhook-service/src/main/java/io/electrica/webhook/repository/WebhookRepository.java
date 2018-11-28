@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface WebhookRepository extends JpaRepository<Webhook, Long> {
 
     @Query(value = " from Webhook wh where wh.id= :id")
-    Webhook getById(@Param("id") UUID id);
+    Optional<Webhook> getById(@Param("id") UUID id);
 
     @Query(value = " from Webhook wh where wh.connectionId = :connectionId order by wh.name ASC")
     List<Webhook> findAllByConnection(@Param("connectionId") Long connectionId);

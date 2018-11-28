@@ -10,9 +10,9 @@ import io.electrica.webhook.service.WebhookService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class WebhookDtoService {
@@ -33,13 +33,12 @@ public class WebhookDtoService {
     public WebhookDto create(CreateWebhookDto dto) {
         Webhook webhook = webhookService.create(toCreateEntity(dto));
         WebhookDto webhookDto = toDto(webhook);
-        webhookDto.setUrl(generateWebhookURL(webhook));
         return webhookDto;
     }
 
     public WebhookDto findById(UUID id) {
         Webhook entity = webhookService.findById(id);
-        WebhookDto webhookDto = mapper.map(entity, WebhookDto.class);
+        WebhookDto webhookDto = toDto(entity);
         webhookDto.setUrl(generateWebhookURL(entity));
         return webhookDto;
     }
@@ -53,17 +52,15 @@ public class WebhookDtoService {
     }
 
     private WebhookDto toDto(Webhook entity) {
-        return mapper.map(entity, WebhookDto.class);
+        WebhookDto dto = mapper.map(entity, WebhookDto.class);
+        dto.setUrl(generateWebhookURL(entity));
+        return dto;
     }
 
     private List<WebhookDto> toDto(List<Webhook> fromList) {
-        List<WebhookDto> dtoList = new ArrayList<>();
-        for (Webhook webhook : fromList) {
-            WebhookDto dto = toDto(webhook);
-            dto.setUrl(generateWebhookURL(webhook));
-            dtoList.add(dto);
-        }
-        return dtoList;
+        return fromList.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     private String generateWebhookURL(Webhook entity) {

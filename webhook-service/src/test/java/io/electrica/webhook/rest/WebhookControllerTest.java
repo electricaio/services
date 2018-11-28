@@ -39,6 +39,7 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     public void testWebhookCreate() {
         CreateWebhookDto createWebhookDto = createWebhookDto("test");
         doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(createWebhookDto.getConnectionId());
+
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
                     WebhookDto actual = webhookController.create(createWebhookDto).getBody();
@@ -52,13 +53,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
 
     @Test(expected = AccessDeniedException.class)
     public void testWebhookWithUserHasNoCreateWebhookPermission() {
-        CreateWebhookDto createWebhookDto = WebhookDto.builder()
-                .connectionId(1L)
-                .connectorId(1L)
-                .name("test")
-                .userId(1L)
-                .organizationId(1L).build();
+        CreateWebhookDto createWebhookDto = new CreateWebhookDto("test", 1L, 1L, 1L, 1L);
         doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(createWebhookDto.getConnectionId());
+
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
                     WebhookDto actual = webhookController.create(createWebhookDto).getBody();
@@ -67,12 +64,7 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
 
     @Test(expected = AccessDeniedException.class)
     public void testWebhookWithValidateConnectionFailed() {
-        CreateWebhookDto createWebhookDto = WebhookDto.builder()
-                .connectionId(1L)
-                .connectorId(1L)
-                .name("test")
-                .userId(1L)
-                .organizationId(1L).build();
+        CreateWebhookDto createWebhookDto = new CreateWebhookDto("test", 1L, 1L, 1L, 1L);
         doReturn(ResponseEntity.ok(false)).when(connectionClient).validate(createWebhookDto.getConnectionId());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
@@ -85,8 +77,7 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         CreateWebhookDto createWebhookDto1 = createWebhookDto("test1");
         CreateWebhookDto createWebhookDto2 = createWebhookDto("test2");
         CreateWebhookDto createWebhookDto3 = createWebhookDto("test3");
-
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(1L);
+        doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(createWebhookDto1.getConnectionId());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
                     webhookController.create(createWebhookDto1);
@@ -106,7 +97,7 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void testGetByConnectionWithNoReadPermission() {
+    public void testGetByConnectionWithWebhookRepository() {
         executeForUser(2, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
                     List<WebhookDto> webhooks = webhookController.getByConnection(1L).getBody();
@@ -117,7 +108,6 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     public void testGetByConnectionWithConnectionBelongToDiffUser() {
         CreateWebhookDto createWebhookDto1 = createWebhookDto("test1");
 
-        doReturn(ResponseEntity.ok(false)).when(connectionClient).validate(1L);
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
                     webhookController.create(createWebhookDto1);
@@ -156,13 +146,13 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         CreateWebhookDto createWebhookDto = createWebhookDto("test");
         CreateWebhookDto createWebhookDto2 = createWebhookDto("test2");
         AtomicReference<WebhookDto> webhookDtoReference = new AtomicReference<>();
+        doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(createWebhookDto.getConnectionId());
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
                     webhookDtoReference.set(webhookController.create(createWebhookDto).getBody());
                     webhookController.create(createWebhookDto2);
 
                 });
-        doReturn(ResponseEntity.ok(false)).when(connectionClient).validate(createWebhookDto.getConnectionId());
         executeForUser(2, 1,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
                     WebhookDto webhookDto = webhookController.getById(getUUIDFromWebhook(
@@ -197,11 +187,6 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     }
 
     private CreateWebhookDto createWebhookDto(String name) {
-        return WebhookDto.builder()
-                .connectionId(1L)
-                .connectorId(1L)
-                .name(name)
-                .userId(1L)
-                .organizationId(1L).build();
+        return new CreateWebhookDto(name, 1L, 1L, 1L, 1L);
     }
 }

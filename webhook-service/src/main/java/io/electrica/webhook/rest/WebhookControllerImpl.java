@@ -30,14 +30,15 @@ public class WebhookControllerImpl implements WebhookController {
     }
 
     @PreAuthorize("#common.hasPermission('ReadWebhook')")
-    @PostAuthorize("#webhook.canUserAccess(returnObject.getBody().getConnectionId())")
+    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId())")
     @Override
     public ResponseEntity<WebhookDto> getById(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(webhookDtoService.findById(id));
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadWebhook') AND #webhook.canUserAccess(#connectionId)")
+    @PreAuthorize("#common.hasPermission('ReadWebhook')")
+    @PostAuthorize("#webhook.allWebhooksWithinCurrentUser(returnObject.getBody())")
     public ResponseEntity<List<WebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId) {
         List<WebhookDto> webhooks = webhookDtoService.findAllByConnectionId(connectionId);
         return ResponseEntity.ok(webhooks);
