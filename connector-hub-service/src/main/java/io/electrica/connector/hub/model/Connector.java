@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
@@ -32,12 +33,12 @@ public class Connector extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private AuthorizationType authorizationType;
 
-    @NotNull
+    @NotBlank
     @Size(max = 255)
     @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @NotBlank
     @Size(max = 127)
     @Column(nullable = false, length = 127)
     private String namespace;
@@ -46,17 +47,41 @@ public class Connector extends AbstractEntity {
     @Column(length = 63)
     private String resource;
 
-    @NotNull
+    @NotBlank
     @Size(max = 63)
     @Column(nullable = false, length = 63)
     private String version;
 
-    @NotNull
+    @NotBlank
     @Size(max = 255)
     @Column(nullable = false, unique = true)
     private String ern;
 
     @Type(type = JSONB_TYPE)
     private Map<String, String> properties;
+
+    @NotBlank
+    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    private String sourceUrl;
+
+    @NotBlank
+    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    private String connectorUrl;
+
+    @NotBlank
+    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    private String sdkUrl;
+
+    @NotBlank
+    @Column(length = 255, nullable = false)
+    @Size(max = 255)
+    private String imageUrl;
+
+    @Column(length = 255)
+    @Size(max = 255)
+    private String description;
 
 }

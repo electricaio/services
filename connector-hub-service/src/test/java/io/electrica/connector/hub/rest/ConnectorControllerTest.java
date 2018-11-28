@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -52,12 +53,15 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
         assertEquals(dto.getNamespace(), actual.getNamespace());
         assertEquals(dto.getVersion(), actual.getVersion());
         assertEquals(dto.getResource(), actual.getResource());
-
         assertEquals(connectorType.getId(), actual.getTypeId());
-
         final String expectedErn = "ern://com_hackerrank:applications:1_0";
         assertEquals(expectedErn, actual.getErn());
         assertTrue(dto.getProperties().equals(actual.getProperties()));
+        assertEquals(dto.getSourceUrl(), actual.getSourceUrl());
+        assertEquals(dto.getSdkUrl(), actual.getSdkUrl());
+        assertEquals(dto.getConnectorUrl(), actual.getConnectorUrl());
+        assertEquals(dto.getImageUrl(), actual.getImageUrl());
+        assertEquals(dto.getDescription(), actual.getDescription());
     }
 
     @Test
@@ -121,6 +125,27 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
     )
     public void testCreateConnectorWithWrongRole() {
         connectorController.create(createHackerRankConnectorDto());
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = PermissionType.CreateConnector
+    )
+    public void testToVerifyStringLength() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        String inputString = "aDtQXnQGapVspYgRIyFgonXYClSxEhmBNMCWeAa07XKQWSJZEkMegGyiceIzmwbH2DbQ6eXraSeRCIYSn5XA" +
+                "Z2G1V3ExOmnI8hAKrgD8eqM58ls07uD1i7SBqsKMpP4oDw3g6ZLhbSO15CPKGMs0HuHt8L9Mo1qg57UumypZYybuKkfZVOj89" +
+                "SxsuElxycWvqA3gikDQh7sugDst4j0Rc0uf9HSidLjcPeR9BMDsiqaR5VhIx7KlLg21bV2XUUEPEuOb";
+        dto.setConnectorUrl(inputString);
+        dto.setSourceUrl(inputString);
+        dto.setImageUrl(inputString);
+        dto.setSdkUrl(inputString);
+        dto.setDescription(inputString);
+        final ConnectorDto actual = connectorController.create(dto).getBody();
+        flushAndClear();
     }
 
     @Test
