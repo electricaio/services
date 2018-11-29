@@ -2,46 +2,67 @@ version: '3.1'
 
 services:
   user-service:
+    depends_on:
+    - postgres-db
     ports:
-      - 22022:22022
+    - 22022:22022
 
   connector-hub-service:
+    depends_on:
+    - postgres-db
     ports:
-      - 22023:22023
+    - 22023:22023
 
   invoker-service:
+    depends_on:
+    - rabbitmq
     ports:
-      - 22024:22024
+    - 22024:22024
 
   connector-service:
     ports:
-      - 22025:22025
+    - 22025:22025
 
   webhook-service:
+    depends_on:
+    - postgres-db
+    - rabbitmq
     ports:
     - 22026:22026
 
   websocket-service:
+    depends_on:
+    - rabbitmq
     ports:
     - 22027:22027
 
   postgres-db:
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=
     ports:
-      - 5432:5432
+    - 5432:5432
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - 15672:15672
+    - 5672:5672
 
   swagger-ui:
     image: swaggerapi/swagger-ui
     environment:
-      - "API_URLS=[ {url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://${HOST_NAME:-localhost}/connector-service/swagger/\", name: \"Connector\"},{url: \"http://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"},{url: \"http://${HOST_NAME:-localhost}/websocket-service/swagger/\", name: \"websocket\"} ]"
-      - BASE_URL=/swagger
+    - "API_URLS=[ {url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://${HOST_NAME:-localhost}/connector-service/swagger/\", name: \"Connector\"},{url: \"http://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"},{url: \"http://${HOST_NAME:-localhost}/websocket-service/swagger/\", name: \"websocket\"} ]"
+    - BASE_URL=/swagger
     ports:
-      - 8080:8080
+    - 8080:8080
 
   gateway:
     environment:
-      - "HOST_NAME=${HOST_NAME:-localhost}"
+    - "HOST_NAME=${HOST_NAME:-localhost}"
+    depends_on:
+    - swagger-ui
+    - user-service
+    - connector-hub-service
+    - invoker-service
+    - connector-service
+    - webhook-service
     ports:
-      - 80:80
+    - 80:80
