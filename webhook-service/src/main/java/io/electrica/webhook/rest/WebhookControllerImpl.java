@@ -3,6 +3,7 @@ package io.electrica.webhook.rest;
 import io.electrica.webhook.dto.CreateWebhookDto;
 import io.electrica.webhook.dto.WebhookDto;
 import io.electrica.webhook.service.dto.WebhookDtoService;
+import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,10 +39,16 @@ public class WebhookControllerImpl implements WebhookController {
 
     @Override
     @PreAuthorize("#common.hasPermission('ReadWebhook')")
-    @PostAuthorize("#webhook.allWebhooksWithinCurrentUser(returnObject.getBody())")
+    @PostAuthorize("#webhook.allWebhooksBelongsCurrentUser(returnObject.getBody())")
     public ResponseEntity<List<WebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId) {
         List<WebhookDto> webhooks = webhookDtoService.findAllByConnectionId(connectionId);
         return ResponseEntity.ok(webhooks);
     }
 
+    @Override
+    @PreAuthorize("#common.hasPermission('DeleteWebhook') AND  #webhook.webhookBelongsCurrentUser(#id)")
+    public ResponseEntity delete(UUID id) {
+        webhookDtoService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT_204).build();
+    }
 }

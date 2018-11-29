@@ -3,10 +3,7 @@ package io.electrica.webhook.rest;
 import io.electrica.webhook.dto.CreateWebhookDto;
 import io.electrica.webhook.dto.WebhookDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,5 +20,8 @@ public interface WebhookController {
 
     @GetMapping(V1 + "/webhooks/{id}")
     ResponseEntity<WebhookDto> getById(@PathVariable("id") UUID id);
+
+    @DeleteMapping(V1 + "/webhooks/{id}")
+    ResponseEntity delete(@PathVariable("id") UUID id);
 
 }
