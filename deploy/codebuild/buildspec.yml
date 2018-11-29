@@ -69,6 +69,10 @@ phases:
     - >
       docker tag electrica/webhook-service:${APP_PROFILE} ${ECR_HOST}/electrica/webhook-service:${APP_PROFILE} &&
       docker push ${ECR_HOST}/electrica/webhook-service:${APP_PROFILE}
+    #   Tag and push websocket-service
+    - >
+      docker tag electrica/websocket-service:${APP_PROFILE} ${ECR_HOST}/electrica/websocket-service:${APP_PROFILE} &&
+      docker push ${ECR_HOST}/electrica/websocket-service:${APP_PROFILE}
   post_build:
     commands:
     - echo Build completed on `date`

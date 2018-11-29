@@ -1,0 +1,16 @@
+apply plugin: 'org.springframework.boot'
+
+
+dependencies {
+    compile project(':common')
+
+    testCompile project(':common-test')
+}
+
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split("\\s+")
+    }
+    jvmArgs = ["-Xmx128m"]
+}
+

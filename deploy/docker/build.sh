@@ -69,3 +69,10 @@ docker build -t electrica/webhook-service:${profile} \
   --build-arg PROFILE=${profile} \
   ./deploy/docker/webhook-service
 rm -rf ./deploy/docker/webhook-service/service.jar
+
+echo "==================== Building websocket-service docker image ===================="
+cp ./websocket-service/build/libs/websocket-service-*.jar ./deploy/docker/websocket-service/service.jar
+docker build -t electrica/websocket-service:${profile} \
+  --build-arg PROFILE=${profile} \
+  ./deploy/docker/websocket-service
+rm -rf ./deploy/docker/websocket-service/service.jar

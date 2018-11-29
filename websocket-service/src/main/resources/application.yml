@@ -1,0 +1,6 @@
+server:
+  port: 22027
+
+spring:
+  application:
+    name: websocket-service
