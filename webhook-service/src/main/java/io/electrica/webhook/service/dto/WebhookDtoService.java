@@ -46,6 +46,10 @@ public class WebhookDtoService {
         return toDto(webhookService.findByConnectionId(connectionId));
     }
 
+    public void delete(UUID id) {
+        webhookService.delete(id);
+    }
+
     private Webhook toCreateEntity(CreateWebhookDto dto) {
         return mapper.map(dto, Webhook.class);
     }

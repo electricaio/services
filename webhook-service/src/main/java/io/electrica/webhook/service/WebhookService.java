@@ -33,4 +33,9 @@ public class WebhookService {
         return webhookRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundServiceException("Webhook entity not found: " + id));
     }
+
+    public void delete(UUID id) {
+        Webhook entity = findById(id);
+        webhookRepository.delete(entity);
+    }
 }

@@ -182,6 +182,61 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
                 });
     }
 
+    @Test
+    public void testDeleteWebhook() {
+        CreateWebhookDto createWebhookDto1 = createWebhookDto("test1");
+        CreateWebhookDto createWebhookDto2 = createWebhookDto("test2");
+        CreateWebhookDto createWebhookDto3 = createWebhookDto("test3");
+
+        doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(1L);
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
+                    webhookController.create(createWebhookDto1);
+                    webhookController.create(createWebhookDto2);
+                    webhookController.create(createWebhookDto3);
+                });
+        flushAndClear();
+        AtomicReference<UUID> webhookId = new AtomicReference<>();
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
+                    List<WebhookDto> webhooks = webhookController.getByConnection(1L).getBody();
+                    assertEquals(3, webhooks.size());
+                    webhookId.set(webhooks.get(0).getId());
+                });
+
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.DeleteWebhook), () -> {
+                    webhookController.delete(webhookId.get());
+                });
+        flushAndClear();
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
+                    List<WebhookDto> webhooks = webhookController.getByConnection(1L).getBody();
+                    assertEquals(2, webhooks.size());
+                    assertEquals(createWebhookDto2.getName(), webhooks.get(0).getName());
+                    assertEquals(createWebhookDto3.getName(), webhooks.get(1).getName());
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testDeleteWebhookWithoutPermission() {
+        CreateWebhookDto createWebhookDto1 = createWebhookDto("test1");
+
+        doReturn(ResponseEntity.ok(true)).when(connectionClient).validate(1L);
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook), () -> {
+                    webhookController.create(createWebhookDto1);
+                });
+        flushAndClear();
+        executeForUser(1, 1,
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.ReadWebhook), () -> {
+                    List<WebhookDto> webhooks = webhookController.getByConnection(1L).getBody();
+                    assertEquals(1, webhooks.size());
+                    webhookController.delete(webhooks.get(0).getId());
+                });
+    }
+
+
     private UUID getUUIDFromWebhook(String url) {
         return UUID.fromString(url.split("/")[3]);
     }
