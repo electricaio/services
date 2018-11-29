@@ -4,24 +4,24 @@ import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.connector.hub.feign.ConnectionClient;
+import io.electrica.webhook.dto.WebhookDto;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Register webhook namespace and support methods for Pre and Post authentication.
  */
 public class WebhookExpressionMethods {
 
-    private final ConnectionClient connectionClient;
     private final Authentication authentication;
+    private final ConnectionClient connectionClient;
 
-    private WebhookExpressionMethods(
-            ConnectionClient connectionClient,
-            Authentication authentication
-    ) {
-        this.connectionClient = connectionClient;
+    public WebhookExpressionMethods(Authentication authentication, ConnectionClient connectionClient) {
         this.authentication = authentication;
+        this.connectionClient = connectionClient;
     }
 
     public Identity getIdentity() {
@@ -30,6 +30,11 @@ public class WebhookExpressionMethods {
 
     public Boolean canUserAccess(Long connectionId) {
         return connectionClient.validate(connectionId).getBody();
+    }
+
+    public Boolean allWebhooksWithinCurrentUser(List<WebhookDto> webhooks) {
+        return webhooks.stream()
+                .allMatch(w -> w.getUserId().equals(getIdentity().getUserId()));
     }
 
     @Component
@@ -48,7 +53,7 @@ public class WebhookExpressionMethods {
 
         @Override
         public Object create(Authentication authentication, MethodInvocation mi) {
-            return new WebhookExpressionMethods(connectionClient, authentication);
+            return new WebhookExpressionMethods(authentication, connectionClient);
         }
     }
 
