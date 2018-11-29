@@ -54,7 +54,7 @@ public class AuthorityHelper {
         return ORGANIZATION_PREFIX + organizationId;
     }
 
-    public static long readOrganization(Collection<? extends GrantedAuthority> authorities) {
+    public static long readOrganizationId(Collection<? extends GrantedAuthority> authorities) {
         return findByPrefix(authorities, ORGANIZATION_PREFIX)
                 .map(Long::valueOf)
                 .orElseThrow(() -> new ActionForbiddenServiceException("Organization authority required in token"));

@@ -2,11 +2,11 @@ package io.electrica.common.security;
 
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityImpl;
-import org.aopalliance.intercept.MethodInvocation;
+import io.electrica.common.helper.ValueCache;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Most common method security set used for custom security verifications.
@@ -14,30 +14,55 @@ import java.util.Objects;
 public class CommonExpressionMethods {
 
     private final Authentication authentication;
-    private final MethodInvocation mi;
+    private final ValueCache<Identity> identityCache = new ValueCache<>(this::createIdentity);
 
-    private CommonExpressionMethods(Authentication authentication, MethodInvocation mi) {
+    protected CommonExpressionMethods(Authentication authentication) {
         this.authentication = authentication;
-        this.mi = mi;
     }
 
-    public Identity getIdentity() {
+
+    private Identity createIdentity() {
         return new IdentityImpl(authentication);
     }
 
-    public boolean hasRole(String roleType) {
-        return getIdentity().getRoles().contains(RoleType.valueOf(roleType));
+    public Identity getIdentity() {
+        return identityCache.get();
+    }
+
+
+    public long getUserId() {
+        return getIdentity().getUserId();
+    }
+
+    public boolean isUser(Long userId) {
+        return Objects.equals(getUserId(), userId);
+    }
+
+    public long getOrganizationId() {
+        return getIdentity().getOrganizationId();
+    }
+
+    public boolean userInOrganization(Long organizationId) {
+        return Objects.equals(getOrganizationId(), organizationId);
+    }
+
+
+    public Set<RoleType> getRoles() {
+        return getIdentity().getRoles();
+    }
+
+    public boolean hasRole(String role) {
+        RoleType roleType = RoleType.valueOf(role);
+        return getRoles().contains(roleType);
     }
 
     public boolean haveOneOfRoles(String... roles) {
-        boolean result = false;
         for (String role : roles) {
             if (hasRole(role)) {
-                result = true;
-                break;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     public boolean isSuperAdmin() {
@@ -52,33 +77,14 @@ public class CommonExpressionMethods {
         return hasRole("OrgUser");
     }
 
-    public boolean isUser(Long userId) {
-        return Objects.equals(getIdentity().getUserId(), userId);
+
+    public Set<PermissionType> getPermissions() {
+        return getIdentity().getPermissions();
     }
 
     public boolean hasPermission(String permission) {
-        return getIdentity().getPermissions().contains(PermissionType.valueOf(permission));
-    }
-
-    public boolean userInOrganization(Long organizationId) {
-        return Objects.equals(getIdentity().getOrganizationId(), organizationId);
-    }
-
-    /**
-     * Component that register {@link CommonExpressionMethods} factory in 'common' namespace.
-     */
-    @Component
-    public static class Factory implements ExpressionMethodsFactory {
-
-        @Override
-        public String getNamespace() {
-            return "common";
-        }
-
-        @Override
-        public Object create(Authentication authentication, MethodInvocation mi) {
-            return new CommonExpressionMethods(authentication, mi);
-        }
+        PermissionType permissionType = PermissionType.valueOf(permission);
+        return getPermissions().contains(permissionType);
     }
 
 }

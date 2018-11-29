@@ -1,7 +1,6 @@
 package io.electrica.connector.hub.security;
 
-import io.electrica.common.context.Identity;
-import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.connector.hub.repository.ConnectionRepository;
 import io.electrica.user.feign.AccessKeyClient;
@@ -13,34 +12,27 @@ import java.util.Objects;
 
 import static io.electrica.common.helper.CollectionUtils.nullToFalse;
 
-public class ConnectionExpressionMethods {
+public class ConnectionExpressionMethods extends CommonExpressionMethods {
 
     private final ConnectionRepository connectionRepository;
     private final AccessKeyClient accessKeyClient;
-    private final Authentication authentication;
 
     private ConnectionExpressionMethods(
             ConnectionRepository connectionRepository,
             AccessKeyClient accessKeyClient,
             Authentication authentication
     ) {
+        super(authentication);
         this.connectionRepository = connectionRepository;
         this.accessKeyClient = accessKeyClient;
-        this.authentication = authentication;
-    }
-
-    public Identity getIdentity() {
-        return new IdentityImpl(authentication);
     }
 
     public boolean canUserAccess(Long connectionId) {
-        final Long userId = getIdentity().getUserId();
-        return connectionRepository.canUserAccessConnection(connectionId, userId);
+        return connectionRepository.canUserAccessConnection(connectionId, getUserId());
     }
 
     public boolean canUserAccessAuthorization(Long authorizationId) {
-        final Long userId = getIdentity().getUserId();
-        return connectionRepository.canUserAccessAuthorization(authorizationId, userId);
+        return connectionRepository.canUserAccessAuthorization(authorizationId, getUserId());
     }
 
     public boolean isSessionAccessKey(Long accessKeyId) {

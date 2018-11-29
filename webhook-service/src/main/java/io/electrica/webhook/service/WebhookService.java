@@ -30,12 +30,12 @@ public class WebhookService {
     }
 
     public Webhook findById(UUID id) {
-        return webhookRepository.getById(id)
+        return webhookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundServiceException("Webhook entity not found: " + id));
     }
 
     public void delete(UUID id) {
-        Webhook entity = findById(id);
+        Webhook entity = webhookRepository.getOne(id);
         webhookRepository.delete(entity);
     }
 }

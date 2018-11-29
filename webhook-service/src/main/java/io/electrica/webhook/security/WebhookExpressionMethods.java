@@ -1,7 +1,6 @@
 package io.electrica.webhook.security;
 
-import io.electrica.common.context.Identity;
-import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.webhook.dto.WebhookDto;
@@ -12,27 +11,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Register webhook namespace and support methods for Pre and Post authentication.
  */
-public class WebhookExpressionMethods {
+public class WebhookExpressionMethods extends CommonExpressionMethods {
 
-    private final Authentication authentication;
     private final ConnectionClient connectionClient;
     private final WebhookService webhookService;
 
-
-    public WebhookExpressionMethods(Authentication authentication, ConnectionClient connectionClient,
-                                    WebhookService webhookService) {
-        this.authentication = authentication;
+    public WebhookExpressionMethods(
+            Authentication authentication,
+            ConnectionClient connectionClient,
+            WebhookService webhookService
+    ) {
+        super(authentication);
         this.connectionClient = connectionClient;
         this.webhookService = webhookService;
-    }
-
-    public Identity getIdentity() {
-        return new IdentityImpl(authentication);
     }
 
     public Boolean canUserAccess(Long connectionId) {
@@ -40,13 +37,14 @@ public class WebhookExpressionMethods {
     }
 
     public Boolean allWebhooksBelongsCurrentUser(List<WebhookDto> webhooks) {
+        long userId = getUserId();
         return webhooks.stream()
-                .allMatch(w -> w.getUserId().equals(getIdentity().getUserId()));
+                .allMatch(w -> Objects.equals(userId, w.getUserId()));
     }
 
     public Boolean webhookBelongsCurrentUser(UUID id) {
         Webhook webhook = webhookService.findById(id);
-        return webhook.getUserId().equals(getIdentity().getUserId());
+        return Objects.equals(webhook.getUserId(), getUserId());
     }
 
     @Component
