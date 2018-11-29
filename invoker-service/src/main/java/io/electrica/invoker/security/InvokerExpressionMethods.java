@@ -1,7 +1,6 @@
 package io.electrica.invoker.security;
 
-import io.electrica.common.context.Identity;
-import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.user.feign.AccessKeyClient;
 import org.aopalliance.intercept.MethodInvocation;
@@ -10,18 +9,13 @@ import org.springframework.stereotype.Component;
 
 import static io.electrica.common.helper.CollectionUtils.nullToFalse;
 
-public class InvokerExpressionMethods {
+public class InvokerExpressionMethods extends CommonExpressionMethods {
 
-    private final Authentication authentication;
     private final AccessKeyClient accessKeyClient;
 
     private InvokerExpressionMethods(Authentication authentication, AccessKeyClient accessKeyClient) {
-        this.authentication = authentication;
+        super(authentication);
         this.accessKeyClient = accessKeyClient;
-    }
-
-    public Identity getIdentity() {
-        return new IdentityImpl(authentication);
     }
 
     public boolean validateAccessKey() {

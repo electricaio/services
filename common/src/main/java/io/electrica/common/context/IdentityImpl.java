@@ -6,14 +6,14 @@ import io.electrica.common.helper.ValueCache;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -22,27 +22,28 @@ import static java.util.Objects.requireNonNull;
 public class IdentityImpl implements Identity {
 
     private final Authentication authentication;
-    private final Set<RoleType> roles;
-    private final Set<PermissionType> permissions;
+
     private final ValueCache<Long> organizationId = new ValueCache<>(() ->
-            AuthorityHelper.readOrganization(getAuthentication().getAuthorities())
+            AuthorityHelper.readOrganizationId(getAuthentication().getAuthorities())
     );
     private final ValueCache<Long> accessKeyId = new ValueCache<>(() ->
             AuthorityHelper.readAccessKeyId(getAuthentication().getAuthorities())
     );
     private final ValueCache<Map<String, Object>> tokenClaims = new ValueCache<>(() ->
-            TokenHelper.getClaims(getToken())
+            unmodifiableMap(TokenHelper.getClaims(getToken()))
     );
-
     private final ValueCache<Long> userId = new ValueCache<>(() ->
             TokenHelper.extractIdFromTokenUsername(getAuthentication().getName())
+    );
+    private final ValueCache<Set<RoleType>> roles = new ValueCache<>(() ->
+            unmodifiableSet(AuthorityHelper.readRoles(getAuthentication().getAuthorities()))
+    );
+    private final ValueCache<Set<PermissionType>> permissions = new ValueCache<>(() ->
+            unmodifiableSet(AuthorityHelper.readPermissions(getAuthentication().getAuthorities()))
     );
 
     public IdentityImpl(Authentication authentication) {
         this.authentication = requireNonNull(authentication);
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        roles = AuthorityHelper.readRoles(authorities);
-        permissions = AuthorityHelper.readPermissions(authorities);
     }
 
     @Override
@@ -83,12 +84,12 @@ public class IdentityImpl implements Identity {
 
     @Override
     public Set<RoleType> getRoles() {
-        return roles;
+        return roles.get();
     }
 
     @Override
     public Set<PermissionType> getPermissions() {
-        return permissions;
+        return permissions.get();
     }
 
     @Override

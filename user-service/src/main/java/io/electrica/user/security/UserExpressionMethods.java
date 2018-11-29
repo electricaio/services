@@ -1,29 +1,23 @@
 package io.electrica.user.security;
 
-import io.electrica.common.context.Identity;
-import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.user.repository.AccessKeyRepository;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-public class UserExpressionMethods {
+public class UserExpressionMethods extends CommonExpressionMethods {
 
-    private final Authentication authentication;
     private final AccessKeyRepository accessKeyRepository;
 
     private UserExpressionMethods(Authentication authentication, AccessKeyRepository accessKeyRepository) {
-        this.authentication = authentication;
+        super(authentication);
         this.accessKeyRepository = accessKeyRepository;
     }
 
-    public Identity getIdentity() {
-        return new IdentityImpl(authentication);
-    }
-
     public boolean isUserAccessKey(Long accessKeyId) {
-        return accessKeyRepository.isUserAccessKeyWithIdExists(accessKeyId, getIdentity().getUserId());
+        return accessKeyRepository.isUserAccessKeyWithIdExists(accessKeyId, getUserId());
     }
 
     /**
