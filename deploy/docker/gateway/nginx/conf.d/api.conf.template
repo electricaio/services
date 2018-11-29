@@ -274,7 +274,7 @@ server {
         }
 
     # Proxy to websocket-service
-        location ~* ^/v[1-9]/(websocket) {
+        location ~* ^/v[1-9]/(websockets) {
             include /etc/nginx/cors.conf;
 
             proxy_set_header Host $http_host;
