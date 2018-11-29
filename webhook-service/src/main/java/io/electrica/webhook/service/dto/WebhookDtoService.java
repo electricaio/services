@@ -39,7 +39,6 @@ public class WebhookDtoService {
     public WebhookDto findById(UUID id) {
         Webhook entity = webhookService.findById(id);
         WebhookDto webhookDto = toDto(entity);
-        webhookDto.setUrl(generateWebhookURL(entity));
         return webhookDto;
     }
 

@@ -34,6 +34,10 @@ public class IdentityImpl implements Identity {
             TokenHelper.getClaims(getToken())
     );
 
+    private final ValueCache<Long> userId = new ValueCache<>(() ->
+            TokenHelper.extractIdFromTokenUsername(getAuthentication().getName())
+    );
+
     public IdentityImpl(Authentication authentication) {
         this.authentication = requireNonNull(authentication);
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -43,7 +47,7 @@ public class IdentityImpl implements Identity {
 
     @Override
     public long getUserId() {
-        return TokenHelper.extractIdFromTokenUsername(authentication.getName());
+        return userId.get();
     }
 
     @Override

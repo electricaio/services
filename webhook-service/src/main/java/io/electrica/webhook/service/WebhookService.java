@@ -1,6 +1,6 @@
 package io.electrica.webhook.service;
 
-import io.electrica.common.exception.BadRequestServiceException;
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.webhook.model.Webhook;
 import io.electrica.webhook.repository.WebhookRepository;
 import org.springframework.stereotype.Component;
@@ -31,6 +31,6 @@ public class WebhookService {
 
     public Webhook findById(UUID id) {
         return webhookRepository.getById(id)
-                .orElseThrow(() -> new BadRequestServiceException("Webhook UUID not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundServiceException("Webhook entity not found: " + id));
     }
 }
