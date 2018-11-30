@@ -1,15 +1,20 @@
 package io.electrica.webhook.model;
 
+import io.electrica.common.jpa.hibernate.JsonObjectUserType;
+import io.electrica.webhook.dto.WebhookScope;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -19,10 +24,18 @@ import java.util.UUID;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "webhooks",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "connectionId"})
+@Table(
+        name = "webhooks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "accessKeyId"}),
+        indexes = {
+                @Index(name = "webhooks_connector_id_idx", columnList = "connectorId"),
+                @Index(name = "webhooks_connection_id_idx", columnList = "connectionId")
+        }
 )
+@TypeDef(name = Webhook.JSONB_TYPE, typeClass = JsonObjectUserType.class)
 public class Webhook {
+
+    public static final String JSONB_TYPE = "jsonb";
 
     @Id
     private UUID id;
@@ -34,30 +47,37 @@ public class Webhook {
 
     @NotNull
     @Column(nullable = false)
-    private Long connectionId;
-
-    @NotNull
-    @Column(nullable = false)
     private Long organizationId;
 
     @NotNull
     @Column(nullable = false)
     private Long userId;
 
-
     @NotNull
     @Column(nullable = false)
-    private Long connectorId;
+    private Long accessKeyId;
 
-    @Column(nullable = false, columnDefinition = "int8 default 0")
-    private Long invocationsCount = 0L;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 31)
+    private WebhookScope scope;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @NotNull
-    @Size(max = 30)
-    @Column(nullable = false)
-    private String hash;
+    /**
+     * Additional data for {@link WebhookScope#Connector} scope.
+     */
+    @Column
+    private Long connectorId;
+
+    /**
+     * Additional data for {@link WebhookScope#Connection} scope.
+     */
+    @Column
+    private Long connectionId;
+
+    @Type(type = JSONB_TYPE)
+    private Map<String, String> properties;
 
 }

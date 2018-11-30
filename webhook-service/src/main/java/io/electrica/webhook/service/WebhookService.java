@@ -12,16 +12,13 @@ import java.util.UUID;
 public class WebhookService {
 
     private final WebhookRepository webhookRepository;
-    private final WebhookHashGenerator webhookHashGenerator;
 
-    public WebhookService(WebhookRepository webhookRepository, WebhookHashGenerator webhookHashGenerator) {
+    public WebhookService(WebhookRepository webhookRepository) {
         this.webhookRepository = webhookRepository;
-        this.webhookHashGenerator = webhookHashGenerator;
     }
 
     public Webhook create(Webhook newEntity) {
         newEntity.setId(UUID.randomUUID());
-        newEntity.setHash(webhookHashGenerator.generateHash(newEntity));
         return webhookRepository.save(newEntity);
     }
 

@@ -81,8 +81,8 @@ public class ConnectionControllerImpl implements ConnectionController {
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND #connection.canUserAccess(#id)")
-    public ResponseEntity<Boolean> validate(@PathVariable("id") Long id) {
+    @PreAuthorize("#common.hasPermission('ReadActiveConnection') AND #connection.canUserAccess(#connectionId)")
+    public ResponseEntity<Boolean> connectionBelongsCurrentUser(@PathVariable("connectionId") Long connectionId) {
         return ResponseEntity.ok(true);
     }
 

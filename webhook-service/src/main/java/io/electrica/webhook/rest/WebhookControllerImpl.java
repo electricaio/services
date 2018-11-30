@@ -1,9 +1,8 @@
 package io.electrica.webhook.rest;
 
-import io.electrica.webhook.dto.CreateWebhookDto;
-import io.electrica.webhook.dto.WebhookDto;
+import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
+import io.electrica.webhook.dto.ConnectionWebhookDto;
 import io.electrica.webhook.service.dto.WebhookDtoService;
-import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,31 +23,26 @@ public class WebhookControllerImpl implements WebhookController {
         this.webhookDtoService = webhookDtoService;
     }
 
-    @PreAuthorize("#common.hasPermission('CreateWebhook') AND  #webhook.canUserAccess(#dto.getConnectionId())")
     @Override
-    public ResponseEntity<WebhookDto> create(@Valid @RequestBody CreateWebhookDto dto) {
-        return ResponseEntity.ok(webhookDtoService.create(dto));
-    }
-
-    @PreAuthorize("#common.hasPermission('ReadWebhook')")
-    @PostAuthorize("#common.isUser(returnObject.getBody().getUserId())")
-    @Override
-    public ResponseEntity<WebhookDto> getById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(webhookDtoService.findById(id));
+    @PreAuthorize("" +
+            "#webhook.hasPermission('CreateWebhook') and " +
+            "#webhook.connectionBelongsCurrentUser(#dto.getConnectionId())"
+    )
+    public ResponseEntity<ConnectionWebhookDto> createConnection(@Valid @RequestBody ConnectionCreateWebhookDto dto) {
+        return ResponseEntity.ok(webhookDtoService.createConnection(dto));
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('ReadWebhook')")
-    @PostAuthorize("#webhook.allWebhooksBelongsCurrentUser(returnObject.getBody())")
-    public ResponseEntity<List<WebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId) {
-        List<WebhookDto> webhooks = webhookDtoService.findAllByConnectionId(connectionId);
-        return ResponseEntity.ok(webhooks);
+    @PreAuthorize("#webhook.hasPermission('ReadWebhook')")
+    @PostAuthorize("#webhook.connectionWebhooksBelongsCurrentUser(returnObject.getBody())")
+    public ResponseEntity<List<ConnectionWebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId) {
+        List<ConnectionWebhookDto> result = webhookDtoService.findAllByConnectionId(connectionId);
+        return ResponseEntity.ok(result);
     }
 
     @Override
-    @PreAuthorize("#common.hasPermission('DeleteWebhook') AND  #webhook.webhookBelongsCurrentUser(#id)")
-    public ResponseEntity delete(UUID id) {
+    @PreAuthorize("#webhook.hasPermission('DeleteWebhook') AND #webhook.webhookBelongsCurrentUser(#id)")
+    public void delete(@PathVariable("id") UUID id) {
         webhookDtoService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT_204).build();
     }
 }

@@ -3,7 +3,7 @@ package io.electrica.webhook.security;
 import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.connector.hub.feign.ConnectionClient;
-import io.electrica.webhook.dto.WebhookDto;
+import io.electrica.webhook.dto.ConnectionWebhookDto;
 import io.electrica.webhook.model.Webhook;
 import io.electrica.webhook.service.WebhookService;
 import org.aopalliance.intercept.MethodInvocation;
@@ -32,11 +32,11 @@ public class WebhookExpressionMethods extends CommonExpressionMethods {
         this.webhookService = webhookService;
     }
 
-    public Boolean canUserAccess(Long connectionId) {
-        return connectionClient.validate(connectionId).getBody();
+    public Boolean connectionBelongsCurrentUser(Long connectionId) {
+        return connectionClient.connectionBelongsCurrentUser(connectionId).getBody();
     }
 
-    public Boolean allWebhooksBelongsCurrentUser(List<WebhookDto> webhooks) {
+    public Boolean connectionWebhooksBelongsCurrentUser(List<ConnectionWebhookDto> webhooks) {
         long userId = getUserId();
         return webhooks.stream()
                 .allMatch(w -> Objects.equals(userId, w.getUserId()));

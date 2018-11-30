@@ -1,7 +1,7 @@
 package io.electrica.webhook.rest;
 
-import io.electrica.webhook.dto.CreateWebhookDto;
-import io.electrica.webhook.dto.WebhookDto;
+import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
+import io.electrica.webhook.dto.ConnectionWebhookDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +12,13 @@ import static io.electrica.common.rest.PathConstants.V1;
 
 public interface WebhookController {
 
-    @PostMapping(V1 + "/webhooks")
-    ResponseEntity<WebhookDto> create(@RequestBody CreateWebhookDto dto);
+    @PostMapping(V1 + "/webhooks/connection")
+    ResponseEntity<ConnectionWebhookDto> createConnection(@RequestBody ConnectionCreateWebhookDto dto);
 
     @GetMapping(V1 + "/connections/{connectionId}/webhooks")
-    ResponseEntity<List<WebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId);
-
-    @GetMapping(V1 + "/webhooks/{id}")
-    ResponseEntity<WebhookDto> getById(@PathVariable("id") UUID id);
+    ResponseEntity<List<ConnectionWebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId);
 
     @DeleteMapping(V1 + "/webhooks/{id}")
-    ResponseEntity delete(@PathVariable("id") UUID id);
+    void delete(@PathVariable("id") UUID id);
 
 }
