@@ -2,7 +2,7 @@ apply plugin: 'org.springframework.boot'
 
 
 dependencies {
-    compile project(':common')
+    compile project(':common-mq')
 
     testCompile project(':common-test')
 }

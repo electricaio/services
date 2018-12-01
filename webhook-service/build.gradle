@@ -2,9 +2,11 @@ apply plugin: 'org.springframework.boot'
 apply plugin: "org.liquibase.gradle"
 
 dependencies {
-    compile project(':common-jpa')
     compile project(':webhook-api')
     compile project(':connector-hub-service-api')
+
+    compile project(':common-jpa')
+    compile project(':common-mq')
 
     testCompile project(':common-test')
     testCompile project(':common-jpa').sourceSets.test.output

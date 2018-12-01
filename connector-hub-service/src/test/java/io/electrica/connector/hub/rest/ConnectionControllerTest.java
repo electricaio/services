@@ -479,7 +479,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
                 PermissionType.ReadActiveConnection), () -> {
-            assertTrue(connectionController.validate(connection.getId()).getBody());
+            assertTrue(connectionController.connectionBelongsCurrentUser(connection.getId()).getBody());
         });
 
     }
@@ -505,7 +505,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         executeForUser(2, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
                 PermissionType.ReadActiveConnection), () -> {
-            assertTrue(connectionController.validate(connection.getId()).getBody());
+            assertTrue(connectionController.connectionBelongsCurrentUser(connection.getId()).getBody());
         });
 
     }
@@ -530,7 +530,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         executeForUser(1, 1L, EnumSet.of(RoleType.OrgUser), EnumSet.of(
                 PermissionType.AddPermission), () -> {
-            assertTrue(connectionController.validate(connection.getId()).getBody());
+            assertTrue(connectionController.connectionBelongsCurrentUser(connection.getId()).getBody());
         });
 
     }

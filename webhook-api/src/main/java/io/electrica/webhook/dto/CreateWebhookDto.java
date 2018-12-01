@@ -1,31 +1,24 @@
 package io.electrica.webhook.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CreateWebhookDto {
+public abstract class CreateWebhookDto {
 
     @NotBlank
     @Size(max = 255)
     private String name;
 
     @NotNull
-    private Long connectionId;
+    private Long accessKeyId;
 
-    @NotNull
-    private Long organizationId;
-
-    @NotNull
-    private Long userId;
-
-    @NotNull
-    private Long connectorId;
+    private Map<String, String> properties;
 
 }
