@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import io.electrica.WebhookServiceApplicationTest;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
+import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
@@ -59,7 +60,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
 
         ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
         dto.setProperties(properties);
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, true);
 
         executeForUser(
                 userId,
@@ -78,6 +80,18 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         );
     }
 
+    private void mockConnectionClient(Long accessKeyId, Long connectionId, boolean connectionBelongsCurrentUser) {
+        doReturn(ResponseEntity.ok(connectionBelongsCurrentUser))
+                .when(connectionClient)
+                .connectionBelongsCurrentUser(connectionId);
+
+        ConnectionDto connection = new ConnectionDto();
+        connection.setAccessKeyId(accessKeyId);
+        doReturn(ResponseEntity.ok(connection))
+                .when(connectionClient)
+                .get(connectionId);
+    }
+
     @Test(expected = AccessDeniedException.class)
     public void testWebhookWithUserHasNoCreateWebhookPermission() {
         Long userId = 1L;
@@ -86,7 +100,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long connectionId = 1L;
 
         ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, true);
 
         executeForUser(
                 userId,
@@ -104,7 +119,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long connectionId = 1L;
 
         ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
-        doReturn(ResponseEntity.ok(false)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, false);
 
         executeForUser(
                 userId,
@@ -124,7 +140,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
         ConnectionCreateWebhookDto dto2 = connectionCreateWebhookDto("test2", accessKeyId, connectionId);
         ConnectionCreateWebhookDto dto3 = connectionCreateWebhookDto("test3", accessKeyId, connectionId);
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, true);
 
         executeForUser(
                 userId,
@@ -158,7 +175,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long connectionId = 1L;
 
         ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, true);
 
         executeForUser(userId, organizationId,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook),
@@ -195,7 +213,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long connectionId = 1L;
 
         ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
-        doReturn(ResponseEntity.ok(true)).when(connectionClient).connectionBelongsCurrentUser(connectionId);
+
+        mockConnectionClient(accessKeyId, connectionId, true);
 
         AtomicReference<UUID> webhookId = new AtomicReference<>();
         executeForUser(userId, organizationId,

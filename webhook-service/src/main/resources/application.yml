@@ -7,5 +7,10 @@ spring:
   datasource:
     name: pool-to-webhook-db
     url: jdbc:postgresql://localhost:5432/webhook_db
+
 webhook:
   base-url: http://localhost
+  # 30 min
+  message-ttl: 1800000
+  # 24 hours
+  queue-ttl: 86400000

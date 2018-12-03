@@ -87,4 +87,12 @@ public class CommonExpressionMethods {
         return getPermissions().contains(permissionType);
     }
 
+
+    public boolean isAccessKey(Long accessKeyId) {
+        return Objects.equals(accessKeyId, getAccessKey());
+    }
+
+    public Long getAccessKey() {
+        return getIdentity().getAccessKeyId();
+    }
 }

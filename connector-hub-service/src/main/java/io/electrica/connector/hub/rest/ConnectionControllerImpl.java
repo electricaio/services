@@ -57,7 +57,7 @@ public class ConnectionControllerImpl implements ConnectionController {
 
     @Override
     @PreAuthorize("#oauth2.hasScope('sdk')")
-    @PostAuthorize("#connection.isSessionAccessKey(returnObject.getBody().getConnection().getAccessKeyId())")
+    @PostAuthorize("#connection.isAccessKey(returnObject.getBody().getConnection().getAccessKeyId())")
     public ResponseEntity<FullConnectionDto> getFull(@PathVariable("id") Long id) {
         FullConnectionDto result = fullConnectionDtoService.findById(id);
         return ResponseEntity.ok(result);

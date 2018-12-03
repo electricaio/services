@@ -91,7 +91,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 deleteAccessKey,
                 listActiveSTLs,
                 addPermission,
-                removePermission
+                removePermission,
+                createWebhook,
+                deleteWebhook,
+                readWebhook
         );
 
 
@@ -114,7 +117,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 associateAccessKeyToSTL,
                 listActiveSTLs,
                 addPermission,
-                removePermission
+                removePermission,
+                createWebhook,
+                deleteWebhook,
+                readWebhook
         );
     }
 

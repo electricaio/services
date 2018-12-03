@@ -1,5 +1,6 @@
 package io.electrica.user.service;
 
+import com.google.common.collect.Sets;
 import io.electrica.common.helper.AuthorityHelper;
 import io.electrica.common.helper.TokenHelper;
 import lombok.AllArgsConstructor;
@@ -38,8 +39,8 @@ public class AccessKeyGenerator {
                 userId,
                 ACCESS_KEY_CLIENT_ID,
                 AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId),
-                ACCESS_KEY_CLIENT_SCOPES,
-                ACCESS_KEY_CLIENT_RESOURCE_IDS
+                Sets.newHashSet(ACCESS_KEY_CLIENT_SCOPES),
+                Sets.newHashSet(ACCESS_KEY_CLIENT_RESOURCE_IDS)
         );
         Object jti = accessToken.getAdditionalInformation().get(TokenHelper.JWT_TOKEN_IDENTIFIER);
         checkArgument(jti != null, "Token identifier required");
