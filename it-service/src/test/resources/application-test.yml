@@ -1,0 +1,2 @@
+# Override here properties for functions tests
+feign.request.interceptor.enable=false

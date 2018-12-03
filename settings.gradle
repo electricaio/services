@@ -15,3 +15,5 @@ include 'webhook-api'
 include 'webhook-service'
 include 'websocket-service'
 include 'common-mq'
+include 'it-service'
+

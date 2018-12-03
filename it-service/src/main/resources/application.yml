@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: it-service
+feign:
+  userService.url: localhost:22022
+  connectorHubService.url: localhost:22023
+  invokerService.url: localhost:22024
+  connectorService.url: localhost:22025
+  webhookService.url: localhost:22026
+security:
+  oauth2:
+    access-token-uri: http://localhost:22022/oauth/token
+    client-id: frontend
+    client-secret: change_me

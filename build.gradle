@@ -43,6 +43,8 @@ subprojects {
         lombokVersion = '1.18.2'
         springfoxSwaggerVersion = '2.9.2'
         jacksonJsr310Version = '2.9.7'
+        testngVersion = '6.10'
+        okhttpVersion = '3.11.0'
     }
 
     sourceCompatibility = 1.8
