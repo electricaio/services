@@ -1,5 +1,6 @@
 package io.electrica.webhook.rest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,17 @@ public interface WebhookController {
 
     @DeleteMapping(V1 + "/webhooks/{id}")
     void delete(@PathVariable("id") UUID id);
+
+    @PostMapping(V1 + "/webhooks/{webhookId}/send")
+    ResponseEntity sendMessage(
+            @PathVariable("webhookId") UUID webhookId,
+            @RequestBody JsonNode payload
+    );
+
+    @PostMapping(V1 + "/webhooks/{webhookId}/invoke")
+    ResponseEntity<JsonNode> invoke(
+            @PathVariable("webhookId") UUID webhookId,
+            @RequestBody JsonNode payload
+    );
 
 }

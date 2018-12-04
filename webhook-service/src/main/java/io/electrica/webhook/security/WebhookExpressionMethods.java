@@ -2,6 +2,7 @@ package io.electrica.webhook.security;
 
 import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
+import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
 import io.electrica.webhook.model.Webhook;
@@ -36,15 +37,28 @@ public class WebhookExpressionMethods extends CommonExpressionMethods {
         return connectionClient.connectionBelongsCurrentUser(connectionId).getBody();
     }
 
+    public Boolean connectionBelongsAccessKey(Long connectionId, Long accessKeyId) {
+        ConnectionDto connection = connectionClient.get(connectionId).getBody();
+        return connection != null && Objects.equals(accessKeyId, connection.getAccessKeyId());
+    }
+
     public Boolean connectionWebhooksBelongsCurrentUser(List<ConnectionWebhookDto> webhooks) {
-        long userId = getUserId();
         return webhooks.stream()
-                .allMatch(w -> Objects.equals(userId, w.getUserId()));
+                .allMatch(w -> isUser(w.getUserId()));
+    }
+
+    public Webhook getWebhook(UUID id) {
+        return webhookService.findById(id);
     }
 
     public Boolean webhookBelongsCurrentUser(UUID id) {
-        Webhook webhook = webhookService.findById(id);
-        return Objects.equals(webhook.getUserId(), getUserId());
+        Webhook webhook = getWebhook(id);
+        return isUser(webhook.getUserId());
+    }
+
+    public Boolean webhookBelongsCurrentAccessKey(UUID id) {
+        Webhook webhook = getWebhook(id);
+        return isUser(webhook.getUserId()) && isAccessKey(webhook.getAccessKeyId());
     }
 
     @Component

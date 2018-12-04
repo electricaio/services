@@ -57,8 +57,8 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 // ToDo change secret
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID)
-                .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
+                .resourceIds(FRONTEND_CLIENT_RESOURCE_IDS)
+                .scopes(FRONTEND_CLIENT_SCOPES)
                 .accessTokenValiditySeconds(30 * 60)
                 .refreshTokenValiditySeconds(30 * 24 * 60 * 60)
 
@@ -67,16 +67,16 @@ public class AuthorizationServerConfigurerAdapterImpl extends AuthorizationServe
                 .withClient("frontend-test")
                 .secret(passwordEncoder.encode("change_me"))
                 .authorizedGrantTypes("refresh_token", "password")
-                .resourceIds(USER_SERVICE_RESOURCE_ID, CONNECTOR_HUB_SERVICE_RESOURCE_ID)
-                .scopes(CREATE_SCOPE, READ_SCOPE, UPDATE_SCOPE, DELETE_SCOPE, DO_SCOPE)
+                .resourceIds(FRONTEND_CLIENT_RESOURCE_IDS)
+                .scopes(FRONTEND_CLIENT_SCOPES)
                 .accessTokenValiditySeconds(60)
                 .refreshTokenValiditySeconds(2 * 60)
 
                 .and()
                 .withClient(ACCESS_KEY_CLIENT_ID)
                 .secret("{none}" + UUID.randomUUID())
-                .resourceIds(ACCESS_KEY_CLIENT_RESOURCE_IDS.toArray(new String[0]))
-                .scopes(ACCESS_KEY_CLIENT_SCOPES.toArray(new String[0]))
+                .resourceIds(ACCESS_KEY_CLIENT_RESOURCE_IDS)
+                .scopes(ACCESS_KEY_CLIENT_SCOPES)
                 .accessTokenValiditySeconds(Integer.MAX_VALUE);
     }
 
