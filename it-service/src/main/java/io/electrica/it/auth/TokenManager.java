@@ -5,9 +5,6 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.Charset;
-import java.util.Base64;
-
 @Component
 public class TokenManager {
 
@@ -29,19 +26,16 @@ public class TokenManager {
     }
 
     public TokenDetails getTokenDetailsForUser(String userName, String password) {
-        String encodedString = new String(Base64.getEncoder().encode((clientId + ":" + clientSecret)
-                .getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
-
         RequestBody body = RequestBody.create(MEDIA_TYPE_FORM_URL,
                 "grant_type=password&username=@e:" + userName + "&password=" + password);
-        return getTokenFromAuthServer(encodedString, body);
+        return getTokenFromAuthServer(body);
     }
 
-    private TokenDetails getTokenFromAuthServer(String encodedString, RequestBody body) {
+    private TokenDetails getTokenFromAuthServer(RequestBody body) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Basic " + encodedString)
+                .addHeader("Authorization", Credentials.basic(clientId, clientSecret))
                 .addHeader("Content-Type", MEDIA_TYPE_FORM_URL.toString())
                 .url(accessTokenUri)
                 .post(body)

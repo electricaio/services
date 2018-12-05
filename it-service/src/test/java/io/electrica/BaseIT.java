@@ -1,6 +1,7 @@
 package io.electrica;
 
 import io.electrica.it.auth.TokenManager;
+import io.electrica.it.context.ContextHolder;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,9 @@ public class BaseIT extends AbstractTestNGSpringContextTests {
 
     @Inject
     public TokenManager tokenManager;
+
+    @Inject
+    public ContextHolder contextHolder;
 
     @Test(groups = {"init"})
     public void checkMicroservices() {

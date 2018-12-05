@@ -4,8 +4,7 @@ import io.electrica.it.auth.TokenDetails;
 import io.electrica.it.model.Organization;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,15 +12,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SessionContextHolder {
+@Component
+public class ContextHolder {
 
-    private static final SessionContextHolder INSTANCE = new SessionContextHolder();
     private final AtomicReference<TokenDetails> tokenDetails = new AtomicReference<>();
     private final List<Organization> organizations = new ArrayList<>();
-
-    public static SessionContextHolder getInstance() {
-        return INSTANCE;
-    }
 
     public void clear() {
         tokenDetails.set(null);
@@ -58,20 +53,11 @@ public class SessionContextHolder {
         return organizations;
     }
 
-    public synchronized void setTokenDetails(TokenDetails td) {
+    public void setTokenDetails(TokenDetails td) {
         tokenDetails.set(td);
     }
 
     public String getAccessToken() {
         return tokenDetails.get() == null ? null : tokenDetails.get().getAccessToken();
-    }
-
-
-    @Configuration
-    public static class SessionContextHolderConfigurer {
-        @Bean
-        public SessionContextHolder sessionContextHolder() {
-            return getInstance();
-        }
     }
 }
