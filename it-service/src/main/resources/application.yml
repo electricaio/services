@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: it-service
+it-service:
+  oauth2:
+    access-token-uri: http://localhost:22022/oauth/token
+    client-id: frontend
+    client-secret: change_me
+    user: admin@electrica.io
+    password: admin
+    grant_type: password

@@ -51,6 +51,9 @@ public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigure
             case "websocket-service":
                 resourceId = AuthorityConstants.WEBSOCKET_SERVICE_RESOURCE_ID;
                 break;
+            case "it-service":
+                resourceId = AuthorityConstants.INTEGRATION_TEST_SERVICE_RESOURCE_ID;
+                break;
             default:
                 throw new UnsupportedOperationException(
                         "Unknown service name to resolve oauth resourceId: " + applicationName

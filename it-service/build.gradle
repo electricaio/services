@@ -1,0 +1,50 @@
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile project(':common')
+    compile project(':connector-hub-service-api')
+    compile project(':user-service-api')
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+
+    testCompile project(':common-test')
+    testCompile project(':common').sourceSets.test.output
+    testCompile "org.testng:testng:$testngVersion"
+
+}
+
+task integrationTest(type: Test) {
+   useTestNG()
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+
+    // explicitly include or exclude tests
+//    exclude 'io/electrica/**'
+
+    // set heap size for the test JVM(s)
+    minHeapSize = "128m"
+    maxHeapSize = "512m"
+
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // Fail the 'test' task on the first test failure
+    failFast = true
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
+    }
+}
+
+test {
+    exclude 'io/electrica/**'
+}
+
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split("\\s+")
+    }
+    jvmArgs = ["-Xmx128m"]
+}
