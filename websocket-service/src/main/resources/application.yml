@@ -4,3 +4,16 @@ server:
 spring:
   application:
     name: websocket-service
+
+websocket:
+  jetty:
+    # 24 hours
+    idle-timeout: 86400000
+    # 8 Kb
+    input-buffer-size: 8192
+    # 1 min
+    async-write-timeout: 60000
+    # 64 Kb
+    max-text-message-size: 65536
+    # 32 Kb
+    max-text-message-buffer-size: 32768
