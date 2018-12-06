@@ -1,5 +1,6 @@
-package io.electrica;
+package io.electrica.it;
 
+import io.electrica.ItServiceApplication;
 import io.electrica.it.auth.TokenManager;
 import io.electrica.it.context.ContextHolder;
 import io.electrica.user.feign.OrganizationClient;

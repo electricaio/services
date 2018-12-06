@@ -13,7 +13,7 @@ dependencies {
 }
 
 task integrationTest(type: Test) {
-   useTestNG()
+    useTestNG()
     // show standard out and standard error of the test JVM(s) on the console
     testLogging.showStandardStreams = true
 
@@ -38,8 +38,10 @@ task integrationTest(type: Test) {
     }
 }
 
+integrationTest.onlyIf { project.hasProperty('execIntegrationTest') }
+
 test {
-    exclude 'io/electrica/**'
+    exclude 'io/electrica/it/**'
 }
 
 bootRun {

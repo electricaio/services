@@ -1,6 +1,6 @@
-package io.electrica.user;
+package io.electrica.it.user;
 
-import io.electrica.BaseIT;
+import io.electrica.it.BaseIT;
 import io.electrica.common.security.RoleType;
 import io.electrica.it.auth.TokenDetails;
 import io.electrica.user.dto.CreateUserDto;
