@@ -1,18 +1,24 @@
 package io.electrica.it.user;
 
-import io.electrica.it.BaseIT;
 import io.electrica.common.security.RoleType;
+import io.electrica.it.BaseIT;
 import io.electrica.it.auth.TokenDetails;
+import io.electrica.user.dto.CreateAccessKeyDto;
 import io.electrica.user.dto.CreateUserDto;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.Date;
+
+import static org.junit.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class UserServiceTest extends BaseIT {
+
+    private static final String USER_NAME_PREFIX = "user_";
+    private static final String EMAIL_POSTFIX = "@electrica.io";
 
     @BeforeClass
     public void setup() {
@@ -21,37 +27,41 @@ public class UserServiceTest extends BaseIT {
 
     @Test(groups = {"fillData"})
     public void testAddOrganizations() {
-        OrganizationDto orgHackerRank = new OrganizationDto();
-        orgHackerRank.setName(ORG_HACKER_RANK);
-        OrganizationDto entity = organizationClient.createIfAbsent(orgHackerRank).getBody();
-        assertEquals(entity.getName(), ORG_HACKER_RANK);
-        contextHolder.addOrganizationToContext(entity);
-
-        OrganizationDto orgTopCoder = new OrganizationDto();
-        orgTopCoder.setName(ORG_TOP_CODER);
-        entity = organizationClient.createIfAbsent(orgTopCoder).getBody();
-        assertEquals(entity.getName(), ORG_TOP_CODER);
-        contextHolder.addOrganizationToContext(entity);
+        createOrganization(ORG_HACKER_RANK);
+        createOrganization(ORG_TOP_CODER);
 
         assertEquals(2, contextHolder.getOrganizations().size());
+        assertEquals(ORG_HACKER_RANK, contextHolder.getOrganizations().get(0).getName());
+        assertEquals(ORG_TOP_CODER, contextHolder.getOrganizations().get(1).getName());
     }
 
 
     @Test(groups = {"fillData"}, dependsOnMethods = {"testAddOrganizations"})
     public void testAddUsersToOrganizations() {
 
-        UserDto inderSabharwal = createUser("inder", "inder@electrica.io", ORG_HACKER_RANK, RoleType.OrgUser);
-        UserDto aleksey = createUser("aleksey", "aleksey@electrica.io", ORG_HACKER_RANK, RoleType.OrgUser);
-        UserDto munish = createUser("munish", "munish@electrica.io", ORG_TOP_CODER, RoleType.OrgUser);
-        UserDto chris = createUser("chris", "chris@electrica.io", ORG_TOP_CODER, RoleType.OrgUser);
+        createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+        createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+        createUser(ORG_TOP_CODER, RoleType.OrgUser);
+        createUser(ORG_TOP_CODER, RoleType.OrgUser);
+        assertEquals(4, contextHolder.getUsers().size());
 
-        assertEquals(2, contextHolder.getOrganizationByName(ORG_HACKER_RANK).getUserMap().size());
-        assertEquals(2, contextHolder.getOrganizationByName(ORG_TOP_CODER).getUserMap().size());
+    }
+
+    @Test(groups = {"fillData"}, dependsOnMethods = {"testAddUsersToOrganizations"})
+    public void testAddAccessKeyToUser() {
+        contextHolder.getUsers().stream()
+                .forEach(u -> {
+                    contextHolder.setContextForUser(u.getEmail());
+                    createAccessKey(u.getId(), "Development");
+                    createAccessKey(u.getId(), "Staging");
+                    createAccessKey(u.getId(), "Production");
+                });
     }
 
     @Test(groups = {"test"}, dependsOnGroups = {"init", "fillData"})
     public void testLogin() {
-        TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser("inder@electrica.io", "inder");
+        UserDto user = contextHolder.getUsers().get(0);
+        TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
         assertNotNull(tokenDetails.getAccessToken());
         assertNotNull(tokenDetails.getRefreshToken());
         assertNotNull(tokenDetails.getCreatedDateTime());
@@ -60,18 +70,34 @@ public class UserServiceTest extends BaseIT {
     }
 
 
-    private UserDto createUser(String username, String email, String org, RoleType roleType) {
-        Long orgId = contextHolder.getOrganizationByName(org).getOrganizationDto().getId();
+    private UserDto createUser(String org, RoleType roleType) {
+        String name = USER_NAME_PREFIX + new Date().getTime();
+        Long orgId = contextHolder.getOrganizationByName(org).getId();
         CreateUserDto user = new CreateUserDto();
         user.setOrganizationId(orgId);
-        user.setFirstName(username);
-        user.setLastName(username);
-        user.setEmail(email);
-        user.setLastName(username);
-        user.setPassword(username);
+        user.setFirstName(name);
+        user.setLastName(name);
+        user.setEmail(name + EMAIL_POSTFIX);
+        user.setLastName(name);
+        user.setPassword(name);
         UserDto userDto = userClient.createUser(user).getBody();
-        contextHolder.addUserToOrganization(org, userDto);
+        contextHolder.addUserToContext(userDto);
         return userDto;
+    }
+
+    private void createAccessKey(Long userId, String name) {
+        CreateAccessKeyDto accessKeyDto = new CreateAccessKeyDto();
+        accessKeyDto.setName(name);
+        accessKeyDto.setUserId(userId);
+        accessKeyClient.createAccessKey(accessKeyDto);
+    }
+
+    private OrganizationDto createOrganization(String name) {
+        OrganizationDto orgTopCoder = new OrganizationDto();
+        orgTopCoder.setName(name);
+        OrganizationDto entity = organizationClient.createIfAbsent(orgTopCoder).getBody();
+        contextHolder.addOrganizationToContext(entity);
+        return entity;
     }
 
 }

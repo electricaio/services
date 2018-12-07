@@ -1,8 +1,11 @@
 package io.electrica.it;
 
 import io.electrica.ItServiceApplication;
+import io.electrica.connector.hub.feign.ConnectionClient;
+import io.electrica.connector.hub.feign.ConnectorClient;
 import io.electrica.it.auth.TokenManager;
 import io.electrica.it.context.ContextHolder;
+import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +32,14 @@ public class BaseIT extends AbstractTestNGSpringContextTests {
     @Inject
     public ContextHolder contextHolder;
 
+    @Inject
+    public AccessKeyClient accessKeyClient;
+
+    @Inject
+    public ConnectorClient connectorClient;
+
+    @Inject
+    public ConnectionClient connectionClient;
     @Test(groups = {"init"})
     public void checkMicroservices() {
         // Todo check  microservices are active

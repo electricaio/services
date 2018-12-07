@@ -4,7 +4,6 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /*
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@ConditionalOnProperty("feign.request.interceptor.enable")
 public class FeignRequestInterceptor implements RequestInterceptor {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_TOKEN_TYPE = "Bearer";

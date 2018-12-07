@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class LocalFeignRequestInterceptor implements RequestInterceptor {
 
     private final ContextHolder contextHolder;
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_TOKEN_TYPE = "Bearer";
 
     public LocalFeignRequestInterceptor(ContextHolder contextHolder) {
         this.contextHolder = contextHolder;
@@ -18,7 +20,7 @@ public class LocalFeignRequestInterceptor implements RequestInterceptor {
     public synchronized void apply(RequestTemplate requestTemplate) {
         String accessToken = contextHolder.getAccessToken();
         if (accessToken != null) {
-            requestTemplate.header("Authorization", accessToken);
+            requestTemplate.header(AUTHORIZATION_HEADER, String.format("%s %s", BEARER_TOKEN_TYPE, accessToken));
         }
     }
 }

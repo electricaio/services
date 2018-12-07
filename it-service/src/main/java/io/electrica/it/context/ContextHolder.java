@@ -1,46 +1,71 @@
 package io.electrica.it.context;
 
 import io.electrica.it.auth.TokenDetails;
-import io.electrica.it.model.Organization;
+import io.electrica.it.auth.TokenManager;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
 
 @Component
 public class ContextHolder {
 
-    private final AtomicReference<TokenDetails> tokenDetails = new AtomicReference<>();
-    private final List<Organization> organizations = new ArrayList<>();
+    private static final String ADMIN_EMAIL = "admin@electrica.io";
+    private static final String ADMIN_PASSWORD = "admin";
+
+    private TokenManager tokenManager;
+
+    public ContextHolder(TokenManager tokenManager) {
+        this.tokenManager = tokenManager;
+    }
+
+    private final ThreadLocal<TokenDetails> context = new ThreadLocal<>();
+    private final List<OrganizationDto> organizations = new ArrayList<>();
+    private final List<UserDto> users = new ArrayList<>();
+    private final Map<String, TokenDetails> tokenStore = new HashMap<>();
 
     public void clear() {
-        tokenDetails.set(null);
+        context.set(null);
     }
 
     public void addOrganizationToContext(OrganizationDto organizationDto) {
-        Organization org = new Organization();
-        org.setOrganizationDto(organizationDto);
-        org.setUserMap(new HashMap<>());
-        organizations.add(org);
+        organizations.add(organizationDto);
     }
 
-    public void addUserToOrganization(String orgName, UserDto userDto) {
-        Optional<Organization> org = organizations.stream()
-                .filter(o -> o.getOrganizationDto().getName().equalsIgnoreCase(orgName))
-                .findFirst();
-        if (org.isPresent()) {
-            org.get().getUserMap().put(userDto.getFirstName(), userDto);
+    public void addUserToContext(UserDto userDto) {
+        users.add(userDto);
+    }
+
+    public void setContextForUser(String email) {
+        TokenDetails td = tokenStore.get(email);
+        if (td == null) {
+            Optional<UserDto> userDtoOptional = users.stream()
+                    .filter(u -> Objects.equals(u.getEmail(), email))
+                    .findFirst();
+            if (userDtoOptional.isPresent()) {
+                UserDto userDto = userDtoOptional.get();
+                td = tokenManager.getTokenDetailsForUser(userDto.getEmail(), userDto.getFirstName());
+                tokenStore.put(userDto.getEmail(), td);
+            } else {
+                throw new RuntimeException("User with Email '" + email + "' does not exist in context");
+            }
         }
+        context.set(td);
     }
 
-    public Organization getOrganizationByName(String orgName) {
-        Optional<Organization> org = organizations.stream()
-                .filter(o -> o.getOrganizationDto().getName().equalsIgnoreCase(orgName))
+    public void setContextForAdmin() {
+        TokenDetails tokenDetails = tokenStore.get(ADMIN_EMAIL);
+        if (tokenDetails == null) {
+            tokenDetails = tokenManager.getTokenDetailsForUser(ADMIN_EMAIL, ADMIN_PASSWORD);
+            tokenStore.put(ADMIN_EMAIL, tokenDetails);
+        }
+        context.set(tokenDetails);
+    }
+
+    public OrganizationDto getOrganizationByName(String orgName) {
+        Optional<OrganizationDto> org = organizations.stream()
+                .filter(o -> o.getName().equalsIgnoreCase(orgName))
                 .findFirst();
         if (org.isPresent()) {
             return org.get();
@@ -49,15 +74,19 @@ public class ContextHolder {
         }
     }
 
-    public List<Organization> getOrganizations() {
+    public List<OrganizationDto> getOrganizations() {
         return organizations;
     }
 
-    public void setTokenDetails(TokenDetails td) {
-        tokenDetails.set(td);
+    public List<UserDto> getUsers() {
+        return users;
+    }
+
+    public void setContext(TokenDetails td) {
+        context.set(td);
     }
 
     public String getAccessToken() {
-        return tokenDetails.get() == null ? null : tokenDetails.get().getAccessToken();
+        return context.get() == null ? null : context.get().getAccessToken();
     }
 }
