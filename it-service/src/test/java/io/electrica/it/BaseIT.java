@@ -1,6 +1,7 @@
 package io.electrica.it;
 
 import io.electrica.ItServiceApplication;
+import io.electrica.connector.hub.feign.AuthorizationClient;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.connector.hub.feign.ConnectorClient;
 import io.electrica.it.auth.TokenManager;
@@ -40,6 +41,14 @@ public class BaseIT extends AbstractTestNGSpringContextTests {
 
     @Inject
     public ConnectionClient connectionClient;
+
+    @Inject
+    public AuthorizationClient authorizationClient;
+
+    public Long getCurrTimeInMillSeconds() {
+        return System.currentTimeMillis();
+    }
+
     @Test(groups = {"init"})
     public void checkMicroservices() {
         // Todo check  microservices are active

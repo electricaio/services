@@ -10,14 +10,13 @@ import io.electrica.user.dto.UserDto;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Date;
-
 import static org.junit.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
 
+@Test
 public class UserServiceTest extends BaseIT {
 
-    private static final String USER_NAME_PREFIX = "user_";
+    private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
 
     @BeforeClass
@@ -25,7 +24,7 @@ public class UserServiceTest extends BaseIT {
         contextHolder.clear();
     }
 
-    @Test(groups = {"fillData"})
+    @Test(groups = {"fillData", "user-service"})
     public void testAddOrganizations() {
         createOrganization(ORG_HACKER_RANK);
         createOrganization(ORG_TOP_CODER);
@@ -36,7 +35,7 @@ public class UserServiceTest extends BaseIT {
     }
 
 
-    @Test(groups = {"fillData"}, dependsOnMethods = {"testAddOrganizations"})
+    @Test(groups = {"fillData", "user-service"}, dependsOnMethods = {"testAddOrganizations"})
     public void testAddUsersToOrganizations() {
 
         createUser(ORG_HACKER_RANK, RoleType.OrgUser);
@@ -47,7 +46,7 @@ public class UserServiceTest extends BaseIT {
 
     }
 
-    @Test(groups = {"fillData"}, dependsOnMethods = {"testAddUsersToOrganizations"})
+    @Test(groups = {"fillData", "user-service"}, dependsOnMethods = {"testAddUsersToOrganizations"})
     public void testAddAccessKeyToUser() {
         contextHolder.getUsers().stream()
                 .forEach(u -> {
@@ -71,7 +70,7 @@ public class UserServiceTest extends BaseIT {
 
 
     private UserDto createUser(String org, RoleType roleType) {
-        String name = USER_NAME_PREFIX + new Date().getTime();
+        String name = USER_NAME_PREFIX + getCurrTimeInMillSeconds();
         Long orgId = contextHolder.getOrganizationByName(org).getId();
         CreateUserDto user = new CreateUserDto();
         user.setOrganizationId(orgId);
