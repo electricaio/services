@@ -60,6 +60,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission createWebhook = savePermission(PermissionType.CreateWebhook, "Create Webhook", "CreateWebhook");
         Permission deleteWebhook = savePermission(PermissionType.DeleteWebhook, "Delete Webhook", "DeleteWebhook");
         Permission readWebhook = savePermission(PermissionType.ReadWebhook, "Read Webhook", "ReadWebhook");
+        Permission readConnector = savePermission(PermissionType.ReadConnector, "Read Connector", "ReadConnector");
 
         assignPermissionsToRole(orgUser,
                 updateUser,
@@ -73,7 +74,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 listActiveSTLs,
                 createWebhook,
                 deleteWebhook,
-                readWebhook
+                readWebhook,
+                readConnector
         );
 
 
@@ -94,7 +96,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 removePermission,
                 createWebhook,
                 deleteWebhook,
-                readWebhook
+                readWebhook,
+                readConnector
         );
 
 
