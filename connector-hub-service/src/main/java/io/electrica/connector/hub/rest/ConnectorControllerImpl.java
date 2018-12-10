@@ -22,6 +22,7 @@ public class ConnectorControllerImpl implements ConnectorController {
     }
 
     @Override
+    @PreAuthorize(" #common.hasPermission('ReadConnector')")
     public ResponseEntity<List<ConnectorDto>> findAll() {
         final List<ConnectorDto> result = connectorDtoService.findAll();
         return ResponseEntity.ok(result);
