@@ -1,6 +1,7 @@
 package io.electrica.it;
 
 import io.electrica.ItServiceApplication;
+import io.electrica.connector.hub.feign.AuthorizationClient;
 import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.connector.hub.feign.ConnectorClient;
 import io.electrica.it.auth.TokenManager;
@@ -13,6 +14,8 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
+
+import static io.electrica.it.util.ItServiceConstants.INIT_GROUP;
 
 @SpringBootTest(classes = ItServiceApplication.class)
 public class BaseIT extends AbstractTestNGSpringContextTests {
@@ -40,7 +43,15 @@ public class BaseIT extends AbstractTestNGSpringContextTests {
 
     @Inject
     public ConnectionClient connectionClient;
-    @Test(groups = {"init"})
+
+    @Inject
+    public AuthorizationClient authorizationClient;
+
+    public Long getCurrTimeInMillSeconds() {
+        return System.currentTimeMillis();
+    }
+
+    @Test(groups = {INIT_GROUP})
     public void checkMicroservices() {
         // Todo check  microservices are active
     }

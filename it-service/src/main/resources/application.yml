@@ -1,3 +1,6 @@
+server:
+  port: 22028
+
 spring:
   application:
     name: it-service
