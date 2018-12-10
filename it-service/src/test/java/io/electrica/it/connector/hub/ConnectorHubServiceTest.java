@@ -3,6 +3,7 @@ package io.electrica.it.connector.hub;
 import io.electrica.connector.hub.dto.*;
 import io.electrica.it.BaseIT;
 import io.electrica.user.dto.AccessKeyDto;
+import io.electrica.user.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -10,12 +11,16 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static io.electrica.it.util.ItServiceConstants.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 public class ConnectorHubServiceTest extends BaseIT {
 
     private static final String CONNECTOR_URL = "http://connector.dev.electrica.io";
     private static final String SDK_URL = "http://sdk.dev.electrica.io";
     private static final String CONNECTION_NAME_PREFIX = "connection-";
-    private static final Long DEFAULT_CONNECTOR_TYPE = 1000L;
+    private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     private final Logger logger = LoggerFactory.getLogger(ConnectorHubServiceTest.class);
 
     private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
@@ -29,7 +34,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         contextHolder.clear();
     }
 
-    @Test(groups = {"fillData"}, dependsOnGroups = {"user-service"})
+    @Test(groups = {FILL_DATA_GROUP}, dependsOnGroups = {USER_SERVICE_GROUP})
     public void testAddConnectors() {
         contextHolder.setContextForAdmin();
         List<ConnectorDto> connectors = connectorClient.findAll().getBody();
@@ -51,7 +56,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         }
     }
 
-    @Test(groups = {"fillData"}, dependsOnMethods = {"testAddConnectors"})
+    @Test(groups = {FILL_DATA_GROUP}, dependsOnMethods = {"testAddConnectors"})
     public void testAddConnections() {
 
         contextHolder.getUsers().stream()
@@ -68,6 +73,63 @@ public class ConnectorHubServiceTest extends BaseIT {
                                 });
                             });
                 });
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testFindAllConnectors() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        List<ConnectorDto> connectorDtoList = connectorClient.findAll().getBody();
+        assertTrue(connectorDtoList.size() > 0);
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testFindAllConnections() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        ConnectorDto connector = connectorClient.findAll().getBody().get(0);
+        List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(), connector.getId()).getBody();
+        assertTrue(connectionDtos.size() > 0);
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testFindAllConnectionsWithConnectorId() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(), null).getBody();
+        assertTrue(connectionDtos.size() > 0);
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testGetConnectionById() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        ConnectorDto connector = connectorClient.findAll().getBody().get(0);
+        ConnectionDto connection = connectionClient.findAllByUser(user.getId(), connector.getId()).getBody().get(0);
+        ConnectionDto actual = connectionClient.get(connection.getId()).getBody();
+        assertEquals(connection.getName(), actual.getName());
+        assertEquals(connection.getRevisionVersion(), actual.getRevisionVersion());
+        assertEquals(connection.getAccessKeyId(), actual.getAccessKeyId());
+        assertEquals(connection.getAuthorizationId(), actual.getAuthorizationId());
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testFindAllByAccessKeyById() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
+        List<ConnectionDto> connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody();
+        assertTrue(connectionDtos.size() > 0);
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testConnectionBelongToCurrentUser() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
+        ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody().get(0);
+        Boolean result = connectionClient.connectionBelongsCurrentUser(connectionDtos.getId()).getBody();
+        assertTrue(result);
     }
 
     private void setAuthorization(ConnectionDto connection, AuthorizationType authorizationType) {

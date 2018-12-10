@@ -10,6 +10,8 @@ import io.electrica.user.dto.UserDto;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static io.electrica.it.util.ItServiceConstants.*;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
 
@@ -24,7 +26,7 @@ public class UserServiceTest extends BaseIT {
         contextHolder.clear();
     }
 
-    @Test(groups = {"fillData", "user-service"})
+    @Test(groups = {FILL_DATA_GROUP, USER_SERVICE_GROUP})
     public void testAddOrganizations() {
         createOrganization(ORG_HACKER_RANK);
         createOrganization(ORG_TOP_CODER);
@@ -35,7 +37,7 @@ public class UserServiceTest extends BaseIT {
     }
 
 
-    @Test(groups = {"fillData", "user-service"}, dependsOnMethods = {"testAddOrganizations"})
+    @Test(groups = {FILL_DATA_GROUP, USER_SERVICE_GROUP}, dependsOnMethods = {"testAddOrganizations"})
     public void testAddUsersToOrganizations() {
 
         createUser(ORG_HACKER_RANK, RoleType.OrgUser);
@@ -46,7 +48,7 @@ public class UserServiceTest extends BaseIT {
 
     }
 
-    @Test(groups = {"fillData", "user-service"}, dependsOnMethods = {"testAddUsersToOrganizations"})
+    @Test(groups = {FILL_DATA_GROUP, USER_SERVICE_GROUP}, dependsOnMethods = {"testAddUsersToOrganizations"})
     public void testAddAccessKeyToUser() {
         contextHolder.getUsers().stream()
                 .forEach(u -> {
@@ -57,7 +59,7 @@ public class UserServiceTest extends BaseIT {
                 });
     }
 
-    @Test(groups = {"test"}, dependsOnGroups = {"init", "fillData"})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
     public void testLogin() {
         UserDto user = contextHolder.getUsers().get(0);
         TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
@@ -66,6 +68,16 @@ public class UserServiceTest extends BaseIT {
         assertNotNull(tokenDetails.getCreatedDateTime());
         assertNotNull(tokenDetails.getExpiresIn());
         assertNotNull(tokenDetails.getJti());
+    }
+
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testRefreshToken() {
+        UserDto user = contextHolder.getUsers().get(0);
+        TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
+        TokenDetails refreshTokenDetail = tokenManager.getNewAccessTokenFromRefreshToken(tokenDetails);
+        assertNotEquals(refreshTokenDetail.getAccessToken(), tokenDetails.getAccessToken());
+        assertNotEquals(tokenDetails.getRefreshToken(), refreshTokenDetail.getRefreshToken());
+        assertNotEquals(tokenDetails.getJti(), refreshTokenDetail.getJti());
     }
 
 

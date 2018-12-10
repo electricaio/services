@@ -31,6 +31,12 @@ public class TokenManager {
         return getTokenFromAuthServer(body);
     }
 
+    public TokenDetails getNewAccessTokenFromRefreshToken(TokenDetails td) {
+        RequestBody body = RequestBody.create(MEDIA_TYPE_FORM_URL,
+                "grant_type=refresh_token&refresh_token=" + td.getRefreshToken());
+        return getTokenFromAuthServer(body);
+    }
+
     private TokenDetails getTokenFromAuthServer(RequestBody body) {
         OkHttpClient client = new OkHttpClient();
 

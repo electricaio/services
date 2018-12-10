@@ -15,6 +15,8 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
+import static io.electrica.it.util.ItServiceConstants.INIT_GROUP;
+
 @SpringBootTest(classes = ItServiceApplication.class)
 public class BaseIT extends AbstractTestNGSpringContextTests {
 
@@ -49,7 +51,7 @@ public class BaseIT extends AbstractTestNGSpringContextTests {
         return System.currentTimeMillis();
     }
 
-    @Test(groups = {"init"})
+    @Test(groups = {INIT_GROUP})
     public void checkMicroservices() {
         // Todo check  microservices are active
     }
