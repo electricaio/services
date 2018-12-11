@@ -3,9 +3,8 @@ package io.electrica.websocket.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.websocket.context.SdkInstanceContext;
 import io.electrica.websocket.dto.inbound.AckInboundMessage;
-import io.electrica.websocket.dto.inbound.InboundMessage;
-import io.electrica.websocket.dto.outbound.AckOutboundMessage;
 import io.electrica.websocket.dto.outbound.OutboundMessage;
+import io.electrica.websocket.dto.outbound.WebhookOutboundMessage;
 import lombok.Setter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +14,6 @@ import org.springframework.web.socket.WebSocketSession;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.UUID;
 
 @Validated
@@ -35,15 +33,13 @@ public class ConnectionMessageHandler {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void handle(@Valid InboundMessage message) throws IOException {
+    public void handle(@Valid AckInboundMessage ack) throws IOException {
         //ToDo dummy
 
-        AckInboundMessage inboundMessage = (AckInboundMessage) message;
-
-        AckOutboundMessage outboundMessage = new AckOutboundMessage();
+        WebhookOutboundMessage outboundMessage = new WebhookOutboundMessage();
         outboundMessage.setId(UUID.randomUUID());
-        outboundMessage.setCorrelationId(inboundMessage.getId());
-        outboundMessage.setArguments(Collections.singletonMap("arg", "hello-world"));
+//        outboundMessage.setCorrelationId(ack.getCorrelationId());
+//        outboundMessage.setArguments(Collections.singletonMap("arg", "hello-world"));
 
         send(outboundMessage);
     }

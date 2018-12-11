@@ -37,6 +37,11 @@ public class WebhookMessage {
     private Long connectorId;
 
     /**
+     * Additional data for {@link WebhookScope#Connector} scope.
+     */
+    private String connectorErn;
+
+    /**
      * Additional data for {@link WebhookScope#Connection} scope.
      */
     private Long connectionId;

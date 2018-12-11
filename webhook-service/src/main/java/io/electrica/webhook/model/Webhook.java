@@ -72,6 +72,12 @@ public class Webhook {
     private Long connectorId;
 
     /**
+     * Additional data for {@link WebhookScope#Connector} scope.
+     */
+    @Column
+    private String connectorErn;
+
+    /**
      * Additional data for {@link WebhookScope#Connection} scope.
      */
     @Column

@@ -34,7 +34,8 @@ public class WebhookControllerImpl implements WebhookController {
             "#webhook.connectionBelongsAccessKey(#dto.getConnectionId(), #dto.getAccessKeyId())"
     )
     public ResponseEntity<ConnectionWebhookDto> createConnection(@Valid @RequestBody ConnectionCreateWebhookDto dto) {
-        return ResponseEntity.ok(webhookDtoService.createConnection(dto));
+        ConnectionWebhookDto result = webhookDtoService.createConnection(dto);
+        return ResponseEntity.ok(result);
     }
 
     @Override
