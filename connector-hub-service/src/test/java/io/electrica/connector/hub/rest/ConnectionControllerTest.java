@@ -367,21 +367,24 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                     connectionController.create(new CreateConnectionDto("Test2", cnHackerRank.get(), 2L,
                             TEST_PROPERTIES));
                 });
-        executeForUser(2, 2,
-                Sets.newHashSet(RoleType.OrgAdmin),
-                Sets.newHashSet(
-                        PermissionType.AssociateAccessKeyToConnector,
-                        PermissionType.ReadActiveConnection), () -> {
-                    connectionController.create(new CreateConnectionDto("Default",
-                            cnGreenhouse.get(), 3L, TEST_PROPERTIES));
-                });
+        executeForUser(2, 2, Sets.newHashSet(RoleType.OrgAdmin), Sets.newHashSet(
+                PermissionType.AssociateAccessKeyToConnector,
+                PermissionType.ReadActiveConnection), () -> {
+            connectionController.create(new CreateConnectionDto("Default",
+                    cnGreenhouse.get(), 3L, TEST_PROPERTIES));
+        });
+        AtomicReference<List<ConnectorDto>> connectorDtoList = new AtomicReference<>();
+        executeForUser(2, 2, Sets.newHashSet(RoleType.OrgAdmin), Sets.newHashSet(
+                PermissionType.ReadConnector), () -> {
+            connectorDtoList.set(connectorController.findAll().getBody());
+        });
         executeForAccessKey(1, 1, () -> {
-            List<ConnectorDto> connectorDtoList = connectorController.findAll().getBody();
+
             List<ConnectionDto> result = connectionController.findAllByAccessKey(null,
-                    connectorDtoList.get(0).getErn()).getBody();
+                    connectorDtoList.get().get(0).getErn()).getBody();
             assertEquals(1, result.size());
             result = connectionController.findAllByAccessKey("Default",
-                    connectorDtoList.get(0).getErn()).getBody();
+                    connectorDtoList.get().get(0).getErn()).getBody();
             assertEquals(1, result.size());
             assertEquals("Default", result.get(0).name);
         });

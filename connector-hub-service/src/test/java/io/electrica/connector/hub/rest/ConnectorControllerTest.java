@@ -1,5 +1,6 @@
 package io.electrica.connector.hub.rest;
 
+import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectorDto;
@@ -15,7 +16,9 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
@@ -45,7 +48,10 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
     public void testCreateConnectorWithSuccess() {
         final CreateConnectorDto dto = createHackerRankConnectorDto();
         final ConnectorDto actual = connectorController.create(dto).getBody();
+        compare(dto, actual);
+    }
 
+    private void compare(CreateConnectorDto dto, ConnectorDto actual) {
         assertNotNull(actual.getId());
         assertNotNull(actual.getRevisionVersion());
 
@@ -54,8 +60,7 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
         assertEquals(dto.getVersion(), actual.getVersion());
         assertEquals(dto.getResource(), actual.getResource());
         assertEquals(connectorType.getId(), actual.getTypeId());
-        final String expectedErn = "ern://com_hackerrank:applications:1_0";
-        assertEquals(expectedErn, actual.getErn());
+        assertNotNull(actual.getErn());
         assertTrue(dto.getProperties().equals(actual.getProperties()));
         assertEquals(dto.getSourceUrl(), actual.getSourceUrl());
         assertEquals(dto.getSdkUrl(), actual.getSdkUrl());
@@ -162,9 +167,89 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
         final ConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
         connectorService.archive(greenHouseDto.getId());
 
-        final List<ConnectorDto> actual = connectorController.findAll().getBody();
+        executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadConnector), () -> {
+                    final List<ConnectorDto> actual = connectorController.findAll().getBody();
+                    assertEquals(1, actual.size());
+                    assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());
+                });
+    }
 
-        assertEquals(1, actual.size());
-        assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = PermissionType.CreateConnector
+    )
+    public void testFindAllNonArchivedWithNoreadPermission() {
+        final CreateConnectorDto createHackerRankSTLDto = createHackerRankConnectorDto();
+        connectorController.create(createHackerRankSTLDto);
+
+        final ConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
+        connectorService.archive(greenHouseDto.getId());
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.CreateConnector), () -> {
+                    connectorController.findAll().getBody();
+                });
+    }
+
+    @Test
+    public void testGetConnectorById() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        final AtomicReference<ConnectorDto> connector = new AtomicReference<>();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.SuperAdmin),
+                EnumSet.of(PermissionType.CreateConnector), () -> {
+                    final ConnectorDto connectorDto = connectorController.create(dto).getBody();
+                    connector.set(connectorDto);
+                });
+
+        flushAndClear();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadConnector), () -> {
+                    ConnectorDto actual = connectorController.getConnector(connector.get().getId()).getBody();
+                    compare(dto, actual);
+                });
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testGetConnectorByIdWithoutReadPermission() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        final AtomicReference<ConnectorDto> connector = new AtomicReference<>();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.SuperAdmin),
+                EnumSet.of(PermissionType.CreateConnector), () -> {
+                    final ConnectorDto connectorDto = connectorController.create(dto).getBody();
+                    connector.set(connectorDto);
+                });
+
+        flushAndClear();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadActiveConnection), () -> {
+                    connectorController.getConnector(connector.get().getId()).getBody();
+                });
+    }
+
+    @Test(expected = EntityNotFoundServiceException.class)
+    public void testGetConnectorByIdWithIDNotExist() {
+        final CreateConnectorDto dto = createHackerRankConnectorDto();
+        final AtomicReference<ConnectorDto> connector = new AtomicReference<>();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.SuperAdmin),
+                EnumSet.of(PermissionType.CreateConnector), () -> {
+                    final ConnectorDto connectorDto = connectorController.create(dto).getBody();
+                    connector.set(connectorDto);
+                });
+
+        flushAndClear();
+
+        executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
+                EnumSet.of(PermissionType.ReadConnector), () -> {
+                    connectorController.getConnector(-22L).getBody();
+                });
     }
 }
