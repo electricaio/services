@@ -123,7 +123,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 removePermission,
                 createWebhook,
                 deleteWebhook,
-                readWebhook
+                readWebhook,
+                readConnector
         );
     }
 
