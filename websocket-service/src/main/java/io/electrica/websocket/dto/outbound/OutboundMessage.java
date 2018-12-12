@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AckOutboundMessage.class, name = AckOutboundMessage.TYPE)
+        @JsonSubTypes.Type(value = WebhookOutboundMessage.class, name = WebhookOutboundMessage.TYPE)
 })
 public abstract class OutboundMessage {
 

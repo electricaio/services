@@ -1,152 +1,155 @@
 databaseChangeLog:
-- changeSet:
-    id: 1543576966504-1
-    author: aleks (generated)
-    changes:
-    - createSequence:
-        sequenceName: revinfo_id_seq
-- changeSet:
-    id: 1543576966504-2
-    author: aleks (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-            name: rev
-            type: BIGINT
-        - column:
-            name: entityname
-            type: VARCHAR(255)
-        tableName: revchanges
-- changeSet:
-    id: 1543576966504-3
-    author: aleks (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: timestamp
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: user_id
-            type: BIGINT
-        tableName: revinfo
-- changeSet:
-    id: 1543576966504-4
-    author: aleks (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-            name: id
-            type: UUID
-        - column:
-            constraints:
-              nullable: false
-            name: access_key_id
-            type: BIGINT
-        - column:
-            name: connection_id
-            type: BIGINT
-        - column:
-            name: connector_id
-            type: BIGINT
-        - column:
-            name: created_at
-            type: TIMESTAMP(6) WITHOUT TIME ZONE
-        - column:
-            constraints:
-              nullable: false
-            name: name
-            type: VARCHAR(128)
-        - column:
-            constraints:
-              nullable: false
-            name: organization_id
-            type: BIGINT
-        - column:
-            name: properties
-            type: JSONB
-        - column:
-            constraints:
-              nullable: false
-            name: scope
-            type: VARCHAR(31)
-        - column:
-            constraints:
-              nullable: false
-            name: user_id
-            type: BIGINT
-        tableName: webhooks
-- changeSet:
-    id: 1543576966504-5
-    author: aleks (generated)
-    changes:
-    - addPrimaryKey:
-        columnNames: id
-        constraintName: revinfo_pkey
-        tableName: revinfo
-- changeSet:
-    id: 1543576966504-6
-    author: aleks (generated)
-    changes:
-    - addPrimaryKey:
-        columnNames: id
-        constraintName: webhooks_pkey
-        tableName: webhooks
-- changeSet:
-    id: 1543576966504-7
-    author: aleks (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: name, access_key_id
-        constraintName: uktdsvajpd6ejaflnv0985ivlb
-        tableName: webhooks
-- changeSet:
-    id: 1543576966504-8
-    author: aleks (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: connection_id
-        indexName: webhooks_connection_id_idx
-        tableName: webhooks
-- changeSet:
-    id: 1543576966504-9
-    author: aleks (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: connector_id
-        indexName: webhooks_connector_id_idx
-        tableName: webhooks
-- changeSet:
-    id: 1543576966504-10
-    author: aleks (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: rev
-        baseTableName: revchanges
-        constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: revinfo
+  - changeSet:
+      id: 1543576966504-1
+      author: aleks (generated)
+      changes:
+        - createSequence:
+            sequenceName: revinfo_id_seq
+  - changeSet:
+      id: 1543576966504-2
+      author: aleks (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rev
+                  type: BIGINT
+              - column:
+                  name: entityname
+                  type: VARCHAR(255)
+            tableName: revchanges
+  - changeSet:
+      id: 1543576966504-3
+      author: aleks (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: timestamp
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: revinfo
+  - changeSet:
+      id: 1543576966504-4
+      author: aleks (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: access_key_id
+                  type: BIGINT
+              - column:
+                  name: connection_id
+                  type: BIGINT
+              - column:
+                  name: connector_ern
+                  type: VARCHAR(255)
+              - column:
+                  name: connector_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP(6) WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(128)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: organization_id
+                  type: BIGINT
+              - column:
+                  name: properties
+                  type: JSONB
+              - column:
+                  constraints:
+                    nullable: false
+                  name: scope
+                  type: VARCHAR(31)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: webhooks
+  - changeSet:
+      id: 1543576966504-5
+      author: aleks (generated)
+      changes:
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: revinfo_pkey
+            tableName: revinfo
+  - changeSet:
+      id: 1543576966504-6
+      author: aleks (generated)
+      changes:
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: webhooks_pkey
+            tableName: webhooks
+  - changeSet:
+      id: 1543576966504-7
+      author: aleks (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name, access_key_id
+            constraintName: uktdsvajpd6ejaflnv0985ivlb
+            tableName: webhooks
+  - changeSet:
+      id: 1543576966504-8
+      author: aleks (generated)
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: connection_id
+            indexName: webhooks_connection_id_idx
+            tableName: webhooks
+  - changeSet:
+      id: 1543576966504-9
+      author: aleks (generated)
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: connector_id
+            indexName: webhooks_connector_id_idx
+            tableName: webhooks
+  - changeSet:
+      id: 1543576966504-10
+      author: aleks (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: rev
+            baseTableName: revchanges
+            constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: revinfo
 

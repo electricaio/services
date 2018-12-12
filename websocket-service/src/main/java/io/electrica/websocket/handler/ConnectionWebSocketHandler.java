@@ -2,13 +2,14 @@ package io.electrica.websocket.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.websocket.context.SdkInstanceContext;
-import io.electrica.websocket.dto.inbound.InboundMessage;
+import io.electrica.websocket.dto.inbound.AckInboundMessage;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.BeanCreatingHandlerProvider;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.inject.Inject;
+import java.io.IOException;
 
 import static io.electrica.websocket.context.SdkInstanceContextHandshakeInterceptor.INSTANCE_CONTEXT_ATTRIBUTE;
 
@@ -43,8 +44,8 @@ public class ConnectionWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        InboundMessage inboundMessage = objectMapper.readValue(message.getPayload(), InboundMessage.class);
-        messageHandler.handle(inboundMessage);
+        AckInboundMessage ack = objectMapper.readValue(message.getPayload(), AckInboundMessage.class);
+        messageHandler.handle(ack);
     }
 
     @Override
@@ -61,12 +62,12 @@ public class ConnectionWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) {
         throw new UnsupportedOperationException("Not supported pong message");
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        throw new Exception("Transport error", exception);
+        throw new IOException("Transport error", exception);
     }
 }
