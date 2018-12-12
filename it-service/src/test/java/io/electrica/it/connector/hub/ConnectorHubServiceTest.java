@@ -144,6 +144,25 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertTrue(result);
     }
 
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    public void testAuthorizationTokenUpdate() {
+        UserDto user = contextHolder.getUsers().get(0);
+        contextHolder.setContextForUser(user.getEmail());
+        Optional<ConnectorDto> connectorDto = connectorClient.findAll().getBody().stream()
+                .filter(c -> Objects.equals(c.getName(), "Slack Channel V1")).findFirst();
+        List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(),
+                connectorDto.get().getId()).getBody();
+
+        ConnectionDto connection = connectionDtos.get(0);
+        TokenAuthorizationDto token = authorizationClient.getToken(connection.getAuthorizationId()).getBody();
+        String tokenStr = getCurrTimeInMillSeconds().toString();
+        token.setToken(tokenStr);
+        authorizationClient.updateToken(token.getId(), token).getBody();
+
+        TokenAuthorizationDto dto = authorizationClient.getToken(connection.getAuthorizationId()).getBody();
+        assertEquals(tokenStr, dto.getToken());
+    }
+
     private void setAuthorization(ConnectionDto connection, AuthorizationType authorizationType) {
         switch (authorizationType) {
             case Basic:
