@@ -164,7 +164,7 @@ server {
 
 
     # Proxy to connector-hub-service
-        location ~* ^/(v[1-9]|public/v[1-9])/(connectors|connections|authorizations|(me/connections)|(access-keys/.*/connections)) {
+        location ~* ^/(v[1-9]|public/v[1-9])/(connectors|connections|authorizations|(me/connections)|(access-keys/.*/connections)|(users/.*/connections)) {
         include /etc/nginx/cors.conf;
 
         proxy_set_header Host $http_host;
