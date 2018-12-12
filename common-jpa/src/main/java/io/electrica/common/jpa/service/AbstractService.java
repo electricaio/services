@@ -121,8 +121,7 @@ public abstract class AbstractService<E extends CommonEntity> {
         }
 
         executeUpdate(merged, update);
-        getRepository().flush();
-        return merged;
+        return getRepository().save(merged);
     }
 
     protected abstract void executeUpdate(E merged, E update);
