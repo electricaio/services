@@ -1,11 +1,27 @@
 apply plugin: 'org.springframework.boot'
 
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "http://maven-repo.electrica.io"
+    }
+}
+ dependencyManagement {
+    imports {
+        mavenBom("io.electrica.integration:dependencies:${electricaIntegrationVersion}")
+        mavenBom("io.electrica.sdk.java:dependencies:${electricaSDKJavaVersion}")
+    }
+}
+
 dependencies {
     compile project(':common')
     compile project(':connector-hub-service-api')
     compile project(':user-service-api')
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
+    testCompile 'io.electrica.sdk.java:slack'
+    testCompile 'io.electrica.sdk.java:core-http'
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
     testCompile "org.testng:testng:$testngVersion"
