@@ -51,6 +51,10 @@ public class ConnectionDtoService extends AbstractDtoService<Connection, CreateC
         return toDto(connectionService.findAllByUser(userId, connectorId));
     }
 
+    public void delete(Long connectionId) {
+        connectionService.delete(connectionId);
+    }
+
     @Override
     protected AbstractService<Connection> getService() {
         return connectionService;

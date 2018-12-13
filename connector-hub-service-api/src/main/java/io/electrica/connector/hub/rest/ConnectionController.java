@@ -46,6 +46,6 @@ public interface ConnectionController {
     ResponseEntity<Boolean> connectionBelongsCurrentUser(@PathVariable("connectionId") Long connectionId);
 
     @DeleteMapping(V1 + "/connections/{connectionId}")
-    ResponseEntity<ConnectionDto> delete(@PathVariable("connectionId") Long connectionId);
+    void delete(@PathVariable("connectionId") Long connectionId);
 
 }
