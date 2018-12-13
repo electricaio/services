@@ -45,10 +45,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission createAccessKey = savePermission(PermissionType.CreateAccessKey, "Create access key", "CreateAccessKey");
         Permission readAccessKey = savePermission(PermissionType.ReadAccessKey, "Read access key", "ReadAccessKey");
         Permission deleteAccessKey = savePermission(PermissionType.DeleteAccessKey, "Delete access key", "DeleteAccessKey");
-        Permission createSTL = savePermission(PermissionType.CreateConnector, "Create Connector", "CreateConnector");
-        Permission stlDeActivate = savePermission(PermissionType.DeActivateConnection, "Deactivate Connection",
+        Permission createConnector = savePermission(PermissionType.CreateConnector, "Create Connector", "CreateConnector");
+        Permission deActivateConnection = savePermission(PermissionType.DeActivateConnection, "Deactivate Connection",
                 "DeActivateConnection");
-        Permission stlActivate = savePermission(PermissionType.ActivateConnection, "Activate Connection",
+        Permission activateConnection = savePermission(PermissionType.ActivateConnection, "Activate Connection",
                 "ActivateConnection");
         Permission associateAccessKeyToSTL = savePermission(PermissionType.AssociateAccessKeyToConnector, "Associate" +
                         " access key to Connector",
@@ -75,7 +75,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 createWebhook,
                 deleteWebhook,
                 readWebhook,
-                readConnector
+                readConnector,
+                deActivateConnection
         );
 
 
@@ -97,7 +98,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 createWebhook,
                 deleteWebhook,
                 readWebhook,
-                readConnector
+                readConnector,
+                deActivateConnection
         );
 
 
@@ -114,9 +116,9 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 createAccessKey,
                 readAccessKey,
                 deleteAccessKey,
-                createSTL,
-                stlDeActivate,
-                stlActivate,
+                createConnector,
+                deActivateConnection,
+                activateConnection,
                 associateAccessKeyToSTL,
                 listActiveSTLs,
                 addPermission,

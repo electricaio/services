@@ -51,7 +51,7 @@ public class Connection extends AbstractEntity {
     @Column(name = "access_key_id", nullable = false)
     private Long accessKeyId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "authorization_id", unique = true)
     private Authorization authorization;
 
