@@ -1,1 +1,18 @@
 # Override here properties for functions tests
+it-service:
+  invoker-service:
+    url: http://localhost
+  connector:
+    url: http://connector.dev.electrica.io
+  sdk:
+    url: http://sdk.dev.electrica.io
+  slack:
+    v1:
+      webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
+      channel: slack-sdk-test
+feign:
+  userService.url: localhost
+  connectorHubService.url: localhost
+  invokerService.url: localhost
+  connectorService.url: localhost
+  webhookService.url: localhost
