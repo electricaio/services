@@ -86,4 +86,9 @@ public class ConnectionControllerImpl implements ConnectionController {
         return ResponseEntity.ok(true);
     }
 
+    @Override
+    @PreAuthorize("#common.hasPermission('DeActivateConnection') AND #connection.canUserAccess(#connectionId)")
+    public ResponseEntity<ConnectionDto> delete(@PathVariable("connectionId")Long connectionId) {
+       return ResponseEntity.ok(connectionDtoService.archive(connectionId));
+    }
 }

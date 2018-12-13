@@ -45,4 +45,7 @@ public interface ConnectionController {
     @GetMapping(PRIVATE + V1 + "/me/connections/{connectionId}/validate")
     ResponseEntity<Boolean> connectionBelongsCurrentUser(@PathVariable("connectionId") Long connectionId);
 
+    @DeleteMapping(V1 + "/connections/{connectionId}")
+    ResponseEntity<ConnectionDto> delete(@PathVariable("connectionId") Long connectionId);
+
 }
