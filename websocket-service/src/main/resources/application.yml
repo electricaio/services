@@ -17,3 +17,11 @@ websocket:
     max-text-message-size: 65536
     # 32 Kb
     max-text-message-buffer-size: 32768
+  amqp:
+    # 30 min
+    cleaner-frequency: 1800000
+    webhook:
+      # 1 min
+      ack-timeout: 60000
+      prefetch-count: 50
+      consumerPoolSize: 3

@@ -1,20 +1,22 @@
 package io.electrica.websocket.context;
 
-import io.electrica.common.context.IdentityImpl;
+import io.electrica.common.context.Identity;
+import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.helper.AuthorityConstants;
+import io.electrica.user.feign.AccessKeyClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import java.security.Principal;
+import javax.inject.Inject;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+
+import static io.electrica.common.helper.CollectionUtils.nullToFalse;
 
 @Component
 public class SdkInstanceContextHandshakeInterceptor implements HandshakeInterceptor {
@@ -22,23 +24,39 @@ public class SdkInstanceContextHandshakeInterceptor implements HandshakeIntercep
     public static final String INSTANCE_CONTEXT_ATTRIBUTE = "x-electrica-sdk-instance-context";
     private static final String INSTANCE_ID_HEADER = "x-electrica-sdk-instance-id";
 
+    private final IdentityContextHolder identityContextHolder;
+    private final AccessKeyClient accessKeyClient;
+
+    @Inject
+    public SdkInstanceContextHandshakeInterceptor(
+            IdentityContextHolder identityContextHolder,
+            AccessKeyClient accessKeyClient
+    ) {
+        this.identityContextHolder = identityContextHolder;
+        this.accessKeyClient = accessKeyClient;
+    }
+
     @Override
     public boolean beforeHandshake(
             ServerHttpRequest request,
             ServerHttpResponse response,
             WebSocketHandler wsHandler,
             Map<String, Object> attributes
-    ) throws Exception {
-        Principal principal = request.getPrincipal();
-        if (!(principal instanceof OAuth2Authentication)) {
-            throw new IllegalStateException("User must be oauth2 authenticated");
+    ) {
+        Identity identity = identityContextHolder.getIdentity();
+        if (identity == null) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return false;
         }
-        OAuth2Authentication authentication = (OAuth2Authentication) principal;
 
-        // Check permissions
-        Set<String> scope = authentication.getOAuth2Request().getScope();
-        if (!scope.contains(AuthorityConstants.SDK_SCOPE)) {
-            // User must have SDK scope
+        // Check for SDK scope
+        if (!identity.getOauthScopes().contains(AuthorityConstants.SDK_SCOPE)) {
+            response.setStatusCode(HttpStatus.FORBIDDEN);
+            return false;
+        }
+
+        // Validate if access key hasn't been revoked
+        if (!isAccessKeyValid()) {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return false;
         }
@@ -53,10 +71,15 @@ public class SdkInstanceContextHandshakeInterceptor implements HandshakeIntercep
         UUID instanceId = UUID.fromString(instanceIdString);
 
         // Set sdk instance context to WebSocket session attributes
-        SdkInstanceContext context = new SdkInstanceContext(instanceId, new IdentityImpl(authentication));
+        SdkInstanceContext context = new SdkInstanceContext(instanceId, identity);
         attributes.put(INSTANCE_CONTEXT_ATTRIBUTE, context);
 
         return true;
+    }
+
+    private boolean isAccessKeyValid() {
+        Boolean result = accessKeyClient.validateMyAccessKey().getBody();
+        return nullToFalse(result);
     }
 
     @Override

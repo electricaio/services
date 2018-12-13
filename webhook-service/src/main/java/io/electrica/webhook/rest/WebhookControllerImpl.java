@@ -53,21 +53,30 @@ public class WebhookControllerImpl implements WebhookController {
     }
 
     @Override
-    @PreAuthorize("#oauth2.hasScope('sdk') and #webhook.webhookBelongsCurrentAccessKey(#webhookId)")
-    public ResponseEntity sendMessage(
+    @PreAuthorize("" +
+            "#oauth2.hasScope('sdk') and " +
+            "#webhook.webhookBelongsCurrentAccessKey(#webhookId) and " +
+            "#webhook.validateAccessKey()"
+    )
+    public ResponseEntity<Void> submit(
             @PathVariable("webhookId") UUID webhookId,
             @RequestBody JsonNode payload
     ) {
-        webhookMessageSender.send(webhookId, payload);
+        webhookMessageSender.send(webhookId, payload, false);
         return ResponseEntity.accepted().build();
     }
 
     @Override
-    @PreAuthorize("#oauth2.hasScope('sdk') and #webhook.webhookBelongsCurrentAccessKey(#webhookId)")
+    @PreAuthorize("" +
+            "#oauth2.hasScope('sdk') and " +
+            "#webhook.webhookBelongsCurrentAccessKey(#webhookId) and " +
+            "#webhook.validateAccessKey()"
+    )
     public ResponseEntity<JsonNode> invoke(
             @PathVariable("webhookId") UUID webhookId,
             @RequestBody JsonNode payload
     ) {
+        webhookMessageSender.send(webhookId, payload, true);
         // TODO
         return ResponseEntity.ok(payload);
     }

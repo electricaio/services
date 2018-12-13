@@ -49,7 +49,7 @@ services:
   swagger-ui:
     image: swaggerapi/swagger-ui
     environment:
-    - "API_URLS=[ {url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://${HOST_NAME:-localhost}/connector-service/swagger/\", name: \"Connector\"},{url: \"http://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"},{url: \"http://${HOST_NAME:-localhost}/websocket-service/swagger/\", name: \"Websocket\"} ]"
+    - "API_URLS=[ {url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://${HOST_NAME:-localhost}/connector-service/swagger/\", name: \"Connector\"},{url: \"http://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"} ]"
     - BASE_URL=/swagger
     ports:
     - 8080:8080

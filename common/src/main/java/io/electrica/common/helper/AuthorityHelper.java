@@ -35,12 +35,14 @@ public class AuthorityHelper {
 
     }
 
-    public static Collection<? extends GrantedAuthority> buildGrantedAuthoritiesForAccessKey(Long accessKeyId) {
-        String accessKeyAuthority = AuthorityHelper.writeAccessKeyId(accessKeyId);
-        return Stream.of(accessKeyAuthority)
+    public static Collection<? extends GrantedAuthority> buildGrantedAuthoritiesForAccessKey(
+            Long accessKeyId, Long organizationId
+    ) {
+        String accessKeyAuthority = AuthorityHelper.writeAccessKey(accessKeyId);
+        String organizationAuthority = AuthorityHelper.writeOrganization(organizationId);
+        return Stream.of(accessKeyAuthority, organizationAuthority)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
     }
 
     private static Optional<String> findByPrefix(Collection<? extends GrantedAuthority> authorities, String prefix) {
@@ -96,7 +98,7 @@ public class AuthorityHelper {
                 .orElseThrow(() -> new ActionForbiddenServiceException("Access key authority required in token"));
     }
 
-    private static String writeAccessKeyId(Long accessKeyId) {
+    private static String writeAccessKey(Long accessKeyId) {
         return ACCESS_KEY_PREFIX + accessKeyId;
     }
 

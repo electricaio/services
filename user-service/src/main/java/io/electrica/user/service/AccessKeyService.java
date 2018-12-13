@@ -31,7 +31,13 @@ public class AccessKeyService extends AbstractService<AccessKey> {
     @Transactional
     public AccessKey refreshKey(Long accessKeyId) {
         AccessKey accessKey = findById(accessKeyId, true);
-        fillAccessKeyInfo(accessKey);
+        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(
+                accessKey.getUser().getId(),
+                accessKey.getId(),
+                accessKey.getUser().getOrganization().getId()
+        );
+        accessKey.setJti(key.getJti());
+        accessKey.setKey(key.getValue());
         return accessKey;
     }
 
@@ -69,12 +75,6 @@ public class AccessKeyService extends AbstractService<AccessKey> {
                 throw new IllegalArgumentException("Required fields: " + String.join(", ", required));
             }
         };
-    }
-
-    private void fillAccessKeyInfo(AccessKey accessKey) {
-        AccessKeyGenerator.Key key = accessKeyGenerator.createAccessKey(accessKey.getUser().getId(), accessKey.getId());
-        accessKey.setJti(key.getJti());
-        accessKey.setKey(key.getValue());
     }
 
     @Override

@@ -34,11 +34,11 @@ public class AccessKeyGenerator {
         this.tokenServices = tokenServices;
     }
 
-    Key createAccessKey(Long userId, Long accessKeyId) {
+    Key createAccessKey(Long userId, Long accessKeyId, Long organizationId) {
         OAuth2AccessToken accessToken = createAccessToken(
                 userId,
                 ACCESS_KEY_CLIENT_ID,
-                AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId),
+                AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId, organizationId),
                 Sets.newHashSet(ACCESS_KEY_CLIENT_SCOPES),
                 Sets.newHashSet(ACCESS_KEY_CLIENT_RESOURCE_IDS)
         );

@@ -1,11 +1,10 @@
-package io.electrica.websocket.handler;
+package io.electrica.websocket.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.websocket.context.SdkInstanceContext;
 import io.electrica.websocket.dto.inbound.AckInboundMessage;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.socket.*;
-import org.springframework.web.socket.handler.BeanCreatingHandlerProvider;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.inject.Inject;
@@ -13,33 +12,29 @@ import java.io.IOException;
 
 import static io.electrica.websocket.context.SdkInstanceContextHandshakeInterceptor.INSTANCE_CONTEXT_ATTRIBUTE;
 
-public class ConnectionWebSocketHandler extends TextWebSocketHandler {
+public class WebSocketSessionHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
-    private final BeanCreatingHandlerProvider<ConnectionMessageHandler> beanCreatingHandlerProvider =
-            new BeanCreatingHandlerProvider<>(ConnectionMessageHandler.class);
+    private final AutowireCapableBeanFactory beanFactory;
 
-    private volatile ConnectionMessageHandler messageHandler;
+    private volatile WebSocketSessionMessageDispatcher messageHandler;
 
     @Inject
-    public ConnectionWebSocketHandler(ObjectMapper objectMapper, BeanFactory beanFactory) {
+    public WebSocketSessionHandler(ObjectMapper objectMapper, AutowireCapableBeanFactory beanFactory) {
         this.objectMapper = objectMapper;
-        beanCreatingHandlerProvider.setBeanFactory(beanFactory);
+        this.beanFactory = beanFactory;
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         Object context = session.getAttributes().get(INSTANCE_CONTEXT_ATTRIBUTE);
         if (!(context instanceof SdkInstanceContext)) {
             throw new IllegalStateException("Sdk instance context expected: " + INSTANCE_CONTEXT_ATTRIBUTE);
         }
 
         SdkInstanceContext sdkInstanceContext = (SdkInstanceContext) context;
-        messageHandler = beanCreatingHandlerProvider.getHandler();
-        messageHandler.setInstanceContext(sdkInstanceContext);
-        messageHandler.setSession(session);
-
-        //ToDo initialize subscriptions here
+        messageHandler = beanFactory.createBean(WebSocketSessionMessageDispatcher.class);
+        messageHandler.init(sdkInstanceContext, session);
     }
 
     @Override
@@ -49,10 +44,9 @@ public class ConnectionWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        // ToDo unsibscribe here
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         if (messageHandler != null) {
-            beanCreatingHandlerProvider.destroy(messageHandler);
+            beanFactory.destroyBean(messageHandler);
         }
     }
 

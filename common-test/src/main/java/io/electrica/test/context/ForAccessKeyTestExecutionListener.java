@@ -22,7 +22,8 @@ public class ForAccessKeyTestExecutionListener extends AbstractTestExecutionList
         if (annotation != null) {
             Authentication authentication = IdentityContextTestHelper.createAccessKeyAuthentication(
                     annotation.userId(),
-                    annotation.accessKeyId()
+                    annotation.accessKeyId(),
+                    0L
             );
             IdentityImpl identity = new IdentityImpl(authentication);
 

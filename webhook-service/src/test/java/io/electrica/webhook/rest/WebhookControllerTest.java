@@ -6,6 +6,7 @@ import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.feign.ConnectionClient;
+import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
 import org.junit.Before;
@@ -33,6 +34,10 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     @MockBean
     @Inject
     private ConnectionClient connectionClient;
+
+    @MockBean
+    @Inject
+    private AccessKeyClient accessKeyClient;
 
     private static ConnectionCreateWebhookDto connectionCreateWebhookDto(
             String name,
@@ -90,6 +95,8 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         doReturn(ResponseEntity.ok(connection))
                 .when(connectionClient)
                 .get(connectionId);
+
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKey();
     }
 
     @Test(expected = AccessDeniedException.class)

@@ -22,8 +22,8 @@ public interface WebhookController {
     @DeleteMapping(V1 + "/webhooks/{id}")
     void delete(@PathVariable("id") UUID id);
 
-    @PostMapping(V1 + "/webhooks/{webhookId}/send")
-    ResponseEntity sendMessage(
+    @PostMapping(V1 + "/webhooks/{webhookId}/submit")
+    ResponseEntity<Void> submit(
             @PathVariable("webhookId") UUID webhookId,
             @RequestBody JsonNode payload
     );

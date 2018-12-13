@@ -1,4 +1,4 @@
-package io.electrica.common.mq;
+package io.electrica.common.mq.webhook;
 
 import org.springframework.amqp.core.*;
 
