@@ -135,16 +135,6 @@ public class ConnectorHubServiceTest extends BaseIT {
     }
 
     @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
-    public void testConnectionBelongToCurrentUser() {
-        UserDto user = contextHolder.getUsers().get(0);
-        contextHolder.setContextForUser(user.getEmail());
-        AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
-        ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody().get(0);
-        Boolean result = connectionClient.connectionBelongsCurrentUser(connectionDtos.getId()).getBody();
-        assertTrue(result);
-    }
-
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
     public void testAuthorizationTokenUpdate() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());

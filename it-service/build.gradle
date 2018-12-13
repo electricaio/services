@@ -11,7 +11,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom("io.electrica.integration:dependencies:${electricaIntegrationVersion}")
-        mavenBom "io.electrica.sdk.java:dependencies:0.0.1"
+        mavenBom("io.electrica.sdk.java:dependencies:${electricaSDKJavaVersion}")
     }
 }
 
@@ -20,9 +20,9 @@ dependencies {
     compile project(':connector-hub-service-api')
     compile project(':user-service-api')
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    compile 'io.electrica.sdk.java:slack'
-    compile 'io.electrica.sdk.java:core-http'
 
+    testCompile 'io.electrica.sdk.java:slack'
+    testCompile 'io.electrica.sdk.java:core-http'
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
     testCompile "org.testng:testng:$testngVersion"

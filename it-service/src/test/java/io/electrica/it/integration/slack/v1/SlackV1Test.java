@@ -16,7 +16,7 @@ import static org.testng.Assert.assertTrue;
 
 public class SlackV1Test extends BaseIT {
 
-    @Value("${feign.invokerService.url}")
+    @Value("${it-service.invoker-service.url}")
     private String invokerServiceUrl;
 
     @Value("${it-service.slack.v1.channel}")
@@ -30,7 +30,7 @@ public class SlackV1Test extends BaseIT {
         AccessKeyDto accessKeyDto = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
 
-        Electrica instance = Electrica.instance(() -> new HttpModuleImpl("http://" + invokerServiceUrl),
+        Electrica instance = Electrica.instance(() -> new HttpModuleImpl(invokerServiceUrl),
                 fullAccessKeyDto.getKey());
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
         boolean result = channelManager.sendMessage(slackChannel, "Hi.. This is Integration Service Test");
