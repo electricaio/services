@@ -6,6 +6,7 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -17,11 +18,19 @@ import static org.testng.Assert.assertTrue;
 
 public class ConnectorHubServiceTest extends BaseIT {
 
-    private static final String CONNECTOR_URL = "http://connector.dev.electrica.io";
-    private static final String SDK_URL = "http://sdk.dev.electrica.io";
     private static final String CONNECTION_NAME_PREFIX = "connection-";
+    private static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
     private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     private final Logger logger = LoggerFactory.getLogger(ConnectorHubServiceTest.class);
+
+     @Value("${it-service.connector.url}")
+    private String connectorUrl;
+     @Value("${it-service.sdk.url}")
+    private String sdkUrl;
+     @Value("${it-service.slack.v1.webhook-token}")
+    private String slackV1WebhookToken;
+     @Value("${it-service.slack.v1.channel}")
+    private String slackChannel;
 
     private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
@@ -49,7 +58,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         if (!(optionalConnector.isPresent())) {
             CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
                     AuthorizationType.Token, connectorName, "channel", version.toLowerCase(), "lever",
-                    "https://github.com/lever/postings-api/", CONNECTOR_URL, SDK_URL,
+                    "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
                     "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
                     TEST_CONNECTOR_PROPERTIES);
             connectorClient.create(dto);
@@ -123,16 +132,6 @@ public class ConnectorHubServiceTest extends BaseIT {
     }
 
     @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
-    public void testConnectionBelongToCurrentUser() {
-        UserDto user = contextHolder.getUsers().get(0);
-        contextHolder.setContextForUser(user.getEmail());
-        AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
-        ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody().get(0);
-        Boolean result = connectionClient.connectionBelongsCurrentUser(connectionDtos.getId()).getBody();
-        assertTrue(result);
-    }
-
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
     public void testAuthorizationTokenUpdate() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -173,7 +172,7 @@ public class ConnectorHubServiceTest extends BaseIT {
                 authorizationClient.authorizeWithBasic(connection.getId(), createBasicAuthorizationDto());
                 break;
             case Token:
-                authorizationClient.authorizeWithToken(connection.getId(), createTokenAuthorizationDto());
+                authorizationClient.authorizeWithToken(connection.getId(), createTokenAuthorizationDto(connection));
                 break;
         }
     }
@@ -191,7 +190,19 @@ public class ConnectorHubServiceTest extends BaseIT {
         connectionDto.setName(name);
         connectionDto.setAccessKeyId(accessKeyId);
         connectionDto.setConnectorId(connectorId);
+        setPropertiesForConnection(connectionDto, connectorId);
         return connectionClient.create(connectionDto).getBody();
+    }
+
+    private void setPropertiesForConnection(CreateConnectionDto connectionDto, Long connectorId) {
+        ConnectorDto connectorDto = connectorClient.getConnector(connectorId).getBody();
+        Map<String, String> properties = new HashMap<>();
+        switch (connectorDto.getName()) {
+            case SLACK_CHANNEL_V1:
+                properties.put("channel.name", slackChannel);
+                connectionDto.setProperties(properties);
+                break;
+        }
     }
 
     private CreateBasicAuthorizationDto createBasicAuthorizationDto() {
@@ -204,11 +215,16 @@ public class ConnectorHubServiceTest extends BaseIT {
         return dto;
     }
 
-    private CreateTokenAuthorizationDto createTokenAuthorizationDto() {
-        final String randomUUID = UUID.randomUUID().toString().substring(0, 6);
-        final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
-        final String token = "token_" + randomUUID;
-        dto.setToken(token);
+    private CreateTokenAuthorizationDto createTokenAuthorizationDto(ConnectionDto connection) {
+       ConnectorDto connectorDto = connectorClient.getConnector(connection.getConnectorId()).getBody();
+       final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
+        switch (connectorDto.getName()) {
+            case SLACK_CHANNEL_V1:
+                dto.setToken(slackV1WebhookToken);
+                break;
+            default:
+                dto.setToken("Test token");
+        }
         return dto;
     }
 
