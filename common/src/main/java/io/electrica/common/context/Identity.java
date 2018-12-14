@@ -57,4 +57,7 @@ public interface Identity {
         throw new UnsupportedOperationException();
     }
 
+    default Set<String> getOauthScopes() {
+        throw new UnsupportedOperationException();
+    }
 }

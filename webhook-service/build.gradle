@@ -3,6 +3,7 @@ apply plugin: "org.liquibase.gradle"
 
 dependencies {
     compile project(':webhook-api')
+    compile project(':user-service-api')
     compile project(':connector-hub-service-api')
 
     compile project(':common-jpa')

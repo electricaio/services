@@ -6,6 +6,7 @@ import io.electrica.common.helper.ValueCache;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import java.util.Map;
@@ -29,9 +30,6 @@ public class IdentityImpl implements Identity {
     private final ValueCache<Long> accessKeyId = new ValueCache<>(() ->
             AuthorityHelper.readAccessKeyId(getAuthentication().getAuthorities())
     );
-    private final ValueCache<Map<String, Object>> tokenClaims = new ValueCache<>(() ->
-            unmodifiableMap(TokenHelper.getClaims(getToken()))
-    );
     private final ValueCache<Long> userId = new ValueCache<>(() ->
             TokenHelper.extractIdFromTokenUsername(getAuthentication().getName())
     );
@@ -40,6 +38,16 @@ public class IdentityImpl implements Identity {
     );
     private final ValueCache<Set<PermissionType>> permissions = new ValueCache<>(() ->
             unmodifiableSet(AuthorityHelper.readPermissions(getAuthentication().getAuthorities()))
+    );
+    private final ValueCache<String> token = new ValueCache<>(() -> {
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) getAuthentication().getDetails();
+        return details.getTokenValue();
+    });
+    private final ValueCache<Map<String, Object>> tokenClaims = new ValueCache<>(() ->
+            unmodifiableMap(TokenHelper.getClaims(getToken()))
+    );
+    private final ValueCache<Set<String>> oauthScopes = new ValueCache<>(() ->
+            ((OAuth2Authentication) getAuthentication()).getOAuth2Request().getScope()
     );
 
     public IdentityImpl(Authentication authentication) {
@@ -58,8 +66,7 @@ public class IdentityImpl implements Identity {
 
     @Override
     public String getToken() {
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) getAuthentication().getDetails();
-        return details.getTokenValue();
+        return token.get();
     }
 
     @Override
@@ -95,5 +102,10 @@ public class IdentityImpl implements Identity {
     @Override
     public long getOrganizationId() {
         return organizationId.get();
+    }
+
+    @Override
+    public Set<String> getOauthScopes() {
+        return oauthScopes.get();
     }
 }

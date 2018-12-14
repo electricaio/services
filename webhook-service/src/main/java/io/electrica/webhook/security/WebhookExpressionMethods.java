@@ -4,6 +4,7 @@ import io.electrica.common.security.CommonExpressionMethods;
 import io.electrica.common.security.ExpressionMethodsFactory;
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.feign.ConnectionClient;
+import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
 import io.electrica.webhook.model.Webhook;
 import io.electrica.webhook.service.WebhookService;
@@ -15,20 +16,25 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static io.electrica.common.helper.CollectionUtils.nullToFalse;
+
 /**
  * Register webhook namespace and support methods for Pre and Post authentication.
  */
 public class WebhookExpressionMethods extends CommonExpressionMethods {
 
+    private final AccessKeyClient accessKeyClient;
     private final ConnectionClient connectionClient;
     private final WebhookService webhookService;
 
     public WebhookExpressionMethods(
             Authentication authentication,
+            AccessKeyClient accessKeyClient,
             ConnectionClient connectionClient,
             WebhookService webhookService
     ) {
         super(authentication);
+        this.accessKeyClient = accessKeyClient;
         this.connectionClient = connectionClient;
         this.webhookService = webhookService;
     }
@@ -61,13 +67,24 @@ public class WebhookExpressionMethods extends CommonExpressionMethods {
         return isUser(webhook.getUserId()) && isAccessKey(webhook.getAccessKeyId());
     }
 
+    public boolean validateAccessKey() {
+        Boolean result = accessKeyClient.validateMyAccessKey().getBody();
+        return nullToFalse(result);
+    }
+
     @Component
     public static class Factory implements ExpressionMethodsFactory {
 
+        private final AccessKeyClient accessKeyClient;
         private final ConnectionClient connectionClient;
         private final WebhookService webhookService;
 
-        public Factory(ConnectionClient connectionClient, WebhookService webhookService) {
+        public Factory(
+                AccessKeyClient accessKeyClient,
+                ConnectionClient connectionClient,
+                WebhookService webhookService
+        ) {
+            this.accessKeyClient = accessKeyClient;
             this.connectionClient = connectionClient;
             this.webhookService = webhookService;
         }
@@ -79,9 +96,8 @@ public class WebhookExpressionMethods extends CommonExpressionMethods {
 
         @Override
         public Object create(Authentication authentication, MethodInvocation mi) {
-            return new WebhookExpressionMethods(authentication, connectionClient, webhookService);
+            return new WebhookExpressionMethods(authentication, accessKeyClient, connectionClient, webhookService);
         }
     }
 
 }
-

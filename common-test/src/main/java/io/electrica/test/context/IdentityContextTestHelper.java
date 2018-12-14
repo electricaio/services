@@ -66,12 +66,12 @@ public class IdentityContextTestHelper {
         );
     }
 
-    static Authentication createAccessKeyAuthentication(long userId, Long accessKeyId) {
+    static Authentication createAccessKeyAuthentication(long userId, Long accessKeyId, Long organizationId) {
         return createAuthentication(
                 userId,
                 AuthorityConstants.ACCESS_KEY_CLIENT_ID,
                 Sets.newHashSet(READ_SCOPE, SDK_SCOPE),
-                AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId)
+                AuthorityHelper.buildGrantedAuthoritiesForAccessKey(accessKeyId, organizationId)
         );
     }
 
@@ -106,7 +106,9 @@ public class IdentityContextTestHelper {
             long accessKeyId,
             Runnable work
     ) {
-        Authentication authentication = IdentityContextTestHelper.createAccessKeyAuthentication(userId, accessKeyId);
+        Authentication authentication = IdentityContextTestHelper.createAccessKeyAuthentication(
+                userId, accessKeyId, 0L
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         try {
             IdentityImpl identity = new IdentityImpl(authentication);

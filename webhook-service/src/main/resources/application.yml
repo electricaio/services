@@ -10,7 +10,3 @@ spring:
 
 webhook:
   base-url: http://localhost
-  # 30 min
-  message-ttl: 1800000
-  # 24 hours
-  queue-ttl: 86400000

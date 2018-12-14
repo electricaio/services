@@ -2,7 +2,7 @@ package io.electrica.websocket.config;
 
 import io.electrica.common.rest.PathConstants;
 import io.electrica.websocket.context.SdkInstanceContextHandshakeInterceptor;
-import io.electrica.websocket.handler.ConnectionWebSocketHandler;
+import io.electrica.websocket.session.WebSocketSessionHandler;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.springframework.beans.factory.BeanFactory;
@@ -42,7 +42,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         PerConnectionWebSocketHandler handler = new PerConnectionWebSocketHandler(
-                ConnectionWebSocketHandler.class,
+                WebSocketSessionHandler.class,
                 false
         );
         handler.setBeanFactory(beanFactory);
