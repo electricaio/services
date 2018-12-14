@@ -13,24 +13,31 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 import static io.electrica.it.util.ItServiceConstants.*;
+import static io.electrica.it.util.ItServiceConstants.SLACK_CHANNEL_V1;
+import static io.electrica.it.util.ItServiceConstants.SLACK_CHANNEL_V2;
+import static io.electrica.sdk.java.slack.channel.v1.SlackChannelV1.CHANNEL_NAME_PROPERTY_KEY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class ConnectorHubServiceTest extends BaseIT {
 
     private static final String CONNECTION_NAME_PREFIX = "connection-";
-    private static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
+
     private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     private final Logger logger = LoggerFactory.getLogger(ConnectorHubServiceTest.class);
 
-     @Value("${it-service.connector.url}")
+    @Value("${it-service.connector.url}")
     private String connectorUrl;
-     @Value("${it-service.sdk.url}")
+    @Value("${it-service.sdk.url}")
     private String sdkUrl;
-     @Value("${it-service.slack.v1.webhook-token}")
+    @Value("${it-service.slack.v1.webhook-token}")
     private String slackV1WebhookToken;
-     @Value("${it-service.slack.v1.channel}")
+    @Value("${it-service.slack.v1.channel}")
     private String slackChannel;
+    @Value("${it-service.slack.v2.webhook-token}")
+    private String slackV2WebhookToken;
+    @Value("${it-service.slack.v2.channel}")
+    private String slackChannelV2;
 
     private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
@@ -136,7 +143,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
         Optional<ConnectorDto> connectorDto = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), "Slack Channel V1")).findFirst();
+                .filter(c -> Objects.equals(c.getName(), "Lever V1")).findFirst();
         List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(),
                 connectorDto.get().getId()).getBody();
 
@@ -155,7 +162,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
         Optional<ConnectorDto> connectorDto = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), "Slack Channel V1")).findFirst();
+                .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_V1)).findFirst();
         List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(),
                 connectorDto.get().getId()).getBody();
         int connectionCount = connectionDtos.size();
@@ -190,7 +197,6 @@ public class ConnectorHubServiceTest extends BaseIT {
         connectionDto.setName(name);
         connectionDto.setAccessKeyId(accessKeyId);
         connectionDto.setConnectorId(connectorId);
-        setPropertiesForConnection(connectionDto, connectorId);
         return connectionClient.create(connectionDto).getBody();
     }
 
@@ -199,7 +205,11 @@ public class ConnectorHubServiceTest extends BaseIT {
         Map<String, String> properties = new HashMap<>();
         switch (connectorDto.getName()) {
             case SLACK_CHANNEL_V1:
-                properties.put("channel.name", slackChannel);
+                properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannel);
+                connectionDto.setProperties(properties);
+                break;
+            case SLACK_CHANNEL_V2:
+                properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannelV2);
                 connectionDto.setProperties(properties);
                 break;
         }
@@ -216,11 +226,14 @@ public class ConnectorHubServiceTest extends BaseIT {
     }
 
     private CreateTokenAuthorizationDto createTokenAuthorizationDto(ConnectionDto connection) {
-       ConnectorDto connectorDto = connectorClient.getConnector(connection.getConnectorId()).getBody();
-       final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
+        ConnectorDto connectorDto = connectorClient.getConnector(connection.getConnectorId()).getBody();
+        final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
         switch (connectorDto.getName()) {
             case SLACK_CHANNEL_V1:
                 dto.setToken(slackV1WebhookToken);
+                break;
+            case SLACK_CHANNEL_V2:
+                dto.setToken(slackV2WebhookToken);
                 break;
             default:
                 dto.setToken("Test token");
