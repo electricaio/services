@@ -1,56 +1,60 @@
 package io.electrica.websocket.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
 import io.electrica.common.context.Identity;
 import io.electrica.common.mq.webhook.WebhookQueueDispatcher;
 import io.electrica.webhook.message.WebhookMessage;
-import io.electrica.websocket.amqp.AmqpAckSender;
+import io.electrica.websocket.amqp.AmqpAckContext;
 import io.electrica.websocket.amqp.WebhookMessageListenerContainerFactory;
 import io.electrica.websocket.context.SdkInstanceContext;
 import io.electrica.websocket.dto.inbound.AckInboundMessage;
 import io.electrica.websocket.dto.outbound.OutboundMessage;
 import io.electrica.websocket.dto.outbound.WebhookOutboundMessage;
-import io.electrica.websocket.service.OutdatedAckSenderCleaner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.*;
 
-import static java.util.Objects.requireNonNull;
-
+@Slf4j
 @Validated
 public class WebSocketSessionMessageDispatcher implements DisposableBean {
 
     private final ObjectMapper objectMapper;
     private final WebhookQueueDispatcher webhookQueueDispatcher;
     private final WebhookMessageListenerContainerFactory webhookMessageListenerContainerFactory;
-    private final OutdatedAckSenderCleaner ackSenderCleaner;
+    private final ScheduledExecutorService ackTimeoutExecutor;
 
-    private UUID cleanerId;
-    private WebSocketSession session;
-    private MessageListenerContainer webhookListenerContainer;
-    private ConcurrentMap<UUID, AmqpAckSender> ackSenders = new ConcurrentHashMap<>();
+    private final long webhookAckTimeout;
+
+    private volatile WebSocketSession session;
+    private volatile MessageListenerContainer webhookListenerContainer;
+    private volatile ConcurrentMap<UUID, AmqpAckContext> ackContextsByMessageId = new ConcurrentHashMap<>();
 
     @Inject
     public WebSocketSessionMessageDispatcher(
             ObjectMapper objectMapper,
             WebhookQueueDispatcher webhookQueueDispatcher,
             WebhookMessageListenerContainerFactory webhookMessageListenerContainerFactory,
-            OutdatedAckSenderCleaner ackSenderCleaner
+            @Named("ackTimeoutExecutorService") ScheduledExecutorService ackTimeoutExecutor,
+            @Value("${websocket.amqp.webhook.ackTimeout}") long webhookAckTimeout
     ) {
         this.objectMapper = objectMapper;
         this.webhookQueueDispatcher = webhookQueueDispatcher;
         this.webhookMessageListenerContainerFactory = webhookMessageListenerContainerFactory;
-        this.ackSenderCleaner = ackSenderCleaner;
+        this.webhookAckTimeout = webhookAckTimeout;
+        this.ackTimeoutExecutor = ackTimeoutExecutor;
     }
 
     void init(SdkInstanceContext instanceContext, WebSocketSession session) {
@@ -63,44 +67,59 @@ public class WebSocketSessionMessageDispatcher implements DisposableBean {
                 identity.getAccessKeyId()
         );
 
-        cleanerId = ackSenderCleaner.addCollection(ackSenders);
-
-        webhookListenerContainer = webhookMessageListenerContainerFactory.create(webhookQueue, (message, channel) -> {
-            UUID id = sendWebhook(message);
-            ackSenders.put(id, new AmqpAckSender(message, channel, AmqpAckSender.Type.Webhook));
-        });
+        webhookListenerContainer = webhookMessageListenerContainerFactory.create(
+                webhookQueue,
+                this::handleWebhookAmqpMessage
+        );
         webhookListenerContainer.start();
     }
 
-    void handle(@Valid AckInboundMessage ack) throws IOException {
+    private void handleWebhookAmqpMessage(Message message, Channel channel) throws IOException {
+        WebhookOutboundMessage webhookMessage = buildWebhookMessage(message);
+        UUID messageId = webhookMessage.getId();
+
+        ScheduledFuture<?> ackTimeoutFuture = ackTimeoutExecutor.schedule(() -> {
+            AmqpAckContext context = ackContextsByMessageId.remove(messageId);
+            if (context != null) {
+                try {
+                    context.sendReject();
+                } catch (IOException e) {
+                    log.error("Can't handle ack timeout for message id: " + messageId, e);
+                }
+            }
+        }, webhookAckTimeout, TimeUnit.MILLISECONDS);
+
+        AmqpAckContext ackContext = new AmqpAckContext(message, channel, ackTimeoutFuture);
+        ackContextsByMessageId.put(messageId, ackContext);
+
+        send(webhookMessage);
+    }
+
+    void handleWebSocketMessage(@Valid AckInboundMessage ack) throws IOException {
         UUID correlationId = ack.getCorrelationId();
-        AmqpAckSender ackSender = ackSenders.remove(correlationId);
-        if (ackSender != null) {
-            ackSender.send(ack.getAccepted());
+        AmqpAckContext context = ackContextsByMessageId.remove(correlationId);
+        if (context != null) {
+            context.sendAck(ack.getAccepted());
         }
     }
 
-    private UUID sendWebhook(Message message) throws IOException {
+    private WebhookOutboundMessage buildWebhookMessage(Message message) throws IOException {
         WebhookMessage webhookMessage = objectMapper.readValue(message.getBody(), WebhookMessage.class);
-        WebhookOutboundMessage outboundMessage = new WebhookOutboundMessage(webhookMessage);
-        return send(outboundMessage);
+        return new WebhookOutboundMessage(webhookMessage);
     }
 
-    private UUID send(OutboundMessage outboundMessage) throws IOException {
-        String payload = objectMapper.writeValueAsString(outboundMessage);
+    private void send(OutboundMessage message) throws IOException {
+        String payload = objectMapper.writeValueAsString(message);
         session.sendMessage(new TextMessage(payload));
-        return outboundMessage.getId();
     }
 
     @Override
     public void destroy() {
-        requireNonNull(webhookListenerContainer, "webhookListenerContainer");
-        requireNonNull(cleanerId, "cleanerId");
-        requireNonNull(ackSenders, "ackSenders");
-
-        webhookListenerContainer.stop();
-        ackSenderCleaner.removeCollection(cleanerId);
-        ackSenders.clear();
+        if (webhookListenerContainer != null) {
+            webhookListenerContainer.stop();
+        }
+        ackContextsByMessageId.values().forEach(AmqpAckContext::cancel);
+        ackContextsByMessageId.clear();
     }
 
 }

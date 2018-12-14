@@ -40,7 +40,7 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         AckInboundMessage ack = objectMapper.readValue(message.getPayload(), AckInboundMessage.class);
-        messageHandler.handle(ack);
+        messageHandler.handleWebSocketMessage(ack);
     }
 
     @Override

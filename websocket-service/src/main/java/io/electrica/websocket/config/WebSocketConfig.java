@@ -6,7 +6,6 @@ import io.electrica.websocket.session.WebSocketSessionHandler;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -18,6 +17,9 @@ import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Configuration
 @EnableWebSocket
@@ -27,17 +29,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private BeanFactory beanFactory;
     @Inject
     private SdkInstanceContextHandshakeInterceptor sdkInstanceContextHandshakeInterceptor;
-
-    @Value("${websocket.jetty.idle-timeout}")
-    private int idleTimeout;
-    @Value("${websocket.jetty.input-buffer-size}")
-    private int inputBufferSize;
-    @Value("${websocket.jetty.async-write-timeout}")
-    private int asyncWriteTimeout;
-    @Value("${websocket.jetty.max-text-message-size}")
-    private int maxTextMessageSize;
-    @Value("${websocket.jetty.max-text-message-buffer-size}")
-    private int maxTextMessageBufferSize;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -55,18 +46,16 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Bean
     public HandshakeHandler jettyHandshakeHandler() {
         WebSocketPolicy policy = new WebSocketPolicy(WebSocketBehavior.SERVER);
-        policy.setIdleTimeout(idleTimeout);
-        policy.setInputBufferSize(inputBufferSize);
-        policy.setAsyncWriteTimeout(asyncWriteTimeout);
-
-        policy.setMaxBinaryMessageSize(1); // disabled
-        policy.setMaxBinaryMessageBufferSize(1); // disabled
-
-        policy.setMaxTextMessageSize(maxTextMessageSize);
-        policy.setMaxTextMessageBufferSize(maxTextMessageBufferSize);
-
-
         return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(policy));
     }
 
+    @Named("ackTimeoutExecutorService")
+    @Bean(destroyMethod = "shutdownNow")
+    public ScheduledExecutorService ackTimeoutExecutorService() {
+        return Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "amqp-ack-timeout-handler");
+            thread.setDaemon(true);
+            return thread;
+        });
+    }
 }
