@@ -16,7 +16,6 @@ import javax.inject.Inject;
 public class WebhookMessageListenerContainerFactory {
 
     private final ConnectionFactory connectionFactory;
-    private final long ackTimeout;
     private final int prefetchCount;
 
     private final ThreadPoolTaskScheduler consumerTaskScheduler;
@@ -24,19 +23,17 @@ public class WebhookMessageListenerContainerFactory {
     @Inject
     public WebhookMessageListenerContainerFactory(
             ConnectionFactory connectionFactory,
-            @Value("${websocket.amqp.webhook.ack-timeout}") long ackTimeout,
-            @Value("${websocket.amqp.webhook.prefetch-count}") int prefetchCount,
+            @Value("${websocket.amqp.webhook.prefetchCount}") int prefetchCount,
             @Value("${websocket.amqp.webhook.consumerPoolSize}") int consumerPoolSize
     ) {
         this.connectionFactory = connectionFactory;
-        this.ackTimeout = ackTimeout;
         this.prefetchCount = prefetchCount;
-        this.consumerTaskScheduler = createThreadPoolTaskScheduler("amqp-webhook-consumer-", consumerPoolSize);
+        this.consumerTaskScheduler = createThreadPoolTaskScheduler(consumerPoolSize);
     }
 
-    private static ThreadPoolTaskScheduler createThreadPoolTaskScheduler(String threadNamePrefix, int poolSize) {
+    private static ThreadPoolTaskScheduler createThreadPoolTaskScheduler(int poolSize) {
         ThreadPoolTaskScheduler result = new ThreadPoolTaskScheduler();
-        result.setThreadNamePrefix(threadNamePrefix);
+        result.setThreadNamePrefix("amqp-webhook-consumer-");
         result.setPoolSize(poolSize);
         result.afterPropertiesSet();
         return result;
@@ -45,7 +42,6 @@ public class WebhookMessageListenerContainerFactory {
     public MessageListenerContainer create(String queue, ChannelAwareMessageListener messageListener) {
         DirectMessageListenerContainer container = new DirectMessageListenerContainer(connectionFactory);
         container.setQueueNames(queue);
-        container.setAckTimeout(ackTimeout);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         container.setMissingQueuesFatal(true);
         container.setChannelAwareMessageListener(messageListener);
