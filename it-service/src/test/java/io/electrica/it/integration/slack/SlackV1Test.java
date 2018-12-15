@@ -17,7 +17,7 @@ import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -27,8 +27,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static io.electrica.it.util.ItServiceConstants.FILL_DATA_GROUP;
-import static io.electrica.it.util.ItServiceConstants.SLACK_CHANNEL_V1;
+import static io.electrica.it.util.ItServiceConstants.*;
 import static org.testng.Assert.assertTrue;
 
 public class SlackV1Test extends BaseIT {
@@ -42,7 +41,7 @@ public class SlackV1Test extends BaseIT {
     private Electrica instance;
     private UserDto user;
 
-    @BeforeClass
+    @BeforeGroups(groups = {TEST_GROUP})
     public void init() {
         user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -112,11 +111,13 @@ public class SlackV1Test extends BaseIT {
     public void testSlackV1AsyncSendMessage() {
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
         SlackChannelV1 slackChannelV1 = channelManager.slackChannels().get(0);
-        ResponseHandler<ChannelV1SendMessageResult> result = new AsyncResponseHandler<>();
+        AsyncResponseHandler<ChannelV1SendMessageResult> result = new AsyncResponseHandler<>();
         try {
             slackChannelV1.submitMessage("This is Slack V1 async test.", result);
-            Object o = (((AsyncResponseHandler<ChannelV1SendMessageResult>) result).awaitResponse(
-                    60L, TimeUnit.SECONDS));
+            Object o = result.awaitResponse(60L, TimeUnit.SECONDS);
+            if (!(o instanceof ChannelV1SendMessageResult)) {
+                Assert.fail();
+            }
         } catch (IOException | TimeoutException e) {
             Assert.fail("Test Failed due to exception:" + e.getMessage());
         }

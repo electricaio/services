@@ -13,8 +13,6 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 import static io.electrica.it.util.ItServiceConstants.*;
-import static io.electrica.it.util.ItServiceConstants.SLACK_CHANNEL_V1;
-import static io.electrica.it.util.ItServiceConstants.SLACK_CHANNEL_V2;
 import static io.electrica.sdk.java.slack.channel.v1.SlackChannelV1.CHANNEL_NAME_PROPERTY_KEY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -197,6 +195,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         connectionDto.setName(name);
         connectionDto.setAccessKeyId(accessKeyId);
         connectionDto.setConnectorId(connectorId);
+        setPropertiesForConnection(connectionDto, connectorId);
         return connectionClient.create(connectionDto).getBody();
     }
 

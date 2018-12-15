@@ -10,16 +10,20 @@ import io.electrica.sdk.java.slack.channel.v2.SlackChannelV2Manager;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static io.electrica.it.util.ItServiceConstants.FILL_DATA_GROUP;
+import static io.electrica.it.util.ItServiceConstants.TEST_GROUP;
 import static org.testng.Assert.assertTrue;
 
 public class SlackV2Test extends BaseIT {
@@ -32,7 +36,7 @@ public class SlackV2Test extends BaseIT {
 
     private Electrica instance;
 
-    @BeforeClass
+    @BeforeGroups(groups = {TEST_GROUP})
     public void init() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -77,16 +81,29 @@ public class SlackV2Test extends BaseIT {
         } catch (IOException e) {
             Assert.fail("Test Failed due to exception:" + e.getMessage());
         }
+        ((TestVoidHandler) voidHandler).awaitResponse(60L, TimeUnit.SECONDS);
     }
 
     private static class TestVoidHandler implements ResponseHandler.Void {
+        CountDownLatch latch = new CountDownLatch(1);
+
         @Override
         public void onResult() {
+            latch.countDown();
         }
 
         @Override
         public void onError(IntegrationException e) {
-            assertTrue(false);
+            Assert.fail();
+        }
+
+        @SneakyThrows
+        private void awaitResponse(Long timeout, TimeUnit unit) {
+            try {
+                latch.await(timeout, unit);
+            } catch (InterruptedException e) {
+                Assert.fail("Test Failed due to exception:" + e.getMessage());
+            }
         }
     }
 }
