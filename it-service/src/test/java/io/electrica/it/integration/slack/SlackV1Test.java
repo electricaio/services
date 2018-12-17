@@ -61,32 +61,24 @@ public class SlackV1Test extends BaseIT {
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV1() {
+    public void testSlackV1() throws IntegrationException, IOException, TimeoutException {
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
         boolean result = false;
-        try {
-            result = channelManager.sendMessage(slackChannel, "This is Slack V1 test.");
-        } catch (IntegrationException | IOException | TimeoutException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
+        result = channelManager.sendMessage(slackChannel, "This is Slack V1 test.");
         assertTrue(result);
     }
 
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV1Broadcast() {
+    public void testSlackV1Broadcast() throws IntegrationException, IOException, TimeoutException {
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
         boolean result = false;
-        try {
-            result = channelManager.broadcast("This is Slack V1 Broadcast test.");
-        } catch (IntegrationException | IOException | TimeoutException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
+        result = channelManager.broadcast("This is Slack V1 Broadcast test.");
         assertTrue(result);
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV1SendMessageByConnectionName() {
+    public void testSlackV1SendMessageByConnectionName() throws IntegrationException, IOException, TimeoutException {
         Optional<ConnectorDto> slackConnector = connectorClient.findAll().getBody().stream()
                 .filter(c -> c.getName().equalsIgnoreCase(SLACK_CHANNEL_V1)).findAny();
         assertTrue(slackConnector.isPresent());
@@ -97,30 +89,19 @@ public class SlackV1Test extends BaseIT {
 
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
 
-        boolean result = false;
-        try {
-            result = channelManager.sendMessageByConnectionName(connectionDto.get().getName(),
-                    "Slack V1 test send message by connection name");
-        } catch (IntegrationException | IOException | TimeoutException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
+        boolean result = channelManager.sendMessageByConnectionName(connectionDto.get().getName(),
+                "Slack V1 test send message by connection name");
         assertTrue(result);
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV1AsyncSendMessage() {
+    public void testSlackV1AsyncSendMessage() throws IOException, TimeoutException {
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
-        SlackChannelV1 slackChannelV1 = channelManager.slackChannels().get(0);
+        SlackChannelV1 slackChannelV1 = channelManager.getChannelByName(SLACK_CHANNEL_V1);
         AsyncResponseHandler<ChannelV1SendMessageResult> result = new AsyncResponseHandler<>();
-        try {
-            slackChannelV1.submitMessage("This is Slack V1 async test.", result);
-            Object o = result.awaitResponse(60L, TimeUnit.SECONDS);
-            if (!(o instanceof ChannelV1SendMessageResult)) {
-                Assert.fail();
-            }
-        } catch (IOException | TimeoutException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
+        slackChannelV1.submitMessage("This is Slack V1 async test.", result);
+        Boolean out = result.awaitResponse(60L, TimeUnit.SECONDS);
+        assertTrue(out);
     }
 
     private static class AsyncResponseHandler<T> implements ResponseHandler<T> {
@@ -138,12 +119,19 @@ public class SlackV1Test extends BaseIT {
         }
 
         @SneakyThrows
-        private Object awaitResponse(Long timeout, TimeUnit unit) throws TimeoutException {
+        private Boolean awaitResponse(Long timeout, TimeUnit unit) {
             Object[] responseContainer = responseQueue.poll(timeout, unit);
             if (responseContainer == null) {
                 throw new TimeoutException();
             }
-            return responseContainer[0];
+            Object o = responseContainer[0];
+            Boolean result = false;
+            if (o instanceof ChannelV1SendMessageResult) {
+                result = ((ChannelV1SendMessageResult) o).isSuccessful();
+            } else if (o instanceof IntegrationException) {
+                throw (IntegrationException) o;
+            }
+            return result;
         }
     }
 

@@ -56,13 +56,9 @@ public class SlackV2Test extends BaseIT {
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV2() throws IntegrationException {
+    public void testSlackV2() throws IntegrationException, IOException, TimeoutException {
         SlackChannelV2Manager channelManager = new SlackChannelV2Manager(instance);
-        try {
-            channelManager.sendMessage(slackChannel, "This is Slack V2 test.");
-        } catch (IntegrationException | IOException | TimeoutException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
+        channelManager.sendMessage(slackChannel, "This is Slack V2 test.");
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
@@ -72,20 +68,16 @@ public class SlackV2Test extends BaseIT {
     }
 
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
-    public void testSlackV2AsyncSendMessage() {
+    public void testSlackV2AsyncSendMessage() throws IOException {
         SlackChannelV2Manager channelManager = new SlackChannelV2Manager(instance);
         SlackChannelV2 slackChannelV2 = channelManager.slackChannels().get(0);
-        ResponseHandler.Void voidHandler = new TestVoidHandler();
-        try {
-            slackChannelV2.submitMessage("This is Slack V2 async test.", voidHandler);
-        } catch (IOException e) {
-            Assert.fail("Test Failed due to exception:" + e.getMessage());
-        }
-        ((TestVoidHandler) voidHandler).awaitResponse(60L, TimeUnit.SECONDS);
+        TestVoidHandler voidHandler = new TestVoidHandler();
+        slackChannelV2.submitMessage("This is Slack V2 async test.", voidHandler);
+        voidHandler.awaitResponse(60L, TimeUnit.SECONDS);
     }
 
     private static class TestVoidHandler implements ResponseHandler.Void {
-        CountDownLatch latch = new CountDownLatch(1);
+        private final CountDownLatch latch = new CountDownLatch(1);
 
         @Override
         public void onResult() {
@@ -94,16 +86,13 @@ public class SlackV2Test extends BaseIT {
 
         @Override
         public void onError(IntegrationException e) {
-            Assert.fail();
+            Assert.fail("Test Failed due to exception:" + e.getMessage());
         }
 
         @SneakyThrows
         private void awaitResponse(Long timeout, TimeUnit unit) {
-            try {
-                latch.await(timeout, unit);
-            } catch (InterruptedException e) {
-                Assert.fail("Test Failed due to exception:" + e.getMessage());
-            }
+            boolean completed = latch.await(timeout, unit);
+            assertTrue(completed);
         }
     }
 }
