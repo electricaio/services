@@ -10,6 +10,7 @@ import io.electrica.it.context.ContextHolder;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
+import io.electrica.webhook.feign.WebhookClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -49,6 +50,9 @@ public abstract class BaseIT extends AbstractTestNGSpringContextTests {
 
     @Inject
     public AuthorizationClient authorizationClient;
+
+    @Inject
+    public WebhookClient webhookClient;
 
     public Long getCurrTimeInMillSeconds() {
         return System.currentTimeMillis();
