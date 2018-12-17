@@ -48,7 +48,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         contextHolder.clear();
     }
 
-    @Test(groups = {FILL_DATA_GROUP}, dependsOnGroups = {USER_SERVICE_GROUP})
+    @Test(groups = {FILL_DATA_GROUP, CONNECTOR_HUB_SERVICE_GROUP}, dependsOnGroups = {USER_SERVICE_GROUP})
     public void testAddConnectors() {
         contextHolder.setContextForAdmin();
         List<ConnectorDto> connectors = connectorClient.findAll().getBody();
@@ -56,21 +56,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     }
 
-    private void createLeverConnector(List<ConnectorDto> connectors, String version) {
-        String connectorName = createConnectorName("Lever", version);
-        Optional<ConnectorDto> optionalConnector = connectors.stream()
-                .filter(c -> Objects.equals(c.getName(), connectorName)).findAny();
-        if (!(optionalConnector.isPresent())) {
-            CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
-                    AuthorizationType.Token, connectorName, "channel", version.toLowerCase(), "lever",
-                    "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
-                    "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
-                    TEST_CONNECTOR_PROPERTIES);
-            connectorClient.create(dto);
-        }
-    }
-
-    @Test(groups = {FILL_DATA_GROUP}, dependsOnMethods = {"testAddConnectors"})
+    @Test(groups = {FILL_DATA_GROUP, CONNECTOR_HUB_SERVICE_GROUP}, dependsOnMethods = {"testAddConnectors"})
     public void testAddConnections() {
 
         contextHolder.getUsers().stream()
@@ -89,7 +75,7 @@ public class ConnectorHubServiceTest extends BaseIT {
                 });
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testFindAllConnectors() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -97,7 +83,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertTrue(connectorDtoList.size() > 0);
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testFindAllConnections() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -106,7 +92,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertTrue(connectionDtos.size() > 0);
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testFindAllConnectionsWithConnectorId() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -114,7 +100,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertTrue(connectionDtos.size() > 0);
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testGetConnectionById() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -127,7 +113,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertEquals(connection.getAuthorizationId(), actual.getAuthorizationId());
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = { FILL_DATA_GROUP})
     public void testFindAllByAccessKeyById() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -136,7 +122,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertTrue(connectionDtos.size() > 0);
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testAuthorizationTokenUpdate() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -155,7 +141,7 @@ public class ConnectorHubServiceTest extends BaseIT {
         assertEquals(tokenStr, dto.getToken());
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testDeleteConnection() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -238,6 +224,20 @@ public class ConnectorHubServiceTest extends BaseIT {
                 dto.setToken("Test token");
         }
         return dto;
+    }
+
+    private void createLeverConnector(List<ConnectorDto> connectors, String version) {
+        String connectorName = createConnectorName("Lever", version);
+        Optional<ConnectorDto> optionalConnector = connectors.stream()
+                .filter(c -> Objects.equals(c.getName(), connectorName)).findAny();
+        if (!(optionalConnector.isPresent())) {
+            CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
+                    AuthorizationType.Token, connectorName, "channel", version.toLowerCase(), "lever",
+                    "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
+                    "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
+                    TEST_CONNECTOR_PROPERTIES);
+            connectorClient.create(dto);
+        }
     }
 
 }

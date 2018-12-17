@@ -18,6 +18,7 @@ dependencies {
     compile project(':common')
     compile project(':connector-hub-service-api')
     compile project(':user-service-api')
+    compile project(':webhook-api')
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
     testCompile 'io.electrica.sdk.java:slack'

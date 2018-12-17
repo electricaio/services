@@ -26,7 +26,7 @@ public class UserServiceTest extends BaseIT {
         contextHolder.clear();
     }
 
-    @Test(groups = {FILL_DATA_GROUP, USER_SERVICE_GROUP})
+    @Test(groups = {FILL_DATA_GROUP, USER_SERVICE_GROUP}, dependsOnGroups = {INIT_GROUP})
     public void testAddOrganizations() {
         createOrganization(ORG_HACKER_RANK);
         createOrganization(ORG_TOP_CODER);
@@ -59,7 +59,7 @@ public class UserServiceTest extends BaseIT {
                 });
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testLogin() {
         UserDto user = contextHolder.getUsers().get(0);
         TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
@@ -70,7 +70,7 @@ public class UserServiceTest extends BaseIT {
         assertNotNull(tokenDetails.getJti());
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {INIT_GROUP, FILL_DATA_GROUP})
+    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
     public void testRefreshToken() {
         UserDto user = contextHolder.getUsers().get(0);
         TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());

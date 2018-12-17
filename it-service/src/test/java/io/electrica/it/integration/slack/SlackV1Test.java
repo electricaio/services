@@ -97,7 +97,7 @@ public class SlackV1Test extends BaseIT {
     @Test(dependsOnGroups = {FILL_DATA_GROUP})
     public void testSlackV1AsyncSendMessage() throws IOException, TimeoutException {
         SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
-        SlackChannelV1 slackChannelV1 = channelManager.getChannelByName(SLACK_CHANNEL_V1);
+        SlackChannelV1 slackChannelV1 = channelManager.getChannelByName(slackChannel);
         AsyncResponseHandler<ChannelV1SendMessageResult> result = new AsyncResponseHandler<>();
         slackChannelV1.submitMessage("This is Slack V1 async test.", result);
         Boolean out = result.awaitResponse(60L, TimeUnit.SECONDS);

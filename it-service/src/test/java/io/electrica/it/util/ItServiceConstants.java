@@ -11,5 +11,7 @@ public final class ItServiceConstants {
     public static final String INIT_GROUP = "init";
     public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
     public static final String SLACK_CHANNEL_V2 = "Slack Channel V2";
+    public static final String CONNECTOR_HUB_SERVICE_GROUP = "connector-hub-service";
+    public static final String WEBHOOK_SERVICE_GROUP = "webhook-service";
 
 }
