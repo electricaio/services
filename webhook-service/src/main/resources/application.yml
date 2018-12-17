@@ -10,3 +10,8 @@ spring:
 
 webhook:
   base-url: http://localhost
+  message-result:
+    # 1 hour
+    max-timeout: 3600000
+    amqp:
+      prefetchCount: 250

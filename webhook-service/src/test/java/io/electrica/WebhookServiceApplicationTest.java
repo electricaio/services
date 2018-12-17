@@ -1,7 +1,7 @@
 package io.electrica;
 
 import io.electrica.common.jpa.test.AbstractJpaApplicationTest;
-import io.electrica.common.mq.webhook.WebhookQueueDispatcher;
+import io.electrica.common.mq.webhook.WebhookMessageQueueDispatcher;
 import org.junit.Before;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +19,7 @@ public abstract class WebhookServiceApplicationTest extends AbstractJpaApplicati
 
     @Inject
     @MockBean
-    private WebhookQueueDispatcher queueDispatcher;
+    private WebhookMessageQueueDispatcher queueDispatcher;
 
     @PersistenceContext
     private EntityManager em;

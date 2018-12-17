@@ -3,8 +3,10 @@ package io.electrica.webhook.rest;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
+import io.electrica.webhook.dto.MessageResultDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,8 +21,8 @@ public interface WebhookController {
     @GetMapping(V1 + "/connections/{connectionId}/webhooks")
     ResponseEntity<List<ConnectionWebhookDto>> getByConnection(@PathVariable("connectionId") Long connectionId);
 
-    @DeleteMapping(V1 + "/webhooks/{id}")
-    void delete(@PathVariable("id") UUID id);
+    @DeleteMapping(V1 + "/webhooks/{webhookId}")
+    void delete(@PathVariable("webhookId") UUID webhookId);
 
     @PostMapping(V1 + "/webhooks/{webhookId}/submit")
     ResponseEntity<Void> submit(
@@ -29,9 +31,13 @@ public interface WebhookController {
     );
 
     @PostMapping(V1 + "/webhooks/{webhookId}/invoke")
-    ResponseEntity<JsonNode> invoke(
+    DeferredResult<JsonNode> invoke(
             @PathVariable("webhookId") UUID webhookId,
-            @RequestBody JsonNode payload
+            @RequestBody JsonNode payload,
+            @RequestParam(name = "timeout", required = false, defaultValue = "60000") long timeout
     );
+
+    @PostMapping(V1 + "/webhooks/messages/result")
+    ResponseEntity<Void> submitMessageResult(@RequestBody MessageResultDto messageResult);
 
 }

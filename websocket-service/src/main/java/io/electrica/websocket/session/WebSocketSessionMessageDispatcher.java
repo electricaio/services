@@ -3,7 +3,7 @@ package io.electrica.websocket.session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import io.electrica.common.context.Identity;
-import io.electrica.common.mq.webhook.WebhookQueueDispatcher;
+import io.electrica.common.mq.webhook.WebhookMessageQueueDispatcher;
 import io.electrica.webhook.message.WebhookMessage;
 import io.electrica.websocket.amqp.AmqpAckContext;
 import io.electrica.websocket.amqp.WebhookMessageListenerContainerFactory;
@@ -32,7 +32,7 @@ import java.util.concurrent.*;
 public class WebSocketSessionMessageDispatcher implements DisposableBean {
 
     private final ObjectMapper objectMapper;
-    private final WebhookQueueDispatcher webhookQueueDispatcher;
+    private final WebhookMessageQueueDispatcher webhookMessageQueueDispatcher;
     private final WebhookMessageListenerContainerFactory webhookMessageListenerContainerFactory;
     private final ScheduledExecutorService ackTimeoutExecutor;
 
@@ -45,13 +45,13 @@ public class WebSocketSessionMessageDispatcher implements DisposableBean {
     @Inject
     public WebSocketSessionMessageDispatcher(
             ObjectMapper objectMapper,
-            WebhookQueueDispatcher webhookQueueDispatcher,
+            WebhookMessageQueueDispatcher webhookMessageQueueDispatcher,
             WebhookMessageListenerContainerFactory webhookMessageListenerContainerFactory,
             @Named("ackTimeoutExecutorService") ScheduledExecutorService ackTimeoutExecutor,
             @Value("${websocket.amqp.webhook.ackTimeout}") long webhookAckTimeout
     ) {
         this.objectMapper = objectMapper;
-        this.webhookQueueDispatcher = webhookQueueDispatcher;
+        this.webhookMessageQueueDispatcher = webhookMessageQueueDispatcher;
         this.webhookMessageListenerContainerFactory = webhookMessageListenerContainerFactory;
         this.webhookAckTimeout = webhookAckTimeout;
         this.ackTimeoutExecutor = ackTimeoutExecutor;
@@ -61,7 +61,7 @@ public class WebSocketSessionMessageDispatcher implements DisposableBean {
         this.session = session;
 
         Identity identity = instanceContext.getIdentity();
-        String webhookQueue = webhookQueueDispatcher.createQueueIfAbsent(
+        String webhookQueue = webhookMessageQueueDispatcher.createQueueIfAbsent(
                 identity.getOrganizationId(),
                 identity.getUserId(),
                 identity.getAccessKeyId()
