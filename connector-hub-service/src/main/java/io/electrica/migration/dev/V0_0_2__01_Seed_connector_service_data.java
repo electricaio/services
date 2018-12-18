@@ -54,7 +54,7 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
                 AuthorizationType.Token, "Slack Channel " + version, "channel", version.toLowerCase(), "slack",
                 SOURCE_URL, "https://www.slack.com", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/slack-logo.png", "Slack Channel V1 Connector",
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/slack-logo.png", "Slack Channel " + version + " Connector",
                 SLACK_PROPERTIES);
         connectorDtoService.create(dto);
     }
