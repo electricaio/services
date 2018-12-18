@@ -18,8 +18,8 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
     private ConnectorDtoService connectorDtoService;
     private ConnectorTypeRepository connectorTypeRepository;
 
-    private static final String CONNECTOR_URL = "http://connector.dev.electrica.io";
-    private static final String SDK_URL = "http://sdk.dev.electrica.io";
+    private static final String SDK_URL = "https://www.electrica.io";
+    private static final String SOURCE_URL = "https://www.electrica.io";
 
     Map<String, String> SLACK_PROPERTIES = new HashMap<String, String>() {{
         put("send-message.url-template", "https://hooks.slack.com/services/%s");
@@ -42,34 +42,74 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
 
         createSlackConnector("V1");
         createSlackConnector("V2");
-        createJDBCConnector("V1");
-        createSalesForceConnector("V1");
-    }
-
-    private void createSalesForceConnector(String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("CRM").getId(),
-                AuthorizationType.Token, "SalesForce " + version, "channel", version.toLowerCase(), "salesforce",
-                "https://developer.salesforce.com/docs", CONNECTOR_URL, SDK_URL,
-                "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/102014/salesforce_logo.png", "test desciption",
-                SLACK_PROPERTIES);
-        connectorDtoService.create(dto);
+        createGreenhouseApplicationConnector("V1");
+        createSCIMConnector("V1");
+        createSmartRecruitersApplicationsConnector("V1");
+        createLeverApplicationsConnector("V1");
+        createIncomingWebhooksConnector("V1");
+        createMySQLConnector("V1");
     }
 
     private void createSlackConnector(String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
                 AuthorizationType.Token, "Slack Channel " + version, "channel", version.toLowerCase(), "slack",
-                "https://api.slack.com/", CONNECTOR_URL, SDK_URL,
-                "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png", "test desciption",
+                SOURCE_URL, "https://www.slack.com", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/slack-logo.png", "Slack Channel V1 Connector",
                 SLACK_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createJDBCConnector(String version) {
+    private void createGreenhouseApplicationConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
+                AuthorizationType.Token, "Greenhouse Applications", "applications", version.toLowerCase(), "greenhouse",
+                SOURCE_URL, "https://www.greenhouse.io", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/greenhouse-logo.png",
+                "Greenhouse Applications Connector", TEST_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createSCIMConnector(String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Basic, "JDBC " + version, "applications", version.toLowerCase(), "jdbc",
-                "http://localhost", CONNECTOR_URL, SDK_URL,
-                "http://d1.awsstatic.com/rdsImages/postgresql_logo.6de4615badd99412268bc6aa8fc958a0f403dd41.png",
-                "test desciption", TEST_PROPERTIES);
+                AuthorizationType.Token, "SCIM", "user", version.toLowerCase(), "scim",
+                SOURCE_URL, "https://tools.ietf.org/html/rfc7644", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/scim-logo.png",
+                "SCIM Connector", TEST_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createSmartRecruitersApplicationsConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
+                AuthorizationType.Token, "SmartRecruiters Applications", "applications", version.toLowerCase(), "smartrecruiters",
+                SOURCE_URL, "https://www.smartrecruiters.com", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/smartrecruiters-logo.png",
+                "SmartRecruiters Applications Connector", TEST_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createLeverApplicationsConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
+                AuthorizationType.Token, "Lever Applications", "applications", version.toLowerCase(), "lever",
+                SOURCE_URL, "https://www.lever.co", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/lever-logo.png",
+                "Lever Applications Connector", TEST_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createIncomingWebhooksConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
+                AuthorizationType.None, "Incoming Webhooks", "incoming", version.toLowerCase(), "webhooks",
+                SOURCE_URL, "https://www.electrica.io", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/webhooks-logo.png",
+                "Incoming Webhooks Connector", TEST_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createMySQLConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
+                AuthorizationType.Basic, "MySQL", "db", version.toLowerCase(), "mysql",
+                SOURCE_URL, "https://www.mysql.com", SDK_URL,
+                "https://s3.us-east-2.amazonaws.com/images.electrica.io/mysql-logo.png",
+                "MySQL Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
