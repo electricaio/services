@@ -2,7 +2,9 @@ package io.electrica.webhook.message;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.webhook.dto.WebhookScope;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
@@ -11,10 +13,18 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WebhookMessage {
 
     @NotNull
     private UUID id;
+
+    @NotNull
+    private UUID webhookId;
+
+    @NotNull
+    private UUID webhookServiceId;
 
     @NotNull
     private String name;

@@ -1,57 +1,64 @@
 package io.electrica.webhook.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.dozermapper.core.Mapper;
+import io.electrica.common.mq.PersistentMessagePostProcessor;
+import io.electrica.common.mq.webhook.WebhookMessageQueueDispatcher;
 import io.electrica.common.mq.webhook.WebhookMessages;
-import io.electrica.common.mq.webhook.WebhookQueueDispatcher;
 import io.electrica.webhook.message.WebhookMessage;
 import io.electrica.webhook.model.Webhook;
-import org.springframework.amqp.core.MessageDeliveryMode;
-import org.springframework.amqp.core.MessagePostProcessor;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.UUID;
+
+import static io.electrica.webhook.config.WebhookConfig.INSTANCE_ID_QUALIFIER;
 
 @Component
 public class WebhookMessageSender {
 
-    private final Mapper mapper;
+    private final UUID serviceInstanceId;
     private final WebhookService webhookService;
     private final RabbitTemplate rabbitTemplate;
-    private final WebhookQueueDispatcher webhookQueueDispatcher;
-    private final MessagePostProcessor messagePostProcessor = message -> {
-        MessageProperties properties = message.getMessageProperties();
-        properties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
-        return message;
-    };
+    private final WebhookMessageQueueDispatcher webhookMessageQueueDispatcher;
 
     @Inject
     public WebhookMessageSender(
-            Mapper mapper,
+            @Named(INSTANCE_ID_QUALIFIER) UUID serviceInstanceId,
             WebhookService webhookService,
             RabbitTemplate rabbitTemplate,
-            WebhookQueueDispatcher webhookQueueDispatcher
+            WebhookMessageQueueDispatcher webhookMessageQueueDispatcher
     ) {
-        this.mapper = mapper;
+        this.serviceInstanceId = serviceInstanceId;
         this.webhookService = webhookService;
         this.rabbitTemplate = rabbitTemplate;
-        this.webhookQueueDispatcher = webhookQueueDispatcher;
+        this.webhookMessageQueueDispatcher = webhookMessageQueueDispatcher;
     }
 
     private WebhookMessage buildMessage(Webhook webhook, JsonNode payload, boolean expectedResult) {
-        WebhookMessage message = mapper.map(webhook, WebhookMessage.class);
-        message.setExpectedResult(expectedResult);
-        message.setPayload(payload);
-        return message;
+        return new WebhookMessage(
+                UUID.randomUUID(),
+                webhook.getId(),
+                serviceInstanceId,
+                webhook.getName(),
+                webhook.getOrganizationId(),
+                webhook.getUserId(),
+                webhook.getAccessKeyId(),
+                webhook.getScope(),
+                webhook.getConnectorId(),
+                webhook.getConnectorErn(),
+                webhook.getConnectionId(),
+                webhook.getProperties(),
+                expectedResult,
+                payload
+        );
     }
 
-    public void send(UUID webhookId, JsonNode payload, boolean expectedResult) {
+    public UUID send(UUID webhookId, JsonNode payload, boolean expectedResult) {
         Webhook webhook = webhookService.findById(webhookId);
 
-        webhookQueueDispatcher.createQueueIfAbsent(
+        webhookMessageQueueDispatcher.createQueueIfAbsent(
                 webhook.getOrganizationId(),
                 webhook.getUserId(),
                 webhook.getAccessKeyId()
@@ -64,6 +71,12 @@ public class WebhookMessageSender {
         );
 
         WebhookMessage message = buildMessage(webhook, payload, expectedResult);
-        rabbitTemplate.convertAndSend(WebhookMessages.EXCHANGE, routingKey, message, messagePostProcessor);
+        rabbitTemplate.convertAndSend(
+                WebhookMessages.EXCHANGE,
+                routingKey,
+                message,
+                PersistentMessagePostProcessor.INSTANCE
+        );
+        return message.getId();
     }
 }

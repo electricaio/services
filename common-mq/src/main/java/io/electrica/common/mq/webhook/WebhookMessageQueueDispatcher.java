@@ -16,7 +16,7 @@ import static io.electrica.common.mq.webhook.WebhookMessages.*;
 
 @Lazy
 @Component
-public class WebhookQueueDispatcher {
+public class WebhookMessageQueueDispatcher {
 
     private final AmqpAdmin amqpAdmin;
 
@@ -26,10 +26,10 @@ public class WebhookQueueDispatcher {
     private Exchange exchange;
 
     @Inject
-    public WebhookQueueDispatcher(
+    public WebhookMessageQueueDispatcher(
             AmqpAdmin amqpAdmin,
-            @Value("${mq.webhook.message-ttl}") Long messageTtl,
-            @Value("${mq.webhook.queue-ttl}") Long queueTtl
+            @Value("${mq.webhook.message.message-ttl}") Long messageTtl,
+            @Value("${mq.webhook.message.queue-ttl}") Long queueTtl
     ) {
         this.amqpAdmin = amqpAdmin;
         this.messageTtl = messageTtl;

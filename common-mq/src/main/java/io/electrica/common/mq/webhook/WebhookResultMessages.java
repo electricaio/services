@@ -2,21 +2,26 @@ package io.electrica.common.mq.webhook;
 
 import org.springframework.amqp.core.*;
 
-public class WebhookMessages {
+import java.util.UUID;
 
-    public static final String EXCHANGE = "webhook-message";
+public class WebhookResultMessages {
 
-    private static final String QUEUE_TEMPLATE = "webhook-message-%s-%s-%s";
-    private static final String ROUTING_KEY_TEMPLATE = "webhook-message.%s.%s.%s";
-    private static final String ALL_BINDING_KEY = String.format(ROUTING_KEY_TEMPLATE, "*", "*", "*");
+    public static final String EXCHANGE = "webhook-message-result";
 
-    private WebhookMessages() {
+    private static final String QUEUE_TEMPLATE = "webhook-message-result-%s";
+    private static final String ROUTING_KEY_TEMPLATE = "webhook-message-result.%s";
+
+    private WebhookResultMessages() {
     }
 
     public static Exchange newExchange() {
         return ExchangeBuilder.topicExchange(EXCHANGE)
                 .durable(true)
                 .build();
+    }
+
+    public static String queueName(UUID serviceInstanceId) {
+        return String.format(QUEUE_TEMPLATE, serviceInstanceId);
     }
 
     public static Queue newQueue(String name, Long messageTtl, Long queueTtl) {
@@ -30,12 +35,8 @@ public class WebhookMessages {
                 .build();
     }
 
-    public static String queueName(Long organizationId, Long userId, Long accessKeyId) {
-        return String.format(QUEUE_TEMPLATE, organizationId, userId, accessKeyId);
-    }
-
-    public static String routingKey(Long organizationId, Long userId, Long accessKeyId) {
-        return String.format(ROUTING_KEY_TEMPLATE, organizationId, userId, accessKeyId);
+    public static String routingKey(UUID serviceInstanceId) {
+        return String.format(ROUTING_KEY_TEMPLATE, serviceInstanceId);
     }
 
     public static Binding newBinding(Queue queue, Exchange exchange, String routingKey) {
