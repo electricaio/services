@@ -6,15 +6,15 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static io.electrica.it.util.ItServiceConstants.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class WebhookServiceTest extends BaseIT {
 
@@ -22,12 +22,12 @@ public class WebhookServiceTest extends BaseIT {
 
     private static final Map<String, String> TEST_WEBHOOK_PROPERTIES = Collections.singletonMap("a", "b");
 
-    @BeforeClass
+    @BeforeEach
     public void setup() {
-        contextHolder.clear();
+        super.init();
     }
 
-    @Test(groups = {FILL_DATA_GROUP, WEBHOOK_SERVICE_GROUP}, dependsOnGroups = {CONNECTOR_HUB_SERVICE_GROUP})
+    @Test
     public void testAddWebhook() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -35,7 +35,7 @@ public class WebhookServiceTest extends BaseIT {
         createAndSaveWebhook(accessKey.getId());
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
+    @Test
     public void testGetByConnection() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());
@@ -45,7 +45,7 @@ public class WebhookServiceTest extends BaseIT {
         assertNotNull(webhookDto);
     }
 
-    @Test(groups = {TEST_GROUP}, dependsOnGroups = {FILL_DATA_GROUP})
+    @Test
     public void testDeleteWebhook() {
         UserDto user = contextHolder.getUsers().get(0);
         contextHolder.setContextForUser(user.getEmail());

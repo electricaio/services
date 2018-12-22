@@ -13,6 +13,7 @@ it-service:
     v2:
       webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
       channel: slack-sdk-test
+  publish-report: true
 feign:
   userService.url: localhost
   connectorHubService.url: localhost
