@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.it.util.ReportContext;
 import io.electrica.sdk.java.core.Electrica;
-import io.electrica.sdk.java.core.http.impl.SingleInstanceHttpModule;
 import io.electrica.sdk.java.slack.channel.v2.SlackChannelV2Manager;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +24,7 @@ public class SlackMessageSender {
             String message = payload;
             ReportContext context = ReportContext.getInstance();
 
-            Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
-                    context.getAccessKey());
+            Electrica instance = context.getElectricaInstance();
             SlackChannelV2Manager channelManager = new SlackChannelV2Manager(instance);
             channelManager.sendMessage(context.getChannelName(), message);
         } catch (Exception e) {

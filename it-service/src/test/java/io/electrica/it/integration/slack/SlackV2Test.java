@@ -7,8 +7,9 @@ import io.electrica.sdk.java.slack.channel.v2.SlackChannelV2;
 import io.electrica.sdk.java.slack.channel.v2.SlackChannelV2Manager;
 import lombok.SneakyThrows;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -17,10 +18,10 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class SlackV2Test extends BaseIT {
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         super.init();
     }

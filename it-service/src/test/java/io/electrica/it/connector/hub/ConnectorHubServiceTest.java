@@ -7,18 +7,20 @@ import io.electrica.connector.hub.dto.TokenAuthorizationDto;
 import io.electrica.it.BaseIT;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class ConnectorHubServiceTest extends BaseIT {
 
-    @BeforeEach
-    void setup() {
+    @BeforeAll
+    void setUp() {
         super.init();
     }
 

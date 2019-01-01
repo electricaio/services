@@ -46,7 +46,7 @@ public abstract class BaseIT {
     private static final String DEFAULT_ACCESS_KEY_NAME = "development";
     public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
     public static final String SLACK_CHANNEL_V2 = "Slack Channel V2";
-    private static Boolean initialize = false;
+    private static Boolean initialized = false;
 
     @Inject
     public UserClient userClient;
@@ -116,7 +116,7 @@ public abstract class BaseIT {
     }
 
     public synchronized void init() {
-        if (initialize == false) {
+        if (initialized == false) {
             createOrganization(ORG_HACKER_RANK);
             ConnectorDto connector = createTestConnector("Test", "V1");
             UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
@@ -127,7 +127,7 @@ public abstract class BaseIT {
             FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
             instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
             initiliazeContextforReport(user, accessKey);
-            initialize = true;
+            initialized = true;
         }
     }
 
@@ -139,6 +139,7 @@ public abstract class BaseIT {
         context.setAccessKey(fullAccessKeyDto.getKey());
         context.setChannelName(slackChannelV2);
         context.setPublishReport(publishReport);
+        context.setElectricaInstance(instance);
     }
 
     private void createSlackConnections(Long accessKey) {

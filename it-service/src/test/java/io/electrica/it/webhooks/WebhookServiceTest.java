@@ -6,8 +6,9 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.Collections;
 import java.util.Map;
@@ -15,15 +16,14 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class WebhookServiceTest extends BaseIT {
 
     private static final String WEBHOOK_PREFIX = "webhook-";
-
     private static final Map<String, String> TEST_WEBHOOK_PROPERTIES = Collections.singletonMap("a", "b");
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public void setUp() {
         super.init();
     }
 
