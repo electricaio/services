@@ -7,8 +7,9 @@ repositories {
         url "http://maven-repo.electrica.io"
     }
 }
- dependencyManagement {
+dependencyManagement {
     imports {
+        mavenBom "org.junit:junit-bom:${junit5Version}"
         mavenBom("io.electrica.integration:dependencies:${electricaIntegrationVersion}")
         mavenBom("io.electrica.sdk.java:dependencies:${electricaSDKJavaVersion}")
     }
@@ -25,34 +26,16 @@ dependencies {
     testCompile 'io.electrica.sdk.java:core-http'
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
-    testCompile "org.testng:testng:$testngVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api"
+	testRuntime "org.junit.jupiter:junit-jupiter-engine"
 
 }
 
 task integrationTest(type: Test) {
-    useTestNG()
-    // show standard out and standard error of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
-
-    // explicitly include or exclude tests
-//    exclude 'io/electrica/**'
-
-    // set heap size for the test JVM(s)
-    minHeapSize = "128m"
-    maxHeapSize = "512m"
-
-    // listen to events in the test execution lifecycle
-    beforeTest { descriptor ->
-        logger.lifecycle("Running test: " + descriptor)
-    }
-
-    // Fail the 'test' task on the first test failure
-    failFast = true
-
-    // listen to standard out and standard error of the test JVM(s)
-    onOutput { descriptor, event ->
-        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
-    }
+    useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
 
 integrationTest.onlyIf { project.hasProperty('execIntegrationTest') }
