@@ -5,18 +5,26 @@ import io.electrica.it.BaseIT;
 import io.electrica.it.auth.TokenDetails;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest extends BaseIT {
 
-    @BeforeAll
+    private static UserDto user;
+
     public void setUp() {
-        super.init();
+        createOrganization(ORG_HACKER_RANK);
+        user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+    }
+
+    @BeforeEach
+    public void setContext() {
+        if (user == null) {
+            setUp();
+        }
+        contextHolder.setContextForUser(user.getEmail());
     }
 
     @Test
@@ -32,7 +40,6 @@ public class UserServiceTest extends BaseIT {
 
     @Test
     void testAddUsersToOrganizations() {
-        UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         assertAll("createUseTest",
                 () -> assertTrue(contextHolder.getUsers().size() > 0),
                 () -> assertNotNull(user)
@@ -41,14 +48,11 @@ public class UserServiceTest extends BaseIT {
 
     @Test
     void testAddAccessKeyToUser() {
-        UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
         createAccessKey(user.getId(), "Test");
     }
 
     @Test
     void testLogin() {
-        UserDto user = contextHolder.getUsers().get(0);
         TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
         assertNotNull(tokenDetails.getAccessToken());
         assertNotNull(tokenDetails.getRefreshToken());
@@ -59,7 +63,6 @@ public class UserServiceTest extends BaseIT {
 
     @Test
     void testRefreshToken() {
-        UserDto user = contextHolder.getUsers().get(0);
         TokenDetails tokenDetails = tokenManager.getTokenDetailsForUser(user.getEmail(), user.getFirstName());
         TokenDetails refreshTokenDetail = tokenManager.getNewAccessTokenFromRefreshToken(tokenDetails);
         assertNotEquals(refreshTokenDetail.getAccessToken(), tokenDetails.getAccessToken());

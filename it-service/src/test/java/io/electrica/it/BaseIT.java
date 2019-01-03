@@ -10,14 +10,11 @@ import io.electrica.it.auth.TokenManager;
 import io.electrica.it.context.ContextHolder;
 import io.electrica.it.report.GenerateTestReport;
 import io.electrica.it.util.ReportContext;
-import io.electrica.sdk.java.core.Electrica;
-import io.electrica.sdk.java.core.http.impl.SingleInstanceHttpModule;
 import io.electrica.user.dto.*;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
 import io.electrica.webhook.feign.WebhookClient;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,10 +40,13 @@ public abstract class BaseIT {
     public static final String ORG_TOP_CODER = "TopCoder";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    private static final String DEFAULT_ACCESS_KEY_NAME = "development";
     public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
-    public static final String SLACK_CHANNEL_V2 = "Slack Channel V2";
-    private static Boolean initialized = false;
+    public static final Long DEFAULT_CONNECTOR_TYPE = 1L;
+    public static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
+        put("URL", "www.google.com");
+        put("Two", "Two");
+        put("Three", "Three");
+    }};
 
     @Inject
     public UserClient userClient;
@@ -75,9 +75,8 @@ public abstract class BaseIT {
     @Inject
     public WebhookClient webhookClient;
 
-    public static Electrica instance;
     private static final String CONNECTION_NAME_PREFIX = "connection-";
-    private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
+
 
     @Value("${it-service.connector.url}")
     public String connectorUrl;
@@ -87,90 +86,39 @@ public abstract class BaseIT {
     public String slackV1WebhookToken;
     @Value("${it-service.slack.v1.channel}")
     public String slackChannelV1;
-    @Value("${it-service.slack.v2.webhook-token}")
-    public String slackV2WebhookToken;
-    @Value("${it-service.slack.v2.channel}")
-    public String slackChannelV2;
     @Value("${it-service.invoker-service.url}")
     public String invokerServiceUrl;
     @Value("${it-service.publish-report}")
     public Boolean publishReport;
 
-    private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
-        put("URL", "www.google.com");
-        put("Two", "Two");
-        put("Three", "Three");
-    }};
-
     @Test
     public void checkMicroservices() {
         // Todo check  microservices are active
+        setReportingContext();
     }
 
-    public static void close() {
-        try {
-            instance.close();
-        } catch (Exception e) {
-            Assertions.fail(e.getMessage());
-        }
-    }
-
-    public synchronized void init() {
-        if (initialized == false) {
-            createOrganization(ORG_HACKER_RANK);
-            ConnectorDto connector = createTestConnector("Test", "V1");
-            UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-            contextHolder.setContextForUser(user.getEmail());
-            AccessKeyDto accessKey = createAccessKey(user.getId(), DEFAULT_ACCESS_KEY_NAME);
-            ConnectionDto connection = createConnection(getConnectionName(), connector, accessKey.getId());
-            createSlackConnections(accessKey.getId());
-            FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
-            instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
-            initiliazeContextforReport(user, accessKey);
-            initialized = true;
-        }
-    }
-
-    private void initiliazeContextforReport(UserDto user, AccessKeyDto accessKeyDto) {
+    private void setReportingContext() {
+        UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         contextHolder.setContextForUser(user.getEmail());
+        AccessKeyDto accessKeyDto = createAccessKey(user.getId(), "Report-" + getCurrTimeAsString());
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
         ReportContext context = ReportContext.getInstance().getInstance();
         context.setInvokerServiceUrl(invokerServiceUrl);
         context.setAccessKey(fullAccessKeyDto.getKey());
-        context.setChannelName(slackChannelV2);
         context.setPublishReport(publishReport);
-        context.setElectricaInstance(instance);
+        context.setSlackConnectionName(createSlackConnections(accessKeyDto.getId()).getName());
     }
 
-    private void createSlackConnections(Long accessKey) {
+    private ConnectionDto createSlackConnections(Long accessKey) {
         ConnectorDto slackV1Connector = connectorClient.findAll().getBody().stream()
                 .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_V1))
                 .findFirst().get();
-        createConnection(getConnectionName(), slackV1Connector, accessKey);
-
-        ConnectorDto slackV2Connector = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_V2))
-                .findFirst().get();
-        createConnection(getConnectionName(), slackV2Connector, accessKey);
+        return createConnection(getConnectionName(), slackV1Connector, accessKey);
     }
 
-    public ConnectorDto createTestConnector(String name, String version) {
-        contextHolder.setContextForAdmin();
-        String connectorName = createConnectorName(name, version);
-        CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
-                AuthorizationType.Token, connectorName, getCurrTimeInMillSeconds().toString(), version.toLowerCase(),
-                name, "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
-                "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
-                TEST_CONNECTOR_PROPERTIES);
-        return connectorClient.create(dto).getBody();
-    }
 
     public String getConnectionName() {
         return CONNECTION_NAME_PREFIX + getCurrTimeInMillSeconds();
-    }
-
-    public String createConnectorName(String name, String version) {
-        return name + " " + version + " " + getCurrTimeInMillSeconds();
     }
 
     public void setAuthorization(ConnectionDto connection, AuthorizationType authorizationType) {
@@ -183,7 +131,6 @@ public abstract class BaseIT {
                 break;
         }
     }
-
 
     public ConnectionDto createConnection(String name, ConnectorDto connector, Long accessKeyId) {
         CreateConnectionDto connectionDto = new CreateConnectionDto();
@@ -202,10 +149,6 @@ public abstract class BaseIT {
         switch (connectorDto.getName()) {
             case SLACK_CHANNEL_V1:
                 properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannelV1);
-                connectionDto.setProperties(properties);
-                break;
-            case SLACK_CHANNEL_V2:
-                properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannelV2);
                 connectionDto.setProperties(properties);
                 break;
         }
@@ -227,9 +170,6 @@ public abstract class BaseIT {
         switch (connectorDto.getName()) {
             case SLACK_CHANNEL_V1:
                 dto.setToken(slackV1WebhookToken);
-                break;
-            case SLACK_CHANNEL_V2:
-                dto.setToken(slackV2WebhookToken);
                 break;
             default:
                 dto.setToken("Test token");
@@ -273,6 +213,27 @@ public abstract class BaseIT {
 
     public String getCurrTimeAsString() {
         return String.valueOf(System.currentTimeMillis());
+    }
+
+    public ConnectorDto createConnector(String name, String version) {
+        contextHolder.setContextForAdmin();
+        String connectorName = createConnectorName(name, version);
+        CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
+                AuthorizationType.Token, connectorName, getCurrTimeInMillSeconds().toString(), version.toLowerCase(),
+                name, "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
+                "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
+                TEST_CONNECTOR_PROPERTIES);
+        return connectorClient.create(dto).getBody();
+    }
+
+    private String createConnectorName(String name, String version) {
+        return name + " " + version + " " + getCurrTimeInMillSeconds();
+    }
+
+    public ConnectionDto getNewConnectionForUser(UserDto user) {
+        AccessKeyDto accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
+        ConnectorDto connector = connectorClient.findAll().getBody().get(0);
+        return createConnection(getCurrTimeAsString(), connector, accessKey.getId());
     }
 
 }

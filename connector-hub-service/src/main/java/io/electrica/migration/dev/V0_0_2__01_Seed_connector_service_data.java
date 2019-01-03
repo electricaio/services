@@ -40,14 +40,14 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         connectorDtoService = context.getBean(ConnectorDtoService.class);
         connectorTypeRepository = context.getBean(ConnectorTypeRepository.class);
 
-        createSlackConnector("V1");
-        createSlackConnector("V2");
-        createGreenhouseApplicationConnector("V1");
-        createSCIMConnector("V1");
-        createSmartRecruitersApplicationsConnector("V1");
-        createLeverApplicationsConnector("V1");
-        createIncomingWebhooksConnector("V1");
-        createMySQLConnector("V1");
+        createSlackConnector("1");
+        createSlackConnector("2");
+        createGreenhouseApplicationConnector("1");
+        createSCIMConnector("1");
+        createSmartRecruitersApplicationsConnector("1");
+        createLeverApplicationsConnector("1");
+        createIncomingWebhooksConnector("1");
+        createMySQLConnector("1");
     }
 
     private void createSlackConnector(String version) {

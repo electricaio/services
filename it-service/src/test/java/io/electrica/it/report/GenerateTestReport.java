@@ -1,6 +1,5 @@
 package io.electrica.it.report;
 
-import io.electrica.it.BaseIT;
 import io.electrica.it.util.ReportContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +17,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.stream.Collectors.joining;
 
-
 public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, AfterTestExecutionCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenerateTestReport.class);
     private TestExecutionSummary summary;
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         summary = new TestExecutionSummary();
     }
 
@@ -43,7 +41,6 @@ public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, 
     public void afterAll(ExtensionContext context) {
         String payload = generatePayload();
         publishReport(payload);
-        BaseIT.close();
     }
 
     private void publishReport(String payload) {
