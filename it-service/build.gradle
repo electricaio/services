@@ -23,11 +23,13 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
     testCompile 'io.electrica.sdk.java:slack'
-    testCompile 'io.electrica.sdk.java:core-http'
+    testCompile 'io.electrica.sdk.java:echo'
+    testCompile 'io.electrica.sdk.java:core'
+    testCompile 'io.electrica.sdk.java:api'
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
-    testCompile "org.junit.jupiter:junit-jupiter-api"
-	testRuntime "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
 }
 

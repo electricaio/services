@@ -33,6 +33,10 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         put("Three", "Three");
     }};
 
+    Map<String, String> ECHO_PROPERTIES = new HashMap<String, String>() {{
+        put("URL", "https://www.electrica.io");
+    }};
+
 
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
@@ -40,73 +44,82 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         connectorDtoService = context.getBean(ConnectorDtoService.class);
         connectorTypeRepository = context.getBean(ConnectorTypeRepository.class);
 
-        createSlackConnector("V1");
-        createSlackConnector("V2");
-        createGreenhouseApplicationConnector("V1");
-        createSCIMConnector("V1");
-        createSmartRecruitersApplicationsConnector("V1");
-        createLeverApplicationsConnector("V1");
-        createIncomingWebhooksConnector("V1");
-        createMySQLConnector("V1");
+        createSlackConnector("Slack Channel V1", "1");
+        createEchoConnector("Echo Test V1", "1");
+        createGreenhouseApplicationConnector("Greenhouse Applications", "1");
+        createSCIMConnector("SCIM", "1");
+        createSmartRecruitersApplicationsConnector("SmartRecruiters Applications", "1");
+        createLeverApplicationsConnector("Lever Applications", "1");
+        createIncomingWebhooksConnector("Incoming Webhooks", "1");
+        createMySQLConnector("MySQL", "1");
     }
 
-    private void createSlackConnector(String version) {
+    private void createSlackConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Token, "Slack Channel " + version, "channel", version.toLowerCase(), "slack",
+                AuthorizationType.Token, name, "channel", version.toLowerCase(), "slack",
                 SOURCE_URL, "https://www.slack.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/slack-logo.png", "Slack Channel " + version + " Connector",
                 SLACK_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createGreenhouseApplicationConnector(String version) {
+    private void createEchoConnector(String name, String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
+                AuthorizationType.None, name, "test", version.toLowerCase(),
+                "echo", SOURCE_URL, "https://www.electrica.io", SDK_URL,
+                "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-original-577x577/s3/0022/0974/brand.gif",
+                "Echo Test Connector", ECHO_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createGreenhouseApplicationConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, "Greenhouse Applications", "applications", version.toLowerCase(), "greenhouse",
+                AuthorizationType.Token, name, "applications", version.toLowerCase(), "greenhouse",
                 SOURCE_URL, "https://www.greenhouse.io", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/greenhouse-logo.png",
                 "Greenhouse Applications Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createSCIMConnector(String version) {
+    private void createSCIMConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Token, "SCIM", "user", version.toLowerCase(), "scim",
+                AuthorizationType.Token, name, "user", version.toLowerCase(), "scim",
                 SOURCE_URL, "https://tools.ietf.org/html/rfc7644", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/scim-logo.png",
                 "SCIM Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createSmartRecruitersApplicationsConnector(String version) {
+    private void createSmartRecruitersApplicationsConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, "SmartRecruiters Applications", "applications", version.toLowerCase(), "smartrecruiters",
+                AuthorizationType.Token, name, "applications", version.toLowerCase(), "smartrecruiters",
                 SOURCE_URL, "https://www.smartrecruiters.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/smartrecruiters-logo.png",
                 "SmartRecruiters Applications Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createLeverApplicationsConnector(String version) {
+    private void createLeverApplicationsConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, "Lever Applications", "applications", version.toLowerCase(), "lever",
+                AuthorizationType.Token, name, "applications", version.toLowerCase(), "lever",
                 SOURCE_URL, "https://www.lever.co", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/lever-logo.png",
                 "Lever Applications Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createIncomingWebhooksConnector(String version) {
+    private void createIncomingWebhooksConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.None, "Incoming Webhooks", "incoming", version.toLowerCase(), "webhooks",
+                AuthorizationType.None, name, "incoming", version.toLowerCase(), "webhooks",
                 SOURCE_URL, "https://www.electrica.io", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/webhooks-logo.png",
                 "Incoming Webhooks Connector", TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 
-    private void createMySQLConnector(String version) {
+    private void createMySQLConnector(String name, String version) {
         CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Basic, "MySQL", "db", version.toLowerCase(), "mysql",
+                AuthorizationType.Basic, name, "db", version.toLowerCase(), "mysql",
                 SOURCE_URL, "https://www.mysql.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/mysql-logo.png",
                 "MySQL Connector", TEST_PROPERTIES);

@@ -9,10 +9,7 @@ it-service:
   slack:
     v1:
       webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
-      channel: slack-sdk-test
-    v2:
-      webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
-      channel: slack-sdk-test
+      test-result-channel: slack-sdk-test
   publish-report: true
 feign:
   userService.url: localhost

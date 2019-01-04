@@ -3,8 +3,10 @@ package io.electrica.it.report;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.it.util.ReportContext;
-import io.electrica.sdk.java.core.Electrica;
-import io.electrica.sdk.java.slack.channel.v2.SlackChannelV2Manager;
+import io.electrica.sdk.java.api.Electrica;
+import io.electrica.sdk.java.core.SingleInstanceHttpModule;
+import io.electrica.sdk.java.slack.channel.v1.SlackChannelV1;
+import io.electrica.sdk.java.slack.channel.v1.SlackChannelV1Manager;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -20,13 +22,14 @@ public class SlackMessageSender {
     private static final String GREEN_COLOR = "#36a64f";
 
     public void send(String payload) {
-        try {
-            String message = payload;
-            ReportContext context = ReportContext.getInstance();
+        ReportContext context = ReportContext.getInstance();
 
-            Electrica instance = context.getElectricaInstance();
-            SlackChannelV2Manager channelManager = new SlackChannelV2Manager(instance);
-            channelManager.sendMessage(context.getChannelName(), message);
+        try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
+                context.getAccessKey())) {
+            String message = payload;
+            SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
+            SlackChannelV1 channelV1 = channelManager.getChannelByName(context.getChannelName());
+            channelV1.send(message);
         } catch (Exception e) {
             LOGGER.error("Exception while sending message to slack. " + e.getMessage());
         }

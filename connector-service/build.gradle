@@ -25,6 +25,9 @@ dependencies {
     runtime("io.electrica.integration:slack") {
         transitive = false
     }
+    runtime("io.electrica.integration:echo") {
+        transitive = false
+    }
 
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
