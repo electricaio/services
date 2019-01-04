@@ -1,4 +1,4 @@
-rootProject.name = 'electrica-services'
+rootProject.name = 'services-all'
 include 'common-jpa'
 include 'user-service'
 include 'common'

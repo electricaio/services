@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import static io.electrica.sdk.java.slack.channel.v1.SlackChannelV1.CHANNEL_NAME_PROPERTY_KEY;
+import static io.electrica.sdk.java8.slack.channel.v1.SlackChannelV1.CHANNEL_NAME_PROPERTY_KEY;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -36,14 +36,13 @@ import static io.electrica.sdk.java.slack.channel.v1.SlackChannelV1.CHANNEL_NAME
 @ExtendWith(GenerateTestReport.class)
 public abstract class BaseIT {
 
-    public static final String ORG_HACKER_RANK = "HackerRank";
-    public static final String ORG_TOP_CODER = "TopCoder";
+    protected static final String ORG_HACKER_RANK = "HackerRank";
+    protected static final String ORG_TOP_CODER = "TopCoder";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
-    public static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
-    public static final Long DEFAULT_CONNECTOR_TYPE = 1L;
-    public static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
+    private static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
+    private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
+    private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
         put("Two", "Two");
         put("Three", "Three");

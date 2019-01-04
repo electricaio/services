@@ -12,12 +12,12 @@ import io.electrica.connector.hub.dto.sdk.BasicTypedAuthorizationDto;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
 import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
-import io.electrica.integration.spi.context.Authorization;
-import io.electrica.integration.spi.context.BasicAuthorization;
-import io.electrica.integration.spi.context.ExecutionContext;
-import io.electrica.integration.spi.context.TokenAuthorization;
-import io.electrica.integration.spi.exception.ExceptionCodes;
-import io.electrica.integration.spi.exception.IntegrationException;
+import io.electrica.connector.spi.context.Authorization;
+import io.electrica.connector.spi.context.BasicAuthorization;
+import io.electrica.connector.spi.context.ExecutionContext;
+import io.electrica.connector.spi.context.TokenAuthorization;
+import io.electrica.connector.spi.exception.ExceptionCodes;
+import io.electrica.connector.spi.exception.IntegrationException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;

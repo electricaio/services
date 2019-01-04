@@ -12,7 +12,7 @@ import io.electrica.connector.hub.dto.AuthorizationType;
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.ConnectorDto;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
-import io.electrica.integration.spi.exception.ExceptionCodes;
+import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.test.context.ForAccessKey;
 import org.junit.Test;
 

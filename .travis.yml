@@ -1,3 +1,7 @@
+branches:
+  only:
+    - master
+
 services:
   - postgresql
 
@@ -5,7 +9,6 @@ addons:
   postgresql: "9.6"
 
 language: java
-
 jdk:
   - openjdk8
 

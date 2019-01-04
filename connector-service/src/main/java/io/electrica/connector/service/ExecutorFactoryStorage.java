@@ -1,8 +1,8 @@
 package io.electrica.connector.service;
 
 import io.electrica.connector.dto.ConnectorExecutorContext;
-import io.electrica.integration.spi.ConnectorExecutorFactory;
-import io.electrica.integration.spi.ConnectorProperties;
+import io.electrica.connector.spi.ConnectorExecutorFactory;
+import io.electrica.connector.spi.ConnectorProperties;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
