@@ -3,8 +3,6 @@ package io.electrica.it.report;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.it.util.ReportContext;
-import io.electrica.sdk.java.api.Connection;
-import io.electrica.sdk.java.api.Connector;
 import io.electrica.sdk.java.api.Electrica;
 import io.electrica.sdk.java.core.SingleInstanceHttpModule;
 import io.electrica.sdk.java.slack.channel.v1.SlackChannelV1;
@@ -29,9 +27,8 @@ public class SlackMessageSender {
         try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
                 context.getAccessKey())) {
             String message = payload;
-            Connector connector = instance.connector(SlackChannelV1Manager.ERN);
-            Connection connection = connector.connection(context.getSlackConnectionName());
-            SlackChannelV1 channelV1 = new SlackChannelV1(connection);
+            SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);
+            SlackChannelV1 channelV1 = channelManager.getChannelByName(context.getChannelName());
             channelV1.send(message);
         } catch (Exception e) {
             LOGGER.error("Exception while sending message to slack. " + e.getMessage());

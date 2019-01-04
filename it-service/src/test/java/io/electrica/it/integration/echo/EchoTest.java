@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EchoTest extends BaseIT {
 
     private static final String TEST_STRING = "Hello";
+    private static final String ECHO_TEST_CONNECTOR_ERN = "ern://echo:test:1";
     private Electrica instance;
     private EchoTestV1 echoTest;
 
@@ -128,7 +129,7 @@ public class EchoTest extends BaseIT {
         AsyncResponseHandler result = new AsyncResponseHandler();
         echoTest.asyncEcho(TEST_STRING, result);
         String out = result.awaitResponse(60L, TimeUnit.SECONDS);
-        assertEquals(out, TEST_STRING);
+        assertEquals(TEST_STRING, out);
     }
 
     @Test
@@ -137,13 +138,13 @@ public class EchoTest extends BaseIT {
         Assertions.assertThrows(IntegrationException.class, () -> {
             echoTest.asyncEcho(TEST_STRING, Boolean.TRUE, result);
             String out = result.awaitResponse(60L, TimeUnit.SECONDS);
-            assertEquals(out, TEST_STRING);
+            assertEquals(TEST_STRING, out);
         });
     }
 
     private ConnectorDto getEchoConnector() {
         return connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), "Echo"))
+                .filter(c -> Objects.equals(c.getErn(), ECHO_TEST_CONNECTOR_ERN))
                 .findFirst().get();
     }
 

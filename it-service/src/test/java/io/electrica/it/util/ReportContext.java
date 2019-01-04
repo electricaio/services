@@ -12,6 +12,7 @@ public class ReportContext {
     private String invokerServiceUrl;
     private Boolean publishReport;
     private String slackConnectionName;
+    private String channelName;
 
     private ReportContext() {
     }

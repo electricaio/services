@@ -40,7 +40,8 @@ public abstract class BaseIT {
     public static final String ORG_TOP_CODER = "TopCoder";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    public static final String SLACK_CHANNEL_1 = "Slack Channel 1";
+    public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
+    public static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
     public static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     public static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
@@ -85,8 +86,8 @@ public abstract class BaseIT {
     public String sdkUrl;
     @Value("${it-service.slack.v1.webhook-token}")
     public String slackV1WebhookToken;
-    @Value("${it-service.slack.v1.channel}")
-    public String slackChannelV1;
+    @Value("${it-service.slack.v1.test-result-channel}")
+    public String slackTestResultChannel;
     @Value("${it-service.invoker-service.url}")
     public String invokerServiceUrl;
     @Value("${it-service.publish-report}")
@@ -113,13 +114,14 @@ public abstract class BaseIT {
             context.setAccessKey(fullAccessKeyDto.getKey());
             context.setPublishReport(publishReport);
             context.setSlackConnectionName(createSlackConnections(accessKeyDto.getId()).getName());
+            context.setChannelName(slackTestResultChannel);
             initialized = true;
         }
     }
 
     private ConnectionDto createSlackConnections(Long accessKey) {
         ConnectorDto slackV1Connector = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_1))
+                .filter(c -> Objects.equals(c.getErn(), SLACK_CHANNEL_V1_ERN))
                 .findFirst().get();
         return createConnection(getConnectionName(), slackV1Connector, accessKey);
     }
@@ -154,9 +156,9 @@ public abstract class BaseIT {
     public void setPropertiesForConnection(CreateConnectionDto connectionDto, Long connectorId) {
         ConnectorDto connectorDto = connectorClient.getConnector(connectorId).getBody();
         Map<String, String> properties = new HashMap<>();
-        switch (connectorDto.getName()) {
-            case SLACK_CHANNEL_1:
-                properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannelV1);
+        switch (connectorDto.getErn()) {
+            case SLACK_CHANNEL_V1_ERN:
+                properties.put(CHANNEL_NAME_PROPERTY_KEY, slackTestResultChannel);
                 connectionDto.setProperties(properties);
                 break;
         }
@@ -175,8 +177,8 @@ public abstract class BaseIT {
     public CreateTokenAuthorizationDto createTokenAuthorizationDto(ConnectionDto connection) {
         ConnectorDto connectorDto = connectorClient.getConnector(connection.getConnectorId()).getBody();
         final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
-        switch (connectorDto.getName()) {
-            case SLACK_CHANNEL_1:
+        switch (connectorDto.getErn()) {
+            case SLACK_CHANNEL_V1_ERN:
                 dto.setToken(slackV1WebhookToken);
                 break;
             default:
@@ -240,7 +242,8 @@ public abstract class BaseIT {
 
     public ConnectionDto getNewConnectionForUser(UserDto user) {
         AccessKeyDto accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
-        ConnectorDto connector = connectorClient.findAll().getBody().get(0);
+        ConnectorDto connector = connectorClient.findAll().getBody().stream()
+                .filter(c -> Objects.equals(c.getErn(), SLACK_CHANNEL_V1_ERN)).findFirst().get();
         return createConnection(getCurrTimeAsString(), connector, accessKey.getId());
     }
 
