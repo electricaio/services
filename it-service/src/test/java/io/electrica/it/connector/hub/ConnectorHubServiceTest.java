@@ -8,20 +8,24 @@ import io.electrica.connector.hub.dto.TokenAuthorizationDto;
 import io.electrica.it.BaseIT;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class ConnectorHubServiceTest extends BaseIT {
 
-    private static UserDto user;
+    private UserDto user;
 
+    @BeforeAll
     public void setUp() {
-        createOrganization(ORG_HACKER_RANK);
+        init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         contextHolder.setContextForUser(user.getEmail());
         getNewConnectionForUser(user);
@@ -29,9 +33,6 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @BeforeEach
     void setContext() {
-        if (user == null) {
-            setUp();
-        }
         contextHolder.setContextForUser(user.getEmail());
     }
 

@@ -40,13 +40,14 @@ public abstract class BaseIT {
     public static final String ORG_TOP_CODER = "TopCoder";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    public static final String SLACK_CHANNEL_V1 = "Slack Channel V1";
+    public static final String SLACK_CHANNEL_1 = "Slack Channel 1";
     public static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     public static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
         put("Two", "Two");
         put("Three", "Three");
     }};
+    private static Boolean initialized = false;
 
     @Inject
     public UserClient userClient;
@@ -94,24 +95,31 @@ public abstract class BaseIT {
     @Test
     public void checkMicroservices() {
         // Todo check  microservices are active
+    }
+
+    public void init() {
+        createOrganization(ORG_HACKER_RANK);
         setReportingContext();
     }
 
     private void setReportingContext() {
-        UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
-        AccessKeyDto accessKeyDto = createAccessKey(user.getId(), "Report-" + getCurrTimeAsString());
-        FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
-        ReportContext context = ReportContext.getInstance().getInstance();
-        context.setInvokerServiceUrl(invokerServiceUrl);
-        context.setAccessKey(fullAccessKeyDto.getKey());
-        context.setPublishReport(publishReport);
-        context.setSlackConnectionName(createSlackConnections(accessKeyDto.getId()).getName());
+        if (!initialized) {
+            UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+            contextHolder.setContextForUser(user.getEmail());
+            AccessKeyDto accessKeyDto = createAccessKey(user.getId(), "Report-" + getCurrTimeAsString());
+            FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
+            ReportContext context = ReportContext.getInstance().getInstance();
+            context.setInvokerServiceUrl(invokerServiceUrl);
+            context.setAccessKey(fullAccessKeyDto.getKey());
+            context.setPublishReport(publishReport);
+            context.setSlackConnectionName(createSlackConnections(accessKeyDto.getId()).getName());
+            initialized = true;
+        }
     }
 
     private ConnectionDto createSlackConnections(Long accessKey) {
         ConnectorDto slackV1Connector = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_V1))
+                .filter(c -> Objects.equals(c.getName(), SLACK_CHANNEL_1))
                 .findFirst().get();
         return createConnection(getConnectionName(), slackV1Connector, accessKey);
     }
@@ -147,7 +155,7 @@ public abstract class BaseIT {
         ConnectorDto connectorDto = connectorClient.getConnector(connectorId).getBody();
         Map<String, String> properties = new HashMap<>();
         switch (connectorDto.getName()) {
-            case SLACK_CHANNEL_V1:
+            case SLACK_CHANNEL_1:
                 properties.put(CHANNEL_NAME_PROPERTY_KEY, slackChannelV1);
                 connectionDto.setProperties(properties);
                 break;
@@ -168,7 +176,7 @@ public abstract class BaseIT {
         ConnectorDto connectorDto = connectorClient.getConnector(connection.getConnectorId()).getBody();
         final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
         switch (connectorDto.getName()) {
-            case SLACK_CHANNEL_V1:
+            case SLACK_CHANNEL_1:
                 dto.setToken(slackV1WebhookToken);
                 break;
             default:

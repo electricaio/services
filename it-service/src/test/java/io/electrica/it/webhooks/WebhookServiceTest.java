@@ -8,8 +8,9 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.Collections;
 import java.util.Map;
@@ -17,27 +18,21 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class WebhookServiceTest extends BaseIT {
 
     private static final String WEBHOOK_PREFIX = "webhook-";
     private static final Map<String, String> TEST_WEBHOOK_PROPERTIES = Collections.singletonMap("a", "b");
-    private static UserDto user;
+    private UserDto user;
 
+    @BeforeAll
     public void setUp() {
-        createOrganization(ORG_HACKER_RANK);
+        init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         ConnectorDto connectorDto = createConnector(WEBHOOK_PREFIX + getCurrTimeAsString(), "1");
         contextHolder.setContextForUser(user.getEmail());
         AccessKeyDto accessKeyDto = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
         createConnection("webhookTest", connectorDto, accessKeyDto.getId());
-    }
-
-    @BeforeEach
-    public void setContext() {
-        if (user == null) {
-            setUp();
-        }
-        contextHolder.setContextForUser(user.getEmail());
     }
 
     @Test

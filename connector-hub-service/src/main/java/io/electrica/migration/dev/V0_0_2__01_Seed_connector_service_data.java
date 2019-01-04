@@ -41,7 +41,7 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
         connectorTypeRepository = context.getBean(ConnectorTypeRepository.class);
 
         createSlackConnector("1");
-        createSlackConnector("2");
+        createEchoConnector("1");
         createGreenhouseApplicationConnector("1");
         createSCIMConnector("1");
         createSmartRecruitersApplicationsConnector("1");
@@ -56,6 +56,15 @@ public class V0_0_2__01_Seed_connector_service_data implements SpringJdbcMigrati
                 SOURCE_URL, "https://www.slack.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/slack-logo.png", "Slack Channel " + version + " Connector",
                 SLACK_PROPERTIES);
+        connectorDtoService.create(dto);
+    }
+
+    private void createEchoConnector(String version) {
+        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
+                    AuthorizationType.Token, "Echo", "test", version.toLowerCase(),
+                    "echo", SOURCE_URL, "https://echo.com", SDK_URL,
+                    "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "echo desciption",
+                    TEST_PROPERTIES);
         connectorDtoService.create(dto);
     }
 

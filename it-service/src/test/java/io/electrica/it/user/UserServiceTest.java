@@ -5,25 +5,21 @@ import io.electrica.it.BaseIT;
 import io.electrica.it.auth.TokenDetails;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest extends BaseIT {
 
-    private static UserDto user;
+    private UserDto user;
 
+    @BeforeAll
     public void setUp() {
-        createOrganization(ORG_HACKER_RANK);
+        init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-    }
-
-    @BeforeEach
-    public void setContext() {
-        if (user == null) {
-            setUp();
-        }
         contextHolder.setContextForUser(user.getEmail());
     }
 

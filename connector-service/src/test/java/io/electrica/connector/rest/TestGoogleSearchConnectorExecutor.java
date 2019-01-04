@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.electrica.integration.spi.Validations.required;
+import static io.electrica.integration.spi.Validations.requiredParametersField;
 import static io.electrica.integration.spi.Validations.requiredPayloadField;
 
 public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
@@ -48,7 +48,7 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
     @Nullable
     @Override
     public Object run() throws IntegrationException {
-        Integer start = required(parameters.getStart(), "start");
+        Integer start = requiredParametersField(parameters.getStart(), "start");
         String query = requiredPayloadField(payload.getQuery(), "query");
 
         String url = String.format("https://www.google.ru/search?q=%s&start=%d", query, start);

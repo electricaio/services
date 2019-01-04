@@ -11,7 +11,6 @@ import io.electrica.sdk.java.slack.channel.v1.SlackChannelV1;
 import io.electrica.sdk.java.slack.channel.v1.SlackChannelV1Manager;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,24 +24,17 @@ public class SlackMessageSender {
     private static final String GREEN_COLOR = "#36a64f";
 
     public void send(String payload) {
-        Electrica instance = null;
-        try {
+        ReportContext context = ReportContext.getInstance();
+
+        try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
+                context.getAccessKey())) {
             String message = payload;
-            ReportContext context = ReportContext.getInstance();
-            instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
-                    context.getAccessKey());
             Connector connector = instance.connector(SlackChannelV1Manager.ERN);
             Connection connection = connector.connection(context.getSlackConnectionName());
             SlackChannelV1 channelV1 = new SlackChannelV1(connection);
             channelV1.send(message);
         } catch (Exception e) {
             LOGGER.error("Exception while sending message to slack. " + e.getMessage());
-        } finally {
-            try {
-                instance.close();
-            } catch (Exception exception) {
-                Assert.fail("Electrica instance exception on closing:" + exception.getMessage());
-            }
         }
     }
 
