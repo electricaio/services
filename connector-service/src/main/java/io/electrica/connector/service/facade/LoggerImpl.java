@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 
 // ToDo wrap logs with Marker identities like instanceId, orgId, userId, accessKeyId, invocationId,
 // ToDo connectorId, connectionId
-public class LoggerImpl implements io.electrica.integration.spi.service.Logger {
+public class LoggerImpl implements io.electrica.connector.spi.service.Logger {
 
     private final Logger delegate;
 

@@ -4,13 +4,13 @@ import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.ConnectorDto;
 import io.electrica.it.BaseIT;
-import io.electrica.sdk.java.api.Callback;
-import io.electrica.sdk.java.api.Connection;
-import io.electrica.sdk.java.api.Connector;
-import io.electrica.sdk.java.api.Electrica;
-import io.electrica.sdk.java.api.exception.IntegrationException;
-import io.electrica.sdk.java.core.SingleInstanceHttpModule;
-import io.electrica.sdk.java.echo.test.v1.EchoTestV1;
+import io.electrica.sdk.java8.api.Callback;
+import io.electrica.sdk.java8.api.Connection;
+import io.electrica.sdk.java8.api.Connector;
+import io.electrica.sdk.java8.api.Electrica;
+import io.electrica.sdk.java8.api.exception.IntegrationException;
+import io.electrica.sdk.java8.core.SingleInstanceHttpModule;
+import io.electrica.sdk.java8.echo.test.v1.EchoTestV1;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
-public class EchoTest extends BaseIT {
+class EchoTest extends BaseIT {
 
     private static final String TEST_STRING = "Hello";
     private static final String ECHO_TEST_CONNECTOR_ERN = "ern://echo:test:1";
@@ -35,7 +35,7 @@ public class EchoTest extends BaseIT {
     private EchoTestV1 echoTest;
 
     @BeforeAll
-    public void setUp() {
+    void setUp() {
         init();
         UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         ConnectorDto connectorDto = getEchoConnector();
@@ -50,7 +50,7 @@ public class EchoTest extends BaseIT {
     }
 
     @AfterAll
-    public void tearDown() {
+    void tearDown() {
         try {
             instance.close();
         } catch (Exception e) {
@@ -59,85 +59,85 @@ public class EchoTest extends BaseIT {
     }
 
     @Test
-    public void testPing() throws Exception {
+    void testPing() throws Exception {
         echoTest.ping();
     }
 
     @Test
-    public void testPingWithException() {
+    void testPingWithException() {
         Assertions.assertThrows(IntegrationException.class, () -> {
             echoTest.ping(Boolean.TRUE);
         });
     }
 
     @Test
-    public void testPingWithTimeout() throws Exception {
+    void testPingWithTimeout() throws Exception {
         echoTest.ping(60L, TimeUnit.SECONDS);
     }
 
     @Test
-    public void testPingWithTimeoutAndException() {
+    void testPingWithTimeoutAndException() {
         Assertions.assertThrows(IntegrationException.class, () -> {
             echoTest.ping(Boolean.TRUE, 60L, TimeUnit.SECONDS);
         });
     }
 
     @Test
-    public void testAsyncPing() throws Exception {
+    void testAsyncPing() throws Exception {
         AsyncResponseHandler voidHandler = new AsyncResponseHandler();
         echoTest.asyncPing(voidHandler);
-        voidHandler.awaitResponse(60L, TimeUnit.SECONDS);
+        voidHandler.awaitResponse();
     }
 
     @Test
-    public void testAsyncPingWithException() {
+    void testAsyncPingWithException() {
         Assertions.assertThrows(IntegrationException.class, () -> {
             AsyncResponseHandler voidHandler = new AsyncResponseHandler();
             echoTest.asyncPing(Boolean.TRUE, voidHandler);
-            voidHandler.awaitResponse(60L, TimeUnit.SECONDS);
+            voidHandler.awaitResponse();
         });
     }
 
     @Test
-    public void testEcho() throws Exception {
+    void testEcho() throws Exception {
         String result = echoTest.echo(TEST_STRING);
         assertEquals(result, TEST_STRING);
     }
 
     @Test
-    public void testEchoWithException() {
+    void testEchoWithException() {
         Assertions.assertThrows(IntegrationException.class, () -> {
             echoTest.echo(TEST_STRING, Boolean.TRUE);
         });
     }
 
     @Test
-    public void testEchoWithTimeout() throws Exception {
+    void testEchoWithTimeout() throws Exception {
         String result = echoTest.echo(TEST_STRING, 60L, TimeUnit.SECONDS);
         assertEquals(result, TEST_STRING);
     }
 
     @Test
-    public void testEchoWithExceptionAndTimeout() {
+    void testEchoWithExceptionAndTimeout() {
         Assertions.assertThrows(IntegrationException.class, () -> {
             echoTest.echo(TEST_STRING, Boolean.TRUE, 60L, TimeUnit.SECONDS);
         });
     }
 
     @Test
-    public void testEchoWithCallback() throws Exception {
+    void testEchoWithCallback() throws Exception {
         AsyncResponseHandler result = new AsyncResponseHandler();
         echoTest.asyncEcho(TEST_STRING, result);
-        String out = result.awaitResponse(60L, TimeUnit.SECONDS);
+        String out = result.awaitResponse();
         assertEquals(TEST_STRING, out);
     }
 
     @Test
-    public void testEchoWithCallbackException() {
-        AsyncResponseHandler result = new AsyncResponseHandler();
+    void testEchoWithCallbackException() {
         Assertions.assertThrows(IntegrationException.class, () -> {
+            AsyncResponseHandler result = new AsyncResponseHandler();
             echoTest.asyncEcho(TEST_STRING, Boolean.TRUE, result);
-            String out = result.awaitResponse(60L, TimeUnit.SECONDS);
+            String out = result.awaitResponse();
             assertEquals(TEST_STRING, out);
         });
     }
@@ -163,8 +163,8 @@ public class EchoTest extends BaseIT {
         }
 
         @SneakyThrows
-        private String awaitResponse(Long timeout, TimeUnit unit) {
-            Object[] responseContainer = responseQueue.poll(timeout, unit);
+        private String awaitResponse() {
+            Object[] responseContainer = responseQueue.poll(60, TimeUnit.SECONDS);
             if (responseContainer == null) {
                 throw new TimeoutException();
             }

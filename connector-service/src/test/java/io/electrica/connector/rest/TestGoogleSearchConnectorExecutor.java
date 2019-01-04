@@ -1,12 +1,9 @@
 package io.electrica.connector.rest;
 
 import com.google.auto.service.AutoService;
-import io.electrica.integration.spi.ConnectorExecutor;
-import io.electrica.integration.spi.ConnectorExecutorFactory;
-import io.electrica.integration.spi.ConnectorProperties;
-import io.electrica.integration.spi.ServiceFacade;
-import io.electrica.integration.spi.exception.Exceptions;
-import io.electrica.integration.spi.exception.IntegrationException;
+import io.electrica.connector.spi.*;
+import io.electrica.connector.spi.exception.Exceptions;
+import io.electrica.connector.spi.exception.IntegrationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +16,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static io.electrica.integration.spi.Validations.requiredParametersField;
-import static io.electrica.integration.spi.Validations.requiredPayloadField;
 
 public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
 
@@ -48,8 +42,8 @@ public class TestGoogleSearchConnectorExecutor implements ConnectorExecutor {
     @Nullable
     @Override
     public Object run() throws IntegrationException {
-        Integer start = requiredParametersField(parameters.getStart(), "start");
-        String query = requiredPayloadField(payload.getQuery(), "query");
+        Integer start = Validations.requiredParametersField(parameters.getStart(), "start");
+        String query = Validations.requiredPayloadField(payload.getQuery(), "query");
 
         String url = String.format("https://www.google.ru/search?q=%s&start=%d", query, start);
 
