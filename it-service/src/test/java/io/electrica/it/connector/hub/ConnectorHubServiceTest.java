@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
-    import java.util.Objects;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +23,7 @@ public class ConnectorHubServiceTest extends BaseIT {
     @BeforeAll
     public void setUp() {
         init();
-        user = createUser(ORG_HACKER_RANK, RoleType.SuperAdmin);
+        user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         contextHolder.setContextForUser(user.getEmail());
         getNewConnectionForUser(user);
     }
@@ -104,16 +104,9 @@ public class ConnectorHubServiceTest extends BaseIT {
     public void testUpdateConnection() {
         ConnectionDto connection = getNewConnectionForUser(user);
 
-        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
-        updateConnectionDto.setId(connection.getId());
-        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
-        updateConnectionDto.setName("updated name");
-        updateConnectionDto.setAccessKeyId(20L);
+        connection.setName("updated name");
 
-        ConnectionDto connectionDto = connectionClient.update(connection.getId(), updateConnectionDto).getBody();
-
-        assertEquals(connectionDto.getName(), updateConnectionDto.getName());
-        assertEquals(connectionDto.getAccessKeyId(), updateConnectionDto.getAccessKeyId());
-
+        ConnectionDto connectionDto = connectionClient.update(connection.getId(), connection).getBody();
+        assertEquals(connectionDto.getName(), connection.getName());
     }
 }

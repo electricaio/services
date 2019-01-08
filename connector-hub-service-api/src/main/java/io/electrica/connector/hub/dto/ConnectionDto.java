@@ -18,7 +18,6 @@ public class ConnectionDto extends CreateConnectionDto {
     @NotNull
     private Long revisionVersion;
 
-    @NotNull
     private Long authorizationId;
 
     private LocalDateTime createdAt;

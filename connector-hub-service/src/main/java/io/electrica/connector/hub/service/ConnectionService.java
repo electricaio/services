@@ -40,11 +40,10 @@ public class ConnectionService extends AbstractService<Connection> {
     @Override
     protected void executeUpdate(Connection merged, Connection update) {
         merged.setName(update.getName());
-        merged.setAccessKeyId(update.getAccessKeyId());
         merged.setProperties(update.getProperties());
 
         Authorization authorization = update.getAuthorization();
-        if (authorization != null) {
+        if (authorization.getId() != null) {
             Authorization authorizationRef = getReference(Authorization.class, authorization.getId());
             merged.setAuthorization(authorizationRef);
         }

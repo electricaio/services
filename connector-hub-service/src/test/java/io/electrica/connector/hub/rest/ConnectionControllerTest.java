@@ -20,7 +20,9 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -612,7 +614,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto connection = connectionController.create(dto).getBody();
 
-        connectionController.update(connection.getId(),  new UpdateConnectionDto());
+        connectionController.update(connection.getId(), connection);
     }
 
     @Test
@@ -622,7 +624,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
             ReadActiveConnection,
             AssociateAccessKeyToConnector
     })
-    public void testUpdateAccessKey() {
+    public void testUpdateProperties() {
         final Long connectorId = connectorController
                 .create(createHackerRankConnectorDto())
                 .getBody()
@@ -635,15 +637,16 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto connection = connectionController.create(dto).getBody();
 
-        Long newAccessKeyId = accessKeyId + 10;
-        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
-        updateConnectionDto.setAccessKeyId(newAccessKeyId);
-        updateConnectionDto.setId(connection.getId());
-        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+        String updateKey = "new key";
+        String updateValue = "new key";
 
-        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+        Map<String, String> properties = new HashMap<>();
+        properties.put(updateKey, updateValue);
+        connection.setProperties(properties);
 
-        assertEquals(update.getBody().getAccessKeyId(), newAccessKeyId);
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), connection);
+        assertEquals(update.getBody().getProperties().get(updateKey), updateValue);
+
     }
 
     @Test
@@ -669,12 +672,9 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         String updatedName = "NEW NAME";
 
-        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
-        updateConnectionDto.setName(updatedName);
-        updateConnectionDto.setId(connection.getId());
-        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+        connection.setName(updatedName);
 
-        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), connection);
 
         assertEquals(update.getBody().getName(), updatedName);
     }
