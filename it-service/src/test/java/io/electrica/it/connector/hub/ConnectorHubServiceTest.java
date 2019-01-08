@@ -1,10 +1,7 @@
 package io.electrica.it.connector.hub;
 
 import io.electrica.common.security.RoleType;
-import io.electrica.connector.hub.dto.AuthorizationType;
-import io.electrica.connector.hub.dto.ConnectionDto;
-import io.electrica.connector.hub.dto.ConnectorDto;
-import io.electrica.connector.hub.dto.TokenAuthorizationDto;
+import io.electrica.connector.hub.dto.*;
 import io.electrica.it.BaseIT;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
@@ -14,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
-import java.util.Objects;
+    import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +23,7 @@ public class ConnectorHubServiceTest extends BaseIT {
     @BeforeAll
     public void setUp() {
         init();
-        user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+        user = createUser(ORG_HACKER_RANK, RoleType.SuperAdmin);
         contextHolder.setContextForUser(user.getEmail());
         getNewConnectionForUser(user);
     }
@@ -101,5 +98,22 @@ public class ConnectorHubServiceTest extends BaseIT {
         connectionClient.delete(con.getId());
         int updatedCount = connectionClient.findAllByUser(user.getId(), null).getBody().size();
         assertEquals(connectionCount - 1, updatedCount);
+    }
+
+    @Test
+    public void testUpdateConnection() {
+        ConnectionDto connection = getNewConnectionForUser(user);
+
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+        updateConnectionDto.setName("updated name");
+        updateConnectionDto.setAccessKeyId(20L);
+
+        ConnectionDto connectionDto = connectionClient.update(connection.getId(), updateConnectionDto).getBody();
+
+        assertEquals(connectionDto.getName(), updateConnectionDto.getName());
+        assertEquals(connectionDto.getAccessKeyId(), updateConnectionDto.getAccessKeyId());
+
     }
 }

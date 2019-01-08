@@ -593,6 +593,93 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         });
     }
 
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateWithoutPermission() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        connectionController.update(connection.getId(),  new UpdateConnectionDto());
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            UpdateConnection,
+            ReadActiveConnection,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateAccessKey() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        Long newAccessKeyId = accessKeyId + 10;
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setAccessKeyId(newAccessKeyId);
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+
+        assertEquals(update.getBody().getAccessKeyId(), newAccessKeyId);
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            UpdateConnection,
+            ReadActiveConnection,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateFromPermittedUser() {
+
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        String updatedName = "NEW NAME";
+
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setName(updatedName);
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+
+        assertEquals(update.getBody().getName(), updatedName);
+    }
+
+
     private AtomicReference<Long> createHackerRankConnector() {
         return createConnector(createHackerRankConnectorDto());
     }

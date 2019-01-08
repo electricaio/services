@@ -2,6 +2,7 @@ package io.electrica.connector.hub.rest;
 
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.UpdateConnectionDto;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -29,6 +30,9 @@ public interface ConnectionController {
 
     @GetMapping(V1 + "/connections/{id}")
     ResponseEntity<ConnectionDto> get(@PathVariable("id") Long id);
+
+    @PutMapping(V1 + "/connections/{id}")
+    ResponseEntity<ConnectionDto> update(@PathVariable("id") Long id, @RequestBody UpdateConnectionDto dto);
 
     @GetMapping(PRIVATE + V1 + "/connections/{id}")
     ResponseEntity<FullConnectionDto> getFull(@PathVariable("id") Long id);
