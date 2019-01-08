@@ -40,9 +40,3 @@ This is a multi-module gradle build with each microservice running in it's own m
 
 # Questions?
 Head to slack channel [dev-backend](https://electricaio.slack.com/messages/CDAG9KTUN/) to get your questions answered.
-
-
-
-[![Build Status](https://travis-ci.com/electricaio/services.svg?token=XaPqFymCCMvmv4mU5F9x&branch=master)](https://travis-ci.com/electricaio/services)
-[![Coverage Status](https://coveralls.io/repos/github/electricaio/services/badge.svg?branch=master&t=RKKuow)](https://coveralls.io/github/electricaio/services?branch=master)
-
