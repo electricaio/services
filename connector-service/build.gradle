@@ -5,12 +5,14 @@ dependencies {
     compile project(':connector-service-api')
 
     compile 'io.electrica.connector:spi'
-
-    runtime 'io.electrica.connector:echo'
-    runtime 'io.electrica.connector:slack'
+    compile 'io.electrica.connector:echo'
+    compile 'io.electrica.connector:slack'
 
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
+
+    testCompileOnly "com.google.auto.service:auto-service:$autoService"
+    testAnnotationProcessor "com.google.auto.service:auto-service:$autoService"
 }
 
 bootRun {
