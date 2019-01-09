@@ -43,7 +43,7 @@ public class ConnectionService extends AbstractService<Connection> {
         merged.setProperties(update.getProperties());
 
         Authorization authorization = update.getAuthorization();
-        if (authorization.getId() != null) {
+        if (authorization != null) {
             Authorization authorizationRef = getReference(Authorization.class, authorization.getId());
             merged.setAuthorization(authorizationRef);
         }

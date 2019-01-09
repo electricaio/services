@@ -614,7 +614,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto connection = connectionController.create(dto).getBody();
 
-        connectionController.update(connection.getId(), connection);
+        connectionController.update(connection.getId(),  new UpdateConnectionDto());
     }
 
     @Test
@@ -637,14 +637,18 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto connection = connectionController.create(dto).getBody();
 
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+
         String updateKey = "new key";
         String updateValue = "new key";
 
         Map<String, String> properties = new HashMap<>();
         properties.put(updateKey, updateValue);
-        connection.setProperties(properties);
+        updateConnectionDto.setProperties(properties);
 
-        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), connection);
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
         assertEquals(update.getBody().getProperties().get(updateKey), updateValue);
 
     }
@@ -672,9 +676,12 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         String updatedName = "NEW NAME";
 
-        connection.setName(updatedName);
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setName(updatedName);
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
 
-        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), connection);
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
 
         assertEquals(update.getBody().getName(), updatedName);
     }

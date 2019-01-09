@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "authorizations")
 @DiscriminatorColumn(name = "type")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Authorization extends AbstractEntity {
+public abstract class Authorization extends AbstractEntity {
 
     @OneToOne(mappedBy = "authorization")
     private Connection connection;

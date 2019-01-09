@@ -2,6 +2,7 @@ package io.electrica.connector.hub.rest;
 
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.CreateConnectionDto;
+import io.electrica.connector.hub.dto.UpdateConnectionDto;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.service.dto.ConnectionDtoService;
 import io.electrica.connector.hub.service.dto.FullConnectionDtoService;
@@ -51,7 +52,7 @@ public class ConnectionControllerImpl implements ConnectionController {
     @Override
     @PreAuthorize("#common.hasPermission('UpdateConnection') AND #connection.canUserAccess(#id)")
     public ResponseEntity<ConnectionDto> update(@PathVariable("id") Long id,
-                                                @Valid @RequestBody ConnectionDto dto) {
+                                                @Valid @RequestBody UpdateConnectionDto dto) {
         final ConnectionDto result = connectionDtoService.update(id, dto);
         return ResponseEntity.ok(result);
     }
