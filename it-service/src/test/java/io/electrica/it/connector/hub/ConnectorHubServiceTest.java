@@ -50,7 +50,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testFindAllConnectionsWithConnectorId() {
-        ConnectorDto connector = connectorClient.findAll().getBody().get(0);
+        ConnectorDto connector = getConnectorForErn(SLACK_CHANNEL_V1_ERN);
         List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(), connector.getId()).getBody();
         assertTrue(connectionDtos.size() > 0);
     }

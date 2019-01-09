@@ -23,16 +23,17 @@ public class WebhookServiceTest extends BaseIT {
 
     private static final String WEBHOOK_PREFIX = "webhook-";
     private static final Map<String, String> TEST_WEBHOOK_PROPERTIES = Collections.singletonMap("a", "b");
+    private static final String ECHO_CONNECTOR_ERN = "ern://echo:test:1";
     private UserDto user;
 
     @BeforeAll
     public void setUp() {
         init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        ConnectorDto connectorDto = createConnector(WEBHOOK_PREFIX + getCurrTimeAsString(), "1");
         contextHolder.setContextForUser(user.getEmail());
-        AccessKeyDto accessKeyDto = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
-        createConnection("webhookTest", connectorDto, accessKeyDto.getId());
+        AccessKeyDto accessKey = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
+        ConnectorDto connectorDto = getConnectorForErn(ECHO_CONNECTOR_ERN);
+        createConnection(WEBHOOK_PREFIX + getCurrTimeAsString(), connectorDto, accessKey.getId());
     }
 
     @Test
@@ -61,11 +62,15 @@ public class WebhookServiceTest extends BaseIT {
     }
 
     private ConnectionWebhookDto createAndSaveWebhook(Long accessKeyId) {
-        ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKeyId).getBody().get(0);
-        assertNotNull(connectionDtos);
+        ConnectionDto connectionDto = connectionClient.findAllByAccessKeyId(accessKeyId).getBody().get(0);
+        assertNotNull(connectionDto);
+        return createAndSaveWebhook(connectionDto.getId(), accessKeyId);
+    }
+
+    private ConnectionWebhookDto createAndSaveWebhook(Long connectionId, Long accessKeyId) {
         ConnectionCreateWebhookDto webhookDto = new ConnectionCreateWebhookDto();
         webhookDto.setAccessKeyId(accessKeyId);
-        webhookDto.setConnectionId(connectionDtos.getId());
+        webhookDto.setConnectionId(connectionId);
         webhookDto.setName(WEBHOOK_PREFIX + getCurrTimeInMillSeconds());
         webhookDto.setProperties(TEST_WEBHOOK_PROPERTIES);
         ConnectionWebhookDto response = webhookClient.createConnection(webhookDto).getBody();
@@ -76,5 +81,4 @@ public class WebhookServiceTest extends BaseIT {
         assertEquals(webhookDto.getConnectionId(), response.getConnectionId());
         return response;
     }
-
 }

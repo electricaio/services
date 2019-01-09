@@ -10,6 +10,7 @@ import io.electrica.it.auth.TokenManager;
 import io.electrica.it.context.ContextHolder;
 import io.electrica.it.report.GenerateTestReport;
 import io.electrica.it.util.ReportContext;
+import io.electrica.it.webhooks.WebhookInvokeClient;
 import io.electrica.user.dto.*;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
@@ -40,7 +41,7 @@ public abstract class BaseIT {
     protected static final String ORG_TOP_CODER = "TopCoder";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    private static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
+    protected static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
     private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
@@ -72,6 +73,9 @@ public abstract class BaseIT {
 
     @Inject
     public AuthorizationClient authorizationClient;
+
+    @Inject
+    public WebhookInvokeClient webhookInvokeClient;
 
     @Inject
     public WebhookClient webhookClient;
@@ -244,6 +248,12 @@ public abstract class BaseIT {
         ConnectorDto connector = connectorClient.findAll().getBody().stream()
                 .filter(c -> Objects.equals(c.getErn(), SLACK_CHANNEL_V1_ERN)).findFirst().get();
         return createConnection(getCurrTimeAsString(), connector, accessKey.getId());
+    }
+
+    protected ConnectorDto getConnectorForErn(String ern) {
+        return connectorClient.findAll().getBody().stream()
+                .filter(c -> Objects.equals(c.getErn(), ern))
+                .findFirst().get();
     }
 
 }
