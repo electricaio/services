@@ -11,7 +11,6 @@ import io.electrica.it.auth.TokenDetails;
 import io.electrica.sdk.java8.api.Connection;
 import io.electrica.sdk.java8.api.Connector;
 import io.electrica.sdk.java8.api.Electrica;
-import io.electrica.sdk.java8.api.MessageListener;
 import io.electrica.sdk.java8.api.http.Message;
 import io.electrica.sdk.java8.core.SingleInstanceHttpModule;
 import io.electrica.user.dto.AccessKeyDto;
@@ -19,19 +18,20 @@ import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,6 +55,8 @@ public class WebhookInvokeTest extends BaseIT {
     private UserDto user;
     private AccessKeyDto accessKey;
     private JsonNode input;
+    private ConnectorDto echoConnector;
+    UUID listenerUUID;
 
     @BeforeAll
     public void setUp() {
@@ -62,11 +64,13 @@ public class WebhookInvokeTest extends BaseIT {
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         contextHolder.setContextForUser(user.getEmail());
         accessKey = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
+        echoConnector = getConnectorForErn(ECHO_CONNECTOR_ERN);
         createWebhookConnection();
-        input = mapper.valueToTree(mapper.createObjectNode().put("a", "a"));
+        input = mapper.valueToTree(mapper.createObjectNode().put("a", "b"));
         TokenDetails td = new TokenDetails();
         td.setAccessToken(instance.getAccessKey());
         contextHolder.setContext(td);
+        connection = connector.connection(connectionDto.getName());
     }
 
     @AfterAll
@@ -78,55 +82,93 @@ public class WebhookInvokeTest extends BaseIT {
         }
     }
 
+    @AfterEach
+    void clearContext() {
+        connection.removeMessageListener(listenerUUID);
+    }
+
     @Test
-    public void testWebhookInvokeAndReturnObject() throws JsonProcessingException {
-        UUID listenerUUID = addListenerToconnection(new WebhookMessageListenerReturnObject());
+    public void testWebhookInvokeAndReturnObject() throws JsonProcessingException, InterruptedException {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.of(new Result("Test"));
+        });
         JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
+        Message message = awaitResultFromQueue(queue);
+        assertMessage(message, true);
+        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
         Result result = mapper.treeToValue(out, Result.class);
         assertEquals("Test", result.getResult());
-        connection.removeMessageListener(listenerUUID);
+    }
+
+
+    @Test
+    public void testWebhookInvokeWithJsonInputAndReturnObject() throws JsonProcessingException, InterruptedException {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.of(new Result("Test"));
+        });
+        Input input = new Input("Testinput");
+        JsonNode jsonNode = mapper.convertValue(input, JsonNode.class);
+        JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), jsonNode, 60000).getBody();
+        Message message = awaitResultFromQueue(queue);
+        assertEquals("Testinput", message.getPayload(Input.class).getInput());
+        Result result = mapper.treeToValue(out, Result.class);
+        assertEquals("Test", result.getResult());
     }
 
     @Test
-    public void testWebhookInvokeAndReturnString() throws JsonProcessingException {
-        UUID listenerUUID = addListenerToconnection(new WebhookMessageListenerReturnString());
+    public void testWebhookInvokeAndReturnString() throws JsonProcessingException, InterruptedException {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.of("Test");
+        });
+
         JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
+        Message message = awaitResultFromQueue(queue);
+        assertMessage(message, true);
+        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
         String result = mapper.treeToValue(out, String.class);
         assertEquals("Test", result);
-        connection.removeMessageListener(listenerUUID);
     }
 
     @Test
-    public void testWebhookInvokeAndReturnNull() throws JsonProcessingException {
-        UUID listenerUUID = addListenerToconnection(new WebhookMessageListenerReturnNull());
+    public void testWebhookInvokeAndReturnNull() throws InterruptedException {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.empty();
+        });
         JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
+        Message message = awaitResultFromQueue(queue);
+        assertMessage(message, true);
+        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
         assertEquals("null", out.asText());
-        connection.removeMessageListener(listenerUUID);
     }
 
     @Test
-    public void testWebhookSubmit() {
-        WebhookMessageListenerReturnObject listener = new WebhookMessageListenerReturnObject();
-        UUID listenerUUID = addListenerToconnection(listener);
+    public void testWebhookSubmit() throws InterruptedException {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.empty();
+        });
         webhookClient.submit(webhookDto.getId(), input).getBody();
-        assertTrue(listener.awaitResponse());
-        connection.removeMessageListener(listenerUUID);
+        Message message = awaitResultFromQueue(queue);
+        assertMessage(message, false);
+        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
     }
 
     private void createWebhookConnection() {
-
-        ConnectorDto connectorDto = getConnectorForErn(ECHO_CONNECTOR_ERN);
-        connectionDto = createConnection(WEBHOOK_PREFIX + getCurrTimeAsString(), connectorDto,
+        connectionDto = createConnection(WEBHOOK_PREFIX + getCurrTimeAsString(), echoConnector,
                 accessKey.getId());
         webhookDto = createAndSaveWebhook(connectionDto.getId(), accessKey.getId());
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
         instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
         connector = instance.connector(ECHO_CONNECTOR_ERN);
-    }
-
-    private UUID addListenerToconnection(MessageListener listener) {
-        connection = connector.connection(connectionDto.getName());
-        return connection.addMessageListener(x -> true, listener);
     }
 
     private ConnectionWebhookDto createAndSaveWebhook(Long connectionId, Long accessKeyId) {
@@ -144,63 +186,23 @@ public class WebhookInvokeTest extends BaseIT {
         return response;
     }
 
-
-    private class WebhookMessageListenerReturnObject implements MessageListener {
-
-        private final CountDownLatch latch = new CountDownLatch(1);
-
-        @Override
-        @SneakyThrows
-        public Optional<Object> onMessage(Message message) {
-            assertEquals(webhookDto.getId(), message.getWebhookId());
-            assertEquals(webhookDto.getConnectionId(), message.getConnectionId());
-            assertEquals("a", mapper.convertValue(message.getPayload(Map.class), JsonNode.class).get("a").asText());
-            latch.countDown();
-            if (message.getExpectedResult()) {
-                Result result = new Result("Test");
-                return Optional.of(result);
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        @SneakyThrows
-        private Boolean awaitResponse() {
-            return latch.await(60, TimeUnit.SECONDS);
-        }
+    private void assertMessage(Message message, boolean isExpectedResult) {
+        assertNotNull(message.getId());
+        assertEquals(webhookDto.getId(), message.getWebhookId());
+        assertNotNull(message.getWebhookServiceId());
+        assertEquals(webhookDto.getName(), message.getName());
+        assertEquals(Message.Scope.Connection, message.getScope());
+        assertNull(message.getConnectorId());
+        assertNull(message.getConnectorErn());
+        assertEquals(connection.getId(), message.getConnectionId());
+        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPropertiesMap());
+        assertEquals(isExpectedResult, message.getExpectedResult());
     }
 
-    private class WebhookMessageListenerReturnString implements MessageListener {
-
-        @Override
-        @SneakyThrows
-        public Optional<Object> onMessage(Message message) {
-            assertEquals(webhookDto.getId(), message.getWebhookId());
-            assertEquals(webhookDto.getConnectionId(), message.getConnectionId());
-            assertEquals("a", mapper.convertValue(message.getPayload(Map.class), JsonNode.class).get("a").asText());
-            if (message.getExpectedResult()) {
-                return Optional.of("Test");
-            } else {
-                return Optional.empty();
-            }
-        }
-    }
-
-    private class WebhookMessageListenerReturnNull implements MessageListener {
-
-        @Override
-        @SneakyThrows
-        public Optional<Object> onMessage(Message message) {
-            assertEquals(webhookDto.getId(), message.getWebhookId());
-            assertEquals(webhookDto.getConnectionId(), message.getConnectionId());
-            assertEquals("a", mapper.convertValue(message.getPayload(Map.class), JsonNode.class).get("a").asText());
-            Object o = null;
-            if (message.getExpectedResult()) {
-                return Optional.ofNullable(o);
-            } else {
-                return Optional.empty();
-            }
-        }
+    private <T> T awaitResultFromQueue(BlockingQueue<T> queue) throws InterruptedException {
+        T result = queue.poll(30, TimeUnit.SECONDS);
+        assertNotNull(result, "Waiting of result timed out");
+        return result;
     }
 
     @NoArgsConstructor
@@ -208,6 +210,14 @@ public class WebhookInvokeTest extends BaseIT {
     @Getter
     @Setter
     public static class Result {
-        public String result;
+        private String result;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class Input {
+        private String input;
     }
 }
