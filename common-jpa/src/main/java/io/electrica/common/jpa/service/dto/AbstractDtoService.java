@@ -21,8 +21,12 @@ public abstract class AbstractDtoService<P extends CommonEntity, C, D> {
         return toDto(getService().create(toCreateEntity(persistentDto)));
     }
 
-    public D update(long id, D persistentDto) {
-        return toDto(getService().update(id, toEntity(persistentDto)));
+    public <U> D update(long id, U persistentDto) {
+        return toDto(getService().update(id, toUpdateEntity(persistentDto)));
+    }
+
+    public <U> P toUpdateEntity(U dto) {
+        return mapper.map(dto, getEntityClass());
     }
 
     public D archive(long id) {

@@ -1,10 +1,7 @@
 package io.electrica.it.connector.hub;
 
 import io.electrica.common.security.RoleType;
-import io.electrica.connector.hub.dto.AuthorizationType;
-import io.electrica.connector.hub.dto.ConnectionDto;
-import io.electrica.connector.hub.dto.ConnectorDto;
-import io.electrica.connector.hub.dto.TokenAuthorizationDto;
+import io.electrica.connector.hub.dto.*;
 import io.electrica.it.BaseIT;
 import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
@@ -101,5 +98,20 @@ public class ConnectorHubServiceTest extends BaseIT {
         connectionClient.delete(con.getId());
         int updatedCount = connectionClient.findAllByUser(user.getId(), null).getBody().size();
         assertEquals(connectionCount - 1, updatedCount);
+    }
+
+    @Test
+    public void testUpdateConnection() {
+        ConnectionDto connection = getNewConnectionForUser(user);
+
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+        connection.setName("updated name");
+
+        ConnectionDto connectionDto = connectionClient.update(connection.getId(), updateConnectionDto).getBody();
+
+        assertEquals(connectionDto.getName(), updateConnectionDto.getName());
+
     }
 }

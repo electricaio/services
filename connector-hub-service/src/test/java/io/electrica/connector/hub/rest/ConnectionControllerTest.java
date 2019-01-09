@@ -20,7 +20,9 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -592,6 +594,98 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
             connectionController.delete(actual.getId());
         });
     }
+
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateWithoutPermission() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        connectionController.update(connection.getId(),  new UpdateConnectionDto());
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            UpdateConnection,
+            ReadActiveConnection,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateProperties() {
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+
+        String updateKey = "new key";
+        String updateValue = "new key";
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put(updateKey, updateValue);
+        updateConnectionDto.setProperties(properties);
+
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+        assertEquals(update.getBody().getProperties().get(updateKey), updateValue);
+
+    }
+
+    @Test
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.SuperAdmin, permissions = {
+            CreateConnector,
+            UpdateConnection,
+            ReadActiveConnection,
+            AssociateAccessKeyToConnector
+    })
+    public void testUpdateFromPermittedUser() {
+
+        final Long connectorId = connectorController
+                .create(createHackerRankConnectorDto())
+                .getBody()
+                .getId();
+
+        final Long accessKeyId = 12L;
+
+        final CreateConnectionDto dto = new CreateConnectionDto("Default", connectorId, accessKeyId,
+                TEST_PROPERTIES);
+        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
+        final ConnectionDto connection = connectionController.create(dto).getBody();
+
+        String updatedName = "NEW NAME";
+
+        UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
+        updateConnectionDto.setName(updatedName);
+        updateConnectionDto.setId(connection.getId());
+        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
+
+        ResponseEntity<ConnectionDto> update = connectionController.update(connection.getId(), updateConnectionDto);
+
+        assertEquals(update.getBody().getName(), updatedName);
+    }
+
 
     private AtomicReference<Long> createHackerRankConnector() {
         return createConnector(createHackerRankConnectorDto());

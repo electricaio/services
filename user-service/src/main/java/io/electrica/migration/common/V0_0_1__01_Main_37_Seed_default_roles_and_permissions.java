@@ -53,7 +53,10 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
         Permission associateAccessKeyToSTL = savePermission(PermissionType.AssociateAccessKeyToConnector, "Associate" +
                         " access key to Connector",
                 "AssociateAccessKeyToConnector");
-        Permission listActiveSTLs = savePermission(PermissionType.ReadActiveConnection, "Read active connections",
+
+        Permission updateConnection = savePermission(PermissionType.UpdateConnection, "Update Connection", "UpdateConnection");
+
+                Permission listActiveSTLs = savePermission(PermissionType.ReadActiveConnection, "Read active connections",
                 "ReadActiveConnection");
         Permission addPermission = savePermission(PermissionType.AddPermission, "Add permission", "AddPermission");
         Permission removePermission = savePermission(PermissionType.RemovePermission, "Remove permission", "RemovePermission");
@@ -76,7 +79,8 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 deleteWebhook,
                 readWebhook,
                 readConnector,
-                deActivateConnection
+                deActivateConnection,
+                updateConnection
         );
 
 
@@ -99,6 +103,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 deleteWebhook,
                 readWebhook,
                 readConnector,
+                updateConnection,
                 deActivateConnection
         );
 
@@ -126,6 +131,7 @@ public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements Sp
                 createWebhook,
                 deleteWebhook,
                 readWebhook,
+                updateConnection,
                 readConnector
         );
     }
