@@ -31,7 +31,7 @@ public class SlackMessageSender {
             SlackChannelV1 channelV1 = channelManager.getChannelByName(context.getChannelName());
             channelV1.send(message);
         } catch (Exception e) {
-            LOGGER.error("Exception while sending message to slack. " + e.getMessage());
+            LOGGER.error("Exception while sending message to slack. " , e);
         }
     }
 

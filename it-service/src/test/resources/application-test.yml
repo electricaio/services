@@ -1,7 +1,7 @@
 # Override here properties for functions tests
 it-service:
   invoker-service:
-    url: http://localhost
+    url: http://api.dev.electrica.io
   connector:
     url: http://connector.dev.electrica.io
   sdk:
@@ -12,8 +12,8 @@ it-service:
       test-result-channel: slack-sdk-test
   publish-report: true
 feign:
-  userService.url: localhost
-  connectorHubService.url: localhost
-  invokerService.url: localhost
-  connectorService.url: localhost
-  webhookService.url: localhost
+  userService.url: api.dev.electrica.io
+  connectorHubService.url: api.dev.electrica.io
+  invokerService.url: api.dev.electrica.io
+  connectorService.url: api.dev.electrica.io
+  webhookService.url: api.dev.electrica.io
