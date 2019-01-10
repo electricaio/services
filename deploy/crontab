@@ -1,5 +1,8 @@
 # Restart Cluster at 16:00 UTC
 00 16 * * * (aws ecr get-login --no-include-email) | bash && /home/ubuntu/services/deploy/deploy-dev.sh >> /home/ubuntu/deploy-dev.log 2>&1
 
+# Start integration test
+30 16 * * * /home/ubuntu/services/deploy/start-integration-test.sh >> /home/ubuntu/integration-test.log 2>&1
+
 # Clean untagged Docker images at 15:00 UTC
 00 15 * * * docker system prune -f
