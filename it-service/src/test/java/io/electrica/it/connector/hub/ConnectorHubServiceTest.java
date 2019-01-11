@@ -102,16 +102,12 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testUpdateConnection() {
-        ConnectionDto connection = getNewConnectionForUser(user);
-
+        ConnectionDto newConnection = getNewConnectionForUser(user);
         UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
-        updateConnectionDto.setId(connection.getId());
-        updateConnectionDto.setRevisionVersion(connection.getRevisionVersion());
-        connection.setName("updated name");
-
-        ConnectionDto connectionDto = connectionClient.update(connection.getId(), updateConnectionDto).getBody();
-
-        assertEquals(connectionDto.getName(), updateConnectionDto.getName());
-
+        updateConnectionDto.setId(newConnection.getId());
+        updateConnectionDto.setRevisionVersion(newConnection.getRevisionVersion());
+        updateConnectionDto.setName("updated name");
+        ConnectionDto updatedConnection = connectionClient.update(newConnection.getId(), updateConnectionDto).getBody();
+        assertEquals(updateConnectionDto.getName(), updatedConnection.getName());
     }
 }
