@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used to order migration after application context initialization.
@@ -15,34 +17,48 @@ import javax.inject.Inject;
 @Component
 public class ApplicationContextAwareMigrationStrategy implements FlywayMigrationStrategy {
 
+    private static final String MIGRATION_PACKAGE = "/io/electrica/migration";
+
     private final ApplicationContext applicationContext;
-    private final EnvironmentType environmentType;
+    private final String[] locations;
 
     @Inject
-    public ApplicationContextAwareMigrationStrategy(ApplicationContext applicationContext,
-                                                    EnvironmentType environmentType) {
+    public ApplicationContextAwareMigrationStrategy(
+            ApplicationContext applicationContext,
+            EnvironmentType environmentType
+    ) {
         this.applicationContext = applicationContext;
-        this.environmentType = environmentType;
+        this.locations = buildLocations(environmentType);
+    }
+
+    private static String[] buildLocations(EnvironmentType environmentType) {
+        List<String> locations = new ArrayList<>();
+        locations.add(MIGRATION_PACKAGE + "/common");
+        switch (environmentType) {
+            case Default:
+            case Development:
+                locations.add(MIGRATION_PACKAGE + "/dev");
+                break;
+            case Test:
+                locations.add(MIGRATION_PACKAGE + "/test");
+                break;
+            case Stage:
+                locations.add(MIGRATION_PACKAGE + "/stage");
+                break;
+            case Production:
+                locations.add(MIGRATION_PACKAGE + "/prod");
+                break;
+            default:
+                throw new UnsupportedOperationException("Environment type is not configured for data migration: "
+                        + environmentType);
+        }
+        return locations.toArray(new String[0]);
     }
 
     @Override
     public void migrate(Flyway flyway) {
-        FlywayApplicationContextBridge.setApplicationContext(applicationContext);
-
-        switch (environmentType) {
-            case Development:
-                flyway.setLocations("/io/electrica/migration/common", "/io/electrica/migration/dev");
-                break;
-            case Default:
-                flyway.setLocations("/io/electrica/migration/common");
-                break;
-            case Test:
-                flyway.setLocations("/io/electrica/migration/common");
-                break;
-            default:
-                throw new RuntimeException("Environment type " + environmentType +
-                        " is not configured for data migration");
-        }
+        FlywayApplicationContextBridge.instance().setApplicationContext(applicationContext);
+        flyway.setLocations(locations);
         flyway.migrate();
     }
 }

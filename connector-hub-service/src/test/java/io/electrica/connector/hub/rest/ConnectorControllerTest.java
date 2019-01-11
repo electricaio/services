@@ -1,12 +1,12 @@
 package io.electrica.connector.hub.rest;
 
+import io.electrica.ConnectorHubServiceApplicationTest;
 import io.electrica.common.exception.EntityNotFoundServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectorDto;
 import io.electrica.connector.hub.dto.CreateConnectorDto;
 import io.electrica.connector.hub.model.ConnectorType;
-import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.connector.hub.service.ConnectorService;
 import io.electrica.test.context.ForUser;
 import org.junit.Before;
@@ -18,11 +18,12 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
-public class ConnectorControllerTest extends AbstractDatabaseTest {
+public class ConnectorControllerTest extends ConnectorHubServiceApplicationTest {
 
     @Inject
     private ConnectorControllerImpl connectorController;
@@ -161,17 +162,25 @@ public class ConnectorControllerTest extends AbstractDatabaseTest {
             permissions = PermissionType.CreateConnector
     )
     public void testFindAllNonArchived() {
-        final CreateConnectorDto createHackerRankSTLDto = createHackerRankConnectorDto();
-        connectorController.create(createHackerRankSTLDto);
+        ConnectorDto hackerRankDto = connectorController.create(createHackerRankConnectorDto()).getBody();
 
-        final ConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
+        ConnectorDto greenHouseDto = connectorController.create(createGreenhouseConnectorDto()).getBody();
         connectorService.archive(greenHouseDto.getId());
 
         executeForUser(1L, 1L, EnumSet.of(RoleType.OrgUser),
                 EnumSet.of(PermissionType.ReadConnector), () -> {
-                    final List<ConnectorDto> actual = connectorController.findAll().getBody();
-                    assertEquals(1, actual.size());
-                    assertEquals(createHackerRankSTLDto.getName(), actual.get(0).getName());
+                    List<ConnectorDto> allConnectors = connectorController.findAll().getBody();
+                    ConnectorDto actualHackerRankDto = allConnectors.stream()
+                            .filter(c -> Objects.equals(c.getId(), hackerRankDto.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new AssertionError("Connector not found: " + hackerRankDto.getId()));
+                    assertEquals(hackerRankDto.getName(), actualHackerRankDto.getName());
+
+                    ConnectorDto actualGreenHouseDto = allConnectors.stream()
+                            .filter(c -> Objects.equals(c.getId(), greenHouseDto.getId()))
+                            .findFirst()
+                            .orElse(null);
+                    assertNull("Must be archived", actualGreenHouseDto);
                 });
     }
 

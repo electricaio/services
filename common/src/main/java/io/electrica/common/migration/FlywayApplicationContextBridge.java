@@ -7,15 +7,20 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FlywayApplicationContextBridge {
 
-    private static final AtomicReference<ApplicationContext> APPLICATION_CONTEXT = new AtomicReference<>();
+    private static final FlywayApplicationContextBridge INSTANCE = new FlywayApplicationContextBridge();
 
-    public static ApplicationContext getApplicationContext() {
-        return APPLICATION_CONTEXT.get();
+    private final AtomicReference<ApplicationContext> applicationContext = new AtomicReference<>();
+
+    public static FlywayApplicationContextBridge instance() {
+        return INSTANCE;
     }
 
-    static void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
-        APPLICATION_CONTEXT.set(applicationContext);
+    public ApplicationContext getApplicationContext() {
+        return applicationContext.get();
+    }
+
+    void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext.set(applicationContext);
     }
 
 }

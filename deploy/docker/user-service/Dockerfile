@@ -13,4 +13,7 @@ ADD service.jar service.jar
 # Copy configuration
 ADD application-${PROFILE}.yml config/application-${PROFILE}.yml
 
+# Copy keystore
+ADD keystore-${PROFILE}.jks config/keystore.jks
+
 EXPOSE 22022

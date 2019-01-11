@@ -2,10 +2,12 @@ spring:
   auth:
     keystore:
       path: file:./config/keystore.jks
-      secret: 763UyszgZUF0OzLn
+      secret: 4EkY86Hx5yjmOPbV
       key-alias: io.electrica
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/user_db
+    username: user_service
+    password: U74bjT62SueESb62
+    url: jdbc:postgresql://backend-stage.cp49urcbfang.us-east-2.rds.amazonaws.com:5432/user_db
 
 feign:
   userService.url: user-service:22022

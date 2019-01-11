@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigration {
+public class V0_0_1_011__DEV_Seed_users_and_organizations implements SpringJdbcMigration {
 
     private RoleRepository roleRepository;
     private OrganizationRepository organizationRepository;
@@ -27,8 +27,8 @@ public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigr
     private UserToRoleRepository userToRoleRepository;
 
     @Override
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        ApplicationContext context = FlywayApplicationContextBridge.getApplicationContext();
+    public void migrate(JdbcTemplate jdbcTemplate) {
+        ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
 
         roleRepository = context.getBean(RoleRepository.class);
         organizationRepository = context.getBean(OrganizationRepository.class);
@@ -38,9 +38,9 @@ public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigr
 
         Organization defaultOrg = saveOrganization("default");
         Organization electricaOrg = saveOrganization("electrica.io");
+
         saveUser("admin", "admin@electrica.io", "admin", electricaOrg, RoleType.SuperAdmin);
         saveUser("scott", "scott@electrica.io", "scott", defaultOrg, RoleType.OrgUser);
-
     }
 
     private Organization saveOrganization(String name) {
@@ -49,8 +49,8 @@ public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigr
         return organizationRepository.save(o);
     }
 
-    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "")
-    private User saveUser(String username, String email, String password, Organization org, RoleType roleType) {
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    private void saveUser(String username, String email, String password, Organization org, RoleType roleType) {
         User user = new User();
         user.setOrganization(org);
         user.setFirstName(username);
@@ -64,6 +64,5 @@ public class V0_0_2__01_Main_38_Seed_User_Service_Data implements SpringJdbcMigr
         Role role = roleRepository.findOneByType(roleType).get();
         userToRole.setRole(role);
         userToRoleRepository.save(userToRole);
-        return newEntity;
     }
 }

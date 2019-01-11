@@ -33,7 +33,7 @@ echo "==================== Building common docker image ===================="
 docker build -t electrica/common:${profile} ./deploy/docker/common
 
 echo "==================== Building gradle projects ===================="
-./gradlew bootJar
+./gradlew clean bootJar
 
 echo "==================== Building user-service docker image ===================="
 cp ./user-service/build/libs/user-service-*.jar ./deploy/docker/user-service/service.jar

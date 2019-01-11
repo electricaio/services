@@ -4,61 +4,73 @@ services:
   user-service:
     image: ${ECR_HOST}electrica/user-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+    depends_on:
+      - postgres-db
     ports:
-    - 25022:5005
+      - 25022:5005
 
   connector-hub-service:
     image: ${ECR_HOST}electrica/connector-hub-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+    depends_on:
+      - postgres-db
     ports:
-    - 25023:5005
+      - 25023:5005
 
   invoker-service:
     image: ${ECR_HOST}electrica/invoker-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
-    - 25024:5005
+      - 25024:5005
 
   connector-service:
     image: ${ECR_HOST}electrica/connector-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
-    - 25025:5005
+      - 25025:5005
 
   webhook-service:
     image: ${ECR_HOST}electrica/webhook-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+    depends_on:
+      - postgres-db
     ports:
-    - 25026:5005
+      - 25026:5005
 
   websocket-service:
     image: ${ECR_HOST}electrica/websocket-service:dev
     environment:
-    - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-    - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost}
     ports:
-    - 25027:5005
+      - 25027:5005
 
   postgres-db:
     image: ${ECR_HOST}electrica/postgres:dev
     environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
 
   rabbitmq:
     environment:
-    - RABBITMQ_DEFAULT_USER=rabbitmq
-    - RABBITMQ_DEFAULT_PASS=rabbitmq
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
 
   gateway:
     image: ${ECR_HOST}electrica/gateway:dev
+
+  swagger-ui:
+    environment:
+      - "API_URLS=[ {url: \"http://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"http://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://${HOST_NAME:-localhost}/connector-service/swagger/\", name: \"Connector\"},{url: \"http://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"} ]"

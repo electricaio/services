@@ -9,21 +9,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 
-public class V0_0_1__01_Add_connector_types implements SpringJdbcMigration {
+public class V0_0_1_010__Seed_connector_types implements SpringJdbcMigration {
 
     private ConnectorTypeRepository connectorTypeRepository;
 
     @Override
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        final ApplicationContext context = FlywayApplicationContextBridge.getApplicationContext();
+    public void migrate(JdbcTemplate jdbcTemplate) {
+        ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
 
         connectorTypeRepository = context.getBean(ConnectorTypeRepository.class);
-        connectorTypeRepository.saveAll(
-                Arrays.asList(
-                        new ConnectorType("Foundation"),
-                        new ConnectorType("CRM"),
-                        new ConnectorType("Talent")
-                )
-        );
+        connectorTypeRepository.saveAll(Arrays.asList(
+                new ConnectorType("Foundation"),
+                new ConnectorType("CRM"),
+                new ConnectorType("Talent")
+        ));
     }
 }

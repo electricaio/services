@@ -1,11 +1,11 @@
 package io.electrica.connector.hub.rest;
 
 import com.google.common.collect.Sets;
+import io.electrica.ConnectorHubServiceApplicationTest;
 import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.*;
-import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.test.context.ForUser;
 import io.electrica.user.feign.AccessKeyClient;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 
-public class AuthorizationControllerTest extends AbstractDatabaseTest {
+public class AuthorizationControllerTest extends ConnectorHubServiceApplicationTest {
 
     @Inject
     private ConnectorControllerImpl connectorController;

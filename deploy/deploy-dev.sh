@@ -2,6 +2,8 @@
 
 echo ========================================= Started at $(date) =========================================
 
+(aws ecr get-login --no-include-email) | bash
+
 export ECR_HOST="251063236326.dkr.ecr.us-east-2.amazonaws.com/"
 export HOST_NAME="api.dev.electrica.io"
 

@@ -1,13 +1,13 @@
 package io.electrica.connector.hub.rest;
 
 import com.google.common.collect.Sets;
+import io.electrica.ConnectorHubServiceApplicationTest;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.*;
 import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
 import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
 import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
 import io.electrica.connector.hub.model.Connection;
-import io.electrica.connector.hub.repository.AbstractDatabaseTest;
 import io.electrica.test.context.ForUser;
 import io.electrica.user.feign.AccessKeyClient;
 import org.junit.Before;
@@ -19,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,7 +27,7 @@ import static io.electrica.common.security.PermissionType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 
-public class ConnectionControllerTest extends AbstractDatabaseTest {
+public class ConnectionControllerTest extends ConnectorHubServiceApplicationTest {
 
     @Inject
     private ConnectorControllerImpl connectorController;
@@ -211,8 +208,6 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
 
         flushAndClear();
 
-        assertEquals(3, connectorRepository.findAll().size());
-
         executeForUser(1, 1,
                 Sets.newHashSet(RoleType.OrgAdmin),
                 Sets.newHashSet(ReadActiveConnection), () -> {
@@ -376,13 +371,19 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
                 ReadConnector), () -> {
             connectorDtoList.set(connectorController.findAll().getBody());
         });
-        executeForAccessKey(1, 1, () -> {
 
+        String greenhouseErn = connectorDtoList.get().stream()
+                .filter(c -> Objects.equals(c.getId(), cnGreenhouse.get()))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("connector not found: " + cnGreenhouse.get()))
+                .getErn();
+
+        executeForAccessKey(1, 1, () -> {
             List<ConnectionDto> result = connectionController.findAllByAccessKey(null,
-                    connectorDtoList.get().get(0).getErn()).getBody();
+                    greenhouseErn).getBody();
             assertEquals(1, result.size());
             result = connectionController.findAllByAccessKey("Default",
-                    connectorDtoList.get().get(0).getErn()).getBody();
+                    greenhouseErn).getBody();
             assertEquals(1, result.size());
             assertEquals("Default", result.get(0).name);
         });
@@ -614,7 +615,7 @@ public class ConnectionControllerTest extends AbstractDatabaseTest {
         doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(accessKeyId);
         final ConnectionDto connection = connectionController.create(dto).getBody();
 
-        connectionController.update(connection.getId(),  new UpdateConnectionDto());
+        connectionController.update(connection.getId(), new UpdateConnectionDto());
     }
 
     @Test

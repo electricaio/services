@@ -232,9 +232,9 @@ public abstract class BaseIT {
         contextHolder.setContextForAdmin();
         String connectorName = createConnectorName(name, version);
         CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
-                AuthorizationType.Token, connectorName, getCurrTimeInMillSeconds().toString(), version.toLowerCase(),
-                name, "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
-                "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
+                AuthorizationType.Token, connectorName, "test desciption", name, getCurrTimeInMillSeconds().toString(), version.toLowerCase(),
+                "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
+                "https://assets.themuse.com/uploaded/companies/773/small_logo.png",
                 TEST_CONNECTOR_PROPERTIES);
         return connectorClient.create(dto).getBody();
     }

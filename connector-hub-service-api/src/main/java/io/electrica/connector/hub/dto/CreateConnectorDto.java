@@ -1,6 +1,9 @@
 package io.electrica.connector.hub.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,15 +27,18 @@ public class CreateConnectorDto {
     private String name;
 
     @Size(max = 255)
+    private String description;
+
+    @NotBlank
+    @Size(max = 255)
+    private String namespace;
+
+    @Size(max = 255)
     private String resource;
 
     @NotBlank
     @Size(max = 255)
     private String version;
-
-    @NotBlank
-    @Size(max = 255)
-    private String namespace;
 
     @NotNull
     @NotBlank
@@ -51,8 +57,6 @@ public class CreateConnectorDto {
     @Size(max = 255)
     private String imageUrl;
 
-    @Size(max = 255)
-    private String description;
-
     private Map<String, String> properties;
+
 }
