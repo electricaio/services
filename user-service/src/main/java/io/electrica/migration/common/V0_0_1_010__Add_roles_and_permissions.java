@@ -15,15 +15,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 
-public class V0_0_1__01_Main_37_Seed_default_roles_and_permissions implements SpringJdbcMigration {
+public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigration {
 
     private RoleRepository roleRepository;
     private PermissionRepository permissionRepository;
     private RoleToPermissionRepository roleToPermissionRepository;
 
     @Override
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-        ApplicationContext context = FlywayApplicationContextBridge.getApplicationContext();
+    public void migrate(JdbcTemplate jdbcTemplate) {
+        ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
 
         roleRepository = context.getBean(RoleRepository.class);
         permissionRepository = context.getBean(PermissionRepository.class);

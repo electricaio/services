@@ -47,7 +47,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(input -> input != null &&
-                        (environmentType.isSafe() || !RequestHelper.isPrivateApi(input)) &&
+                        (environmentType == EnvironmentType.Development || !RequestHelper.isPrivateApi(input)) &&
                         !RequestHelper.isAuthPath(input) &&
                         !RequestHelper.isErrorPath(input)
                 )
@@ -64,7 +64,7 @@ public class SwaggerConfig {
                                 .build(),
                         new ResponseMessageBuilder()
                                 .code(403)
-                                .message("Forbidden!")
+                                .message("Forbidden")
                                 .build()
                 ))
                 .securitySchemes(Collections.singletonList(securityScheme()))

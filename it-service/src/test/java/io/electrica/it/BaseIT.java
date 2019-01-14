@@ -39,50 +39,37 @@ public abstract class BaseIT {
 
     protected static final String ORG_HACKER_RANK = "HackerRank";
     protected static final String ORG_TOP_CODER = "TopCoder";
+    protected static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
     private static final String USER_NAME_PREFIX = "user-";
     private static final String EMAIL_POSTFIX = "@electrica.io";
-    protected static final String SLACK_CHANNEL_V1_ERN = "ern://slack:channel:1";
     private static final Long DEFAULT_CONNECTOR_TYPE = 1L;
     private static final Map<String, String> TEST_CONNECTOR_PROPERTIES = new HashMap<String, String>() {{
         put("URL", "www.google.com");
         put("Two", "Two");
         put("Three", "Three");
     }};
+    private static final String CONNECTION_NAME_PREFIX = "connection-";
     private static Boolean initialized = false;
-
     @Inject
     public UserClient userClient;
-
     @Inject
     public OrganizationClient organizationClient;
-
     @Inject
     public TokenManager tokenManager;
-
     @Inject
     public ContextHolder contextHolder;
-
     @Inject
     public AccessKeyClient accessKeyClient;
-
     @Inject
     public ConnectorClient connectorClient;
-
     @Inject
     public ConnectionClient connectionClient;
-
     @Inject
     public AuthorizationClient authorizationClient;
-
     @Inject
     public WebhookInvokeClient webhookInvokeClient;
-
     @Inject
     public WebhookClient webhookClient;
-
-    private static final String CONNECTION_NAME_PREFIX = "connection-";
-
-
     @Value("${it-service.connector.url}")
     public String connectorUrl;
     @Value("${it-service.sdk.url}")
@@ -231,11 +218,20 @@ public abstract class BaseIT {
     public ConnectorDto createConnector(String name, String version) {
         contextHolder.setContextForAdmin();
         String connectorName = createConnectorName(name, version);
-        CreateConnectorDto dto = new CreateConnectorDto(DEFAULT_CONNECTOR_TYPE,
-                AuthorizationType.Token, connectorName, getCurrTimeInMillSeconds().toString(), version.toLowerCase(),
-                name, "https://github.com/lever/postings-api/", connectorUrl, sdkUrl,
-                "https://assets.themuse.com/uploaded/companies/773/small_logo.png", "test desciption",
-                TEST_CONNECTOR_PROPERTIES);
+        CreateConnectorDto dto = new CreateConnectorDto(
+                DEFAULT_CONNECTOR_TYPE,
+                AuthorizationType.Token,
+                connectorName,
+                "test desciption",
+                name,
+                getCurrTimeInMillSeconds().toString(),
+                version.toLowerCase(),
+                "https://github.com/lever/postings-api/",
+                connectorUrl,
+                sdkUrl,
+                "https://assets.themuse.com/uploaded/companies/773/small_logo.png",
+                TEST_CONNECTOR_PROPERTIES
+        );
         return connectorClient.create(dto).getBody();
     }
 

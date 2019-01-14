@@ -18,7 +18,7 @@ public class EnvironmentTypeConfig {
 
     private static final String PRODUCTION_ENV_PROFILE_NAME = "prod";
     private static final String DEVELOPMENT_ENV_PROFILE_NAME = "dev";
-    private static final String STAGING_ENV_PROFILE_NAME = "stage";
+    private static final String STAGE_ENV_PROFILE_NAME = "stage";
     public static final String TEST_ENV_PROFILE_NAME = "test";
 
     @Bean
@@ -43,10 +43,10 @@ public class EnvironmentTypeConfig {
     }
 
     @Bean
-    @Profile(STAGING_ENV_PROFILE_NAME)
-    public EnvironmentType stagingEnvironmentType() {
-        LOGGER.info("Application started in Staging mode");
-        return EnvironmentType.Staging;
+    @Profile(STAGE_ENV_PROFILE_NAME)
+    public EnvironmentType stageEnvironmentType() {
+        LOGGER.info("Application started in Stage mode");
+        return EnvironmentType.Stage;
     }
 
     @Bean
