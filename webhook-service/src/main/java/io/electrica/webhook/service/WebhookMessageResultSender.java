@@ -31,7 +31,7 @@ public class WebhookMessageResultSender {
     ) {
         this.serviceInstanceId = serviceInstanceId;
         this.rabbitTemplate = rabbitTemplate;
-        this.deliveryOptimizationEnabled = !environmentType.isSafe();
+        this.deliveryOptimizationEnabled = environmentType == EnvironmentType.Production;
         this.webhookMessageResultDispatcher = webhookMessageResultDispatcher;
     }
 

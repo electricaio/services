@@ -13,6 +13,9 @@ docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/clu
 
 git pull
 
+docker pull rabbitmq:3-management-alpine
+docker pull swaggerapi/swagger-ui
+
 docker pull ${ECR_HOST}electrica/gateway:stage
 docker pull ${ECR_HOST}electrica/user-service:stage
 docker pull ${ECR_HOST}electrica/connector-hub-service:stage

@@ -9,7 +9,7 @@ security:
     resource.jwt.key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqrEcGfcFiXOtLhtbPQWmqBjWUm8r/rS8pfYDrEUda0e1MbCoevwuNnNtlojmmazdnHakaiXib9poyYXgUryFq0at/inmPmCDxPl1eSUs8AVjjBiCYazmpg5/zCleW+BvwJuthXe5TgMS2umKwUB4sY1B5x3lMKiGfugdB8+JIi7Qcu6Oebw4oNyk8ajOyTxQLLQg7utlFAslwNKOhrLHKmfdgmGJ6pN3ynDCyQuIt87ETtrPZhHgAsoETD+rKuL/6vtZ6ovL3dEdox8yuFMlfHG+CdF4Jz74dEMZ7I/AU8Yhr/sqq5aSqMSKVNswuawbh/W+hv0JONBo1S8nyRcdrwIDAQAB\n-----END PUBLIC KEY-----"
 
 webhook:
-  base-url: http://dev.electrica.io/v1/webhooks
+  base-url: http://api.dev.electrica.io/v1/webhooks
 
 feign:
   userService.url: user-service:22022
