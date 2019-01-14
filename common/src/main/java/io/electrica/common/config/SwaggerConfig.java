@@ -98,7 +98,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        String versionDescription = environmentType.isSafe() ? "-" + environmentType : "";
+        String versionDescription = environmentType == EnvironmentType.Production ? "" : "-" + environmentType;
         return new ApiInfo(
                 "Electrica REST API",
                 "Documentation for Electrica public REST API services.",
