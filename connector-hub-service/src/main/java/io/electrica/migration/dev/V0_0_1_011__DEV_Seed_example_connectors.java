@@ -3,10 +3,9 @@ package io.electrica.migration.dev;
 import io.electrica.common.migration.FlywayApplicationContextBridge;
 import io.electrica.connector.hub.dto.AuthorizationType;
 import io.electrica.connector.hub.dto.CreateConnectorDto;
-import io.electrica.connector.hub.model.ConnectorType;
-import io.electrica.connector.hub.repository.ConnectorTypeRepository;
-import io.electrica.connector.hub.service.dto.ConnectorDtoService;
+import io.electrica.migration.MigrationUtils;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -23,82 +22,69 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         put("Three", "Three");
     }};
 
-    private ConnectorDtoService connectorDtoService;
-    private ConnectorTypeRepository connectorTypeRepository;
-
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) {
-        final ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
-        connectorDtoService = context.getBean(ConnectorDtoService.class);
-        connectorTypeRepository = context.getBean(ConnectorTypeRepository.class);
+        ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
 
-        createGreenhouseApplicationConnector("Greenhouse Applications", "1");
-        createSCIMConnector("SCIM", "1");
-        createSmartRecruitersApplicationsConnector("SmartRecruiters Applications", "1");
-        createLeverApplicationsConnector("Lever Applications", "1");
-        createIncomingWebhooksConnector("Incoming Webhooks", "1");
-        createMySQLConnector("MySQL", "1");
+        createGreenhouseApplicationConnector(context);
+        createSCIMConnector(context);
+        createSmartRecruitersApplicationsConnector(context);
+        createLeverApplicationsConnector(context);
+        createIncomingWebhooksConnector(context);
+        createMySQLConnector(context);
     }
 
-    private void createGreenhouseApplicationConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, name, "Greenhouse Applications Connector", "greenhouse", "applications", version.toLowerCase(),
+    private void createGreenhouseApplicationConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "Greenhouse Applications", "Greenhouse Applications Connector", "greenhouse", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.greenhouse.io", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/greenhouse-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
+        MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
 
-    private void createSCIMConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Token, name, "SCIM Connector", "scim", "user", version.toLowerCase(),
+    private void createSCIMConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "SCIM", "SCIM Connector", "scim", "user", "1".toLowerCase(),
                 SOURCE_URL, "https://tools.ietf.org/html/rfc7644", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/scim-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
+        MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
 
-    private void createSmartRecruitersApplicationsConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, name, "SmartRecruiters Applications Connector", "smartrecruiters", "applications", version.toLowerCase(),
+    private void createSmartRecruitersApplicationsConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "SmartRecruiters Applications", "SmartRecruiters Applications Connector", "smartrecruiters", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.smartrecruiters.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/smartrecruiters-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
+        MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
 
-    private void createLeverApplicationsConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Talent").getId(),
-                AuthorizationType.Token, name, "Lever Applications Connector", "lever", "applications", version.toLowerCase(),
+    private void createLeverApplicationsConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "Lever Applications", "Lever Applications Connector", "lever", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.lever.co", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/lever-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
+        MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
 
-    private void createIncomingWebhooksConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.None, name, "Incoming Webhooks Connector", "webhooks", "incoming", version.toLowerCase(),
+    private void createIncomingWebhooksConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.None, "Incoming Webhooks", "Incoming Webhooks Connector", "webhooks", "incoming", "1".toLowerCase(),
                 SOURCE_URL, "https://www.electrica.io", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/webhooks-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
+        MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
 
-    private void createMySQLConnector(String name, String version) {
-        CreateConnectorDto dto = new CreateConnectorDto(findConnectorType("Foundation").getId(),
-                AuthorizationType.Basic, name, "MySQL Connector", "mysql", "db", version.toLowerCase(),
+    private void createMySQLConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Basic, "MySQL", "MySQL Connector", "mysql", "db", "1".toLowerCase(),
                 SOURCE_URL, "https://www.mysql.com", SDK_URL,
                 "https://s3.us-east-2.amazonaws.com/images.electrica.io/mysql-logo.png",
                 TEST_PROPERTIES);
-        connectorDtoService.create(dto);
-    }
-
-    private ConnectorType findConnectorType(String name) {
-        return connectorTypeRepository.findAll()
-                .stream()
-                .filter(st -> st.getName().equals(name))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Connector type with passed name does not exist."));
+        MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
 }
