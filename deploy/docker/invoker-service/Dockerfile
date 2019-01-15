@@ -1,6 +1,4 @@
-# Define args for FROM clause (see https://github.com/moby/moby/pull/31352#issuecomment-315108094)
-ARG PROFILE
-FROM electrica/common:${PROFILE}
+FROM electrica/common
 
 # Define args
 ARG PROFILE
