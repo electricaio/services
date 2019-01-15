@@ -19,7 +19,7 @@ Any args also can be passed with start container:
 docker run electrica/user-service:dev --spring.liquibase.enabled=true
 ```
 
-# Start cluster
+# Start cluster 1
 Example to start cluster for `dev` profile:
 ```
 docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up
