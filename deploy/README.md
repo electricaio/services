@@ -1,11 +1,7 @@
 # Build docker images
 Example to build for `dev` profile:
 ```
-sh deploy/docker/build.sh -p dev
-```
-OR
-```
-sh deploy/docker/build.sh --profile=dev
+./gradlew clean assemble && sh deploy/docker/build.dev.sh
 ```
 Possible profiles are: `dev`, `stage`, `prod`.
 
@@ -16,18 +12,18 @@ Possible profiles are: `dev`, `stage`, `prod`.
 ## Custom args
 Any args also can be passed with start container:
 ```
-docker run electrica/user-service:dev --spring.liquibase.enabled=true
+docker run electrica/user-service --spring.liquibase.enabled=true
 ```
 
 # Start cluster
 Example to start cluster for `dev` profile:
 ```
-docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up
+docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.local.yml up
 ```
 
 Example to down cluster for `dev` profile and remove all containers and data:
 ```
-docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml down
+docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.local.yml down
 ```
 
 # Setup Dev Stand

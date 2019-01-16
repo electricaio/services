@@ -9,6 +9,7 @@ import io.electrica.connector.hub.feign.ConnectorClient;
 import io.electrica.it.auth.TokenManager;
 import io.electrica.it.context.ContextHolder;
 import io.electrica.it.report.GenerateTestReport;
+import io.electrica.it.rule.ServiceAwaitExtension;
 import io.electrica.it.util.ReportContext;
 import io.electrica.it.webhooks.WebhookInvokeClient;
 import io.electrica.user.dto.*;
@@ -31,10 +32,9 @@ import java.util.UUID;
 
 import static io.electrica.sdk.java8.slack.channel.v1.SlackChannelV1.CHANNEL_NAME_PROPERTY_KEY;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles(EnvironmentTypeConfig.TEST_ENV_PROFILE_NAME)
-@ExtendWith(GenerateTestReport.class)
+@ExtendWith({SpringExtension.class, GenerateTestReport.class, ServiceAwaitExtension.class})
 public abstract class BaseIT {
 
     protected static final String ORG_HACKER_RANK = "HackerRank";
@@ -50,6 +50,7 @@ public abstract class BaseIT {
     }};
     private static final String CONNECTION_NAME_PREFIX = "connection-";
     private static Boolean initialized = false;
+
     @Inject
     public UserClient userClient;
     @Inject
@@ -70,10 +71,8 @@ public abstract class BaseIT {
     public WebhookInvokeClient webhookInvokeClient;
     @Inject
     public WebhookClient webhookClient;
-    @Value("${it-service.connector.url}")
-    public String connectorUrl;
-    @Value("${it-service.sdk.url}")
-    public String sdkUrl;
+
+
     @Value("${it-service.slack.v1.webhook-token}")
     public String slackV1WebhookToken;
     @Value("${it-service.slack.v1.test-result-channel}")
@@ -227,8 +226,8 @@ public abstract class BaseIT {
                 getCurrTimeInMillSeconds().toString(),
                 version.toLowerCase(),
                 "https://github.com/lever/postings-api/",
-                connectorUrl,
-                sdkUrl,
+                "https://test.com",
+                "https://test.com",
                 "https://assets.themuse.com/uploaded/companies/773/small_logo.png",
                 TEST_CONNECTOR_PROPERTIES
         );
