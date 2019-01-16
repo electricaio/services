@@ -42,7 +42,7 @@ public final class RequestHelper {
     }
 
     public static boolean isHealthPath(String path) {
-        return path.startsWith("/health");
+        return path.startsWith(PathConstants.HEALTH_PATH);
     }
 
     public static boolean isErrorPath(String path) {

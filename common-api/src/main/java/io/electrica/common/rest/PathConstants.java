@@ -10,4 +10,5 @@ public interface PathConstants {
 
     String V1 = "/v1";
 
+    String HEALTH_PATH = PRIVATE + "/health";
 }
