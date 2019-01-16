@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: it-service
+
 it-service:
   oauth2:
     access-token-uri: http://localhost:22022/oauth/token
