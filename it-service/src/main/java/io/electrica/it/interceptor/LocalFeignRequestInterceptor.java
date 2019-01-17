@@ -2,6 +2,7 @@ package io.electrica.it.interceptor;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import io.electrica.it.auth.TokenDetails;
 import io.electrica.it.context.ContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +10,6 @@ import org.springframework.stereotype.Component;
 public class LocalFeignRequestInterceptor implements RequestInterceptor {
 
     private final ContextHolder contextHolder;
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_TOKEN_TYPE = "Bearer";
 
     public LocalFeignRequestInterceptor(ContextHolder contextHolder) {
         this.contextHolder = contextHolder;
@@ -18,9 +17,9 @@ public class LocalFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public synchronized void apply(RequestTemplate requestTemplate) {
-        String accessToken = contextHolder.getAccessToken();
-        if (accessToken != null) {
-            requestTemplate.header(AUTHORIZATION_HEADER, String.format("%s %s", BEARER_TOKEN_TYPE, accessToken));
+        TokenDetails token = contextHolder.getToken();
+        if (token != null) {
+            requestTemplate.header("Authorization", "Bearer " + token.getAccessToken());
         }
     }
 }

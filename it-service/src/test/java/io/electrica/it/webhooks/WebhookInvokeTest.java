@@ -1,8 +1,8 @@
 package io.electrica.it.webhooks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import io.electrica.common.security.RoleType;
 import io.electrica.connector.hub.dto.ConnectionDto;
 import io.electrica.connector.hub.dto.ConnectorDto;
@@ -18,18 +18,11 @@ import io.electrica.user.dto.FullAccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.junit.Assert;
+import lombok.*;
 import org.junit.jupiter.api.*;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -37,49 +30,73 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
-public class WebhookInvokeTest extends BaseIT {
-
+class WebhookInvokeTest extends BaseIT {
 
     private static final String WEBHOOK_PREFIX = "webhook-";
-    private static final Map<String, String> TEST_WEBHOOK_PROPERTIES = Collections.singletonMap("a", "b");
     private static final String ECHO_CONNECTOR_ERN = "ern://echo:test:1";
 
+    private static final String MESSAGE_STRING_RESULT = "someTestString";
+    private static final Result MESSAGE_OBJECT_RESULT = new Result(MESSAGE_STRING_RESULT);
+    private static final Map<String, String> PAYLOD = Collections.singletonMap("stringProperty", "stringValue");
+    private static final Map<String, String> WEBHOOK_PROPERTIES = Collections.singletonMap("Key", "Value");
+
     @Inject
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     private Connection connection;
-    private Connector connector;
     private Electrica instance;
-    private ConnectionWebhookDto webhookDto;
-    private ConnectionDto connectionDto;
-    private UserDto user;
-    private AccessKeyDto accessKey;
-    private JsonNode input;
-    private ConnectorDto echoConnector;
-    UUID listenerUUID;
+    private ConnectionWebhookDto privateWebhookDto;
+    private ConnectionWebhookDto publicWebhookDto;
+    private List<ConnectionWebhookDto> allWebhooks;
+    private JsonNode payload;
+    private UUID listenerUUID;
+
+    private static <T> T awaitResultFromQueue(BlockingQueue<T> queue) throws InterruptedException {
+        T result = queue.poll(30, TimeUnit.SECONDS);
+        assertNotNull(result, "Waiting of result timed out");
+        return result;
+    }
+
+    private static String getWebhookSign(ConnectionWebhookDto webhook) {
+        String url = webhook.getPublicInvokeUrl();
+        String s = url.replaceFirst("/invoke", "");
+        return s.substring(s.lastIndexOf("/") + 1);
+    }
 
     @BeforeAll
-    public void setUp() {
+    void setUp() {
         init();
-        user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
-        accessKey = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
-        echoConnector = getConnectorForErn(ECHO_CONNECTOR_ERN);
-        createWebhookConnection();
-        input = mapper.valueToTree(mapper.createObjectNode().put("a", "b"));
-        TokenDetails td = new TokenDetails();
-        td.setAccessToken(instance.getAccessKey());
-        contextHolder.setContext(td);
+
+        UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
+        contextHolder.setTokenForUser(user.getEmail());
+
+        AccessKeyDto accessKey = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
+        ConnectorDto echoConnector = findConnector(ECHO_CONNECTOR_ERN);
+        ConnectionDto connectionDto = createConnection(
+                WEBHOOK_PREFIX + getCurrTimeAsString(),
+                echoConnector,
+                accessKey.getId()
+        );
+        privateWebhookDto = createConnectionWebhook(connectionDto.getId(), accessKey.getId(), false);
+        publicWebhookDto = createConnectionWebhook(connectionDto.getId(), accessKey.getId(), true);
+        allWebhooks = Arrays.asList(privateWebhookDto, publicWebhookDto);
+
+        FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
+        instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
+        Connector connector = instance.connector(ECHO_CONNECTOR_ERN);
+        payload = mapper.valueToTree(PAYLOD);
         connection = connector.connection(connectionDto.getName());
     }
 
     @AfterAll
-    void tearDown() {
-        try {
-            instance.close();
-        } catch (Exception e) {
-            Assert.fail("Exception while closing connection:" + e.getMessage());
-        }
+    void tearDown() throws Exception {
+        instance.close();
+    }
+
+    @BeforeEach
+    void setUpToken() {
+        TokenDetails token = TokenDetails.builder().accessToken(instance.getAccessKey()).build();
+        contextHolder.setToken(token);
     }
 
     @AfterEach
@@ -87,137 +104,168 @@ public class WebhookInvokeTest extends BaseIT {
         connection.removeMessageListener(listenerUUID);
     }
 
-    @Test
-    public void testWebhookInvokeAndReturnObject() throws JsonProcessingException, InterruptedException {
-        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
-        listenerUUID = connection.addMessageListener(p -> true, message -> {
-            queue.add(message);
-            return Optional.of(new Result("Test"));
-        });
-        JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
-        Message message = awaitResultFromQueue(queue);
-        assertMessage(message, true);
-        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
-        Result result = mapper.treeToValue(out, Result.class);
-        assertEquals("Test", result.getResult());
-    }
-
-
-    @Test
-    public void testWebhookInvokeWithJsonInputAndReturnObject() throws JsonProcessingException, InterruptedException {
-        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
-        listenerUUID = connection.addMessageListener(p -> true, message -> {
-            queue.add(message);
-            return Optional.of(new Result("Test"));
-        });
-        Input input = new Input("Testinput");
-        JsonNode jsonNode = mapper.convertValue(input, JsonNode.class);
-        JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), jsonNode, 60000).getBody();
-        Message message = awaitResultFromQueue(queue);
-        assertEquals("Testinput", message.getPayload(Input.class).getInput());
-        Result result = mapper.treeToValue(out, Result.class);
-        assertEquals("Test", result.getResult());
+    private ConnectionWebhookDto createConnectionWebhook(Long connectionId, Long accessKeyId, boolean isPublic) {
+        ConnectionCreateWebhookDto wh = new ConnectionCreateWebhookDto();
+        wh.setAccessKeyId(accessKeyId);
+        wh.setConnectionId(connectionId);
+        wh.setIsPublic(isPublic);
+        wh.setName(WEBHOOK_PREFIX + getCurrTimeInMillSeconds());
+        wh.setProperties(WEBHOOK_PROPERTIES);
+        return webhookManagementClient.createConnection(wh).getBody();
     }
 
     @Test
-    public void testWebhookInvokeAndReturnString() throws JsonProcessingException, InterruptedException {
+    void testWebhookInvokeAndReturnObject() throws Exception {
         BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
         listenerUUID = connection.addMessageListener(p -> true, message -> {
             queue.add(message);
-            return Optional.of("Test");
+            return Optional.of(MESSAGE_OBJECT_RESULT);
         });
 
-        JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
+        for (ConnectionWebhookDto webhook : allWebhooks) {
+            JsonNode response = webhookClient.feignInvoke(webhook.getId(), payload, 60000).getBody();
+            Message message = awaitResultFromQueue(queue);
+            assertInvokeAndReturnObject(message, webhook, response);
+        }
+
+        contextHolder.setToken(null);
+        String sign = getWebhookSign(publicWebhookDto);
+
+        assertThrows(FeignException.class, () -> {
+            webhookClient.feignPublicInvoke(privateWebhookDto.getId(), sign, payload, 60000).getBody();
+        });
+
+        JsonNode response = webhookClient.feignPublicInvoke(publicWebhookDto.getId(), sign, payload, 60000).getBody();
         Message message = awaitResultFromQueue(queue);
-        assertMessage(message, true);
-        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
-        String result = mapper.treeToValue(out, String.class);
-        assertEquals("Test", result);
+        assertInvokeAndReturnObject(message, publicWebhookDto, response);
+    }
+
+    private void assertInvokeAndReturnObject(Message message, ConnectionWebhookDto webhook, JsonNode response)
+            throws Exception {
+        assertConnectionMessage(webhook, message, true);
+        assertNotNull(response);
+        Result messageResult = mapper.treeToValue(response, Result.class);
+        assertEquals(MESSAGE_OBJECT_RESULT, messageResult);
     }
 
     @Test
-    public void testWebhookInvokeAndReturnNull() throws InterruptedException {
+    void testWebhookInvokeAndReturnString() throws Exception {
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
+        listenerUUID = connection.addMessageListener(p -> true, message -> {
+            queue.add(message);
+            return Optional.of(MESSAGE_STRING_RESULT);
+        });
+
+        for (ConnectionWebhookDto webhook : allWebhooks) {
+            JsonNode response = webhookClient.feignInvoke(webhook.getId(), payload, 60000).getBody();
+            Message message = awaitResultFromQueue(queue);
+            assertInvokeAndReturnString(message, webhook, response);
+        }
+
+        contextHolder.setToken(null);
+        String sign = getWebhookSign(publicWebhookDto);
+
+        assertThrows(FeignException.class, () -> {
+            webhookClient.feignPublicInvoke(privateWebhookDto.getId(), sign, payload, 60000).getBody();
+        });
+
+        JsonNode response = webhookClient.feignPublicInvoke(publicWebhookDto.getId(), sign, payload, 60000).getBody();
+        Message message = awaitResultFromQueue(queue);
+        assertInvokeAndReturnString(message, publicWebhookDto, response);
+    }
+
+    private void assertInvokeAndReturnString(Message message, ConnectionWebhookDto webhook, JsonNode response)
+            throws Exception {
+        assertConnectionMessage(webhook, message, true);
+        assertNotNull(response);
+        String messageResult = mapper.treeToValue(response, String.class);
+        assertEquals(MESSAGE_STRING_RESULT, messageResult);
+    }
+
+    @Test
+    void testWebhookInvokeAndReturnNull() throws Exception {
         BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
         listenerUUID = connection.addMessageListener(p -> true, message -> {
             queue.add(message);
             return Optional.empty();
         });
-        JsonNode out = webhookInvokeClient.invoke(webhookDto.getId(), input, 60000).getBody();
+
+        for (ConnectionWebhookDto webhook : allWebhooks) {
+            JsonNode response = webhookClient.feignInvoke(webhook.getId(), payload, 60000).getBody();
+            Message message = awaitResultFromQueue(queue);
+            assertInvokeAndReturnNull(message, webhook, response);
+        }
+
+        contextHolder.setToken(null);
+        String sign = getWebhookSign(publicWebhookDto);
+
+        assertThrows(FeignException.class, () -> {
+            webhookClient.feignPublicInvoke(privateWebhookDto.getId(), sign, payload, 60000).getBody();
+        });
+
+        JsonNode response = webhookClient.feignPublicInvoke(publicWebhookDto.getId(), sign, payload, 60000).getBody();
         Message message = awaitResultFromQueue(queue);
-        assertMessage(message, true);
-        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
-        assertEquals("null", out.asText());
+        assertInvokeAndReturnNull(message, publicWebhookDto, response);
+    }
+
+    private void assertInvokeAndReturnNull(Message message, ConnectionWebhookDto webhook, JsonNode response)
+            throws Exception {
+        assertConnectionMessage(webhook, message, true);
+        assertNotNull(response);
+        String messageResult = mapper.treeToValue(response, String.class);
+        assertNull(messageResult);
     }
 
     @Test
-    public void testWebhookSubmit() throws InterruptedException {
+    void testWebhookSubmit() throws InterruptedException {
         BlockingQueue<Message> queue = new ArrayBlockingQueue<>(1);
         listenerUUID = connection.addMessageListener(p -> true, message -> {
             queue.add(message);
             return Optional.empty();
         });
-        webhookClient.submit(webhookDto.getId(), input).getBody();
+
+        for (ConnectionWebhookDto webhook : allWebhooks) {
+            webhookClient.feignSubmit(webhook.getId(), payload).getBody();
+            Message message = awaitResultFromQueue(queue);
+            assertConnectionMessage(webhook, message, false);
+        }
+
+        contextHolder.setToken(null);
+        String sign = getWebhookSign(publicWebhookDto);
+
+        assertThrows(FeignException.class, () -> {
+            webhookClient.feignPublicInvoke(privateWebhookDto.getId(), sign, payload, 60000).getBody();
+        });
+
+        webhookClient.feignPublicSubmit(publicWebhookDto.getId(), sign, payload).getBody();
         Message message = awaitResultFromQueue(queue);
-        assertMessage(message, false);
-        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPayload(Map.class));
+        assertConnectionMessage(publicWebhookDto, message, false);
     }
 
-    private void createWebhookConnection() {
-        connectionDto = createConnection(WEBHOOK_PREFIX + getCurrTimeAsString(), echoConnector,
-                accessKey.getId());
-        webhookDto = createAndSaveWebhook(connectionDto.getId(), accessKey.getId());
-        FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
-        instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
-        connector = instance.connector(ECHO_CONNECTOR_ERN);
-    }
-
-    private ConnectionWebhookDto createAndSaveWebhook(Long connectionId, Long accessKeyId) {
-        ConnectionCreateWebhookDto webhookDto = new ConnectionCreateWebhookDto();
-        webhookDto.setAccessKeyId(accessKeyId);
-        webhookDto.setConnectionId(connectionId);
-        webhookDto.setName(WEBHOOK_PREFIX + getCurrTimeInMillSeconds());
-        webhookDto.setProperties(TEST_WEBHOOK_PROPERTIES);
-        ConnectionWebhookDto response = webhookClient.createConnection(webhookDto).getBody();
-        assertNotNull(response.getId());
-        assertNotNull(response.getUrl());
-        assertEquals(webhookDto.getName(), response.getName());
-        assertEquals(webhookDto.getAccessKeyId(), response.getAccessKeyId());
-        assertEquals(webhookDto.getConnectionId(), response.getConnectionId());
-        return response;
-    }
-
-    private void assertMessage(Message message, boolean isExpectedResult) {
+    private void assertConnectionMessage(ConnectionWebhookDto webhook, Message message, boolean isExpectedResult) {
         assertNotNull(message.getId());
-        assertEquals(webhookDto.getId(), message.getWebhookId());
+        assertEquals(webhook.getId(), message.getWebhookId());
         assertNotNull(message.getWebhookServiceId());
-        assertEquals(webhookDto.getName(), message.getName());
+        assertEquals(webhook.getName(), message.getName());
+        assertEquals(webhook.getOrganizationId(), message.getOrganizationId());
+        assertEquals(webhook.getUserId(), message.getUserId());
+        assertEquals(webhook.getAccessKeyId(), message.getAccessKeyId());
+        assertEquals(webhook.getIsPublic(), message.isPublic());
         assertEquals(Message.Scope.Connection, message.getScope());
         assertNull(message.getConnectorId());
         assertNull(message.getConnectorErn());
         assertEquals(connection.getId(), message.getConnectionId());
-        assertEquals(TEST_WEBHOOK_PROPERTIES, message.getPropertiesMap());
+        assertEquals(WEBHOOK_PROPERTIES, message.getPropertiesMap());
         assertEquals(isExpectedResult, message.getExpectedResult());
+        assertEquals(PAYLOD, message.getPayload(Map.class));
     }
 
-    private <T> T awaitResultFromQueue(BlockingQueue<T> queue) throws InterruptedException {
-        T result = queue.poll(30, TimeUnit.SECONDS);
-        assertNotNull(result, "Waiting of result timed out");
-        return result;
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Getter
     @Setter
+    @EqualsAndHashCode
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Result {
         private String result;
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class Input {
-        private String input;
     }
 }

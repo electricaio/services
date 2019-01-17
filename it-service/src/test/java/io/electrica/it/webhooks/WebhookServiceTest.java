@@ -8,6 +8,7 @@ import io.electrica.user.dto.AccessKeyDto;
 import io.electrica.user.dto.UserDto;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,59 +27,70 @@ public class WebhookServiceTest extends BaseIT {
     private static final String ECHO_CONNECTOR_ERN = "ern://echo:test:1";
     private UserDto user;
 
+    private static void assertConnectionWebhook(ConnectionCreateWebhookDto webhookDto, ConnectionWebhookDto response) {
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertEquals(webhookDto.getName(), response.getName());
+        assertEquals(webhookDto.getAccessKeyId(), response.getAccessKeyId());
+        assertEquals(webhookDto.getConnectionId(), response.getConnectionId());
+        assertEquals(webhookDto.getIsPublic(), response.getIsPublic());
+
+        assertNotNull(response.getSubmitUrl());
+        assertNotNull(response.getInvokeUrl());
+        Assert.assertEquals(webhookDto.getIsPublic(), response.getPublicSubmitUrl() != null);
+        Assert.assertEquals(webhookDto.getIsPublic(), response.getPublicInvokeUrl() != null);
+    }
+
     @BeforeAll
     public void setUp() {
         init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
+        contextHolder.setTokenForUser(user.getEmail());
         AccessKeyDto accessKey = createAccessKey(user.getId(), WEBHOOK_PREFIX + getCurrTimeAsString());
-        ConnectorDto connectorDto = getConnectorForErn(ECHO_CONNECTOR_ERN);
+        ConnectorDto connectorDto = findConnector(ECHO_CONNECTOR_ERN);
         createConnection(WEBHOOK_PREFIX + getCurrTimeAsString(), connectorDto, accessKey.getId());
     }
 
     @Test
     public void testAddWebhook() {
         AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
-        createAndSaveWebhook(accessKey.getId());
+        createConnectionWebhook(accessKey.getId());
     }
 
     @Test
     public void testGetByConnection() {
         AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
         ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody().get(0);
-        ConnectionWebhookDto webhookDto = webhookClient.getByConnection(connectionDtos.getId()).getBody().get(0);
-        assertNotNull(webhookDto);
+        ConnectionWebhookDto webhook = webhookManagementClient.getByConnection(connectionDtos.getId()).getBody().get(0);
+        assertNotNull(webhook);
     }
 
     @Test
     public void testDeleteWebhook() {
         AccessKeyDto accessKey = accessKeyClient.findAllNonArchivedByUser(user.getId()).getBody().get(0);
-        ConnectionWebhookDto dto = createAndSaveWebhook(accessKey.getId());
+        ConnectionWebhookDto dto = createConnectionWebhook(accessKey.getId());
         ConnectionDto connectionDtos = connectionClient.findAllByAccessKeyId(accessKey.getId()).getBody().get(0);
-        int count = webhookClient.getByConnection(connectionDtos.getId()).getBody().size();
-        webhookClient.delete(dto.getId());
-        int countAfterDeletion = webhookClient.getByConnection(connectionDtos.getId()).getBody().size();
+        int count = webhookManagementClient.getByConnection(connectionDtos.getId()).getBody().size();
+        webhookManagementClient.delete(dto.getId());
+        int countAfterDeletion = webhookManagementClient.getByConnection(connectionDtos.getId()).getBody().size();
         assertEquals(count - 1, countAfterDeletion);
     }
 
-    private ConnectionWebhookDto createAndSaveWebhook(Long accessKeyId) {
+    private ConnectionWebhookDto createConnectionWebhook(Long accessKeyId) {
         ConnectionDto connectionDto = connectionClient.findAllByAccessKeyId(accessKeyId).getBody().get(0);
         assertNotNull(connectionDto);
-        return createAndSaveWebhook(connectionDto.getId(), accessKeyId);
+        return createConnectionWebhook(connectionDto.getId(), accessKeyId);
     }
 
-    private ConnectionWebhookDto createAndSaveWebhook(Long connectionId, Long accessKeyId) {
+    private ConnectionWebhookDto createConnectionWebhook(Long connectionId, Long accessKeyId) {
         ConnectionCreateWebhookDto webhookDto = new ConnectionCreateWebhookDto();
         webhookDto.setAccessKeyId(accessKeyId);
         webhookDto.setConnectionId(connectionId);
         webhookDto.setName(WEBHOOK_PREFIX + getCurrTimeInMillSeconds());
+        webhookDto.setIsPublic(true);
         webhookDto.setProperties(TEST_WEBHOOK_PROPERTIES);
-        ConnectionWebhookDto response = webhookClient.createConnection(webhookDto).getBody();
-        assertNotNull(response.getId());
-        assertNotNull(response.getUrl());
-        assertEquals(webhookDto.getName(), response.getName());
-        assertEquals(webhookDto.getAccessKeyId(), response.getAccessKeyId());
-        assertEquals(webhookDto.getConnectionId(), response.getConnectionId());
+        ConnectionWebhookDto response = webhookManagementClient.createConnection(webhookDto).getBody();
+        assertConnectionWebhook(webhookDto, response);
         return response;
     }
 }

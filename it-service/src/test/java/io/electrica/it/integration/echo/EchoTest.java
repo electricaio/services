@@ -39,7 +39,7 @@ class EchoTest extends BaseIT {
         init();
         UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
         ConnectorDto connectorDto = getEchoConnector();
-        contextHolder.setContextForUser(user.getEmail());
+        contextHolder.setTokenForUser(user.getEmail());
         AccessKeyDto accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
         instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());

@@ -1,6 +1,7 @@
 package io.electrica.webhook.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.mq.PersistentMessagePostProcessor;
 import io.electrica.common.mq.webhook.WebhookMessageQueueDispatcher;
 import io.electrica.common.mq.webhook.WebhookMessages;
@@ -9,11 +10,13 @@ import io.electrica.webhook.model.Webhook;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.UUID;
 
 import static io.electrica.webhook.config.WebhookConfig.INSTANCE_ID_QUALIFIER;
+import static io.electrica.webhook.helper.SignHelper.checkSign;
 
 @Component
 public class WebhookMessageSender {
@@ -45,6 +48,7 @@ public class WebhookMessageSender {
                 webhook.getOrganizationId(),
                 webhook.getUserId(),
                 webhook.getAccessKeyId(),
+                webhook.getIsPublic(),
                 webhook.getScope(),
                 webhook.getConnectorId(),
                 webhook.getConnectorErn(),
@@ -55,8 +59,17 @@ public class WebhookMessageSender {
         );
     }
 
-    public UUID send(UUID webhookId, JsonNode payload, boolean expectedResult) {
+    public UUID send(
+            UUID webhookId,
+            JsonNode payload,
+            boolean expectedResult,
+            boolean isPublic,
+            @Nullable String sign
+    ) {
         Webhook webhook = webhookService.findById(webhookId);
+        if (isPublic && (!webhook.getIsPublic() || !checkSign(webhook, sign))) {
+            throw new BadRequestServiceException("Webhook not found");
+        }
 
         webhookMessageQueueDispatcher.createQueueIfAbsent(
                 webhook.getOrganizationId(),

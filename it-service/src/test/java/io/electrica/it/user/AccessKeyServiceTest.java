@@ -27,7 +27,7 @@ public class AccessKeyServiceTest extends BaseIT {
     public void setUp() {
         init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
+        contextHolder.setTokenForUser(user.getEmail());
         accessKeyDto = createAccessKey(user.getId(), user.getId() + getCurrTimeAsString());
     }
 

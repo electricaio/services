@@ -39,6 +39,9 @@ public class WebhookMessage {
     private Long accessKeyId;
 
     @NotNull
+    private Boolean isPublic;
+
+    @NotNull
     private WebhookScope scope;
 
     /**

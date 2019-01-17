@@ -1,12 +1,15 @@
 package io.electrica.it.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TokenDetails {
+
     @JsonProperty("access_token")
     private String accessToken;
 

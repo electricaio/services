@@ -11,13 +11,12 @@ import io.electrica.it.context.ContextHolder;
 import io.electrica.it.report.GenerateTestReport;
 import io.electrica.it.rule.ServiceAwaitExtension;
 import io.electrica.it.util.ReportContext;
-import io.electrica.it.webhooks.WebhookInvokeClient;
 import io.electrica.user.dto.*;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
 import io.electrica.webhook.feign.WebhookClient;
-import org.junit.jupiter.api.Test;
+import io.electrica.webhook.feign.WebhookManagementClient;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,42 +51,36 @@ public abstract class BaseIT {
     private static Boolean initialized = false;
 
     @Inject
-    public UserClient userClient;
+    protected UserClient userClient;
     @Inject
-    public OrganizationClient organizationClient;
+    protected OrganizationClient organizationClient;
     @Inject
-    public TokenManager tokenManager;
+    protected TokenManager tokenManager;
     @Inject
-    public ContextHolder contextHolder;
+    protected ContextHolder contextHolder;
     @Inject
-    public AccessKeyClient accessKeyClient;
+    protected AccessKeyClient accessKeyClient;
     @Inject
-    public ConnectorClient connectorClient;
+    protected ConnectorClient connectorClient;
     @Inject
-    public ConnectionClient connectionClient;
+    protected ConnectionClient connectionClient;
     @Inject
-    public AuthorizationClient authorizationClient;
+    protected AuthorizationClient authorizationClient;
     @Inject
-    public WebhookInvokeClient webhookInvokeClient;
+    protected WebhookManagementClient webhookManagementClient;
     @Inject
-    public WebhookClient webhookClient;
-
+    protected WebhookClient webhookClient;
 
     @Value("${it-service.slack.v1.webhook-token}")
-    public String slackV1WebhookToken;
+    protected String slackV1WebhookToken;
     @Value("${it-service.slack.v1.test-result-channel}")
-    public String slackTestResultChannel;
+    protected String slackTestResultChannel;
     @Value("${it-service.invoker-service.url}")
-    public String invokerServiceUrl;
+    protected String invokerServiceUrl;
     @Value("${it-service.publish-report}")
-    public Boolean publishReport;
+    protected Boolean publishReport;
 
-    @Test
-    public void checkMicroservices() {
-        // Todo check  microservices are active
-    }
-
-    public void init() {
+    protected void init() {
         createOrganization(ORG_HACKER_RANK);
         setReportingContext();
     }
@@ -95,10 +88,11 @@ public abstract class BaseIT {
     private void setReportingContext() {
         if (!initialized) {
             UserDto user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-            contextHolder.setContextForUser(user.getEmail());
+            contextHolder.setTokenForUser(user.getEmail());
             AccessKeyDto accessKeyDto = createAccessKey(user.getId(), "Report-" + getCurrTimeAsString());
             FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
-            ReportContext context = ReportContext.getInstance().getInstance();
+
+            ReportContext context = ReportContext.getInstance();
             context.setInvokerServiceUrl(invokerServiceUrl);
             context.setAccessKey(fullAccessKeyDto.getKey());
             context.setPublishReport(publishReport);
@@ -215,8 +209,8 @@ public abstract class BaseIT {
     }
 
     public ConnectorDto createConnector(String name, String version) {
-        contextHolder.setContextForAdmin();
-        String connectorName = createConnectorName(name, version);
+        contextHolder.setTokenForAdmin();
+        String connectorName = connectorName(name, version);
         CreateConnectorDto dto = new CreateConnectorDto(
                 DEFAULT_CONNECTOR_TYPE,
                 AuthorizationType.Token,
@@ -234,21 +228,20 @@ public abstract class BaseIT {
         return connectorClient.create(dto).getBody();
     }
 
-    private String createConnectorName(String name, String version) {
+    private String connectorName(String name, String version) {
         return name + " " + version + " " + getCurrTimeInMillSeconds();
     }
 
-    public ConnectionDto getNewConnectionForUser(UserDto user) {
+    public ConnectionDto createConnectionForUser(UserDto user) {
         AccessKeyDto accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
-        ConnectorDto connector = connectorClient.findAll().getBody().stream()
-                .filter(c -> Objects.equals(c.getErn(), SLACK_CHANNEL_V1_ERN)).findFirst().get();
+        ConnectorDto connector = findConnector(SLACK_CHANNEL_V1_ERN);
         return createConnection(getCurrTimeAsString(), connector, accessKey.getId());
     }
 
-    protected ConnectorDto getConnectorForErn(String ern) {
+    protected ConnectorDto findConnector(String ern) {
         return connectorClient.findAll().getBody().stream()
                 .filter(c -> Objects.equals(c.getErn(), ern))
-                .findFirst().get();
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Connector not found: " + ern));
     }
-
 }
