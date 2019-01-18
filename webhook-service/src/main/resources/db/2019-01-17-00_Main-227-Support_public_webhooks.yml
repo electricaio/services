@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1547719187083-1
+      author: aleks (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+                  name: is_public
+                  type: bool
+            tableName: webhooks
+

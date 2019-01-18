@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,8 +32,14 @@ public class WebhookMessageResultDispatcher {
         return result;
     }
 
-    public DeferredResult<JsonNode> submit(UUID webhookId, JsonNode payload, long timeout) {
-        UUID messageId = webhookMessageSender.send(webhookId, payload, true);
+    public DeferredResult<JsonNode> submit(
+            UUID webhookId,
+            JsonNode payload,
+            long timeout,
+            boolean isPublic,
+            @Nullable String sign
+    ) {
+        UUID messageId = webhookMessageSender.send(webhookId, payload, true, isPublic, sign);
         DeferredResult<JsonNode> result = createWebhookResult(messageId, timeout);
         results.put(messageId, result);
         return result;

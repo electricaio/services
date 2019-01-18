@@ -25,12 +25,18 @@ bootRun {
 }
 
 liquibase {
+    // Use `gradle diffChangeLog` task to create difference changelog
     activities {
         main {
-            changeLogFile "src/main/resources/db/generated.yml"
-            url "jdbc:postgresql://localhost:5432/webhook_db"
-            username "postgres"
-            password ""
+            changeLogFile 'src/main/resources/db/generated.yml'
+            // DB without changes
+            url 'jdbc:postgresql://localhost:15432/webhook_db'
+            username 'postgres'
+            password ''
+            // DB with changes
+            referenceUrl 'jdbc:postgresql://localhost:5432/webhook_db'
+            referenceUsername 'postgres'
+            referencePassword ''
         }
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -58,8 +59,13 @@ public class Webhook {
     private Long accessKeyId;
 
     @NotNull
+    @ColumnDefault("false")
+    @Column(nullable = false)
+    private Boolean isPublic;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 31)
+    @Column(nullable = false, length = 31, updatable = false)
     private WebhookScope scope;
 
     @CreationTimestamp

@@ -164,7 +164,7 @@ server {
     }
 
     # Proxy to webhook-service
-    location ~* ^/v[1-9]/(webhooks|(connections/.*/webhooks)) {
+    location ~* ^/(v[1-9]|public/v[1-9])/(webhooks|(connections/.*/webhooks)) {
         include /etc/nginx/cors.conf;
 
         proxy_set_header Host $http_host;

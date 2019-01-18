@@ -9,12 +9,12 @@ import io.electrica.connector.hub.feign.ConnectionClient;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
 import io.electrica.webhook.dto.ConnectionWebhookDto;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doReturn;
 
-public class WebhookControllerTest extends WebhookServiceApplicationTest {
+public class WebhookManagementControllerTest extends WebhookServiceApplicationTest {
 
     @Inject
-    private WebhookControllerImpl webhookController;
+    private WebhookManagementControllerImpl webhookController;
 
     @MockBean
     @Inject
@@ -42,17 +42,38 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
     private static ConnectionCreateWebhookDto connectionCreateWebhookDto(
             String name,
             Long accessKeyId,
-            Long connectionId
+            Long connectionId,
+            boolean isPublic,
+            @Nullable Map<String, String> properties
     ) {
         ConnectionCreateWebhookDto dto = new ConnectionCreateWebhookDto();
         dto.setName(name);
         dto.setAccessKeyId(accessKeyId);
         dto.setConnectionId(connectionId);
+        dto.setIsPublic(isPublic);
+        dto.setProperties(properties);
         return dto;
     }
 
-    @Before
-    public void setup() {
+    private static void assertConnectionWebhook(
+            Long userId,
+            Long organizationId,
+            ConnectionCreateWebhookDto expected,
+            ConnectionWebhookDto actual
+    ) {
+        assertNotNull(actual);
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getAccessKeyId(), actual.getAccessKeyId());
+        assertEquals(expected.getConnectionId(), actual.getConnectionId());
+        assertEquals(expected.getProperties(), actual.getProperties());
+        assertEquals(expected.getIsPublic(), actual.getIsPublic());
+
+        assertEquals(organizationId, actual.getOrganizationId());
+        assertEquals(userId, actual.getUserId());
+        assertNotNull(actual.getSubmitUrl());
+        assertNotNull(actual.getInvokeUrl());
+        assertEquals(expected.getIsPublic(), actual.getPublicSubmitUrl() != null);
+        assertEquals(expected.getIsPublic(), actual.getPublicInvokeUrl() != null);
     }
 
     @Test
@@ -61,10 +82,6 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long organizationId = 1L;
         Long accessKeyId = 1L;
         Long connectionId = 1L;
-        Map<String, String> properties = Collections.singletonMap("a", "b");
-
-        ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
-        dto.setProperties(properties);
 
         mockConnectionClient(accessKeyId, connectionId, true);
 
@@ -73,14 +90,20 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
                 organizationId,
                 Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.CreateWebhook),
                 () -> {
-                    ConnectionWebhookDto actual = webhookController.createConnection(dto).getBody();
-                    assertEquals(dto.getName(), actual.getName());
-                    assertEquals(dto.getAccessKeyId(), actual.getAccessKeyId());
-                    assertEquals(dto.getConnectionId(), actual.getConnectionId());
-                    assertEquals(organizationId, actual.getOrganizationId());
-                    assertEquals(userId, actual.getUserId());
-                    assertEquals(properties, actual.getProperties());
-                    assertNotNull(actual.getUrl());
+                    Map<String, String> properties = Collections.singletonMap("a", "b");
+                    ConnectionCreateWebhookDto privateWebhook = connectionCreateWebhookDto(
+                            "test-private", accessKeyId, connectionId, false, properties
+                    );
+                    ConnectionWebhookDto actualPrivateWebhook = webhookController.createConnection(privateWebhook)
+                            .getBody();
+                    assertConnectionWebhook(userId, organizationId, privateWebhook, actualPrivateWebhook);
+
+                    ConnectionCreateWebhookDto publicWebhook = connectionCreateWebhookDto(
+                            "test-public", accessKeyId, connectionId, true, properties
+                    );
+                    ConnectionWebhookDto actualPublicWebhook = webhookController.createConnection(publicWebhook)
+                            .getBody();
+                    assertConnectionWebhook(userId, organizationId, publicWebhook, actualPublicWebhook);
                 }
         );
     }
@@ -106,7 +129,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long accessKeyId = 1L;
         Long connectionId = 1L;
 
-        ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
+        ConnectionCreateWebhookDto dto = connectionCreateWebhookDto(
+                "test", accessKeyId, connectionId, false, null
+        );
 
         mockConnectionClient(accessKeyId, connectionId, true);
 
@@ -125,7 +150,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long accessKeyId = 1L;
         Long connectionId = 1L;
 
-        ConnectionCreateWebhookDto dto = connectionCreateWebhookDto("test", accessKeyId, connectionId);
+        ConnectionCreateWebhookDto dto = connectionCreateWebhookDto(
+                "test", accessKeyId, connectionId, false, null
+        );
 
         mockConnectionClient(accessKeyId, connectionId, false);
 
@@ -144,9 +171,15 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long accessKeyId = 1L;
         Long connectionId = 1L;
 
-        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
-        ConnectionCreateWebhookDto dto2 = connectionCreateWebhookDto("test2", accessKeyId, connectionId);
-        ConnectionCreateWebhookDto dto3 = connectionCreateWebhookDto("test3", accessKeyId, connectionId);
+        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto(
+                "test1", accessKeyId, connectionId, false, null
+        );
+        ConnectionCreateWebhookDto dto2 = connectionCreateWebhookDto(
+                "test2", accessKeyId, connectionId, false, null
+        );
+        ConnectionCreateWebhookDto dto3 = connectionCreateWebhookDto(
+                "test3", accessKeyId, connectionId, false, null
+        );
 
         mockConnectionClient(accessKeyId, connectionId, true);
 
@@ -181,7 +214,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long accessKeyId = 1L;
         Long connectionId = 1L;
 
-        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
+        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto(
+                "test1", accessKeyId, connectionId, false, null
+        );
 
         mockConnectionClient(accessKeyId, connectionId, true);
 
@@ -219,7 +254,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         Long accessKeyId = 1L;
         Long connectionId = 1L;
 
-        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto("test1", accessKeyId, connectionId);
+        ConnectionCreateWebhookDto dto1 = connectionCreateWebhookDto(
+                "test1", accessKeyId, connectionId, false, null
+        );
 
         mockConnectionClient(accessKeyId, connectionId, true);
 
@@ -231,9 +268,9 @@ public class WebhookControllerTest extends WebhookServiceApplicationTest {
         flushAndClear();
 
         executeForUser(userId, organizationId,
-                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.DeleteWebhook), () -> {
-                    webhookController.delete(webhookId.get());
-                });
+                Sets.newHashSet(RoleType.OrgUser), Sets.newHashSet(PermissionType.DeleteWebhook), () ->
+                        webhookController.delete(webhookId.get())
+        );
     }
 
 }

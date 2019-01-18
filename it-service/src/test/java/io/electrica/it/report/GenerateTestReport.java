@@ -15,8 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.util.stream.Collectors.joining;
-
 public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, AfterTestExecutionCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenerateTestReport.class);
@@ -52,7 +50,7 @@ public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, 
     }
 
     private String generatePayload() {
-        Long timeTaken = (System.currentTimeMillis() - summary.getTimeStarted()) / 60;
+        long timeTaken = (System.currentTimeMillis() - summary.getTimeStarted()) / 60;
         StringBuilder stringBuilder = new StringBuilder();
         String testStatus = summary.getTestsFailed().get() > 0 ? "Failure" : "Success";
         stringBuilder.append("******Integration Test run on: " + new Date() + " ******\n")
@@ -67,12 +65,9 @@ public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, 
     private String getTestResultDetails() {
         String out = "";
         if (summary.testsFailed.get() > 0) {
-            StringBuilder str = new StringBuilder();
-            str.append("\nFailed Tests")
-                    .append("\n--------------\n")
-                    .append(summary.failures.stream()
-                            .collect(joining("\n")));
-            out = str.toString();
+            out = "\nFailed Tests" +
+                    "\n--------------\n" +
+                    String.join("\n", summary.failures);
         }
         return out;
     }
@@ -87,11 +82,11 @@ public class GenerateTestReport implements BeforeAllCallback, AfterAllCallback, 
 
         private final List<String> failures = new ArrayList<>();
 
-        public TestExecutionSummary() {
+        TestExecutionSummary() {
             this.timeStarted = System.currentTimeMillis();
         }
 
-        public void addToFailureList(String testName) {
+        void addToFailureList(String testName) {
             failures.add(testName);
         }
     }

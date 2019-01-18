@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class ReportContext {
 
-    private static final ReportContext instance = new ReportContext();
+    private static final ReportContext INSTANCE = new ReportContext();
+
     private String accessKey;
     private String invokerServiceUrl;
     private Boolean publishReport;
@@ -18,7 +19,7 @@ public class ReportContext {
     }
 
     public static ReportContext getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
 }

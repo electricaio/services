@@ -8,12 +8,16 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ConnectionWebhookDto extends ConnectionCreateWebhookDto {
+public class ConnectionWebhookDto extends ConnectionCreateWebhookDto implements WebhookDto {
 
     private UUID id;
     private Long organizationId;
     private Long userId;
-    private String url;
     private LocalDateTime createdAt;
+
+    private String submitUrl;
+    private String invokeUrl;
+    private String publicSubmitUrl;
+    private String publicInvokeUrl;
 
 }

@@ -19,6 +19,9 @@ public abstract class CreateWebhookDto {
     @NotNull
     private Long accessKeyId;
 
+    @NotNull
+    private Boolean isPublic;
+
     private Map<String, String> properties;
 
 }

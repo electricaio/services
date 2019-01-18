@@ -20,7 +20,7 @@ public class UserServiceTest extends BaseIT {
     public void setUp() {
         init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
+        contextHolder.setTokenForUser(user.getEmail());
     }
 
     @Test

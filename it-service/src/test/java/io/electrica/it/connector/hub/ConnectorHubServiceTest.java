@@ -24,18 +24,18 @@ public class ConnectorHubServiceTest extends BaseIT {
     public void setUp() {
         init();
         user = createUser(ORG_HACKER_RANK, RoleType.OrgUser);
-        contextHolder.setContextForUser(user.getEmail());
-        getNewConnectionForUser(user);
+        contextHolder.setTokenForUser(user.getEmail());
+        createConnectionForUser(user);
     }
 
     @BeforeEach
     void setContext() {
-        contextHolder.setContextForUser(user.getEmail());
+        contextHolder.setTokenForUser(user.getEmail());
     }
 
     @Test
     public void testAddConnectors() {
-        contextHolder.setContextForAdmin();
+        contextHolder.setTokenForAdmin();
         createConnector("Test-" + getCurrTimeInMillSeconds(), "V1");
     }
 
@@ -47,7 +47,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testFindAllConnectionsWithConnectorId() {
-        ConnectorDto connector = getConnectorForErn(SLACK_CHANNEL_V1_ERN);
+        ConnectorDto connector = findConnector(SLACK_CHANNEL_V1_ERN);
         List<ConnectionDto> connectionDtos = connectionClient.findAllByUser(user.getId(), connector.getId()).getBody();
         assertTrue(connectionDtos.size() > 0);
     }
@@ -60,7 +60,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testGetConnectionById() {
-        ConnectionDto connection = getNewConnectionForUser(user);
+        ConnectionDto connection = createConnectionForUser(user);
         ConnectionDto actual = connectionClient.get(connection.getId()).getBody();
         assertEquals(connection.getName(), actual.getName());
         assertEquals(connection.getAccessKeyId(), actual.getAccessKeyId());
@@ -93,7 +93,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testDeleteConnection() {
-        ConnectionDto con = getNewConnectionForUser(user);
+        ConnectionDto con = createConnectionForUser(user);
         int connectionCount = connectionClient.findAllByUser(user.getId(), null).getBody().size();
         connectionClient.delete(con.getId());
         int updatedCount = connectionClient.findAllByUser(user.getId(), null).getBody().size();
@@ -102,7 +102,7 @@ public class ConnectorHubServiceTest extends BaseIT {
 
     @Test
     public void testUpdateConnection() {
-        ConnectionDto newConnection = getNewConnectionForUser(user);
+        ConnectionDto newConnection = createConnectionForUser(user);
         UpdateConnectionDto updateConnectionDto = new UpdateConnectionDto();
         updateConnectionDto.setId(newConnection.getId());
         updateConnectionDto.setRevisionVersion(newConnection.getRevisionVersion());

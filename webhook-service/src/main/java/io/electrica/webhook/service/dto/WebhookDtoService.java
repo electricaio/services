@@ -3,11 +3,8 @@ package io.electrica.webhook.service.dto;
 import com.github.dozermapper.core.Mapper;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
-import io.electrica.common.helper.StringUtils;
-import io.electrica.webhook.dto.ConnectionCreateWebhookDto;
-import io.electrica.webhook.dto.ConnectionWebhookDto;
-import io.electrica.webhook.dto.CreateWebhookDto;
-import io.electrica.webhook.dto.WebhookScope;
+import io.electrica.webhook.dto.*;
+import io.electrica.webhook.helper.SignHelper;
 import io.electrica.webhook.model.Webhook;
 import io.electrica.webhook.service.WebhookService;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static io.electrica.webhook.rest.WebhookController.*;
 
 @Component
 public class WebhookDtoService {
@@ -65,11 +64,22 @@ public class WebhookDtoService {
 
     private ConnectionWebhookDto toConnectionDto(Webhook entity) {
         ConnectionWebhookDto dto = mapper.map(entity, ConnectionWebhookDto.class);
-        dto.setUrl(getWebhookURL(entity));
+        return setUrls(entity, dto);
+    }
+
+    private <T extends WebhookDto> T setUrls(Webhook entity, T dto) {
+        dto.setSubmitUrl(getWebhookUrl(entity, false, SUBMIT_SUFFIX));
+        dto.setInvokeUrl(getWebhookUrl(entity, false, INVOKE_SUFFIX));
+        if (entity.getIsPublic()) {
+            dto.setPublicSubmitUrl(getWebhookUrl(entity, true, SUBMIT_SUFFIX));
+            dto.setPublicInvokeUrl(getWebhookUrl(entity, true, INVOKE_SUFFIX));
+        }
         return dto;
     }
 
-    private String getWebhookURL(Webhook entity) {
-        return webhookBaseURL + StringUtils.URL_SLASH + entity.getId();
+    private String getWebhookUrl(Webhook entity, boolean isPublic, String suffix) {
+        String pathPrefix = isPublic ? PUBLIC_PREFIX : PREFIX;
+        String sign = isPublic ? "/" + SignHelper.createSign(entity) : "";
+        return webhookBaseURL + pathPrefix + "/" + entity.getId() + sign + suffix;
     }
 }

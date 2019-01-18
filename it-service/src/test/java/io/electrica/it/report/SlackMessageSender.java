@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SlackMessageSender {
+class SlackMessageSender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SlackMessageSender.class);
     private static final String GREEN_COLOR = "#36a64f";
 
-    public void send(String payload) {
+    void send(String payload) {
         ReportContext context = ReportContext.getInstance();
 
         try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
@@ -31,7 +31,7 @@ public class SlackMessageSender {
             SlackChannelV1 channelV1 = channelManager.getChannelByName(context.getChannelName());
             channelV1.send(message);
         } catch (Exception e) {
-            LOGGER.error("Exception while sending message to slack. " , e);
+            LOGGER.error("Exception while sending message to slack. ", e);
         }
     }
 
