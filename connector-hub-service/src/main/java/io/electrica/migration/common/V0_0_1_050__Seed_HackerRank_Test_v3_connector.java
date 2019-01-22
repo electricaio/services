@@ -11,32 +11,31 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class V0_0_1_030__Seed_Slack_Channel_v1_connector implements SpringJdbcMigration {
+public class V0_0_1_050__Seed_HackerRank_Test_v3_connector implements SpringJdbcMigration {
 
     private static final Map<String, String> PROPERTIES = new HashMap<String, String>() {{
-        put("send-message.url-template", "https://hooks.slack.com/services/%s");
+        put("api.url", "https://www.hackerrank.com/x/api/v1/tests");
         put("http-client.max-idle-connections", "10");
         put("http-client.keep-alive-duration-min", "60");
     }};
-
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) {
         ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
         CreateConnectorDto connector = new CreateConnectorDto(
                 null,
                 AuthorizationType.Token,
-                "Slack Channel v1",
-                "The Slack Connector allows easy integration to slack channels",
-                "slack",
-                "channel",
+                "HackerRank for Work tests v3",
+                "The HackerRank Tests Connector enables you to fetch and create tests on the HackerRank platform",
+                "hackerrank-v3",
+                "tests",
                 "1",
                 "https://www.electrica.io",
-                "https://www.slack.com",
-                "https://www.electrica.io",
-                "https://images.electrica.io/slack-logo.png",
+                "https://www.hackerrank.com",
+                "https://www.hackerrank.com/work/apidocs#!/Tests/options_tests",
+                "https://images.electrica.io/hackerrank-logo.png",
                 PROPERTIES
         );
 
-        MigrationUtils.saveConnector(context, connector, "Foundation");
+        MigrationUtils.saveConnector(context, connector, "Talent");
     }
 }

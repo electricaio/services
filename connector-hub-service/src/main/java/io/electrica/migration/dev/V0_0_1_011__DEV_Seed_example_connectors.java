@@ -38,7 +38,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.Token, "Greenhouse Applications", "Greenhouse Applications Connector", "greenhouse", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.greenhouse.io", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/greenhouse-logo.png",
+                "https://images.electrica.io/greenhouse-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
@@ -47,7 +47,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.Token, "SCIM", "SCIM Connector", "scim", "user", "1".toLowerCase(),
                 SOURCE_URL, "https://tools.ietf.org/html/rfc7644", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/scim-logo.png",
+                "https://images.electrica.io/scim-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
@@ -56,7 +56,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.Token, "SmartRecruiters Applications", "SmartRecruiters Applications Connector", "smartrecruiters", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.smartrecruiters.com", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/smartrecruiters-logo.png",
+                "https://images.electrica.io/smartrecruiters-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
@@ -65,7 +65,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.Token, "Lever Applications", "Lever Applications Connector", "lever", "applications", "1".toLowerCase(),
                 SOURCE_URL, "https://www.lever.co", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/lever-logo.png",
+                "https://images.electrica.io/lever-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Talent");
     }
@@ -74,7 +74,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.None, "Incoming Webhooks", "Incoming Webhooks Connector", "webhooks", "incoming", "1".toLowerCase(),
                 SOURCE_URL, "https://www.electrica.io", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/webhooks-logo.png",
+                "https://images.electrica.io/webhooks-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
@@ -83,7 +83,7 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         CreateConnectorDto dto = new CreateConnectorDto(null,
                 AuthorizationType.Basic, "MySQL", "MySQL Connector", "mysql", "db", "1".toLowerCase(),
                 SOURCE_URL, "https://www.mysql.com", SDK_URL,
-                "https://s3.us-east-2.amazonaws.com/images.electrica.io/mysql-logo.png",
+                "https://images.electrica.io/mysql-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
     }
