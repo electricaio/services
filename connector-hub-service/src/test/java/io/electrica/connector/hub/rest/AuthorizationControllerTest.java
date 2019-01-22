@@ -48,7 +48,7 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
     )
     public void testBasicAuthWithSuccess() {
         Long connectionId = createConnectionToMySql();
-        CreateBasicAuthorizationDto request = createCreateBasicAuthorizationDto();
+        CreateBasicAuthorizationDto request = getCreateBasicAuthorizationDto();
 
         assertTrue(basicAuthorizationRepository.findAll().isEmpty());
 
@@ -87,7 +87,7 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
     )
     public void testBasicAuthWithTokenConnector() {
         Long connectionId = createConnectionToHackerRank();
-        CreateBasicAuthorizationDto request = createCreateBasicAuthorizationDto();
+        CreateBasicAuthorizationDto request = getCreateBasicAuthorizationDto();
 
         authorizationController.authorizeWithBasic(connectionId, request).getBody();
     }
@@ -154,7 +154,7 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
     )
     public void testTokenAuthWithSuccess() {
         Long connectionId = createConnectionToHackerRank();
-        CreateTokenAuthorizationDto request = createCreateTokenAuthorizationDto();
+        CreateTokenAuthorizationDto request = getCreateTokenAuthorizationDto();
 
         assertTrue(tokenAuthorizationRepository.findAll().isEmpty());
 
@@ -188,7 +188,7 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
     )
     public void testTokenAuthWithBasicConnector() {
         Long connectionId = createConnectionToMySql();
-        CreateTokenAuthorizationDto request = createCreateTokenAuthorizationDto();
+        CreateTokenAuthorizationDto request = getCreateTokenAuthorizationDto();
 
         authorizationController.authorizeWithToken(connectionId, request).getBody();
     }
@@ -236,18 +236,116 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
         });
     }
 
+    @Test
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = {
+                    PermissionType.CreateConnector,
+                    PermissionType.AssociateAccessKeyToConnector,
+                    PermissionType.ReadActiveConnection
+            }
+    )
+    public void testIbmAuthWithSuccess() {
+        Long connectionId = createConnectionToBrassRing();
+        CreateIbmAuthorizationDto request = getCreateIbmAuthorizationDto();
+
+        assertTrue(ibmAuthorizationRepository.findAll().isEmpty());
+
+        IbmAuthorizationDto result = authorizationController.authorizeWithIbm(connectionId, request).getBody();
+
+        assertNotNull(result.getId());
+        assertNotNull(result.getRevisionVersion());
+
+        ConnectionDto connection = connectionController.get(connectionId).getBody();
+        assertEquals(connection.getAuthorizationId(), result.getId());
+
+        assertTrue(result.getIntegrationId().startsWith("integrationId_"));
+        assertTrue(result.getClientId().startsWith("clientId_"));
+
+        IbmAuthorizationDto get = authorizationController.getIbm(result.getId()).getBody();
+        assertTrue(get.getIntegrationId().startsWith("integrationId_"));
+        assertTrue(get.getClientId().startsWith("clientId_"));
+
+
+        get.setClientId("test");
+        IbmAuthorizationDto update = authorizationController.updateIbm(get.getId(), get).getBody();
+        assertTrue(update.getIntegrationId().startsWith("integrationId_"));
+        assertEquals("test", update.getClientId());
+
+        get = authorizationController.getIbm(result.getId()).getBody();
+        assertTrue(get.getIntegrationId().startsWith("integrationId_"));
+        assertEquals("test", get.getClientId());
+    }
+
+    @Test(expected = BadRequestServiceException.class)
+    @ForUser(
+            userId = 1,
+            organizationId = 1,
+            roles = RoleType.SuperAdmin,
+            permissions = {
+                    PermissionType.CreateConnector,
+                    PermissionType.AssociateAccessKeyToConnector
+            }
+    )
+    public void testIbmAuthWithTokenConnector() {
+        Long connectionId = createConnectionToHackerRank();
+        CreateIbmAuthorizationDto request = getCreateIbmAuthorizationDto();
+
+        authorizationController.authorizeWithIbm(connectionId, request).getBody();
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgUser, permissions = PermissionType.CreateConnector)
+    public void testIbmAuthWithWrongPermission() {
+        CreateIbmAuthorizationDto dto = getCreateIbmAuthorizationDto();
+        authorizationController.authorizeWithIbm(1L, dto).getBody();
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    @ForUser(userId = 1, organizationId = 1, roles = RoleType.OrgAdmin, permissions = {
+            PermissionType.CreateConnector,
+            PermissionType.AssociateAccessKeyToConnector
+    })
+    public void testIbmAuthWithNonExistingConnection() {
+        Long connectionId = -1L;
+        CreateIbmAuthorizationDto dto = getCreateIbmAuthorizationDto();
+        authorizationController.authorizeWithIbm(connectionId, dto);
+    }
+
+
+    @Test(expected = AccessDeniedException.class)
+    public void testIbmAuthWithConnectionFromDiffUser() {
+
+        final AtomicLong wrapper = new AtomicLong();
+
+        executeForUser(-1L, -1L, Sets.newHashSet(RoleType.SuperAdmin), Sets.newHashSet(
+                PermissionType.CreateConnector,
+                PermissionType.AssociateAccessKeyToConnector),
+                () -> {
+                    final Long connectionId = createConnectionToBrassRing();
+                    wrapper.set(connectionId);
+                });
+
+        executeForUser(1L, 1L, Sets.newHashSet(RoleType.OrgAdmin), Sets.newHashSet(
+                PermissionType.CreateConnector,
+                PermissionType.AssociateAccessKeyToConnector),
+                () -> {
+
+                    Long connectionId = wrapper.get();
+                    CreateIbmAuthorizationDto dto = getCreateIbmAuthorizationDto();
+                    authorizationController.authorizeWithIbm(connectionId, dto);
+                });
+    }
+
     private Long createConnectionToMySql() {
         final Long connectorId = connectorController
                 .create(createMySQLConnectorDto())
                 .getBody()
                 .getId();
 
-        final CreateConnectionDto dto = new CreateConnectionDto();
-        dto.setName("Default");
-        dto.setConnectorId(connectorId);
-        dto.setAccessKeyId(-1L);
-        doReturn(ResponseEntity.ok(true)).when(accessKeyClient).validateMyAccessKeyById(dto.getAccessKeyId());
-        return connectionController.create(dto).getBody().getId();
+        return createConnection(connectorId);
     }
 
     private Long createConnectionToHackerRank() {
@@ -256,6 +354,19 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
                 .getBody()
                 .getId();
 
+        return createConnection(connectorId);
+    }
+
+    private Long createConnectionToBrassRing() {
+        final Long connectorId = connectorController
+                .create(createBrassRingConnectorDto())
+                .getBody()
+                .getId();
+
+        return createConnection(connectorId);
+    }
+
+    private Long createConnection(Long connectorId) {
         final CreateConnectionDto dto = new CreateConnectionDto();
         dto.setName("Default");
         dto.setConnectorId(connectorId);
@@ -264,21 +375,31 @@ public class AuthorizationControllerTest extends ConnectorHubServiceApplicationT
         return connectionController.create(dto).getBody().getId();
     }
 
-    private CreateBasicAuthorizationDto createCreateBasicAuthorizationDto() {
-        final String randomUUID = UUID.randomUUID().toString().substring(0, 6);
-        final CreateBasicAuthorizationDto dto = new CreateBasicAuthorizationDto();
-        final String user = "user_" + randomUUID;
-        final String password = "pwd_" + randomUUID;
+    private CreateBasicAuthorizationDto getCreateBasicAuthorizationDto() {
+        String randomUUID = UUID.randomUUID().toString().substring(0, 6);
+        CreateBasicAuthorizationDto dto = new CreateBasicAuthorizationDto();
+        String user = "user_" + randomUUID;
+        String password = "pwd_" + randomUUID;
         dto.setUsername(user);
         dto.setPassword(password);
         return dto;
     }
 
-    private CreateTokenAuthorizationDto createCreateTokenAuthorizationDto() {
-        final String randomUUID = UUID.randomUUID().toString().substring(0, 6);
-        final CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
-        final String token = "token_" + randomUUID;
+    private CreateTokenAuthorizationDto getCreateTokenAuthorizationDto() {
+        String randomUUID = UUID.randomUUID().toString().substring(0, 6);
+        CreateTokenAuthorizationDto dto = new CreateTokenAuthorizationDto();
+        String token = "token_" + randomUUID;
         dto.setToken(token);
+        return dto;
+    }
+
+    private CreateIbmAuthorizationDto getCreateIbmAuthorizationDto() {
+        String randomUUID = UUID.randomUUID().toString().substring(0, 6);
+        CreateIbmAuthorizationDto dto = new CreateIbmAuthorizationDto();
+        String integrationId = "integrationId_" + randomUUID;
+        String clientId = "clientId_" + randomUUID;
+        dto.setIntegrationId(integrationId);
+        dto.setClientId(clientId);
         return dto;
     }
 }

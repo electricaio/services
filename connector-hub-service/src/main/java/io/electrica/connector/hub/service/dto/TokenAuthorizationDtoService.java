@@ -8,9 +8,6 @@ import io.electrica.connector.hub.model.TokenAuthorization;
 import io.electrica.connector.hub.service.TokenAuthorizationService;
 import org.springframework.stereotype.Component;
 
-/**
- * User Dto Service implementation class for token based authorization.
- */
 @Component
 public class TokenAuthorizationDtoService extends
         AbstractDtoService<TokenAuthorization, CreateTokenAuthorizationDto, TokenAuthorizationDto> {

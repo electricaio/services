@@ -37,6 +37,9 @@ public abstract class ConnectorHubServiceApplicationTest extends AbstractJpaAppl
     protected TokenAuthorizationRepository tokenAuthorizationRepository;
 
     @Inject
+    protected IbmAuthorizationRepository ibmAuthorizationRepository;
+
+    @Inject
     protected ConnectorRepository connectorRepository;
 
     protected List<ConnectorType> connectorTypes;
@@ -104,6 +107,24 @@ public abstract class ConnectorHubServiceApplicationTest extends AbstractJpaAppl
         );
         dto.setAuthorizationType(AuthorizationType.Basic);
         dto.setVersion("5.6");
+        dto.setProperties(TEST_PROPERTIES);
+        dto.setSourceUrl("https://www.postgresql.org/docs/");
+        dto.setConnectorUrl("https://localhost:9090");
+        dto.setSdkUrl("https://localhost:9091");
+        dto.setImageUrl("https://localhost:9091/PostgresConnetor.png");
+        dto.setDescription("Test desc");
+        return dto;
+    }
+
+    protected CreateConnectorDto createBrassRingConnectorDto() {
+        final CreateConnectorDto dto = new CreateConnectorDto();
+        dto.setName("Brass Ring");
+        dto.setNamespace("brassring");
+        dto.setTypeId(
+                findConnectorType("Foundation").getId()
+        );
+        dto.setAuthorizationType(AuthorizationType.Ibm);
+        dto.setVersion("1");
         dto.setProperties(TEST_PROPERTIES);
         dto.setSourceUrl("https://www.postgresql.org/docs/");
         dto.setConnectorUrl("https://localhost:9090");

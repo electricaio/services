@@ -7,15 +7,10 @@ import io.electrica.connector.dto.ConnectorExecutorResult;
 import io.electrica.connector.dto.ErrorDto;
 import io.electrica.connector.dto.InvocationContext;
 import io.electrica.connector.hub.dto.BasicAuthorizationDto;
+import io.electrica.connector.hub.dto.IbmAuthorizationDto;
 import io.electrica.connector.hub.dto.TokenAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.BasicTypedAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
-import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
-import io.electrica.connector.spi.context.Authorization;
-import io.electrica.connector.spi.context.BasicAuthorization;
-import io.electrica.connector.spi.context.ExecutionContext;
-import io.electrica.connector.spi.context.TokenAuthorization;
+import io.electrica.connector.hub.dto.sdk.*;
+import io.electrica.connector.spi.context.*;
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
 import org.springframework.stereotype.Component;
@@ -43,6 +38,9 @@ public class ExecutorManagerMapper {
         } else if (dto instanceof TokenTypedAuthorizationDto) {
             TokenAuthorizationDto data = ((TokenTypedAuthorizationDto) dto).getData();
             return new TokenAuthorization(data.getToken());
+        } else if (dto instanceof IbmTypedAuthorizationDto) {
+            IbmAuthorizationDto data = ((IbmTypedAuthorizationDto) dto).getData();
+            return new IbmAuthorization(data.getIntegrationId(), data.getClientId());
         }
         return null;
     }
