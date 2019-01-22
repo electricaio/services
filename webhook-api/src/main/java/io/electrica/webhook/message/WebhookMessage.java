@@ -1,6 +1,5 @@
 package io.electrica.webhook.message;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.webhook.dto.WebhookScope;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,7 +63,12 @@ public class WebhookMessage {
     @NotNull
     private Boolean expectedResult;
 
+    private String expectedContentType;
+
     @NotNull
-    private JsonNode payload;
+    private String payload;
+
+    @NotNull
+    private String contentType;
 
 }

@@ -15,7 +15,6 @@ import io.electrica.user.dto.*;
 import io.electrica.user.feign.AccessKeyClient;
 import io.electrica.user.feign.OrganizationClient;
 import io.electrica.user.feign.UserClient;
-import io.electrica.webhook.feign.WebhookClient;
 import io.electrica.webhook.feign.WebhookManagementClient;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,8 +67,6 @@ public abstract class BaseIT {
     protected AuthorizationClient authorizationClient;
     @Inject
     protected WebhookManagementClient webhookManagementClient;
-    @Inject
-    protected WebhookClient webhookClient;
 
     @Value("${it-service.slack.v1.webhook-token}")
     protected String slackV1WebhookToken;

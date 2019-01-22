@@ -1,9 +1,10 @@
 package io.electrica.webhook.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.common.exception.TimeoutServiceException;
 import io.electrica.webhook.dto.MessageResultDto;
+import io.electrica.webhook.rest.TypedDeferredResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -18,38 +19,45 @@ public class WebhookMessageResultDispatcher {
 
     private final WebhookMessageSender webhookMessageSender;
 
-    private final ConcurrentMap<UUID, DeferredResult<JsonNode>> results = new ConcurrentHashMap<>();
+    private final ConcurrentMap<UUID, TypedDeferredResult<String>> results = new ConcurrentHashMap<>();
 
     public WebhookMessageResultDispatcher(WebhookMessageSender webhookMessageSender) {
         this.webhookMessageSender = webhookMessageSender;
     }
 
-    private DeferredResult<JsonNode> createWebhookResult(UUID messageId, long timeout) {
-        DeferredResult<JsonNode> result = new DeferredResult<>(timeout);
+    private TypedDeferredResult<String> createWebhookResult(
+            UUID messageId,
+            String expectedContentType,
+            long timeout
+    ) {
+        TypedDeferredResult<String> result = new TypedDeferredResult<>(expectedContentType, timeout);
         result.onCompletion(() -> results.remove(messageId));
         result.onError(result::setErrorResult);
         result.onTimeout(() -> result.setErrorResult(new TimeoutServiceException()));
         return result;
     }
 
-    public DeferredResult<JsonNode> submit(
+    public DeferredResult<ResponseEntity<String>> submit(
             UUID webhookId,
-            JsonNode payload,
+            String payload,
+            String contentType,
+            @Nullable String expectedContentType,
             long timeout,
             boolean isPublic,
             @Nullable String sign
     ) {
-        UUID messageId = webhookMessageSender.send(webhookId, payload, true, isPublic, sign);
-        DeferredResult<JsonNode> result = createWebhookResult(messageId, timeout);
+        UUID messageId = webhookMessageSender.send(webhookId, payload, contentType, expectedContentType,
+                true, isPublic, sign);
+        TypedDeferredResult<String> result = createWebhookResult(messageId, expectedContentType, timeout);
         results.put(messageId, result);
         return result;
     }
 
     public void handle(MessageResultDto messageResult) {
         UUID messageId = messageResult.getMessageId();
-        DeferredResult<JsonNode> result = results.get(messageId);
+        TypedDeferredResult<String> result = results.get(messageId);
         if (result != null) {
-            result.setResult(messageResult.getPayload());
+            result.buildResponseEntityResult(messageResult.getPayload());
         }
     }
 }

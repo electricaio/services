@@ -1,21 +1,25 @@
 package io.electrica.webhook.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.webhook.dto.MessageResultDto;
 import io.electrica.webhook.service.WebhookMessageResultDispatcher;
 import io.electrica.webhook.service.WebhookMessageResultSender;
 import io.electrica.webhook.service.WebhookMessageSender;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.validation.Valid;
 import java.util.UUID;
+
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 @RestController
 public class WebhookControllerImpl implements WebhookController {
@@ -44,20 +48,24 @@ public class WebhookControllerImpl implements WebhookController {
             "#webhook.validateAccessKey()"
     )
     public ResponseEntity<Void> submit(
+            @RequestHeader(value = CONTENT_TYPE, defaultValue = MediaType.TEXT_PLAIN_VALUE) String contentType,
             @PathVariable("webhookId") UUID webhookId,
-            @RequestBody JsonNode payload
+            @RequestBody String payload
     ) {
-        webhookMessageSender.send(webhookId, payload, false, false, null);
+        webhookMessageSender.send(webhookId, payload, contentType, null,
+                false, false, null);
         return ResponseEntity.accepted().build();
     }
 
     @Override
     public ResponseEntity<Void> publicSubmit(
+            @RequestHeader(value = CONTENT_TYPE, defaultValue = MediaType.TEXT_PLAIN_VALUE) String contentType,
             @PathVariable("webhookId") UUID webhookId,
             @PathVariable("sign") String sign,
-            @RequestBody JsonNode payload
+            @RequestBody String payload
     ) {
-        webhookMessageSender.send(webhookId, payload, false, true, sign);
+        webhookMessageSender.send(webhookId, payload, contentType, null,
+                false, true, sign);
         return ResponseEntity.accepted().build();
     }
 
@@ -67,28 +75,34 @@ public class WebhookControllerImpl implements WebhookController {
             "#webhook.webhookBelongsCurrentAccessKey(#webhookId) and " +
             "#webhook.validateAccessKey()"
     )
-    public DeferredResult<JsonNode> invoke(
+    public DeferredResult<ResponseEntity<String>> invoke(
+            @RequestHeader(value = CONTENT_TYPE, defaultValue = MediaType.TEXT_PLAIN_VALUE) String contentType,
+            @RequestHeader(value = ACCEPT, defaultValue = MediaType.ALL_VALUE) String accept,
             @PathVariable("webhookId") UUID webhookId,
-            @RequestBody JsonNode payload,
+            @RequestBody String payload,
             @RequestParam(name = "timeout", required = false, defaultValue = "60000") long timeout
     ) {
         if (timeout > messageResultMaxTimeout) {
             timeout = messageResultMaxTimeout;
         }
-        return webhookMessageResultDispatcher.submit(webhookId, payload, timeout, false, null);
+        return webhookMessageResultDispatcher.submit(webhookId, payload, contentType, accept,
+                timeout, false, null);
     }
 
     @Override
-    public DeferredResult<JsonNode> publicInvoke(
+    public DeferredResult<ResponseEntity<String>> publicInvoke(
+            @RequestHeader(value = CONTENT_TYPE, defaultValue = MediaType.TEXT_PLAIN_VALUE) String contentType,
+            @RequestHeader(value = ACCEPT, defaultValue = MediaType.ALL_VALUE) String accept,
             @PathVariable("webhookId") UUID webhookId,
             @PathVariable("sign") String sign,
-            @RequestBody JsonNode payload,
+            @RequestBody String payload,
             @RequestParam(name = "timeout", required = false, defaultValue = "60000") long timeout
     ) {
         if (timeout > messageResultMaxTimeout) {
             timeout = messageResultMaxTimeout;
         }
-        return webhookMessageResultDispatcher.submit(webhookId, payload, timeout, true, sign);
+        return webhookMessageResultDispatcher.submit(webhookId, payload, contentType, accept,
+                timeout, true, sign);
     }
 
     @Override

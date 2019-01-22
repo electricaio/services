@@ -1,6 +1,5 @@
 package io.electrica.webhook.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +22,6 @@ public class MessageResultDto {
     @NotNull
     private UUID webhookServiceId;
 
-    private JsonNode payload;
+    private String payload;
 
 }
