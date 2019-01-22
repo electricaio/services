@@ -1,17 +1,8 @@
 package io.electrica.connector.hub.service.dto;
 
-import io.electrica.connector.hub.dto.BasicAuthorizationDto;
-import io.electrica.connector.hub.dto.ConnectionDto;
-import io.electrica.connector.hub.dto.ConnectorDto;
-import io.electrica.connector.hub.dto.TokenAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.BasicTypedAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.FullConnectionDto;
-import io.electrica.connector.hub.dto.sdk.TokenTypedAuthorizationDto;
-import io.electrica.connector.hub.dto.sdk.TypedAuthorizationDto;
-import io.electrica.connector.hub.model.Authorization;
-import io.electrica.connector.hub.model.BasicAuthorization;
-import io.electrica.connector.hub.model.Connection;
-import io.electrica.connector.hub.model.TokenAuthorization;
+import io.electrica.connector.hub.dto.*;
+import io.electrica.connector.hub.dto.sdk.*;
+import io.electrica.connector.hub.model.*;
 import io.electrica.connector.hub.service.ConnectionService;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +16,7 @@ public class FullConnectionDtoService {
     private final ConnectorDtoService connectorDtoService;
     private final BasicAuthorizationDtoService basicAuthorizationDtoService;
     private final TokenAuthorizationDtoService tokenAuthorizationDtoService;
+    private final IbmAuthorizationDtoService ibmAuthorizationDtoService;
 
     @Inject
     public FullConnectionDtoService(
@@ -32,13 +24,15 @@ public class FullConnectionDtoService {
             ConnectionDtoService connectionDtoService,
             ConnectorDtoService connectorDtoService,
             BasicAuthorizationDtoService basicAuthorizationDtoService,
-            TokenAuthorizationDtoService tokenAuthorizationDtoService
+            TokenAuthorizationDtoService tokenAuthorizationDtoService,
+            IbmAuthorizationDtoService ibmAuthorizationDtoService
     ) {
         this.connectionService = connectionService;
         this.connectionDtoService = connectionDtoService;
         this.connectorDtoService = connectorDtoService;
         this.basicAuthorizationDtoService = basicAuthorizationDtoService;
         this.tokenAuthorizationDtoService = tokenAuthorizationDtoService;
+        this.ibmAuthorizationDtoService = ibmAuthorizationDtoService;
     }
 
     public FullConnectionDto findById(Long connectionId) {
@@ -58,6 +52,9 @@ public class FullConnectionDtoService {
         } else if (authorization instanceof TokenAuthorization) {
             TokenAuthorizationDto data = tokenAuthorizationDtoService.toDto((TokenAuthorization) authorization);
             return new TokenTypedAuthorizationDto(data);
+        } else if (authorization instanceof IbmAuthorization) {
+            IbmAuthorizationDto data = ibmAuthorizationDtoService.toDto((IbmAuthorization) authorization);
+            return new IbmTypedAuthorizationDto(data);
         } else if (authorization == null) {
             return null;
         }
