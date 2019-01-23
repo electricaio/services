@@ -1,6 +1,5 @@
 package io.electrica.webhook.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.common.mq.PersistentMessagePostProcessor;
 import io.electrica.common.mq.webhook.WebhookMessageQueueDispatcher;
@@ -39,7 +38,8 @@ public class WebhookMessageSender {
         this.webhookMessageQueueDispatcher = webhookMessageQueueDispatcher;
     }
 
-    private WebhookMessage buildMessage(Webhook webhook, JsonNode payload, boolean expectedResult) {
+    private WebhookMessage buildMessage(Webhook webhook, String payload, String contentType,
+                                        String expectedContentType, boolean expectedResult) {
         return new WebhookMessage(
                 UUID.randomUUID(),
                 webhook.getId(),
@@ -55,13 +55,17 @@ public class WebhookMessageSender {
                 webhook.getConnectionId(),
                 webhook.getProperties(),
                 expectedResult,
-                payload
+                expectedContentType,
+                payload,
+                contentType
         );
     }
 
     public UUID send(
             UUID webhookId,
-            JsonNode payload,
+            String payload,
+            String contentType,
+            @Nullable String expectedContentType,
             boolean expectedResult,
             boolean isPublic,
             @Nullable String sign
@@ -83,7 +87,7 @@ public class WebhookMessageSender {
                 webhook.getAccessKeyId()
         );
 
-        WebhookMessage message = buildMessage(webhook, payload, expectedResult);
+        WebhookMessage message = buildMessage(webhook, payload, contentType, expectedContentType, expectedResult);
         rabbitTemplate.convertAndSend(
                 WebhookMessages.EXCHANGE,
                 routingKey,
