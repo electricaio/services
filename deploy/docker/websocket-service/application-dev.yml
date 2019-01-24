@@ -12,3 +12,4 @@ feign:
   invokerService.url: invoker-service:22024
   connectorService.url: connector-service:22025
   webhookService.url: webhook-service:22026
+  metricService.url: metric-service:22028

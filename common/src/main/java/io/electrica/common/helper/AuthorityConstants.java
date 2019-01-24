@@ -16,6 +16,7 @@ public interface AuthorityConstants {
     String WEBHOOK_SERVICE_RESOURCE_ID = "w";
     String WEBSOCKET_SERVICE_RESOURCE_ID = "ws";
     String INTEGRATION_TEST_SERVICE_RESOURCE_ID = "it";
+    String METRIC_SERVICE_RESOURCE_ID = "m";
 
     String ACCESS_KEY_CLIENT_ID = "accessKey";
     String FRONTEND_CLIENT_ID = "frontend";
@@ -24,7 +25,8 @@ public interface AuthorityConstants {
     String[] FRONTEND_CLIENT_RESOURCE_IDS = {
             USER_SERVICE_RESOURCE_ID,
             CONNECTOR_HUB_SERVICE_RESOURCE_ID,
-            WEBHOOK_SERVICE_RESOURCE_ID
+            WEBHOOK_SERVICE_RESOURCE_ID,
+            METRIC_SERVICE_RESOURCE_ID
     };
 
     String[] ACCESS_KEY_CLIENT_SCOPES = {READ_SCOPE, SDK_SCOPE};

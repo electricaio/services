@@ -35,4 +35,7 @@ docker tag electrica/webhook-service ${ECR_HOST}/electrica/webhook-service:${TAG
 docker push ${ECR_HOST}/electrica/webhook-service:${TAG} && \
 \
 docker tag electrica/websocket-service ${ECR_HOST}/electrica/websocket-service:${TAG} && \
-docker push ${ECR_HOST}/electrica/websocket-service:${TAG}
+docker push ${ECR_HOST}/electrica/websocket-service:${TAG}  && \
+\
+docker tag electrica/metric-service ${ECR_HOST}/electrica/metric-service:${TAG} && \
+docker push ${ECR_HOST}/electrica/metric-service:${TAG}

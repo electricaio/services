@@ -49,4 +49,11 @@ cp ./websocket-service/build/libs/websocket-service-*.jar ./deploy/docker/websoc
 docker build -t electrica/websocket-service \
   --build-arg PROFILE=${PROFILE} \
   ./deploy/docker/websocket-service && \
-rm -rf ./deploy/docker/websocket-service/service.jar
+rm -rf ./deploy/docker/websocket-service/service.jar && \
+\
+echo "==================== Building metric-service docker image ====================" && \
+cp ./metric-service/build/libs/metric-service-*.jar ./deploy/docker/metric-service/service.jar && \
+docker build -t electrica/metric-service \
+  --build-arg PROFILE=${PROFILE} \
+  ./deploy/docker/metric-service && \
+rm -rf ./deploy/docker/metric-service/service.jar

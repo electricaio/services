@@ -31,6 +31,12 @@ services:
     ports:
       - 22027:22027
 
+  metric-service:
+    depends_on:
+      - rabbitmq
+    ports:
+      - 22028:22028
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:

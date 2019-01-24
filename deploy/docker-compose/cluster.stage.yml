@@ -49,6 +49,14 @@ services:
     ports:
       - 25027:5005
 
+  metric-service:
+    image: ${ECR_HOST}electrica/metric-service:stage
+    environment:
+      - JAVA_OPTS=-Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - ARGS=--common.swagger.host=${HOST_NAME:-localhost} --common.swagger.protocol=https
+    ports:
+      - 25028:5005
+
   rabbitmq:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq

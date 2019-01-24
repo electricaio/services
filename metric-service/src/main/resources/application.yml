@@ -1,0 +1,6 @@
+server:
+  port: 22028
+
+spring:
+  application:
+    name: metric-service
