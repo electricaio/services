@@ -7,6 +7,8 @@ dependencies {
     compile 'io.electrica.connector:spi'
     compile 'io.electrica.connector:echo'
     compile 'io.electrica.connector:slack'
+    compile 'io.electrica.connector:hackerrank'
+    compile 'io.electrica.connector:brassring'
 
     // TODO temporary fix to solve jar hell
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"

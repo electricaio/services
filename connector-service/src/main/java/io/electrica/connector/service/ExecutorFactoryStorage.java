@@ -3,15 +3,18 @@ package io.electrica.connector.service;
 import io.electrica.connector.dto.ConnectorExecutorContext;
 import io.electrica.connector.spi.ConnectorExecutorFactory;
 import io.electrica.connector.spi.ConnectorProperties;
+import io.electrica.connector.spi.impl.MapConnectorProperties;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -75,33 +78,12 @@ public class ExecutorFactoryStorage {
                 }
                 Map<String, String> properties = context.getConnection().getConnector().getProperties();
                 ConnectorProperties connectorProperties = properties == null ?
-                        ConnectorPropertiesImpl.EMPTY :
-                        new ConnectorPropertiesImpl(properties);
+                        ConnectorProperties.EMPTY :
+                        new MapConnectorProperties(properties);
                 factory.setup(connectorProperties);
                 return factory;
             }
         });
     }
 
-    private static class ConnectorPropertiesImpl implements ConnectorProperties {
-
-        private static final ConnectorProperties EMPTY = new ConnectorPropertiesImpl(Collections.emptyMap());
-
-        private final Map<String, String> properties;
-
-        private ConnectorPropertiesImpl(Map<String, String> properties) {
-            this.properties = properties;
-        }
-
-        @Override
-        public boolean contains(String key) {
-            return properties.containsKey(key);
-        }
-
-        @Nullable
-        @Override
-        public String getString(String key) {
-            return properties.get(key);
-        }
-    }
 }

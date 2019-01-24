@@ -10,9 +10,11 @@ import io.electrica.connector.hub.dto.BasicAuthorizationDto;
 import io.electrica.connector.hub.dto.IbmAuthorizationDto;
 import io.electrica.connector.hub.dto.TokenAuthorizationDto;
 import io.electrica.connector.hub.dto.sdk.*;
+import io.electrica.connector.spi.ObjectProperties;
 import io.electrica.connector.spi.context.*;
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
+import io.electrica.connector.spi.impl.MapObjectProperties;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -52,6 +54,9 @@ public class ExecutorManagerMapper {
                 c.getInvocationId(),
                 context.getInstanceId(),
                 fullConnection.getConnection().getName(),
+                fullConnection.getConnection().getProperties() == null ?
+                        ObjectProperties.EMPTY :
+                        new MapObjectProperties(fullConnection.getConnection().getProperties()),
                 toSdkAuthorization(fullConnection.getAuthorization()),
                 context.getAction(),
                 context.getParameters(),
