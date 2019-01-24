@@ -14,6 +14,10 @@ import java.util.Map;
 public class V0_0_1_040__Seed_BrassRing_Applications_v1_connector implements SpringJdbcMigration {
 
     private static final Map<String, String> PROPERTIES = new HashMap<String, String>() {{
+        put(
+                "api.url",
+                "https://trm.brassring.com/jetstream/500/presentation/template/asp/HRISIntegration/msgdispatch.asp"
+        );
         put("http-client.max-idle-connections", "10");
         put("http-client.keep-alive-duration-min", "60");
     }};
@@ -27,7 +31,7 @@ public class V0_0_1_040__Seed_BrassRing_Applications_v1_connector implements Spr
                 "BrassRing Connector v1",
                 "Bi-directional BrassRing Connector for testing candidates using third-party SaaS providers",
                 "brassring",
-                "applications",
+                "application",
                 "1",
                 "https://www.electrica.io",
                 "https://www.ibm.com/in-en/talent-management",
