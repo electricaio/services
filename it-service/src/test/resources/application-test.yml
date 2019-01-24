@@ -6,7 +6,7 @@ it-service:
     v1:
       webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
       test-result-channel: slack-sdk-test
-  publish-report: true
+  publish-report: false
 
 feign:
   userService.url: localhost
