@@ -16,4 +16,6 @@ include 'webhook-service'
 include 'websocket-service'
 include 'common-mq'
 include 'it-service'
+include 'metric-service-api'
+include 'metric-service'
 

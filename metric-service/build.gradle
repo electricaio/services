@@ -1,0 +1,40 @@
+apply plugin: 'org.springframework.boot'
+apply plugin: "org.liquibase.gradle"
+
+dependencies {
+    compile project(':metric-service-api')
+
+    compile project(':common-jpa')
+    compile project(':common-mq')
+
+    testCompile project(':common-test')
+    testCompile project(':common-jpa').sourceSets.test.output
+
+    liquibaseRuntime "org.liquibase:liquibase-core"
+    liquibaseRuntime "org.postgresql:postgresql:${postgresqlDriverVersion}"
+    liquibaseRuntime "org.yaml:snakeyaml:${snakeyamlVersion}"
+}
+
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split("\\s+")
+    }
+    jvmArgs = ["-Xmx128m"]
+}
+
+liquibase {
+    // Use `gradle diffChangeLog` task to create difference changelog
+    activities {
+        main {
+            changeLogFile 'src/main/resources/db/generated.yml'
+            // DB without changes
+            url 'jdbc:postgresql://localhost:15432/metric_db'
+            username 'postgres'
+            password ''
+            // DB with changes
+            referenceUrl 'jdbc:postgresql://localhost:5432/metric_db'
+            referenceUsername 'postgres'
+            referencePassword ''
+        }
+    }
+}

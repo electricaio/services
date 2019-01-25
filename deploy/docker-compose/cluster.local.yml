@@ -49,6 +49,13 @@ services:
     ports:
       - 25027:5005
 
+  metric-service:
+    image: electrica/metric-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - 25028:5005
+
   postgres-db:
     image: electrica/postgres
     environment:

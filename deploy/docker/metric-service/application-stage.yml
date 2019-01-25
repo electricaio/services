@@ -1,0 +1,19 @@
+spring:
+  rabbitmq:
+    host: rabbitmq
+  datasource:
+    username: metric_service
+    password: Ptq7CWFMRYSAgDVj
+    url: jdbc:postgresql://backend-stage.cp49urcbfang.us-east-2.rds.amazonaws.com:5432/metric_db
+
+security:
+  oauth2:
+  resource.jwt.key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApy3qbmDiHv1IwncR9Jy/mZ/8vMC+c6SN/Yl7Km4tAVEn5DzBQD7Zesa5mWfgpyREN1fyH05vrWwh6w1B5wNcM6Slz4kfvHgPfVyLBazAUMMBgYSoewZf5CCONi9AJeohEH6xsxlhR1RsBbsOpknDhOjF+qHh333Crq9G8DpTxmm+3a99m6a5u5JoYKY/uX6QJN9GnLoNKaMugclUcxGIBAwLXEncDBXOemfhf7SKYBsXBSLNRioQWKuzbIjNaqhCl3QKp8979PAOEfE4vH79ZTF8p5z/k+JmBFxMgulm4bDUDf8DaEg36SZjcmVIQBDQyzPyLdbJjvqzu0v+XdqilQIDAQAB\n-----END PUBLIC KEY-----"
+
+feign:
+  userService.url: user-service:22022
+  connectorHubService.url: connector-hub-service:22023
+  invokerService.url: invoker-service:22024
+  connectorService.url: connector-service:22025
+  webhookService.url: webhook-service:22026
+  metricService.url: metric-service:22028

@@ -1,6 +1,6 @@
 package io.electrica.common.server;
 
-import io.electrica.common.helper.AuthorityConstants;
+import com.google.common.collect.ImmutableMap;
 import io.electrica.common.helper.RequestHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
+import static io.electrica.common.helper.AuthorityConstants.*;
 
 /**
  * Enable and configure oauth2 Resource Server.
@@ -20,44 +23,35 @@ import javax.servlet.http.HttpServletResponse;
 @EnableResourceServer
 public class ResourceServerConfigurerAdapterImpl extends ResourceServerConfigurerAdapter {
 
+    private static final Map<String, String> APP_NAME_TO_RESOURCE_ID_MAP = ImmutableMap.<String, String>builder()
+            .put("user-service", USER_SERVICE_RESOURCE_ID)
+            .put("connector-hub-service", CONNECTOR_HUB_SERVICE_RESOURCE_ID)
+            .put("invoker-service", INVOKER_SERVICE_RESOURCE_ID)
+            .put("connector-service", CONNECTOR_SERVICE_RESOURCE_ID)
+            .put("webhook-service", WEBHOOK_SERVICE_RESOURCE_ID)
+            .put("websocket-service", WEBSOCKET_SERVICE_RESOURCE_ID)
+            .put("it-service", INTEGRATION_TEST_SERVICE_RESOURCE_ID)
+            .put("metric-service", METRIC_SERVICE_RESOURCE_ID)
+            .build();
+
     private final String applicationName;
+
+    // specify id of resource, that validated using JWT token
+    // token have to be explicitly granted to all required micro-services
+    private final String resourceId;
 
     @Inject
     public ResourceServerConfigurerAdapterImpl(@Value("${spring.application.name}") String applicationName) {
         this.applicationName = applicationName;
+        this.resourceId = APP_NAME_TO_RESOURCE_ID_MAP.getOrDefault(applicationName, null);
     }
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // specify id of resource, that validated using JWT token
-        // token have to be explicitly granted to all required micro-services
-        String resourceId;
-        switch (applicationName) {
-            case "user-service":
-                resourceId = AuthorityConstants.USER_SERVICE_RESOURCE_ID;
-                break;
-            case "connector-hub-service":
-                resourceId = AuthorityConstants.CONNECTOR_HUB_SERVICE_RESOURCE_ID;
-                break;
-            case "invoker-service":
-                resourceId = AuthorityConstants.INVOKER_SERVICE_RESOURCE_ID;
-                break;
-            case "connector-service":
-                resourceId = AuthorityConstants.CONNECTOR_SERVICE_RESOURCE_ID;
-                break;
-            case "webhook-service":
-                resourceId = AuthorityConstants.WEBHOOK_SERVICE_RESOURCE_ID;
-                break;
-            case "websocket-service":
-                resourceId = AuthorityConstants.WEBSOCKET_SERVICE_RESOURCE_ID;
-                break;
-            case "it-service":
-                resourceId = AuthorityConstants.INTEGRATION_TEST_SERVICE_RESOURCE_ID;
-                break;
-            default:
-                throw new UnsupportedOperationException(
-                        "Unknown service name to resolve oauth resourceId: " + applicationName
-                );
+    public void configure(ResourceServerSecurityConfigurer resources) {
+        if (resourceId == null) {
+            throw new UnsupportedOperationException(
+                    "Unknown service name to resolve oauth resourceId: " + applicationName
+            );
         }
         resources.resourceId(resourceId);
     }
