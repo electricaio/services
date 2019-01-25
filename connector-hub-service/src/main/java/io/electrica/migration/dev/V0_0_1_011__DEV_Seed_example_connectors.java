@@ -32,6 +32,9 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
         createLeverApplicationsConnector(context);
         createIncomingWebhooksConnector(context);
         createMySQLConnector(context);
+        createJenkinsConnector(context);
+        createSalesforceConnector(context);
+        createMarketoConnector(context);
     }
 
     private void createGreenhouseApplicationConnector(BeanFactory beanFactory) {
@@ -86,5 +89,30 @@ public class V0_0_1_011__DEV_Seed_example_connectors implements SpringJdbcMigrat
                 "https://images.electrica.io/mysql-logo.png",
                 TEST_PROPERTIES);
         MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
+    }
+
+    private void createJenkinsConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "Jenkins", "Jenkins Connector", "jenkins", "jobs", "1".toLowerCase(),
+                SOURCE_URL, "https://jenkins.io", SDK_URL,
+                "https://images.electrica.io/jenkins-logo.png",
+                null);
+        MigrationUtils.saveConnector(beanFactory, dto, "Foundation");
+    }
+
+    private void createMarketoConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "Marketo", "Marketo Assets Connector", "marketo", "assets", "1".toLowerCase(),
+                SOURCE_URL, "http://marketohost.wpengine.com/rest-api/endpoint-reference/asset-endpoint-reference", SDK_URL,
+                "https://images.electrica.io/marketo-logo.png", null);
+        MigrationUtils.saveConnector(beanFactory, dto, "CRM");
+    }
+
+    private void createSalesforceConnector(BeanFactory beanFactory) {
+        CreateConnectorDto dto = new CreateConnectorDto(null,
+                AuthorizationType.Token, "Salesforce", "Salesforce Reports Connector", "salesforce", "reports", "1".toLowerCase(),
+                SOURCE_URL, "https://developer.salesforce.com/docs/atlas.en-us.api_analytics.meta/api_analytics/sforce_analytics_rest_api_intro.htm", SDK_URL,
+                "https://images.electrica.io/salesforce-logo.png", null);
+        MigrationUtils.saveConnector(beanFactory, dto, "CRM");
     }
 }

@@ -27,7 +27,7 @@ public class V0_0_1_040__Seed_BrassRing_Applications_v1_connector implements Spr
         ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
         CreateConnectorDto connector = new CreateConnectorDto(
                 null,
-                AuthorizationType.Token,
+                AuthorizationType.Ibm,
                 "BrassRing Connector v1",
                 "Bi-directional BrassRing Connector for testing candidates using third-party SaaS providers",
                 "brassring",
