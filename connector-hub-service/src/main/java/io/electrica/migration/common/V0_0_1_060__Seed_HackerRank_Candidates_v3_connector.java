@@ -1,0 +1,41 @@
+package io.electrica.migration.common;
+
+import io.electrica.common.migration.FlywayApplicationContextBridge;
+import io.electrica.connector.hub.dto.AuthorizationType;
+import io.electrica.connector.hub.dto.CreateConnectorDto;
+import io.electrica.migration.MigrationUtils;
+import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class V0_0_1_060__Seed_HackerRank_Candidates_v3_connector implements SpringJdbcMigration {
+
+    private static final Map<String, String> PROPERTIES = new HashMap<String, String>() {{
+        put("api.template.url", "https://www.hackerrank.com/x/api/v3/tests/%s/candidates");
+        put("http-client.max-idle-connections", "10");
+        put("http-client.keep-alive-duration-min", "60");
+    }};
+    @Override
+    public void migrate(JdbcTemplate jdbcTemplate) {
+        ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
+        CreateConnectorDto connector = new CreateConnectorDto(
+                null,
+                AuthorizationType.Token,
+                "HackerRank for Work candidates v3",
+                "The HackerRank Candidates Connector enables you to manage candidates and invite them to test",
+                "hackerrank-v3",
+                "candidates",
+                "1",
+                "https://www.electrica.io",
+                "https://www.hackerrank.com",
+                "https://www.hackerrank.com/work/apidocs#!/TestCandidate/options_candidates",
+                "https://images.electrica.io/hackerrank-logo.png",
+                PROPERTIES
+        );
+
+        MigrationUtils.saveConnector(context, connector, "Talent");
+    }
+}
