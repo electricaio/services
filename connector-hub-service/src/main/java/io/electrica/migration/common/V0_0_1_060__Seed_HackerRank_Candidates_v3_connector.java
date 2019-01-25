@@ -11,34 +11,31 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class V0_0_1_040__Seed_BrassRing_Applications_v1_connector implements SpringJdbcMigration {
+public class V0_0_1_060__Seed_HackerRank_Candidates_v3_connector implements SpringJdbcMigration {
 
     private static final Map<String, String> PROPERTIES = new HashMap<String, String>() {{
-        put(
-                "api.url",
-                "https://trm.brassring.com/jetstream/500/presentation/template/asp/HRISIntegration/msgdispatch.asp"
-        );
+        put("api.template.url", "https://www.hackerrank.com/x/api/v3/tests/%s/candidates");
         put("http-client.max-idle-connections", "10");
         put("http-client.keep-alive-duration-min", "60");
     }};
-
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) {
         ApplicationContext context = FlywayApplicationContextBridge.instance().getApplicationContext();
         CreateConnectorDto connector = new CreateConnectorDto(
                 null,
-                AuthorizationType.Ibm,
-                "BrassRing Connector v1",
-                "Bi-directional BrassRing Connector for testing candidates using third-party SaaS providers",
-                "brassring",
-                "application",
+                AuthorizationType.Token,
+                "HackerRank for Work candidates v3",
+                "The HackerRank Candidates Connector enables you to manage candidates and invite them to test",
+                "hackerrank-v3",
+                "candidates",
                 "1",
                 "https://www.electrica.io",
-                "https://www.ibm.com/in-en/talent-management",
-                "https://www.electrica.io",
-                "https://images.electrica.io/brassring-logo.png",
+                "https://www.hackerrank.com",
+                "https://www.hackerrank.com/work/apidocs#!/TestCandidate/options_candidates",
+                "https://images.electrica.io/hackerrank-logo.png",
                 PROPERTIES
         );
+
         MigrationUtils.saveConnector(context, connector, "Talent");
     }
 }
