@@ -14,7 +14,7 @@ import java.util.Map;
 public class V0_0_1_050__Seed_HackerRank_Test_v3_connector implements SpringJdbcMigration {
 
     private static final Map<String, String> PROPERTIES = new HashMap<String, String>() {{
-        put("api.url", "https://www.hackerrank.com/x/api/v1/tests");
+        put("api.url", "https://www.hackerrank.com/x/api/v3/tests");
         put("http-client.max-idle-connections", "10");
         put("http-client.keep-alive-duration-min", "60");
     }};
