@@ -5,6 +5,7 @@ dependencies {
     compile project(':common-mq')
     compile project(':webhook-api')
     compile project(':user-service-api')
+    compile project(':metric-service-api')
     compile 'org.springframework:spring-websocket'
 
     testCompile project(':common-test')
