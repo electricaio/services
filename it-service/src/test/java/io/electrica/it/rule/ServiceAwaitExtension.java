@@ -26,7 +26,8 @@ public class ServiceAwaitExtension implements BeforeAllCallback, AfterAllCallbac
             "http://localhost:22024",
             "http://localhost:22025",
             "http://localhost:22026",
-            "http://localhost:22027"
+            "http://localhost:22027",
+            "http://localhost:22028"
     );
 
     private static final Waiter INSTANCE = new Waiter();

@@ -67,4 +67,4 @@ services:
 
   swagger-ui:
     environment:
-      - "API_URLS=[ {url: \"https://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"https://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"https://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"https://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"} ]"
+      - "API_URLS=[ {url: \"https://${HOST_NAME:-localhost}/user-service/swagger/\", name: \"User\"}, {url: \"https://${HOST_NAME:-localhost}/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"https://${HOST_NAME:-localhost}/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"https://${HOST_NAME:-localhost}/webhook-service/swagger/\", name: \"Webhook\"}, {url: \"https://${HOST_NAME:-localhost}/metric-service/swagger/\", name: \"Metric\"} ]"

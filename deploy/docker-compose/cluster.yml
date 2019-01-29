@@ -53,6 +53,7 @@ services:
       - invoker-service
       - connector-service
       - webhook-service
+      - metric-service
       - websocket-service
     ports:
       - 80:80

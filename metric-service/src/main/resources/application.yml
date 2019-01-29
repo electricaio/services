@@ -4,3 +4,6 @@ server:
 spring:
   application:
     name: metric-service
+  datasource:
+    name: pool-to-metric-db
+    url: jdbc:postgresql://127.0.0.1:5432/metric_db

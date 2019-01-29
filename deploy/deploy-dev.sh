@@ -23,6 +23,7 @@ docker pull ${ECR_HOST}electrica/connector-hub-service:dev
 docker pull ${ECR_HOST}electrica/invoker-service:dev
 docker pull ${ECR_HOST}electrica/connector-service:dev
 docker pull ${ECR_HOST}electrica/webhook-service:dev
+docker pull ${ECR_HOST}electrica/metric-service:dev
 docker pull ${ECR_HOST}electrica/websocket-service:dev
 
 docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.dev.yml up -d
