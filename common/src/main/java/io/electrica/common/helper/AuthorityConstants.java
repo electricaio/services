@@ -36,7 +36,8 @@ public interface AuthorityConstants {
             INVOKER_SERVICE_RESOURCE_ID,
             CONNECTOR_SERVICE_RESOURCE_ID,
             WEBHOOK_SERVICE_RESOURCE_ID,
-            WEBSOCKET_SERVICE_RESOURCE_ID
+            WEBSOCKET_SERVICE_RESOURCE_ID,
+            METRIC_SERVICE_RESOURCE_ID
     };
 
 }

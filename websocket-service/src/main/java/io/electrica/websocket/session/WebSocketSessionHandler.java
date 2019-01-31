@@ -16,25 +16,34 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final AutowireCapableBeanFactory beanFactory;
+    private final InstanceSessionChangeSender instanceSessionChangeSender;
 
     private volatile WebSocketSessionMessageDispatcher messageHandler;
+    private volatile SdkInstanceContext sdkInstanceContext;
 
     @Inject
-    public WebSocketSessionHandler(ObjectMapper objectMapper, AutowireCapableBeanFactory beanFactory) {
+    public WebSocketSessionHandler(ObjectMapper objectMapper, AutowireCapableBeanFactory beanFactory,
+                                   InstanceSessionChangeSender instanceSessionChangeSender) {
         this.objectMapper = objectMapper;
         this.beanFactory = beanFactory;
+        this.instanceSessionChangeSender = instanceSessionChangeSender;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
+        sdkInstanceContext = extractContext(session);
+        messageHandler = beanFactory.createBean(WebSocketSessionMessageDispatcher.class);
+        messageHandler.init(sdkInstanceContext, session);
+        instanceSessionChangeSender.start(sdkInstanceContext);
+    }
+
+    private SdkInstanceContext extractContext(WebSocketSession session) {
         Object context = session.getAttributes().get(INSTANCE_CONTEXT_ATTRIBUTE);
         if (!(context instanceof SdkInstanceContext)) {
             throw new IllegalStateException("Sdk instance context expected: " + INSTANCE_CONTEXT_ATTRIBUTE);
         }
 
-        SdkInstanceContext sdkInstanceContext = (SdkInstanceContext) context;
-        messageHandler = beanFactory.createBean(WebSocketSessionMessageDispatcher.class);
-        messageHandler.init(sdkInstanceContext, session);
+        return  (SdkInstanceContext) context;
     }
 
     @Override
@@ -48,6 +57,7 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
         if (messageHandler != null) {
             beanFactory.destroyBean(messageHandler);
         }
+        instanceSessionChangeSender.stop(sdkInstanceContext, status);
     }
 
     @Override

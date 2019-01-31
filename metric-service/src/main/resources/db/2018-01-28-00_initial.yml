@@ -1,0 +1,168 @@
+databaseChangeLog:
+- changeSet:
+    id: 1548867931985-1
+    author: romanpetrovskiy (generated)
+    changes:
+    - createSequence:
+        sequenceName: revinfo_id_seq
+- changeSet:
+    id: 1548867931985-2
+    author: romanpetrovskiy (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: access_key_id
+            type: BIGINT
+        - column:
+            name: expired_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: last_session_started
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: organization_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: session_state
+            type: VARCHAR(31)
+        - column:
+            constraints:
+              nullable: false
+            name: started_client_time
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: started_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: stopped_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: instance_sessions
+- changeSet:
+    id: 1548867931985-3
+    author: romanpetrovskiy (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: rev
+            type: BIGINT
+        - column:
+            name: entityname
+            type: VARCHAR(255)
+        tableName: revchanges
+- changeSet:
+    id: 1548867931985-4
+    author: romanpetrovskiy (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: timestamp
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: revinfo
+- changeSet:
+    id: 1548867931985-5
+    author: romanpetrovskiy (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: instance_sessions_pkey
+        tableName: instance_sessions
+- changeSet:
+    id: 1548867931985-6
+    author: romanpetrovskiy (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: revinfo_pkey
+        tableName: revinfo
+- changeSet:
+    id: 1548867931985-7
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: access_key_id
+        indexName: instance_sessions_access_key_id_idx
+        tableName: instance_sessions
+- changeSet:
+    id: 1548867931985-8
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: organization_id
+        indexName: instance_sessions_organization_id_idx
+        tableName: instance_sessions
+- changeSet:
+    id: 1548867931985-9
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: user_id
+        indexName: instance_sessions_user_id_idx
+        tableName: instance_sessions
+- changeSet:
+    id: 1548867931985-10
+    author: romanpetrovskiy (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rev
+        baseTableName: revchanges
+        constraintName: fk9m2hkxrk7o2k0n7tm5qx949s1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: revinfo
+
