@@ -1,9 +1,8 @@
-package io.electrica.instance.session.rest;
+package io.electrica.metric.instance.session.rest;
 
-import io.electrica.instance.session.service.dto.InstanceSessionDtoService;
+import io.electrica.metric.instance.session.service.dto.InstanceSessionDtoService;
 import io.electrica.metric.instance.session.dto.UpsertInstanceSessionDto;
 import io.electrica.metric.instance.session.dto.InstanceSessionDto;
-import io.electrica.metric.instance.session.rest.InstanceSessionController;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;

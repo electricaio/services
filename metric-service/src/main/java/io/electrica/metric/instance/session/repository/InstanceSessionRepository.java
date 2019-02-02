@@ -1,6 +1,6 @@
-package io.electrica.instance.session.repository;
+package io.electrica.metric.instance.session.repository;
 
-import io.electrica.instance.session.model.InstanceSession;
+import io.electrica.metric.instance.session.model.InstanceSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

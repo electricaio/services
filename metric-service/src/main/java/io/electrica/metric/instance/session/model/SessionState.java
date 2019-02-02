@@ -1,4 +1,4 @@
-package io.electrica.instance.session.model;
+package io.electrica.metric.instance.session.model;
 
 import java.util.Collections;
 import java.util.EnumMap;

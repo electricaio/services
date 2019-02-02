@@ -1,9 +1,9 @@
-package io.electrica.instance.session.service;
+package io.electrica.metric.instance.session.service;
 
 import io.electrica.common.exception.BadRequestServiceException;
-import io.electrica.instance.session.model.InstanceSession;
-import io.electrica.instance.session.model.SessionState;
-import io.electrica.instance.session.repository.InstanceSessionRepository;
+import io.electrica.metric.instance.session.model.InstanceSession;
+import io.electrica.metric.instance.session.model.SessionState;
+import io.electrica.metric.instance.session.repository.InstanceSessionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.retry.annotation.Backoff;

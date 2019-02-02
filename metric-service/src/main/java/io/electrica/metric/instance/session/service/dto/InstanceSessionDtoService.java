@@ -1,11 +1,11 @@
-package io.electrica.instance.session.service.dto;
+package io.electrica.metric.instance.session.service.dto;
 
 import com.github.dozermapper.core.Mapper;
 import io.electrica.common.context.Identity;
 import io.electrica.common.context.IdentityContextHolder;
-import io.electrica.instance.session.model.InstanceSession;
-import io.electrica.instance.session.model.SessionState;
-import io.electrica.instance.session.service.InstanceSessionService;
+import io.electrica.metric.instance.session.model.InstanceSession;
+import io.electrica.metric.instance.session.model.SessionState;
+import io.electrica.metric.instance.session.service.InstanceSessionService;
 import io.electrica.metric.instance.session.dto.UpsertInstanceSessionDto;
 import io.electrica.metric.instance.session.dto.InstanceSessionDto;
 import org.springframework.data.domain.Page;
