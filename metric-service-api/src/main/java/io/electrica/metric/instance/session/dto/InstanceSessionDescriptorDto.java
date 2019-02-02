@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpsertInstanceSessionDto {
+public class InstanceSessionDescriptorDto {
     private UUID id;
     private String name;
     private ZonedDateTime startedClientTime;
