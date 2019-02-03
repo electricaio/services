@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':metric-service-api')
+    compile project(':common-mq')
+}
