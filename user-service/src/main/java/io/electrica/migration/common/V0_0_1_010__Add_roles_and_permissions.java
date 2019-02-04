@@ -64,6 +64,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
         Permission deleteWebhook = savePermission(PermissionType.DeleteWebhook, "Delete Webhook", "DeleteWebhook");
         Permission readWebhook = savePermission(PermissionType.ReadWebhook, "Read Webhook", "ReadWebhook");
         Permission readConnector = savePermission(PermissionType.ReadConnector, "Read Connector", "ReadConnector");
+        Permission readInstanceSession = savePermission(PermissionType.ReadInstanceSession,
+                "ReadInstance Session", "ReadInstanceSession");
 
         assignPermissionsToRole(orgUser,
                 updateUser,
@@ -80,7 +82,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 readWebhook,
                 readConnector,
                 deActivateConnection,
-                updateConnection
+                updateConnection,
+                readInstanceSession
         );
 
 
@@ -104,7 +107,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 readWebhook,
                 readConnector,
                 updateConnection,
-                deActivateConnection
+                deActivateConnection,
+                readInstanceSession
         );
 
 
@@ -132,7 +136,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 deleteWebhook,
                 readWebhook,
                 updateConnection,
-                readConnector
+                readConnector,
+                readInstanceSession
         );
     }
 

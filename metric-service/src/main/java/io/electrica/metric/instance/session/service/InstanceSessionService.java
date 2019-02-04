@@ -1,9 +1,11 @@
 package io.electrica.metric.instance.session.service;
 
 import io.electrica.common.exception.BadRequestServiceException;
+import io.electrica.metric.instance.session.dto.InstanceSessionFilter;
 import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
 import io.electrica.metric.instance.session.repository.InstanceSessionRepository;
+import io.electrica.metric.instance.session.repository.InstanceSessionSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.retry.annotation.Backoff;
@@ -26,16 +28,8 @@ public class InstanceSessionService {
         this.repository = repository;
     }
 
-    public Page<InstanceSession> findByOrganizationId(long organizationId, Pageable pageable) {
-        return repository.findByOrganizationId(organizationId, pageable);
-    }
-
-    public Page<InstanceSession> findByUserId(long userId, Pageable pageable) {
-        return repository.findByUserId(userId, pageable);
-    }
-
-    public Page<InstanceSession> findByAccessKeyId(long accessKeyId, Pageable pageable) {
-        return repository.findByAccessKeyId(accessKeyId, pageable);
+    public Page<InstanceSession> findByFilter(InstanceSessionFilter filter, Pageable pageable) {
+        return repository.findAll(new InstanceSessionSpecification(filter), pageable);
     }
 
     @Retryable(value = {OptimisticLockException.class, SQLException.class},

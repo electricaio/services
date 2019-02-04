@@ -3,6 +3,7 @@ package io.electrica.metric.instance.session.service.dto;
 import com.github.dozermapper.core.Mapper;
 import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.metric.instance.session.dto.InstanceSessionDetailedDescriptorDto;
+import io.electrica.metric.instance.session.dto.InstanceSessionFilter;
 import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
 import io.electrica.metric.instance.session.service.InstanceSessionService;
@@ -42,21 +43,8 @@ public class InstanceSessionDtoService {
         return toInstanceSessionDto(service.stop(dto.getId(), dto.getStartedClientTime()));
     }
 
-    public List<InstanceSessionDto> findByCurrentUserId(Pageable pageable) {
-        long userId = identityContextHolder.getIdentity().getUserId();
-        return toInstanceSessionDtoList(service.findByUserId(userId, pageable));
-    }
-
-    public List<InstanceSessionDto> findByAccessKeyId(long accessKeyId, Pageable pageable) {
-        return toInstanceSessionDtoList(service.findByAccessKeyId(accessKeyId, pageable));
-    }
-
-    public List<InstanceSessionDto> findByUserId(long userId, Pageable pageable) {
-        return toInstanceSessionDtoList(service.findByUserId(userId, pageable));
-    }
-
-    public List<InstanceSessionDto> findByOrganizationId(long organizationId, Pageable pageable) {
-        return toInstanceSessionDtoList(service.findByOrganizationId(organizationId, pageable));
+    public List<InstanceSessionDto> findByFilter(InstanceSessionFilter filter, Pageable pageable) {
+        return toInstanceSessionDtoList(service.findByFilter(filter, pageable));
     }
 
     private List<InstanceSessionDto> toInstanceSessionDtoList(Page<InstanceSession> page) {
