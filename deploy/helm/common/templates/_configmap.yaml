@@ -1,0 +1,9 @@
+{{- define "common.configmap" -}}
+kind: ConfigMap
+apiVersion: v1
+{{ template "common.metadata" . }}
+data:
+  {{- range $key, $val := .Values.config.properties }}
+    {{ $key }}: {{ $val }}
+  {{- end}}
+{{- end -}}

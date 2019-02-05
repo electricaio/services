@@ -1,0 +1,6 @@
+dependencies:
+- name: common
+  repository: file://../../../../../deploy/helm/common
+  version: 0.1.0
+digest: sha256:742ac77bbb85c316c4c88ae8ba0cab4db80905204a2d8cf157067ae8b14d2738
+generated: 2019-02-04T12:26:42.233101217-08:00
