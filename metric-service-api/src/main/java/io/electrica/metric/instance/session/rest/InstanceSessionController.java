@@ -1,16 +1,15 @@
 package io.electrica.metric.instance.session.rest;
 
-import io.electrica.metric.instance.session.dto.UpsertInstanceSessionDto;
 import io.electrica.metric.instance.session.dto.InstanceSessionDto;
+import io.electrica.metric.instance.session.model.SessionState;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 import static io.electrica.common.rest.PathConstants.V1;
 
@@ -18,24 +17,15 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface InstanceSessionController {
     String PREFIX = V1 + "/metrics/instance-sessions";
 
-    @PostMapping(PREFIX + "/started")
-    ResponseEntity<Void> started(@RequestBody UpsertInstanceSessionDto dto);
-
-    @PostMapping(PREFIX + "/{instanceSessionId}/expired")
-    ResponseEntity<Void> expired(@PathVariable("instanceSessionId") UUID id,
-                                 @RequestParam("sessionStartedClientTime")
-                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                        ZonedDateTime sessionStartedClientTime);
-
-    @PostMapping(PREFIX + "/{instanceSessionId}/stopped")
-    ResponseEntity<Void> stopped(@PathVariable("instanceSessionId") UUID id,
-                                 @RequestParam("sessionStartedClientTime")
-                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                      ZonedDateTime sessionStartedClientTime);
-
-    @GetMapping(path = PREFIX + "/user-instance-sessions")
+    @GetMapping(path = PREFIX + "/instance-sessions")
     List<InstanceSessionDto> getInstanceSessions(
             @PageableDefault Pageable pageable,
+            @RequestParam(value = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(value = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(value = "nameStartWith", required = false) String nameStartWith,
+            @RequestParam(value = "state[]", required = false) Set<SessionState> sessionStates,
             @RequestParam(value = "accessKeyId", required = false) Long accessKeyId,
             @RequestParam(value = "userId", required = false) Long userId,
             @RequestParam(value = "organizationId", required = false) Long organizationId

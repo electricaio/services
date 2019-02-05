@@ -1,5 +1,6 @@
 package io.electrica.metric.instance.session.dto;
 
+import io.electrica.metric.instance.session.model.SessionState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ public class InstanceSessionDto {
     private Long organizationId;
     private Long accessKeyId;
     private String name;
-    private String sessionState;
+    private SessionState sessionState;
     private ZonedDateTime startedClientTime;
     private LocalDateTime startedTime;
     private LocalDateTime stoppedTime;

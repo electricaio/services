@@ -18,4 +18,5 @@ include 'common-mq'
 include 'it-service'
 include 'metric-service-api'
 include 'metric-service'
+include 'metric-common'
 

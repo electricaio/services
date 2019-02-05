@@ -1,6 +1,8 @@
 package io.electrica.websocket.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.electrica.common.context.Identity;
+import io.electrica.metric.common.mq.instance.session.InstanceSessionEventSender;
 import io.electrica.websocket.context.SdkInstanceContext;
 import io.electrica.websocket.dto.inbound.AckInboundMessage;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -16,17 +18,17 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final AutowireCapableBeanFactory beanFactory;
-    private final InstanceSessionChangeSender instanceSessionChangeSender;
+    private final InstanceSessionEventSender instanceSessionEventSender;
 
     private volatile WebSocketSessionMessageDispatcher messageHandler;
     private volatile SdkInstanceContext sdkInstanceContext;
 
     @Inject
     public WebSocketSessionHandler(ObjectMapper objectMapper, AutowireCapableBeanFactory beanFactory,
-                                   InstanceSessionChangeSender instanceSessionChangeSender) {
+                                   InstanceSessionEventSender instanceSessionEventSender) {
         this.objectMapper = objectMapper;
         this.beanFactory = beanFactory;
-        this.instanceSessionChangeSender = instanceSessionChangeSender;
+        this.instanceSessionEventSender = instanceSessionEventSender;
     }
 
     @Override
@@ -34,7 +36,15 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
         sdkInstanceContext = extractContext(session);
         messageHandler = beanFactory.createBean(WebSocketSessionMessageDispatcher.class);
         messageHandler.init(sdkInstanceContext, session);
-        instanceSessionChangeSender.start(sdkInstanceContext);
+        Identity identity = sdkInstanceContext.getIdentity();
+        instanceSessionEventSender.sendEstablished(
+                sdkInstanceContext.getInstanceId(),
+                sdkInstanceContext.getInstanceName(),
+                sdkInstanceContext.getInstanceStartClientTime(),
+                identity.getUserId(),
+                identity.getOrganizationId(),
+                identity.getAccessKeyId()
+        );
     }
 
     private SdkInstanceContext extractContext(WebSocketSession session) {
@@ -57,7 +67,16 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
         if (messageHandler != null) {
             beanFactory.destroyBean(messageHandler);
         }
-        instanceSessionChangeSender.stop(sdkInstanceContext, status);
+        Identity identity = sdkInstanceContext.getIdentity();
+        instanceSessionEventSender.sendClosed(
+                sdkInstanceContext.getInstanceId(),
+                sdkInstanceContext.getInstanceName(),
+                sdkInstanceContext.getInstanceStartClientTime(),
+                identity.getUserId(),
+                identity.getOrganizationId(),
+                identity.getAccessKeyId(),
+                status.getCode()
+        );
     }
 
     @Override
