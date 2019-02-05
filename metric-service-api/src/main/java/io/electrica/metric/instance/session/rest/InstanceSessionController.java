@@ -16,7 +16,7 @@ import static io.electrica.common.rest.PathConstants.V1;
 public interface InstanceSessionController {
     String PREFIX = V1 + "/metrics/instance-sessions";
 
-    @GetMapping(path = PREFIX + "/user-instance-sessions")
+    @GetMapping(path = PREFIX + "/instance-sessions")
     List<InstanceSessionDto> getInstanceSessions(
             @PageableDefault Pageable pageable,
             @RequestParam(value = "startDate")
