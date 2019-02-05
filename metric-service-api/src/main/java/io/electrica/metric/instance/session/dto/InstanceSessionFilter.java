@@ -5,17 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.EnumSet;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstanceSessionFilter {
+public class InstanceSessionFilter implements Serializable {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String nameStartWith;
-    private Set<SessionState> sessionStates;
+    private EnumSet<SessionState> sessionStates;
     private Long accessKeyId;
     private Long userId;
     private Long organizationId;

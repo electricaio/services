@@ -1,6 +1,5 @@
 package io.electrica.metric.instance.session.service;
 
-import io.electrica.common.exception.BadRequestServiceException;
 import io.electrica.metric.instance.session.dto.InstanceSessionFilter;
 import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
@@ -16,8 +15,7 @@ import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.UUID;
+import java.time.ZoneOffset;
 
 @Component
 public class InstanceSessionService {
@@ -34,69 +32,61 @@ public class InstanceSessionService {
 
     @Retryable(value = {OptimisticLockException.class, SQLException.class},
             backoff = @Backoff(delay = 0), maxAttempts = 5)
-    public InstanceSession start(InstanceSession newEntity) {
-        newEntity.setLastSessionStarted(newEntity.getStartedClientTime());
-        return repository.findById(newEntity.getId())
-                .map(e -> resume(e, newEntity.getLastSessionStarted()))
-                .orElseGet(() -> repository.save(newEntity));
+    public InstanceSession changeState(InstanceSession newEntity) {
+        InstanceSession merged = repository.findById(newEntity.getId())
+                .map(oldEntity -> merge(oldEntity, newEntity))
+                .orElseGet(() -> initStartedTime(newEntity));
+        return repository.save(merged);
     }
 
-    private InstanceSession resume(InstanceSession instanceSession, ZonedDateTime lastSessionStarted) {
-        if (instanceSession.getLastSessionStarted().isBefore(lastSessionStarted)
-                || instanceSession.getLastSessionStarted().isEqual(lastSessionStarted)) {
-            instanceSession.setLastSessionStarted(lastSessionStarted);
-            instanceSession.setExpiredTime(null);
-            instanceSession.setSessionState(SessionState.Running);
-            return repository.save(instanceSession);
+    private InstanceSession merge(InstanceSession oldEntity, InstanceSession newEntity) {
+        if (isRelevant(oldEntity, newEntity)) {
+            oldEntity.setLastSessionStarted(newEntity.getLastSessionStarted());
+            if (oldEntity.getSessionState().isTransitionAllowed(newEntity.getSessionState())) {
+                oldEntity.setSessionState(newEntity.getSessionState());
+                if (newEntity.getSessionState() == SessionState.Expired) {
+                    oldEntity.setExpiredTime(LocalDateTime.now());
+                    oldEntity.setStoppedTime(null);
+                }
+                if (newEntity.getSessionState() == SessionState.Running) {
+                    oldEntity.setExpiredTime(null);
+                    oldEntity.setStoppedTime(null);
+                }
+                if (newEntity.getSessionState() == SessionState.Stopped) {
+                    oldEntity.setExpiredTime(null);
+                    oldEntity.setStoppedTime(LocalDateTime.now());
+                }
+            }
         }
+
+        oldEntity.setUserId(newEntity.getUserId());
+        oldEntity.setOrganizationId(newEntity.getOrganizationId());
+        oldEntity.setAccessKeyId(newEntity.getAccessKeyId());
+
+        LocalDateTime newStartTime = getLastSessionStartedAsUTC(newEntity);
+        if (oldEntity.getStartedTime().isAfter(newStartTime)) {
+            oldEntity.setStartedTime(newStartTime);
+        }
+
+        return repository.save(oldEntity);
+    }
+
+    private boolean isRelevant(InstanceSession oldEntity, InstanceSession newEntity) {
+        return oldEntity.getLastSessionStarted().isBefore(newEntity.getLastSessionStarted())
+                || oldEntity.getLastSessionStarted().isEqual(newEntity.getLastSessionStarted());
+    }
+
+    private InstanceSession initStartedTime(InstanceSession instanceSession) {
+        instanceSession.setStartedClientTime(instanceSession.getLastSessionStarted());
+        LocalDateTime newStartTime = getLastSessionStartedAsUTC(instanceSession);
+        instanceSession.setStartedTime(newStartTime);
         return instanceSession;
     }
 
-    @Retryable(value = OptimisticLockException.class, backoff = @Backoff(0), maxAttempts = 5)
-    public InstanceSession expire(UUID id, ZonedDateTime lastSessionStarted) {
-        checkSessionStartedTime(lastSessionStarted);
-        InstanceSession instanceSession = findByIdOrElseThrow(id);
-        if (instanceSession.getLastSessionStarted().isBefore(lastSessionStarted)) {
-            checkTransition(instanceSession, SessionState.Expired);
-            instanceSession.setExpiredTime(LocalDateTime.now());
-            instanceSession.setSessionState(SessionState.Expired);
-            return repository.save(instanceSession);
-        }
-        return instanceSession;
-    }
-
-    @Retryable(value = OptimisticLockException.class, backoff = @Backoff(0), maxAttempts = 5)
-    public InstanceSession stop(UUID id, ZonedDateTime lastSessionStarted) {
-        checkSessionStartedTime(lastSessionStarted);
-        InstanceSession instanceSession = findByIdOrElseThrow(id);
-        if (instanceSession.getLastSessionStarted().equals(lastSessionStarted)
-                || instanceSession.getLastSessionStarted().isEqual(lastSessionStarted)) {
-            checkTransition(instanceSession, SessionState.Stopped);
-            instanceSession.setExpiredTime(null);
-            instanceSession.setStoppedTime(LocalDateTime.now());
-            instanceSession.setSessionState(SessionState.Stopped);
-            return repository.save(instanceSession);
-        }
-        return instanceSession;
-    }
-
-    private InstanceSession findByIdOrElseThrow(UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new BadRequestServiceException("InstanceSession not found with " + id));
-    }
-
-    private void checkSessionStartedTime(ZonedDateTime lastSessionStarted) {
-        if (lastSessionStarted == null) {
-            throw new BadRequestServiceException("WebSocketSessionId is empty");
-        }
-    }
-
-    private void checkTransition(InstanceSession instanceSession, SessionState toSessionState) {
-        if (!instanceSession.getSessionState().isTransitionAllowed(toSessionState)) {
-            throw new BadRequestServiceException(String.format(
-                    "Transition isn't allowed from %s to %s for InstanceSession %s",
-                    instanceSession.getSessionState(), toSessionState, instanceSession.getOrganizationId()
-            ));
-        }
+    private LocalDateTime getLastSessionStartedAsUTC(InstanceSession instanceSession) {
+        return LocalDateTime.ofInstant(
+                instanceSession.getLastSessionStarted().toInstant(),
+                ZoneOffset.UTC
+        );
     }
 }

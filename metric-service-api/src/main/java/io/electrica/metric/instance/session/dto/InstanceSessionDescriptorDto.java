@@ -15,5 +15,8 @@ import java.util.UUID;
 public class InstanceSessionDescriptorDto {
     private UUID id;
     private String name;
-    private ZonedDateTime startedClientTime;
+    private ZonedDateTime lastSessionStarted;
+    private Long userId;
+    private Long organizationId;
+    private Long accessKeyId;
 }

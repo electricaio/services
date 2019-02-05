@@ -67,10 +67,14 @@ public class WebSocketSessionHandler extends TextWebSocketHandler {
         if (messageHandler != null) {
             beanFactory.destroyBean(messageHandler);
         }
+        Identity identity = sdkInstanceContext.getIdentity();
         instanceSessionEventSender.sendClosed(
                 sdkInstanceContext.getInstanceId(),
                 sdkInstanceContext.getInstanceName(),
                 sdkInstanceContext.getInstanceStartClientTime(),
+                identity.getUserId(),
+                identity.getOrganizationId(),
+                identity.getAccessKeyId(),
                 status.getCode()
         );
     }

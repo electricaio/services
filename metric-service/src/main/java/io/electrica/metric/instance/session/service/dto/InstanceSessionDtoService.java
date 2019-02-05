@@ -2,7 +2,6 @@ package io.electrica.metric.instance.session.service.dto;
 
 import com.github.dozermapper.core.Mapper;
 import io.electrica.common.context.IdentityContextHolder;
-import io.electrica.metric.instance.session.dto.InstanceSessionDetailedDescriptorDto;
 import io.electrica.metric.instance.session.dto.InstanceSessionFilter;
 import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
@@ -29,18 +28,20 @@ public class InstanceSessionDtoService {
         this.mapper = mapper;
     }
 
-    public InstanceSessionDto start(InstanceSessionDetailedDescriptorDto dto) {
-        InstanceSession entity = toUpsertEntity(dto);
-        InstanceSession instanceSession = service.start(entity);
+    public InstanceSessionDto start(InstanceSessionDescriptorDto dto) {
+        InstanceSession entity = toEntity(dto, SessionState.Running);
+        InstanceSession instanceSession = service.changeState(entity);
         return toInstanceSessionDto(instanceSession);
     }
 
     public InstanceSessionDto expire(InstanceSessionDescriptorDto dto) {
-        return toInstanceSessionDto(service.expire(dto.getId(), dto.getStartedClientTime()));
+        InstanceSession entity = toEntity(dto, SessionState.Expired);
+        return toInstanceSessionDto(service.changeState(entity));
     }
 
     public InstanceSessionDto stop(InstanceSessionDescriptorDto dto) {
-        return toInstanceSessionDto(service.stop(dto.getId(), dto.getStartedClientTime()));
+        InstanceSession entity = toEntity(dto, SessionState.Stopped);
+        return toInstanceSessionDto(service.changeState(entity));
     }
 
     public List<InstanceSessionDto> findByFilter(InstanceSessionFilter filter, Pageable pageable) {
@@ -53,12 +54,9 @@ public class InstanceSessionDtoService {
                 .collect(Collectors.toList());
     }
 
-    private InstanceSession toUpsertEntity(InstanceSessionDetailedDescriptorDto dto) {
+    private InstanceSession toEntity(InstanceSessionDescriptorDto dto, SessionState sessionState) {
         InstanceSession result = mapper.map(dto, InstanceSession.class);
-        result.setSessionState(SessionState.Running);
-        result.setAccessKeyId(dto.getAccessKeyId());
-        result.setUserId(dto.getUserId());
-        result.setOrganizationId(dto.getOrganizationId());
+        result.setSessionState(sessionState);
         return result;
     }
 

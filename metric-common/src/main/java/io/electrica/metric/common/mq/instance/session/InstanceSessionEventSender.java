@@ -30,8 +30,13 @@ public class InstanceSessionEventSender {
         ));
     }
 
-    public void sendClosed(UUID id, String name, ZonedDateTime startedClientTime, int closedCode) {
-        metricSender.send(CLOSED_ROUTING_KEY,
-                InstanceConnectionClosedEvent.of(id, name, startedClientTime, closedCode));
+    public void sendClosed(UUID id, String name, ZonedDateTime startedClientTime, long userId,
+                           long organizationId, long accessKeyId, int closedCode) {
+        metricSender.send(
+                CLOSED_ROUTING_KEY,
+                InstanceConnectionClosedEvent.of(
+                        id, name, startedClientTime, userId, organizationId, accessKeyId, closedCode
+                )
+        );
     }
 }

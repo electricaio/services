@@ -3,7 +3,6 @@ package io.electrica.metric.instance.session.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -77,7 +76,6 @@ public class InstanceSession {
     private ZonedDateTime lastSessionStarted;
 
     @Column(nullable = false)
-    @CreationTimestamp
     private LocalDateTime startedTime;
 
     @Column

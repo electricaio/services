@@ -17,8 +17,9 @@ public class InstanceConnectionClosedEvent implements MetricEvent {
     private InstanceSessionDescriptorDto descriptor;
 
     public static InstanceConnectionClosedEvent of(UUID id, String name, ZonedDateTime startedClientTime,
-                                                   int closedCode) {
-        InstanceSessionDescriptorDto descriptor = new InstanceSessionDescriptorDto(id, name, startedClientTime);
+                                                   long userId, long organizationId, long accessKeyId, int closedCode) {
+        InstanceSessionDescriptorDto descriptor = new InstanceSessionDescriptorDto(id, name, startedClientTime,
+                userId, organizationId, accessKeyId);
         return new InstanceConnectionClosedEvent(closedCode, descriptor);
     }
 }

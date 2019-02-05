@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,11 +40,15 @@ public class InstanceSessionControllerImpl implements InstanceSessionController 
             @RequestParam(value = "userId", required = false) Long userId,
             @RequestParam(value = "organizationId", required = false) Long organizationId
     ) {
+        EnumSet<SessionState> sessionStatesEnumSet = EnumSet.noneOf(SessionState.class);
+        if (sessionStates != null) {
+            sessionStatesEnumSet.addAll(sessionStates);
+        }
         return instanceSessionDtoService.findByFilter(new InstanceSessionFilter(
                 startDate,
                 endDate,
                 nameStartWith,
-                sessionStates == null ? Collections.emptySet() : sessionStates,
+                sessionStatesEnumSet,
                 accessKeyId,
                 userId,
                 organizationId
