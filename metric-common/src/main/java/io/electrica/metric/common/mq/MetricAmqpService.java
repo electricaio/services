@@ -1,5 +1,6 @@
 package io.electrica.metric.common.mq;
 
+import io.electrica.common.condition.NotTestCondition;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
@@ -7,6 +8,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Named;
@@ -18,6 +20,7 @@ import static io.electrica.metric.common.mq.config.MetricAmqpConfig.METRIC_DEAD_
 import static io.electrica.metric.common.mq.config.MetricAmqpConfig.METRIC_EXCHANGE_QUALIFIER;
 
 @Component
+@Conditional(NotTestCondition.class)
 public class MetricAmqpService {
     private static final int MAX_RETRY = 3;
     private static final String DEAD_LETTER_QUEUE_POSTFIX = "-dlq";

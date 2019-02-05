@@ -14,8 +14,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 @RestController
 public class InstanceSessionControllerImpl implements InstanceSessionController {
@@ -26,16 +25,17 @@ public class InstanceSessionControllerImpl implements InstanceSessionController 
         this.instanceSessionDtoService = instanceSessionDtoService;
     }
 
-    @PreAuthorize("#common.isSuperAdmin() OR #metric.canReadInstanceSession(#userId)")
+    @PreAuthorize("#common.hasPermission('ReadInstanceSession') " +
+            " AND ( #common.isSuperAdmin() OR #common.isUser(#userId) )")
     @Override
     public List<InstanceSessionDto> getInstanceSessions(
             @PageableDefault Pageable pageable,
-            @RequestParam(value = "startDate")
+            @RequestParam(value = "startDate", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(value = "endDate")
+            @RequestParam(value = "endDate", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(value = "nameStartWith", required = false) String nameStartWith,
-            @RequestParam(value = "sessionStates[]", required = false) SessionState[] sessionStates,
+            @RequestParam(value = "state[]", required = false) Set<SessionState> sessionStates,
             @RequestParam(value = "accessKeyId", required = false) Long accessKeyId,
             @RequestParam(value = "userId", required = false) Long userId,
             @RequestParam(value = "organizationId", required = false) Long organizationId
@@ -44,7 +44,7 @@ public class InstanceSessionControllerImpl implements InstanceSessionController 
                 startDate,
                 endDate,
                 nameStartWith,
-                sessionStates == null ? Collections.emptySet() : Stream.of(sessionStates).collect(Collectors.toSet()),
+                sessionStates == null ? Collections.emptySet() : sessionStates,
                 accessKeyId,
                 userId,
                 organizationId

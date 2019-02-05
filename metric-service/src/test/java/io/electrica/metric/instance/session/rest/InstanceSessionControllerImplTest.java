@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 
 @SpringBootTest(classes = MetricServiceApplication.class)
 public class InstanceSessionControllerImplTest extends AbstractJpaApplicationTest {
@@ -21,24 +22,17 @@ public class InstanceSessionControllerImplTest extends AbstractJpaApplicationTes
     private InstanceSessionControllerImpl instanceSessionController;
 
     @Test
-    @ForUser(roles = RoleType.SuperAdmin)
+    @ForUser(roles = RoleType.SuperAdmin, permissions = PermissionType.ReadInstanceSession)
     public void testPermissionsForSuperAdmin() {
         instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
-                "", new SessionState[]{SessionState.Running}, 1L, 2L, 3L);
+                "", EnumSet.of(SessionState.Running), 1L, 2L, 3L);
     }
 
-    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadUser)
     @Test(expected = AccessDeniedException.class)
-    public void testNoPermissionsForUser() {
+    @ForUser(roles = RoleType.SuperAdmin, permissions = PermissionType.ReadUser)
+    public void testNoPermissionsForSuperAdmin() {
         instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
-                null, null, null, 1L, null);
-    }
-
-    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadInstanceSession)
-    @Test(expected = AccessDeniedException.class)
-    public void testPermissionsForDifferentUser() {
-        instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
-                null, null, null, 2L, null);
+                "", EnumSet.of(SessionState.Running), 1L, 2L, 3L);
     }
 
     @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadInstanceSession)
@@ -46,5 +40,19 @@ public class InstanceSessionControllerImplTest extends AbstractJpaApplicationTes
     public void testPermissionsForUser() {
         instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
                 null, null, null, 0L, null);
+    }
+
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadUser)
+    @Test(expected = AccessDeniedException.class)
+    public void testNoPermissionsForUser() {
+        instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
+                null, null, null, 0L, null);
+    }
+
+    @ForUser(roles = RoleType.OrgUser, permissions = PermissionType.ReadInstanceSession)
+    @Test(expected = AccessDeniedException.class)
+    public void testPermissionsForDifferentUser() {
+        instanceSessionController.getInstanceSessions(Pageable.unpaged(), LocalDateTime.now(), LocalDateTime.now(),
+                null, null, null, 2L, null);
     }
 }

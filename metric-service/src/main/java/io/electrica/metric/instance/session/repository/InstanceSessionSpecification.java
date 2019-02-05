@@ -17,22 +17,25 @@ public class InstanceSessionSpecification implements Specification<InstanceSessi
 
     @Override
     public Predicate toPredicate(Root<InstanceSession> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        Expression<LocalDateTime> sessionEndDate = builder.<LocalDateTime>coalesce()
-                .value(root.get("stoppedTime"))
-                .value(root.get("expiredTime"))
-                .value(LocalDateTime.now())
-                .as(LocalDateTime.class);
+        Predicate predicate = builder.and();
 
-        Predicate predicate = builder.or(
-                builder.between(root.get("startedTime"),
-                        instanceSessionFilter.getStartDate(), instanceSessionFilter.getEndDate()),
-                builder.between(sessionEndDate,
-                        instanceSessionFilter.getStartDate(), instanceSessionFilter.getEndDate()),
-                builder.and(
-                        builder.lessThanOrEqualTo(root.get("startedTime"), instanceSessionFilter.getStartDate()),
-                        builder.greaterThanOrEqualTo(sessionEndDate, instanceSessionFilter.getEndDate())
-                )
-        );
+        if (instanceSessionFilter.getStartDate() != null && instanceSessionFilter.getEndDate() != null) {
+            Expression<LocalDateTime> sessionEndDate = builder.<LocalDateTime>coalesce()
+                    .value(root.get("stoppedTime"))
+                    .value(root.get("expiredTime"))
+                    .value(LocalDateTime.now())
+                    .as(LocalDateTime.class);
+            predicate = builder.or(
+                    builder.between(root.get("startedTime"),
+                            instanceSessionFilter.getStartDate(), instanceSessionFilter.getEndDate()),
+                    builder.between(sessionEndDate,
+                            instanceSessionFilter.getStartDate(), instanceSessionFilter.getEndDate()),
+                    builder.and(
+                            builder.lessThanOrEqualTo(root.get("startedTime"), instanceSessionFilter.getStartDate()),
+                            builder.greaterThanOrEqualTo(sessionEndDate, instanceSessionFilter.getEndDate())
+                    )
+            );
+        }
 
         if (instanceSessionFilter.getNameStartWith() != null) {
             predicate = builder.and(predicate, builder.like(root.get("name"),
