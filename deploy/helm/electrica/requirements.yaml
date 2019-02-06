@@ -1,0 +1,40 @@
+dependencies:
+#  - name: postgres
+#    version: 0.0.1
+#    condition: postgres.enabled
+#
+#  - name: rabbit
+#    version: 0.0.1
+#    condition: rabbit.enabled
+#
+#  - name: swagger
+#    version: 0.0.1
+#    condition: swagger.enabled
+#
+#  - name: userService
+#    version: 0.0.1
+#    condition: userService.enabled
+#
+#  - name: connectorHubService
+#    version: 0.0.1
+#    condition: connectorHubService.enabled
+#
+#  - name: connectorService
+#    version: 0.0.1
+#    condition: connectorService.enabled
+#
+#  - name: invokerService
+#    version: 0.0.1
+#    condition: invokerService.enabled
+#
+#  - name: webhookService
+#    version: 0.0.1
+#    condition: webhookService.enabled
+#
+#  - name: websocketService
+#    version: 0.0.1
+#    condition: websocketService.enabled
+#
+#  - name: metricService
+#    version: 0.0.1
+#    condition: metricService.enabled
