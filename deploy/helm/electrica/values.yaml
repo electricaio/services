@@ -1,0 +1,76 @@
+# Common settings.
+global:
+  # Default tag for Electrica.io images.
+  tag: latest
+  hub: 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica
+
+  host:
+    api: api.electrica.io
+
+  imagePullPolicy: Always
+
+
+postgres:
+  enabled: true
+  replicaCount: 1
+  image: postgres
+
+rabbit:
+  enabled: true
+  replicaCount: 1
+  image: rabbitmq
+  tag: 3-management-alpine
+
+swagger:
+  enabled: true
+  replicaCount: 1
+  image: swaggerapi/swagger-ui
+
+userService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: user-service
+
+connectorHubService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: connector-hub-service
+
+connectorService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: connector-service
+
+invokerService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: invoker-service
+
+webhookService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: webhook-service
+
+websocketService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: websocket-service
+
+metricService:
+  enabled: true
+  replicaCount: 1
+  autoscaleMin: 1
+  autoscaleMax: 5
+  image: metric-service
