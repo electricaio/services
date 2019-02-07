@@ -19,10 +19,10 @@ public interface InstanceSessionClient extends InstanceSessionController {
     List<InstanceSessionDto> feignGetInstanceSessions(
             @RequestParam(value = "pageNumber", required = false) int pageNumber,
             @RequestParam(value = "pageSize", required = false) int pageSize,
-            @RequestParam(value = "startDate", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(value = "endDate", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(value = "startTime", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(value = "endTime", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
             @RequestParam(value = "nameStartWith", required = false) String nameStartWith,
             @RequestParam(value = "state[]", required = false) Set<SessionState> sessionStates,
             @RequestParam(value = "accessKeyId", required = false) Long accessKeyId,

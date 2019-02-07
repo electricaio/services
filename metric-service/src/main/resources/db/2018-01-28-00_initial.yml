@@ -1,12 +1,112 @@
 databaseChangeLog:
 - changeSet:
-    id: 1548867931985-1
+    id: 1549534884175-1
     author: romanpetrovskiy (generated)
     changes:
     - createSequence:
         sequenceName: revinfo_id_seq
 - changeSet:
-    id: 1548867931985-2
+    id: 1549534884175-2
+    author: romanpetrovskiy (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: invocation_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: access_key_id
+            type: BIGINT
+        - column:
+            name: action
+            type: VARCHAR(255)
+        - column:
+            name: authorization_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connection_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connection_revision_version
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connector_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: connector_revision_version
+            type: BIGINT
+        - column:
+            name: end_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: ern
+            type: VARCHAR(255)
+        - column:
+            name: error_code
+            type: VARCHAR(255)
+        - column:
+            name: error_message
+            type: TEXT
+        - column:
+            name: error_payload
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: instance_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: organization_id
+            type: BIGINT
+        - column:
+            name: parameters
+            type: TEXT
+        - column:
+            name: payload
+            type: TEXT
+        - column:
+            name: result
+            type: TEXT
+        - column:
+            name: revision_version
+            type: BIGINT
+        - column:
+            name: stack_trace
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: start_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: status
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-3
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -69,7 +169,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: instance_sessions
 - changeSet:
-    id: 1548867931985-3
+    id: 1549534884175-4
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -84,7 +184,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         tableName: revchanges
 - changeSet:
-    id: 1548867931985-4
+    id: 1549534884175-5
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -106,7 +206,15 @@ databaseChangeLog:
             type: BIGINT
         tableName: revinfo
 - changeSet:
-    id: 1548867931985-5
+    id: 1549534884175-6
+    author: romanpetrovskiy (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: invocation_id
+        constraintName: connection_invocations_pkey
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-7
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -114,7 +222,7 @@ databaseChangeLog:
         constraintName: instance_sessions_pkey
         tableName: instance_sessions
 - changeSet:
-    id: 1548867931985-6
+    id: 1549534884175-8
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -122,7 +230,67 @@ databaseChangeLog:
         constraintName: revinfo_pkey
         tableName: revinfo
 - changeSet:
-    id: 1548867931985-7
+    id: 1549534884175-9
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: access_key_id
+        indexName: connection_invocations_access_key_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-10
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: connection_id
+        indexName: connection_invocations_connection_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-11
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: connector_id
+        indexName: connection_invocations_connector_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-12
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: instance_id
+        indexName: connection_invocations_instance_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-13
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: organization_id
+        indexName: connection_invocations_organization_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-14
+    author: romanpetrovskiy (generated)
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: user_id
+        indexName: connection_invocations_user_id_idx
+        tableName: connection_invocations
+- changeSet:
+    id: 1549534884175-15
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -132,7 +300,7 @@ databaseChangeLog:
         indexName: instance_sessions_access_key_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1548867931985-8
+    id: 1549534884175-16
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -142,7 +310,7 @@ databaseChangeLog:
         indexName: instance_sessions_organization_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1548867931985-9
+    id: 1549534884175-17
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -152,7 +320,7 @@ databaseChangeLog:
         indexName: instance_sessions_user_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1548867931985-10
+    id: 1549534884175-18
     author: romanpetrovskiy (generated)
     changes:
     - addForeignKeyConstraint:

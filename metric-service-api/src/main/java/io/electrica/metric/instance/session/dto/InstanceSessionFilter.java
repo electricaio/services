@@ -13,8 +13,8 @@ import java.util.EnumSet;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstanceSessionFilter implements Serializable {
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String nameStartWith;
     private EnumSet<SessionState> sessionStates;
     private Long accessKeyId;
