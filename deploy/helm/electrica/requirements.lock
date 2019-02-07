@@ -1,0 +1,9 @@
+dependencies:
+- name: webhook-service
+  repository: file://../webhook-service
+  version: 0.0.1
+- name: websocket-service
+  repository: file://../websocket-service
+  version: 0.0.1
+digest: sha256:b339c5e15e960984b3de411289f0e7c6929f7cdaadc6f6ff092ed8a5a9a9e0c3
+generated: 2019-02-07T15:24:42.43267967-08:00

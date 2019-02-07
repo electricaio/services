@@ -1,0 +1,5 @@
+global:
+  config:
+    properties:
+      spring.datasource.username: postgres
+      spring.datasource.password: 6Mw7QscV1i

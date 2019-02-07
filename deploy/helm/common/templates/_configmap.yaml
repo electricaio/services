@@ -1,10 +1,21 @@
 {{- define "common.configmap" -}}
+{{- $common := dict "Values" .Values.common -}}
+{{- $noCommon := omit .Values "common" -}}
+{{- $overrides := dict "Values" $noCommon -}}
+{{- $noValues := omit . "Values" -}}
+{{- with merge $noValues $overrides $common -}}
 kind: ConfigMap
 apiVersion: v1
 {{ template "common.metadata" . }}
 data:
-    JAVA_OPTS: -Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
   {{- range $key, $val := .Values.config.properties }}
-    {{ $key }}: {{ $val }}
+    {{ $key }}: {{ $val | quote }}
   {{- end}}
+  {{ if .Values.global }}
+    {{- range $key, $val := .Values.global.config.properties }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end}}
+  {{ end }}
+
+{{- end -}}
 {{- end -}}

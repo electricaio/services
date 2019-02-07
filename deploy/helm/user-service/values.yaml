@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 image:
-  tag: dev
   containerPort: 22022
 
 nameOverride: ""
@@ -12,8 +11,6 @@ fullnameOverride: ""
 config:
   properties:
     spring.datasource.url: jdbc:postgresql://postgres-postgresql.default.svc.cluster.local:5432/user_db
-    spring.datasource.username: postgres
-    spring.datasource.password: JkeSBLY58v
 
 service:
   targetPort: 22022
