@@ -1,4 +1,4 @@
-rootProject.name = 'services-all'
+rootProject.name = 'electrica-services-all'
 include 'common-jpa'
 include 'user-service'
 include 'common'
@@ -20,3 +20,6 @@ include 'metric-service-api'
 include 'metric-service'
 include 'metric-common'
 
+//rootProject.children.each {
+//    it.name = 'electrica-services-' + it.name
+//}

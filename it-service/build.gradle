@@ -9,10 +9,10 @@ dependencies {
 
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
-    testCompile 'io.electrica.sdk.java8:api'
-    testCompile 'io.electrica.sdk.java8:core'
-    testCompile 'io.electrica.sdk.java8:echo'
-    testCompile 'io.electrica.sdk.java8:slack'
+    testCompile 'io.electrica.sdk.java8:electrica-sdk-java8-api'
+    testCompile 'io.electrica.sdk.java8:electrica-sdk-java8-core'
+    testCompile 'io.electrica.sdk.java8:electrica-sdk-java8-echo'
+    testCompile 'io.electrica.sdk.java8:electrica-sdk-java8-slack'
 
     testCompile project(':common-test')
     testCompile project(':common').sourceSets.test.output
