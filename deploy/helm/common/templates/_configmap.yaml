@@ -1,0 +1,10 @@
+{{- define "common.configmap" -}}
+kind: ConfigMap
+apiVersion: v1
+{{ template "common.metadata" . }}
+data:
+    JAVA_OPTS: -Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+  {{- range $key, $val := .Values.config.properties }}
+    {{ $key }}: {{ $val }}
+  {{- end}}
+{{- end -}}
