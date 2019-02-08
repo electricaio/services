@@ -1,8 +1,0 @@
-# Restart Cluster at 16:00 UTC
-00 16 * * * /home/ubuntu/services/deploy/deploy-dev.sh >> /home/ubuntu/deploy.log 2>&1
-
-# Start integration test
-30 16 * * * /home/ubuntu/services/deploy/start-integration-test.sh >> /home/ubuntu/integration-test.log 2>&1 && /home/ubuntu/services/deploy/build-push-stage.sh >> /home/ubuntu/build-push-stage.log 2>&1
-
-# Clean untagged Docker images at 15:00 UTC
-00 15 * * * docker system prune -f

@@ -21,4 +21,6 @@ USER electrica
 # Create configuration folder
 RUN mkdir -p config
 
+ADD docker-compose-override.yml config/docker-compose-override.yml
+
 ENTRYPOINT ["./entrypoint.sh"]

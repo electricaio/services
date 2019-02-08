@@ -1,29 +1,45 @@
 # Build docker images
-Example to build for `dev` profile:
+To build Docker images execute following:
 ```
-./gradlew clean assemble && sh deploy/docker/build.dev.sh
+./gradlew clean assemble && sh deploy/docker/build.sh
 ```
-Possible profiles are: `dev`, `stage`, `prod`.
 
-## Env variables
+## Override Properties
+There are two ways to override application properties for Docker container.
+
+### Env variables
 - `JAVA_OPTS` - specify java options to start micro-service
 - `ARGS` - specify application args, can be used to override Spring properties (e.q `--spring.liquibase.enabled=true`)
-
-## Custom args
-Any args also can be passed with start container:
+- `PROPERTY_NAME` - set env variable with the same name of the property (e.q `SPRING_LIQUIBASE_ENABLED=true` or `spring.liquibase.enabled=true`) 
+E.q
+```bash
+docker run electrica/user-service -e ARGS="--spring.liquibase.enabled=true" -e JAVA_OPTS="Xmx256" -e SPRING_RABBIT_HOST=localhost 
 ```
+
+### Start arguments
+Any args also can be passed to container:
+```bash
 docker run electrica/user-service --spring.liquibase.enabled=true
 ```
 
-# Start cluster
-Example to start cluster for `dev` profile:
+# Start cluster locally
+Below is example how to start cluster locally with `dev` profile:
 ```
-docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.local.yml up
+docker-compose -f deploy/docker-compose/cluster.yml up
+```
+And down it **removing** all containers and **data**:
+```
+docker-compose -f deploy/docker-compose/cluster.yml down
 ```
 
-Example to down cluster for `dev` profile and remove all containers and data:
+# Start Postgres locally
+Below is example how to start Postgres locally with all backend expected databases:
 ```
-docker-compose -f deploy/docker-compose/cluster.yml -f deploy/docker-compose/cluster.local.yml down
+docker-compose -f deploy/docker-compose/postgres.yml up
+```
+And down it **removing** all **data**:
+```
+docker-compose -f deploy/docker-compose/postgres.yml down
 ```
 
 # Setup Dev Stand

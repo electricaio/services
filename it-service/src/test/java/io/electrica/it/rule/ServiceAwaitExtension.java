@@ -64,11 +64,14 @@ public class ServiceAwaitExtension implements BeforeAllCallback, AfterAllCallbac
 
         private synchronized void beforeAll() throws Exception {
             if (!initialized) {
-                for (String host : hosts) {
-                    String serviceHealthUrl = host + PathConstants.HEALTH_PATH;
-                    waitForService(serviceHealthUrl);
+                try {
+                    for (String host : hosts) {
+                        String serviceHealthUrl = host + PathConstants.HEALTH_PATH;
+                        waitForService(serviceHealthUrl);
+                    }
+                } finally {
+                    initialized = true;
                 }
-                initialized = true;
             }
         }
 
