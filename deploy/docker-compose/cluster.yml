@@ -33,6 +33,7 @@ services:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
       - spring.profiles.active=dev
       - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.rabbitmq.host=rabbitmq
     depends_on:
       - rabbitmq
     ports:
