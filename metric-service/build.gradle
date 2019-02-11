@@ -4,6 +4,8 @@ apply plugin: "org.liquibase.gradle"
 dependencies {
     compile project(':metric-service-api')
     compile project(':metric-common')
+    compile project(':user-service-api')
+    compile project(':connector-hub-service-api')
 
     compile project(':common-jpa')
     compile project(':common-mq')

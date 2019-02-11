@@ -5,6 +5,7 @@ import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
 import io.electrica.metric.instance.session.repository.InstanceSessionRepository;
 import io.electrica.metric.instance.session.repository.InstanceSessionSpecification;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.retry.annotation.Backoff;
@@ -13,9 +14,10 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class InstanceSessionService {
@@ -26,12 +28,19 @@ public class InstanceSessionService {
         this.repository = repository;
     }
 
+    public Optional<InstanceSession> findById(UUID id) {
+        return repository.findById(id);
+    }
+
     public Page<InstanceSession> findByFilter(InstanceSessionFilter filter, Pageable pageable) {
         return repository.findAll(new InstanceSessionSpecification(filter), pageable);
     }
 
-    @Retryable(value = {OptimisticLockException.class, SQLException.class},
-            backoff = @Backoff(delay = 0), maxAttempts = 5)
+    @Retryable(
+            value = {OptimisticLockException.class, ConstraintViolationException.class},
+            backoff = @Backoff(delay = 0),
+            maxAttempts = 5
+    )
     public InstanceSession changeState(InstanceSession newEntity) {
         InstanceSession merged = repository.findById(newEntity.getId())
                 .map(oldEntity -> merge(oldEntity, newEntity))

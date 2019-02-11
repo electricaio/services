@@ -20,11 +20,15 @@ public class MetricSender {
     }
 
     public void send(String routingKey, MetricEvent event) {
-        rabbitTemplate.convertAndSend(
-                METRIC_EXCHANGE,
-                routingKey,
-                event,
-                PersistentMessagePostProcessor.INSTANCE
-        );
+        try {
+            rabbitTemplate.convertAndSend(
+                    METRIC_EXCHANGE,
+                    routingKey,
+                    event,
+                    PersistentMessagePostProcessor.INSTANCE
+            );
+        } catch (Exception e) {
+            log.error("Can't send {} metric event {}", routingKey, event, e);
+        }
     }
 }
