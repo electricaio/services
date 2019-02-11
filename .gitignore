@@ -28,3 +28,4 @@
 
 # Chart dependencies
 **/charts/*.tgz
+deploy/helm/**/requirements.lock

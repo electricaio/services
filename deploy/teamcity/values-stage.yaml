@@ -1,0 +1,35 @@
+global:
+  profile: stage
+  image:
+    tag: latest-snapshot
+    repository: 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica
+    pullPolicy: Always
+
+#user-service:
+#  enabled: true
+#  config:
+#    properties:
+#      # TODO specify correct url here
+#      spring.datasource.url: jdbc:postgresql://postgres-db:5432/user_db
+#    secrets:
+#      spring.datasource.username: postgres
+#      spring.datasource.password: c8jJ30uD00
+#
+#connector-hub-service:
+#  enabled: true
+#  config:
+#    properties:
+#      # TODO specify correct url here
+#      spring.datasource.url: jdbc:postgresql://postgres-db:5432/connector_hub_db
+#    secrets:
+#      spring.datasource.username: postgres
+#      spring.datasource.password: c8jJ30uD00
+
+invoker-service:
+  enabled: true
+  config:
+    properties:
+      spring.rabbitmq.host: rabbitmq.electrica-system.svc.cluster.local
+    secrets:
+      spring.rabbitmq.username: backend
+      spring.rabbitmq.password: f2mzUqKTa8Vb5yDp

@@ -1,20 +1,17 @@
-# Default values for common.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+global:
+  profile: prod
+  image:
+    tag: latest
+    repository: 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica
+    pullPolicy: IfNotPresent
+
+enabled: true
 
 replicaCount: 1
 
-
-image:
-  tag: latest
-  repository: electrica
-  pullPolicy: Never
-
-nameOverride: ""
-fullnameOverride: ""
-
 config:
   properties: []
+  secrets: []
 
 service:
   type: ClusterIP
@@ -25,6 +22,7 @@ ingress:
   enabled: true
   annotations:
      kubernetes.io/ingress.class: nginx
+     nginx.ingress.kubernetes.io/use-regex: "true"
      nginx.ingress.kubernetes.io/enable-cors: "true"
      nginx.ingress.kubernetes.io/cors-allow-headers: "Origin,Content-Type,Content-Encoding,Accept,Accept-Encoding,Authorization"
   tls: []

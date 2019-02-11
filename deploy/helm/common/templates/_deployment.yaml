@@ -1,8 +1,8 @@
 {{- define "common.deployment" -}}
-{{- $common := dict "Values" .Values.common -}} 
-{{- $noCommon := omit .Values "common" -}} 
-{{- $overrides := dict "Values" $noCommon -}} 
-{{- $noValues := omit . "Values" -}} 
+{{- $common := dict "Values" .Values.common -}}
+{{- $noCommon := omit .Values "common" -}}
+{{- $overrides := dict "Values" $noCommon -}}
+{{- $noValues := omit . "Values" -}}
 {{- with merge $noValues $overrides $common -}}
 apiVersion: apps/v1beta2
 kind: Deployment
@@ -21,8 +21,8 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}/{{ template "common.name" . }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.global.image.repository }}/{{ template "common.name" . }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
           envFrom:
             - configMapRef:
                 name: {{ template "common.fullname" . }}
@@ -34,11 +34,19 @@ spec:
               protocol: TCP
           livenessProbe:
             initialDelaySeconds: 120
+            timeoutSeconds: 20
+            periodSeconds: 30
+            failureThreshold: 6
+            successThreshold: 1
             httpGet:
               path: /private/health
               port: http
           readinessProbe:
-            initialDelaySeconds: 120
+            initialDelaySeconds: 30
+            timeoutSeconds: 20
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
             httpGet:
               path: /private/health
               port: http
