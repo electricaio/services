@@ -1,7 +1,7 @@
 dependencies:
-  - name: connector-hub-service
-    version: 0.1.0
-    repository: file://../connector-hub-service
+#  - name: connector-hub-service
+#    version: 0.1.0
+#    repository: file://../connector-hub-service
 #  - name: connector-service
 #    version: 0.0.1
 #    repository: file://../connector-service

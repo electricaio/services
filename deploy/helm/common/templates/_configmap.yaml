@@ -8,14 +8,10 @@ kind: ConfigMap
 apiVersion: v1
 {{ template "common.metadata" . }}
 data:
+    test: we
   {{- range $key, $val := .Values.config.properties }}
-    {{ $key }}: {{ $val | quote }}
+    {{ $key }}: {{ $val }}
   {{- end}}
-  {{ if .Values.global }}
-    {{- range $key, $val := .Values.global.config.properties }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end}}
-  {{ end }}
 
 {{- end -}}
 {{- end -}}

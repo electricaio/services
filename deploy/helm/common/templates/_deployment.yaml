@@ -26,6 +26,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ template "common.fullname" . }}
+            - secretRef:
+                name: {{ template "common.fullname" . }}
           ports:
             - name: http
               containerPort: {{ .Values.image.containerPort }}
