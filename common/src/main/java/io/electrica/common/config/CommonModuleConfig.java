@@ -9,6 +9,7 @@ import java.util.TimeZone;
 @Configuration
 @EnableConfigurationProperties
 @PropertySource("classpath:/common.properties")
+@PropertySource("classpath:/assemble.properties")
 public class CommonModuleConfig {
 
     static {

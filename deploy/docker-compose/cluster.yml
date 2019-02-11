@@ -2,50 +2,117 @@ version: '3.1'
 
 services:
   user-service:
+    image: electrica/user-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.datasource.url=jdbc:postgresql://postgres-db:5432/user_db
+    depends_on:
+      - postgres-db
     ports:
       - 22022:22022
+      - 25022:5005
 
   connector-hub-service:
+    image: electrica/connector-hub-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.datasource.url=jdbc:postgresql://postgres-db:5432/connector_hub_db
+    depends_on:
+      - postgres-db
     ports:
       - 22023:22023
+      - 25023:5005
 
   invoker-service:
+    image: electrica/invoker-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
     depends_on:
       - rabbitmq
     ports:
       - 22024:22024
+      - 25024:5005
 
   connector-service:
+    image: electrica/connector-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
     ports:
       - 22025:22025
+      - 25025:5005
 
   webhook-service:
+    image: electrica/webhook-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.datasource.url=jdbc:postgresql://postgres-db:5432/webhook_db
+      - spring.rabbitmq.host=rabbitmq
     depends_on:
+      - postgres-db
       - rabbitmq
     ports:
       - 22026:22026
+      - 25026:5005
 
   websocket-service:
+    image: electrica/websocket-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.rabbitmq.host=rabbitmq
     depends_on:
       - rabbitmq
     ports:
       - 22027:22027
+      - 25027:5005
 
   metric-service:
+    image: electrica/metric-service
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - spring.profiles.active=dev
+      - spring.config.additional-location=file:./config/docker-compose-override.yml
+      - spring.datasource.url=jdbc:postgresql://postgres-db:5432/metric_db
+      - spring.rabbitmq.host=rabbitmq
     depends_on:
+      - postgres-db
       - rabbitmq
     ports:
       - 22028:22028
+      - 25028:5005
+
+  postgres-db:
+    image: electrica/postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - 15672:15672
       - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
 
   gateway:
+    image: electrica/gateway
     environment:
-      - "HOST_NAME=${HOST_NAME:-localhost}"
+      - HOST_NAME=localhost
     depends_on:
       - swagger-ui
       - user-service
@@ -62,5 +129,6 @@ services:
     image: swaggerapi/swagger-ui
     environment:
       - BASE_URL=/swagger
+      - "API_URLS=[ {url: \"http://localhost/user-service/swagger/\", name: \"User\"}, {url: \"http://localhost/connector-hub-service/swagger/\", name: \"Connector Hub\"}, {url: \"http://localhost/invoker-service/swagger/\", name: \"Invoker\"}, {url: \"http://localhost/connector-service/swagger/\", name: \"Connector\"},{url: \"http://localhost/webhook-service/swagger/\", name: \"Webhook\"},{url: \"http://localhost/metric-service/swagger/\", name: \"Metric\"} ]"
     ports:
       - 8080:8080

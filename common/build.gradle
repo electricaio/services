@@ -1,11 +1,13 @@
+import java.time.ZonedDateTime
+
 dependencies {
     compile project(':common-api')
-    
+
     compile 'org.springframework.boot:spring-boot-starter-jetty'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-mail'
     compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:$securityOauth2AutoconfigureVersion"
-    
+
     compile 'org.flywaydb:flyway-core'
     compile 'com.samskivert:jmustache'
 
@@ -21,4 +23,10 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonJsr310Version"
 
     testCompile project(':common-test')
+}
+
+processResources {
+    filesMatching('assemble.properties') {
+        expand('version': project.version, 'date': ZonedDateTime.now())
+    }
 }

@@ -1,16 +1,8 @@
-spring:
-  auth:
-    keystore:
-      path: file:./config/keystore.jks
-      secret: 763UyszgZUF0OzLn
-      key-alias: io.electrica
-  datasource:
-    url: jdbc:postgresql://postgres-db:5432/user_db
-
 feign:
   userService.url: user-service:22022
   connectorHubService.url: connector-hub-service:22023
   invokerService.url: invoker-service:22024
   connectorService.url: connector-service:22025
   webhookService.url: webhook-service:22026
+  websocketService.url: webhook-service:22027
   metricService.url: metric-service:22028

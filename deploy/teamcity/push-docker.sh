@@ -13,12 +13,12 @@ aws ecr describe-repositories --output text | awk '{print $5}' |
 
 export ECR_HOST="251063236326.dkr.ecr.us-east-2.amazonaws.com"
 
-docker tag electrica/postgres ${ECR_HOST}/electrica/postgres:${TAG} && \
-docker push ${ECR_HOST}/electrica/postgres:${TAG} && \
-\
-docker tag electrica/gateway ${ECR_HOST}/electrica/gateway:${TAG} && \
-docker push ${ECR_HOST}/electrica/gateway:${TAG} && \
-\
+#docker tag electrica/postgres ${ECR_HOST}/electrica/postgres:${TAG} && \
+#docker push ${ECR_HOST}/electrica/postgres:${TAG} && \
+# \
+#docker tag electrica/gateway ${ECR_HOST}/electrica/gateway:${TAG} && \
+#docker push ${ECR_HOST}/electrica/gateway:${TAG} && \
+# \
 docker tag electrica/user-service ${ECR_HOST}/electrica/user-service:${TAG} && \
 docker push ${ECR_HOST}/electrica/user-service:${TAG} && \
 \
