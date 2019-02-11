@@ -1,4 +1,5 @@
 dependencies {
     compile project(':metric-service-api')
     compile project(':common-mq')
+    compile project(':webhook-api')
 }

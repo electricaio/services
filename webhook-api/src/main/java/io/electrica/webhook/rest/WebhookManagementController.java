@@ -12,6 +12,9 @@ import static io.electrica.common.rest.PathConstants.V1;
 
 public interface WebhookManagementController {
 
+    @GetMapping(V1 + "/webhooks/{webhookId}")
+    ResponseEntity<ConnectionWebhookDto> findById(@PathVariable("webhookId") UUID webhookId);
+
     @PostMapping(V1 + "/webhooks/connection")
     ResponseEntity<ConnectionWebhookDto> createConnection(@RequestBody ConnectionCreateWebhookDto dto);
 

@@ -1,4 +1,4 @@
-package io.electrica.it.metric.instance.session.rest;
+package io.electrica.it.metric.connection.invocation.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
