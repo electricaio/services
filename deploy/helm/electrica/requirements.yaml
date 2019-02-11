@@ -1,0 +1,19 @@
+dependencies:
+#  - name: connector-hub-service
+#    version: 0.1.0
+#    repository: file://../connector-hub-service
+#  - name: connector-service
+#    version: 0.0.1
+#    repository: file://../connector-service
+#  - name: invoker-service
+#    version: 0.0.1
+#    repository: file://../invoker-service
+#  - name: user-service
+#    version: 0.0.1
+#    repository: file://../user-service
+#  - name: webhook-service
+#    version: 0.0.1
+#    repository: file://../webhook-service
+#  - name: websocket-service
+#    version: 0.0.1
+#    repository: file://../websocket-service

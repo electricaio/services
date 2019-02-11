@@ -1,0 +1,17 @@
+{{- define "common.configmap" -}}
+{{- $common := dict "Values" .Values.common -}}
+{{- $noCommon := omit .Values "common" -}}
+{{- $overrides := dict "Values" $noCommon -}}
+{{- $noValues := omit . "Values" -}}
+{{- with merge $noValues $overrides $common -}}
+kind: ConfigMap
+apiVersion: v1
+{{ template "common.metadata" . }}
+data:
+    test: we
+  {{- range $key, $val := .Values.config.properties }}
+    {{ $key }}: {{ $val }}
+  {{- end}}
+
+{{- end -}}
+{{- end -}}
