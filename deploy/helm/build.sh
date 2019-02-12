@@ -13,9 +13,15 @@ helm lint --strict ${helm_dir}/common && helm package ${helm_dir}/common && \
 \
 echo && \
 echo --------------------- Linting and packaging invoker-service --------------------- && \
-cp -v common-*.tgz ${electrica_charts_dir}/invoker-service/charts && \
+cp -v common-*.tgz ${electrica_charts_dir}/invoker-service/charts/ && \
   helm lint ${electrica_charts_dir}/invoker-service && \
   helm package ${electrica_charts_dir}/invoker-service && \
+\
+echo && \
+echo --------------------- Linting and packaging connector-service --------------------- && \
+cp -v common-*.tgz ${electrica_charts_dir}/connector-service/charts/ && \
+  helm lint ${electrica_charts_dir}/connector-service && \
+  helm package ${electrica_charts_dir}/connector-service && \
 \
 echo && \
 echo --------------------- Linting and packaging electrica --------------------- && \
