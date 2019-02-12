@@ -8,10 +8,17 @@ kind: ConfigMap
 apiVersion: v1
 {{ template "common.metadata" . }}
 data:
-    test: we
-  {{- range $key, $val := .Values.config.properties }}
-    {{ $key }}: {{ $val }}
-  {{- end}}
+  spring.profiles.active: {{ .Values.global.profile }}
+  feign.userService.url: user-service
+  feign.connectorHubService.url: connector-hub-service
+  feign.invokerService.url: invoker-service
+  feign.connectorService.url: connector-service
+  feign.webhookService.url: webhook-service
+  feign.websocketService.url: webhook-service
+  feign.metricService.url: metric-service
+{{- range $key, $val := .Values.config.properties }}
+  {{ $key }}: {{ $val }}
+{{- end}}
 
 {{- end -}}
 {{- end -}}

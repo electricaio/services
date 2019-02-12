@@ -1,0 +1,9 @@
+image:
+  containerPort: 22024
+
+service:
+  targetPort: 22024
+
+ingress:
+  paths:
+    - /v[1-9]/sdk
