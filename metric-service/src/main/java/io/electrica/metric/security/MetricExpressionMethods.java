@@ -42,9 +42,9 @@ public class MetricExpressionMethods extends CommonExpressionMethods {
     }
 
     public Boolean webhookBelongsCurrentUser(UUID id) {
-        return Optional.ofNullable(webhookManagementClient.findById(id))
+        return Optional.ofNullable(webhookManagementClient.webhookBelongsCurrentUser(id))
                 .map(HttpEntity::getBody)
-                .filter(dto -> isUser(dto.getUserId()))
+                .filter(b -> b)
                 .isPresent();
     }
 

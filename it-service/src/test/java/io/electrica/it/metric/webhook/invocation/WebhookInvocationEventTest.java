@@ -102,7 +102,7 @@ public class WebhookInvocationEventTest extends BaseIT {
         assertEquals(instance.getInstanceId(), webhookInvocationDto.getSdkInstanceId());
         assertEquals(PAYLOAD_TEST_STRING, webhookInvocationDto.getResultPayload());
         assertNull(webhookInvocationDto.getErrorMessage());
-        assertNull(webhookInvocationDto.getStackTrace());
+        assertNull(webhookInvocationDto.getErrorTime());
     }
 
     @Test
@@ -111,13 +111,12 @@ public class WebhookInvocationEventTest extends BaseIT {
             throw new RuntimeException("Test");
         });
         assertThrows(FeignException.class,
-                () -> webhookClient.invoke(webhookDto.getId(), PAYLOAD_TEST_STRING, 100));
+                () -> webhookClient.invoke(webhookDto.getId(), PAYLOAD_TEST_STRING, 123));
         WebhookInvocationDto webhookInvocationDto = find(webhookDto.getId(), WebhookInvocationStatus.Error);
         commonAssert(webhookInvocationDto);
         assertNull(webhookInvocationDto.getResultPayload());
-        assertEquals("Timeout exception", webhookInvocationDto.getErrorMessage());
-        assertTrue(webhookInvocationDto.getStackTrace() != null
-                && !webhookInvocationDto.getStackTrace().isEmpty());
+        assertEquals("Webhook timeout exception 123ms", webhookInvocationDto.getErrorMessage());
+        assertNotNull(webhookInvocationDto.getErrorTime());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class WebhookInvocationEventTest extends BaseIT {
         commonAssert(webhookInvocationDto);
         assertNull(webhookInvocationDto.getResultPayload());
         assertNull(webhookInvocationDto.getErrorMessage());
-        assertNull(webhookInvocationDto.getStackTrace());
+        assertNull(webhookInvocationDto.getErrorTime());
     }
 
     private void commonAssert(WebhookInvocationDto webhookInvocationDto) {

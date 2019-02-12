@@ -30,12 +30,10 @@ public class WebhookInvocation {
     @Id
     private UUID messageId;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     private UUID webhookId;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     private UUID webhookServiceId;
 
     @Column
@@ -100,7 +98,11 @@ public class WebhookInvocation {
     @Column
     private String errorMessage;
 
-    @Column(columnDefinition = "TEXT")
-    private String stackTrace;
+    @Column
+    private LocalDateTime errorTime;
+
+    @Version
+    @Column(nullable = false)
+    private Long revisionVersion;
 }
 

@@ -112,5 +112,6 @@ public class ConnectionInvocation {
     private List<String> errorPayload;
 
     @Version
+    @Column(nullable = false)
     private Long revisionVersion;
 }

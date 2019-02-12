@@ -12,21 +12,13 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WebhookInvocationResultEvent implements MetricEvent {
+public class WebhookInvocationErrorEvent implements MetricEvent {
     @NotNull
     private UUID messageId;
 
     @NotNull
-    private LocalDateTime endTime;
+    private String errorMessage;
 
     @NotNull
-    private UUID webhookId;
-
-    @NotNull
-    private UUID sdkInstanceId;
-
-    @NotNull
-    private UUID webhookServiceId;
-
-    private String resultPayload;
+    private LocalDateTime errorTime;
 }

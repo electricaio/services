@@ -6,7 +6,6 @@ import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import io.electrica.test.context.ForUser;
 import io.electrica.user.feign.AccessKeyClient;
-import io.electrica.webhook.dto.ConnectionWebhookDto;
 import io.electrica.webhook.feign.WebhookManagementClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,15 +45,10 @@ public class WebhookInvocationControllerImplTest  extends AbstractJpaApplication
         when(accessKeyClient.validateMyAccessKeyById(NOT_USER_ACCESS_KEY_ID))
                 .thenReturn(ResponseEntity.ok(Boolean.FALSE));
 
-        ConnectionWebhookDto userWebhookDto = new ConnectionWebhookDto();
-        userWebhookDto.setId(USER_WEBHOOK_ID);
-        userWebhookDto.setUserId(DEFAULT_USER_ID);
-        when(webhookManagementClient.findById(USER_WEBHOOK_ID)).thenReturn(ResponseEntity.ok(userWebhookDto));
-
-        ConnectionWebhookDto notUserWebhookDto = new ConnectionWebhookDto();
-        notUserWebhookDto.setId(NOT_USER_WEBHOOK_ID);
-        notUserWebhookDto.setUserId(NOT_DEFAULT_USER_ID);
-        when(webhookManagementClient.findById(NOT_USER_WEBHOOK_ID)).thenReturn(ResponseEntity.ok(notUserWebhookDto));
+        when(webhookManagementClient.webhookBelongsCurrentUser(USER_WEBHOOK_ID))
+                .thenReturn(ResponseEntity.ok(Boolean.TRUE));
+        when(webhookManagementClient.webhookBelongsCurrentUser(NOT_USER_WEBHOOK_ID))
+                .thenReturn(ResponseEntity.ok(Boolean.FALSE));
     }
 
     @Test

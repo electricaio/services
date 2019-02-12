@@ -1,12 +1,12 @@
 databaseChangeLog:
 - changeSet:
-    id: 1549881175538-1
+    id: 1549962505557-1
     author: romanpetrovskiy (generated)
     changes:
     - createSequence:
         sequenceName: revinfo_id_seq
 - changeSet:
-    id: 1549881175538-2
+    id: 1549962505557-2
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -84,6 +84,8 @@ databaseChangeLog:
             name: result
             type: TEXT
         - column:
+            constraints:
+              nullable: false
             name: revision_version
             type: BIGINT
         - column:
@@ -106,7 +108,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-3
+    id: 1549962505557-3
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -169,7 +171,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: instance_sessions
 - changeSet:
-    id: 1549881175538-4
+    id: 1549962505557-4
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -184,7 +186,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         tableName: revchanges
 - changeSet:
-    id: 1549881175538-5
+    id: 1549962505557-5
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -206,7 +208,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: revinfo
 - changeSet:
-    id: 1549881175538-6
+    id: 1549962505557-6
     author: romanpetrovskiy (generated)
     changes:
     - createTable:
@@ -238,6 +240,9 @@ databaseChangeLog:
             name: error_message
             type: VARCHAR(255)
         - column:
+            name: error_time
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
             name: expected_content_type
             type: VARCHAR(255)
         - column:
@@ -259,14 +264,16 @@ databaseChangeLog:
             name: result_payload
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
+            name: revision_version
+            type: BIGINT
+        - column:
             name: scope
             type: INT
         - column:
             name: sdk_instance_id
             type: UUID
-        - column:
-            name: stack_trace
-            type: TEXT
         - column:
             name: start_time
             type: TIMESTAMP(6) WITHOUT TIME ZONE
@@ -279,21 +286,17 @@ databaseChangeLog:
             name: user_id
             type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: webhook_id
             type: UUID
         - column:
             name: webhook_name
             type: VARCHAR(255)
         - column:
-            constraints:
-              nullable: false
             name: webhook_service_id
             type: UUID
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-7
+    id: 1549962505557-7
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -301,7 +304,7 @@ databaseChangeLog:
         constraintName: connection_invocations_pkey
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-8
+    id: 1549962505557-8
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -309,7 +312,7 @@ databaseChangeLog:
         constraintName: instance_sessions_pkey
         tableName: instance_sessions
 - changeSet:
-    id: 1549881175538-9
+    id: 1549962505557-9
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -317,7 +320,7 @@ databaseChangeLog:
         constraintName: revinfo_pkey
         tableName: revinfo
 - changeSet:
-    id: 1549881175538-10
+    id: 1549962505557-10
     author: romanpetrovskiy (generated)
     changes:
     - addPrimaryKey:
@@ -325,7 +328,7 @@ databaseChangeLog:
         constraintName: webhook_invocations_pkey
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-11
+    id: 1549962505557-11
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -335,7 +338,7 @@ databaseChangeLog:
         indexName: connection_invocations_access_key_id_idx
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-12
+    id: 1549962505557-12
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -345,7 +348,7 @@ databaseChangeLog:
         indexName: connection_invocations_connection_id_idx
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-13
+    id: 1549962505557-13
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -355,7 +358,7 @@ databaseChangeLog:
         indexName: connection_invocations_connector_id_idx
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-14
+    id: 1549962505557-14
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -365,7 +368,7 @@ databaseChangeLog:
         indexName: connection_invocations_instance_id_idx
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-15
+    id: 1549962505557-15
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -375,7 +378,7 @@ databaseChangeLog:
         indexName: connection_invocations_user_id_idx
         tableName: connection_invocations
 - changeSet:
-    id: 1549881175538-16
+    id: 1549962505557-16
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -385,7 +388,7 @@ databaseChangeLog:
         indexName: instance_sessions_access_key_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1549881175538-17
+    id: 1549962505557-17
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -395,7 +398,7 @@ databaseChangeLog:
         indexName: instance_sessions_organization_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1549881175538-18
+    id: 1549962505557-18
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -405,7 +408,7 @@ databaseChangeLog:
         indexName: instance_sessions_user_id_idx
         tableName: instance_sessions
 - changeSet:
-    id: 1549881175538-19
+    id: 1549962505557-19
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -415,7 +418,7 @@ databaseChangeLog:
         indexName: webhook_invocations_access_key_id_idx
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-20
+    id: 1549962505557-20
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -425,7 +428,7 @@ databaseChangeLog:
         indexName: webhook_invocations_user_id_idx
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-21
+    id: 1549962505557-21
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -435,7 +438,7 @@ databaseChangeLog:
         indexName: webhook_invocations_webhook_id_idx
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-22
+    id: 1549962505557-22
     author: romanpetrovskiy (generated)
     changes:
     - createIndex:
@@ -445,7 +448,7 @@ databaseChangeLog:
         indexName: webhook_invocations_webhook_service_id_idx
         tableName: webhook_invocations
 - changeSet:
-    id: 1549881175538-23
+    id: 1549962505557-23
     author: romanpetrovskiy (generated)
     changes:
     - addForeignKeyConstraint:

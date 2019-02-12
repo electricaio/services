@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static io.electrica.common.rest.PathConstants.PRIVATE;
 import static io.electrica.common.rest.PathConstants.V1;
 
 public interface WebhookManagementController {
@@ -24,4 +25,6 @@ public interface WebhookManagementController {
     @DeleteMapping(V1 + "/webhooks/{webhookId}")
     void delete(@PathVariable("webhookId") UUID webhookId);
 
+    @GetMapping(PRIVATE + V1 + "/webhooks/{webhookId}/validate")
+    ResponseEntity<Boolean> webhookBelongsCurrentUser(@PathVariable("webhookId") UUID webhookId);
 }

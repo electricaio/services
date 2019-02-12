@@ -31,6 +31,12 @@ public class WebhookService {
                 .orElseThrow(() -> new BadRequestServiceException("Webhook not found: " + id));
     }
 
+    public boolean webhookBelongsToUser(UUID webhookId, Long userId) {
+        return webhookRepository.findById(webhookId)
+                .filter(w -> userId.equals(w.getUserId()))
+                .isPresent();
+    }
+
     public void delete(UUID id) {
         Webhook entity = webhookRepository.getOne(id);
         webhookRepository.delete(entity);

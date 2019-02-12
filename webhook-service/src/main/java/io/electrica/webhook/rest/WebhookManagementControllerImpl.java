@@ -54,4 +54,8 @@ public class WebhookManagementControllerImpl implements WebhookManagementControl
         webhookDtoService.delete(webhookId);
     }
 
+    @Override
+    public ResponseEntity<Boolean> webhookBelongsCurrentUser(@PathVariable("webhookId") UUID webhookId) {
+        return ResponseEntity.ok(webhookDtoService.webhookBelongsCurrentUser(webhookId));
+    }
 }

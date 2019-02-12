@@ -5,7 +5,6 @@ import io.electrica.metric.common.mq.webhook.invocation.WebhookInvocationSender;
 import io.electrica.webhook.dto.MessageResultDto;
 import io.electrica.webhook.rest.TypedDeferredResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -40,14 +39,13 @@ public class WebhookMessageResultDispatcher {
         result.onCompletion(() -> results.remove(messageId));
         result.onError(e -> {
             result.setErrorResult(e);
-            webhookInvocationSender.sendErrorResult(messageId, LocalDateTime.now(), e.getMessage(),
-                    ExceptionUtils.getStackTrace(e));
+            webhookInvocationSender.sendError(messageId, LocalDateTime.now(), e.getMessage());
         });
         result.onTimeout(() -> {
             TimeoutServiceException timeoutServiceException = new TimeoutServiceException();
             result.setErrorResult(timeoutServiceException);
-            webhookInvocationSender.sendErrorResult(messageId, LocalDateTime.now(), "Timeout exception",
-                    ExceptionUtils.getStackTrace(timeoutServiceException));
+            webhookInvocationSender.sendError(messageId, LocalDateTime.now(),
+                    "Webhook timeout exception " + timeout + "ms");
         });
         return result;
     }
@@ -70,10 +68,10 @@ public class WebhookMessageResultDispatcher {
 
     public void handle(MessageResultDto messageResult) {
         UUID messageId = messageResult.getMessageId();
+        webhookInvocationSender.sendResult(messageId, LocalDateTime.now(), messageResult);
         TypedDeferredResult<String> result = results.get(messageId);
         if (result != null) {
             result.buildResponseEntityResult(messageResult.getPayload());
-            webhookInvocationSender.sendResult(messageId, LocalDateTime.now(), messageResult);
         }
     }
 }

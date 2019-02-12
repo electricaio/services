@@ -20,10 +20,8 @@ public class WebhookInvocationDto {
     @NotNull
     private UUID messageId;
 
-    @NotNull
     private UUID webhookId;
 
-    @NotNull
     private UUID webhookServiceId;
 
     private String webhookName;
@@ -67,5 +65,5 @@ public class WebhookInvocationDto {
 
     private String errorMessage;
 
-    private String stackTrace;
+    private LocalDateTime errorTime;
 }

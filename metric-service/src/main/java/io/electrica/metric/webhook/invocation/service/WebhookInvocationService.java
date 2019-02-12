@@ -4,14 +4,14 @@ import io.electrica.metric.webhook.invocation.model.WebhookInvocation;
 import io.electrica.metric.webhook.invocation.model.WebhookInvocationStatus;
 import io.electrica.metric.webhook.invocation.repository.WebhookInvocationRepository;
 import io.electrica.metric.webhook.invocation.repository.WebhookInvocationSpecification;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.List;
@@ -28,7 +28,7 @@ public class WebhookInvocationService {
     }
 
     @Retryable(
-            value = {OptimisticLockException.class, ConstraintViolationException.class},
+            value = {ObjectOptimisticLockingFailureException.class, DataIntegrityViolationException.class},
             backoff = @Backoff(delay = 0),
             maxAttempts = 5
     )
@@ -36,6 +36,10 @@ public class WebhookInvocationService {
         WebhookInvocation merged = repository.findById(webhookInvocation.getMessageId())
                 .map(e -> merge(e, webhookInvocation))
                 .orElse(webhookInvocation);
+        if (merged.getEndTime() == null && Boolean.FALSE.equals(merged.getExpectedResult())) {
+            merged.setEndTime(merged.getStartTime());
+        }
+        merged.setStatus(calculateStatus(merged));
         return repository.save(merged);
     }
 
@@ -94,16 +98,27 @@ public class WebhookInvocationService {
         if (newEntity.getEndTime() != null) {
             oldEntity.setEndTime(newEntity.getEndTime());
         }
-        if (newEntity.getStatus() != WebhookInvocationStatus.Pending) {
-            oldEntity.setStatus(newEntity.getStatus());
+        if (newEntity.getErrorTime() != null) {
+            oldEntity.setErrorTime(newEntity.getErrorTime());
         }
         if (newEntity.getErrorMessage() != null) {
             oldEntity.setErrorMessage(newEntity.getErrorMessage());
         }
-        if (newEntity.getStackTrace() != null) {
-            oldEntity.setStackTrace(newEntity.getStackTrace());
-        }
         return oldEntity;
+    }
+
+    private WebhookInvocationStatus calculateStatus(WebhookInvocation webhookInvocation) {
+        if (webhookInvocation.getErrorTime() != null) {
+            return WebhookInvocationStatus.Error;
+        }
+        if (webhookInvocation.getEndTime() != null) {
+            if (Boolean.FALSE.equals(webhookInvocation.getExpectedResult())) {
+                return WebhookInvocationStatus.Invoked;
+            } else {
+                return WebhookInvocationStatus.Success;
+            }
+        }
+        return WebhookInvocationStatus.Pending;
     }
 
     public List<WebhookInvocation> getWebhookInvocations(Pageable pageable,
