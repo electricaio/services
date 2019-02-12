@@ -75,7 +75,7 @@ public class InstanceSessionStartStopEventTest extends BaseIT {
     private void checkState(UUID instanceId, SessionState expectedState)
             throws InterruptedException {
         SessionState sessionState = null;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             Thread.sleep(1000);
             sessionState = instanceSessionClient.feignGetInstanceSessions(0, 1, null,
                     LocalDateTime.now(), instanceId.toString(), null, null,

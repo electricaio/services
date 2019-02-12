@@ -79,7 +79,8 @@ public class ConnectionInvocation {
     private String ern;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(length = 31, nullable = false)
+    @Enumerated(EnumType.STRING)
     private ConnectionInvocationStatus status;
 
     @Column

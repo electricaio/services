@@ -44,6 +44,12 @@ public class WebhookInvocationService {
     }
 
     private WebhookInvocation merge(WebhookInvocation oldEntity, WebhookInvocation newEntity) {
+        if (newEntity.getWebhookId() != null) {
+            oldEntity.setWebhookId(newEntity.getWebhookId());
+        }
+        if (newEntity.getWebhookServiceId() != null) {
+            oldEntity.setWebhookServiceId(newEntity.getWebhookServiceId());
+        }
         if (newEntity.getWebhookName() != null) {
             oldEntity.setWebhookName(newEntity.getWebhookName());
         }

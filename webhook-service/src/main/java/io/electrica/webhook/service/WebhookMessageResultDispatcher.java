@@ -68,10 +68,10 @@ public class WebhookMessageResultDispatcher {
 
     public void handle(MessageResultDto messageResult) {
         UUID messageId = messageResult.getMessageId();
-        webhookInvocationSender.sendResult(messageId, LocalDateTime.now(), messageResult);
         TypedDeferredResult<String> result = results.get(messageId);
         if (result != null) {
             result.buildResponseEntityResult(messageResult.getPayload());
         }
+        webhookInvocationSender.sendResult(messageId, LocalDateTime.now(), messageResult);
     }
 }

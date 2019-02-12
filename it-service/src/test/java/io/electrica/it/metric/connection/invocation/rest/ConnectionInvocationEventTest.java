@@ -119,7 +119,7 @@ class ConnectionInvocationEventTest extends BaseIT {
     private ConnectionInvocationDto getConnectionInvocation(UUID instanceId, ConnectionInvocationStatus status)
             throws InterruptedException {
         Optional<ConnectionInvocationDto> connectionInvocationDto = Optional.empty();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             Thread.sleep(1000);
             connectionInvocationDto = connectionInvocationClient.feignGetConnectionInvocations(
                     0, 1, null, null, null, instanceId,

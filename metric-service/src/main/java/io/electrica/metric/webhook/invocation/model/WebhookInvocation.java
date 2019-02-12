@@ -92,7 +92,8 @@ public class WebhookInvocation {
     private LocalDateTime endTime;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(length = 31, nullable = false)
+    @Enumerated(EnumType.STRING)
     private WebhookInvocationStatus status;
 
     @Column

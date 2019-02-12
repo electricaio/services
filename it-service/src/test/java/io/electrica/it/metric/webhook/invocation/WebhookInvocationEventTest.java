@@ -146,7 +146,7 @@ public class WebhookInvocationEventTest extends BaseIT {
     private WebhookInvocationDto find(UUID webhookId, WebhookInvocationStatus status) throws InterruptedException {
         contextHolder.setTokenForUser(user.getEmail());
         Optional<WebhookInvocationDto> webhookInvocationDto = Optional.empty();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             Thread.sleep(1000);
             webhookInvocationDto = webhookInvocationClient.feignGetWebhookInvocations(0, 1,
                     null, null, null, webhookId, null,
