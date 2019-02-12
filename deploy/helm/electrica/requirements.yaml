@@ -1,5 +1,4 @@
 dependencies:
   - name: invoker-service
     version: 0.0.1-SNAPSHOT
-    repository: file://../invoker-service
     condition: invoker-service.enabled
