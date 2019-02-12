@@ -42,6 +42,14 @@ public class WebhookDtoService {
         return toConnectionDto(webhook);
     }
 
+    public ConnectionWebhookDto findById(UUID webhookId) {
+        return toConnectionDto(webhookService.findById(webhookId));
+    }
+
+    public boolean webhookBelongsCurrentUser(UUID webhookId) {
+        return webhookService.webhookBelongsToUser(webhookId, identityContextHolder.getIdentity().getUserId());
+    }
+
     public List<ConnectionWebhookDto> findAllByConnectionId(Long connectionId) {
         return webhookService.findByConnectionId(connectionId).stream()
                 .map(this::toConnectionDto)

@@ -68,6 +68,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 "Read Instance Session", "ReadInstanceSession");
         Permission readConnectionInvocation = savePermission(PermissionType.ReadConnectionInvocation,
                 "Read Connection Invocation", "ReadConnectionInvocation");
+        Permission readWebhookInvocation = savePermission(PermissionType.ReadWebhookInvocation,
+                "Read Webhook Invocation", "ReadWebhookInvocation");
 
         assignPermissionsToRole(orgUser,
                 updateUser,
@@ -86,7 +88,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 deActivateConnection,
                 updateConnection,
                 readInstanceSession,
-                readConnectionInvocation
+                readConnectionInvocation,
+                readWebhookInvocation
         );
 
 
@@ -112,7 +115,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 updateConnection,
                 deActivateConnection,
                 readInstanceSession,
-                readConnectionInvocation
+                readConnectionInvocation,
+                readWebhookInvocation
         );
 
 
@@ -142,7 +146,8 @@ public class V0_0_1_010__Add_roles_and_permissions implements SpringJdbcMigratio
                 updateConnection,
                 readConnector,
                 readInstanceSession,
-                readConnectionInvocation
+                readConnectionInvocation,
+                readWebhookInvocation
         );
     }
 

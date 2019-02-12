@@ -1,4 +1,5 @@
 dependencies {
     compile project(':common-api')
+    compile project(':webhook-api')
     compile "org.springframework.data:spring-data-commons"
 }

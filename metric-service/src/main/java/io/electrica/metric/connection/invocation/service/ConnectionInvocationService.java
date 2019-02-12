@@ -4,14 +4,14 @@ import io.electrica.metric.connection.invocation.model.ConnectionInvocation;
 import io.electrica.metric.connection.invocation.model.ConnectionInvocationStatus;
 import io.electrica.metric.connection.invocation.repository.ConnectionInvocationRepository;
 import io.electrica.metric.connection.invocation.repository.ConnectionInvocationSpecification;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.List;
@@ -28,7 +28,7 @@ public class ConnectionInvocationService {
     }
 
     @Retryable(
-            value = {OptimisticLockException.class, ConstraintViolationException.class},
+            value = {ObjectOptimisticLockingFailureException.class, DataIntegrityViolationException.class},
             backoff = @Backoff(delay = 0),
             maxAttempts = 5
     )

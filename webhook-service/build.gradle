@@ -8,6 +8,7 @@ dependencies {
 
     compile project(':common-jpa')
     compile project(':common-mq')
+    compile project(':metric-common')
 
     testCompile project(':common-test')
     testCompile project(':common-jpa').sourceSets.test.output

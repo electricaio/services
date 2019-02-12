@@ -24,6 +24,12 @@ public class WebhookManagementControllerImpl implements WebhookManagementControl
     }
 
     @Override
+    @PreAuthorize("#webhook.hasPermission('ReadWebhook') AND #webhook.webhookBelongsCurrentUser(#webhookId)")
+    public ResponseEntity<ConnectionWebhookDto> findById(@PathVariable("webhookId") UUID webhookId) {
+        return ResponseEntity.ok(webhookDtoService.findById(webhookId));
+    }
+
+    @Override
     @PreAuthorize("" +
             "#webhook.hasPermission('CreateWebhook') and " +
             "#webhook.connectionBelongsCurrentUser(#dto.getConnectionId()) and " +
@@ -48,4 +54,8 @@ public class WebhookManagementControllerImpl implements WebhookManagementControl
         webhookDtoService.delete(webhookId);
     }
 
+    @Override
+    public ResponseEntity<Boolean> webhookBelongsCurrentUser(@PathVariable("webhookId") UUID webhookId) {
+        return ResponseEntity.ok(webhookDtoService.webhookBelongsCurrentUser(webhookId));
+    }
 }

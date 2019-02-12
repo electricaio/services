@@ -5,15 +5,15 @@ import io.electrica.metric.instance.session.model.InstanceSession;
 import io.electrica.metric.instance.session.model.SessionState;
 import io.electrica.metric.instance.session.repository.InstanceSessionRepository;
 import io.electrica.metric.instance.session.repository.InstanceSessionSpecification;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class InstanceSessionService {
     }
 
     @Retryable(
-            value = {OptimisticLockException.class, ConstraintViolationException.class},
+            value = {ObjectOptimisticLockingFailureException.class, DataIntegrityViolationException.class},
             backoff = @Backoff(delay = 0),
             maxAttempts = 5
     )

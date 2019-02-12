@@ -40,7 +40,8 @@ public enum PermissionType {
     ReadConnector(23),
     UpdateConnection(24),
     ReadInstanceSession(25),
-    ReadConnectionInvocation(26);
+    ReadConnectionInvocation(26),
+    ReadWebhookInvocation(27);
 
     private static final Map<Integer, PermissionType> ALL = Arrays.stream(PermissionType.values())
             .collect(Collectors.toMap(PermissionType::getCode, Function.identity()));
