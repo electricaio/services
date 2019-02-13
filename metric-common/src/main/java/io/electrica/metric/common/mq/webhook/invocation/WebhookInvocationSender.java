@@ -46,22 +46,30 @@ public class WebhookInvocationSender {
         ));
     }
 
-    public void sendResult(UUID messageId, LocalDateTime endTime, MessageResultDto messageResultDto) {
+    public void sendResult(UUID messageId, LocalDateTime endTime, MessageResultDto messageResultDto,
+                           Long organizationId, Long userId, Long accessKeyId) {
         metricSender.send(WEBHOOK_INVOCATION_RESULT_ROUTING_KEY, new WebhookInvocationResultEvent(
                 messageId,
                 endTime,
                 messageResultDto.getWebhookId(),
                 messageResultDto.getSdkInstanceId(),
                 messageResultDto.getWebhookServiceId(),
-                messageResultDto.getPayload()
+                messageResultDto.getPayload(),
+                organizationId,
+                userId,
+                accessKeyId
         ));
     }
 
-    public void sendError(UUID messageId, LocalDateTime errorTime, String errorMessage) {
+    public void sendError(UUID messageId, LocalDateTime errorTime, String errorMessage,
+                          Long organizationId, Long userId, Long accessKeyId) {
         metricSender.send(WEBHOOK_INVOCATION_ERROR_ROUTING_KEY, new WebhookInvocationErrorEvent(
                 messageId,
                 errorMessage,
-                errorTime
+                errorTime,
+                organizationId,
+                userId,
+                accessKeyId
         ));
     }
 }

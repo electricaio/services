@@ -12,7 +12,7 @@
     <springProfile name="default">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -24,7 +24,7 @@
     <springProfile name="dev">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -36,7 +36,7 @@
     <springProfile name="stage">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -48,7 +48,7 @@
     <springProfile name="test">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -60,7 +60,7 @@
     <springProfile name="prod">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -73,7 +73,7 @@
                 <totalSizeCap>500MB</totalSizeCap>
             </rollingPolicy>
             <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) organization_id=[%X{organization_id}] user_id=[%X{user_id}] access_key_id=[%X{access_key_id}] http_status=[%X{http_status}]%n</pattern>
             </encoder>
         </appender>
 

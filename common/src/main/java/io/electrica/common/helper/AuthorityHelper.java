@@ -93,9 +93,13 @@ public class AuthorityHelper {
     }
 
     public static long readAccessKeyId(Collection<? extends GrantedAuthority> authorities) {
-        return findByPrefix(authorities, ACCESS_KEY_PREFIX)
-                .map(Long::valueOf)
+        return readAccessKeyIdIfPresent(authorities)
                 .orElseThrow(() -> new ActionForbiddenServiceException("Access key authority required in token"));
+    }
+
+    public static Optional<Long> readAccessKeyIdIfPresent(Collection<? extends GrantedAuthority> authorities) {
+        return findByPrefix(authorities, ACCESS_KEY_PREFIX)
+                .map(Long::valueOf);
     }
 
     private static String writeAccessKey(Long accessKeyId) {

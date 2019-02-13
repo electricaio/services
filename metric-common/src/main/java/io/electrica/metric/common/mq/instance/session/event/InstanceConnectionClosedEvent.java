@@ -5,6 +5,7 @@ import io.electrica.metric.instance.session.dto.InstanceSessionDescriptorDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Delegate;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class InstanceConnectionClosedEvent implements MetricEvent {
     private int code;
+    @Delegate
     private InstanceSessionDescriptorDto descriptor;
 
     public static InstanceConnectionClosedEvent of(UUID id, String name, ZonedDateTime startedClientTime,

@@ -13,11 +13,22 @@ import java.util.UUID;
 public interface Identity {
 
     long NOT_AUTHENTICATED_USER_ID = -1;
+    long NOT_AUTHENTICATED_ORGANIZATION_ID = -1;
 
     /**
      * Interface stub for not authenticated users.
      */
-    Identity ANONYMOUS = () -> NOT_AUTHENTICATED_USER_ID;
+    Identity ANONYMOUS = new Identity() {
+        @Override
+        public long getUserId() {
+            return NOT_AUTHENTICATED_USER_ID;
+        }
+
+        @Override
+        public long getOrganizationId() {
+            return NOT_AUTHENTICATED_ORGANIZATION_ID;
+        }
+    };
 
     long getUserId();
 
@@ -37,6 +48,10 @@ public interface Identity {
         throw new UnsupportedOperationException();
     }
 
+    default Long getAccessKeyIdIfPresent() {
+        return null;
+    }
+
     default long getTokenIssuedAt() {
         throw new UnsupportedOperationException();
     }
@@ -53,9 +68,7 @@ public interface Identity {
         throw new UnsupportedOperationException();
     }
 
-    default long getOrganizationId() {
-        throw new UnsupportedOperationException();
-    }
+    long getOrganizationId();
 
     default Set<String> getOauthScopes() {
         throw new UnsupportedOperationException();

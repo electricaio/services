@@ -1,6 +1,9 @@
 package io.electrica.metric.common.mq;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
+import io.electrica.common.context.IdentityContextHolder;
 import io.electrica.common.mq.PersistentMessagePostProcessor;
 import io.electrica.metric.common.mq.instance.session.event.InstanceConnectionClosedEvent;
 import io.electrica.metric.common.mq.instance.session.event.InstanceConnectionEstablishedEvent;
@@ -25,15 +28,30 @@ public class MetricSender {
 
     private final RabbitTemplate rabbitTemplate;
     private final boolean metricsEnabled;
+    private final ObjectMapper objectMapper;
+    private final IdentityContextHolder identityContextHolder;
 
     @Inject
     public MetricSender(RabbitTemplate rabbitTemplate,
-                        @Value("${common.metric.invocation.enabled}") boolean metricsEnabled) {
+                        @Value("${common.metric.invocation.enabled}") boolean metricsEnabled,
+                        ObjectMapper objectMapper, IdentityContextHolder identityContextHolder) {
         this.rabbitTemplate = rabbitTemplate;
         this.metricsEnabled = metricsEnabled;
+        this.objectMapper = objectMapper;
+        this.identityContextHolder = identityContextHolder;
     }
 
     public void send(String routingKey, MetricEvent event) {
+        if (log.isDebugEnabled()) {
+            try {
+                String strMetricEvent = objectMapper.writeValueAsString(event);
+                identityContextHolder.logForUser(event.getOrganizationId(), event.getUserId(), event.getAccessKeyId(),
+                        () -> log.debug("Metric event {}", strMetricEvent));
+            } catch (JsonProcessingException e) {
+                log.debug("Can't serialize metric event", e);
+            }
+        }
+
         //It is hard to track instance sessions state via logs and events are relatively rare
         //so they should be sent and stored even though if other metrics are turned off
         if (INSTANCE_SESSION_EVENTS.contains(event.getClass()) || metricsEnabled) {
