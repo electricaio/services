@@ -317,7 +317,7 @@ server {
     }
 
     # Proxy to metric-service
-    location ~* ^/v[1-9]|/metrics/(instance-sessions|connection-invocations|webhook-invocations) {
+    location ~* ^/v[1-9]/metrics {
         include /etc/nginx/cors.conf;
 
         proxy_set_header Host $http_host;
