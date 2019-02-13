@@ -5,3 +5,6 @@ dependencies:
   - name: connector-service
     version: 0.0.1-SNAPSHOT
     condition: connector-service.enabled
+  - name: webhook-service
+    version: 0.0.1-SNAPSHOT
+    condition: webhook-service.enabled

@@ -24,5 +24,11 @@ cp -v common-*.tgz ${electrica_charts_dir}/connector-service/charts/ && \
   helm package ${electrica_charts_dir}/connector-service && \
 \
 echo && \
+echo --------------------- Linting and packaging webhook-service --------------------- && \
+cp -v common-*.tgz ${electrica_charts_dir}/webhook-service/charts/ && \
+  helm lint ${electrica_charts_dir}/webhook-service && \
+  helm package ${electrica_charts_dir}/webhook-service && \
+\
+echo && \
 echo --------------------- Linting and packaging electrica --------------------- && \
 helm lint ${helm_dir}/electrica && helm package ${helm_dir}/electrica

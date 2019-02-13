@@ -1,0 +1,11 @@
+image:
+  containerPort: 22026
+
+service:
+  targetPort: 22026
+
+ingress:
+  paths:
+    - /public/v[1-9]/webhooks
+    - /v[1-9]/connections/.*/webhooks
+    - /v[1-9]/webhooks
