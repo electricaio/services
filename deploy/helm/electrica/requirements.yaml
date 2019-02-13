@@ -2,3 +2,6 @@ dependencies:
   - name: invoker-service
     version: 0.0.1-SNAPSHOT
     condition: invoker-service.enabled
+  - name: connector-service
+    version: 0.0.1-SNAPSHOT
+    condition: connector-service.enabled

@@ -1,0 +1,8 @@
+image:
+  containerPort: 22025
+
+service:
+  targetPort: 22025
+
+ingress:
+  enabled: false
