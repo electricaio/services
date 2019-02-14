@@ -1,9 +1,11 @@
 global:
-  profile: prod
   image:
     tag: latest
     repository: 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica
     pullPolicy: IfNotPresent
+  config:
+    properties:
+      spring.profiles.active: prod
 
 enabled: true
 

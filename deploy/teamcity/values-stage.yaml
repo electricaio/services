@@ -1,9 +1,11 @@
 global:
-  profile: stage
   image:
     tag: latest-snapshot
     repository: 251063236326.dkr.ecr.us-east-2.amazonaws.com/electrica
     pullPolicy: Always
+  config:
+    properties:
+      spring.profiles.active: stage
 
 #user-service:
 #  enabled: true
@@ -44,6 +46,18 @@ webhook-service:
       spring.datasource.url: jdbc:postgresql://postgres-postgresql.electrica-system.svc.cluster.local:5432/webhook_db
       spring.rabbitmq.host: rabbitmq.electrica-system.svc.cluster.local
       webhook.base-url: https://api.stage.electrica.io
+    secrets:
+      spring.datasource.username: postgres
+      spring.datasource.password: c8jJ30uD00
+      spring.rabbitmq.username: backend
+      spring.rabbitmq.password: f2mzUqKTa8Vb5yDp
+
+metric-service:
+  enabled: true
+  config:
+    properties:
+      spring.datasource.url: jdbc:postgresql://postgres-postgresql.electrica-system.svc.cluster.local:5432/metric_db
+      spring.rabbitmq.host: rabbitmq.electrica-system.svc.cluster.local
     secrets:
       spring.datasource.username: postgres
       spring.datasource.password: c8jJ30uD00

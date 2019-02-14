@@ -8,3 +8,6 @@ dependencies:
   - name: webhook-service
     version: 0.0.1-SNAPSHOT
     condition: webhook-service.enabled
+  - name: metric-service
+    version: 0.0.1-SNAPSHOT
+    condition: metric-service.enabled

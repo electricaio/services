@@ -1,0 +1,10 @@
+global:
+  config:
+    properties:
+      feign.userService.url: electrica-user-service
+      feign.connectorHubService.url: electrica-connector-hub-service
+      feign.invokerService.url: electrica-invoker-service
+      feign.connectorService.url: electrica-connector-service
+      feign.webhookService.url: electrica-webhook-service
+      feign.websocketService.url: electrica-websocket-service
+      feign.metricService.url: electrica-metric-service

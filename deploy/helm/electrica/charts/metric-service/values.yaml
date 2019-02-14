@@ -1,0 +1,9 @@
+image:
+  containerPort: 22028
+
+service:
+  targetPort: 22028
+
+ingress:
+  paths:
+    - /v[1-9]/metrics
