@@ -1,0 +1,16 @@
+image:
+  containerPort: 22022
+
+service:
+  targetPort: 22022
+
+ingress:
+  rest:
+    paths:
+      - /oauth/
+      - /public/v[1-9]/users
+      - /public/v[1-9]/organizations
+      - /v[1-9]/users
+      - /v[1-9]/organizations
+      - /v[1-9]/access-keys
+      - /v[1-9]/me/user

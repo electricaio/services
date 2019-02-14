@@ -1,0 +1,15 @@
+image:
+  containerPort: 22023
+
+service:
+  targetPort: 22023
+
+ingress:
+  rest:
+    paths:
+      - /v[1-9]/connectors
+      - /v[1-9]/connections
+      - /v[1-9]/authorizations
+      - /v[1-9]/me/connections
+      - /v[1-9]/access-keys/.*/connections
+      - /v[1-9]/users/.*/connections

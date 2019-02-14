@@ -1,4 +1,10 @@
 dependencies:
+  - name: user-service
+    version: 0.0.1-SNAPSHOT
+    condition: user-service.enabled
+  - name: connector-hub-service
+    version: 0.0.1-SNAPSHOT
+    condition: connector-hub-service.enabled
   - name: invoker-service
     version: 0.0.1-SNAPSHOT
     condition: invoker-service.enabled
