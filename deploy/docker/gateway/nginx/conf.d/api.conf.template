@@ -309,8 +309,8 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
 
-        proxy_send_timeout   30d;
-        proxy_read_timeout   30d;
+        proxy_send_timeout   3600s;
+        proxy_read_timeout   3600s;
         proxy_connect_timeout 30s;
 
         proxy_pass http://websocket-service;
