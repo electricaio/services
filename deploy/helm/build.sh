@@ -12,6 +12,19 @@ echo --------------------- Linting and packaging common --------------------- &&
 helm lint --strict ${helm_dir}/common && helm package ${helm_dir}/common && \
 \
 echo && \
+echo --------------------- Linting and packaging user-service --------------------- && \
+find ${electrica_charts_dir}/user-service/charts/ -name "*.tgz" -exec rm -rf {} \; && \
+  cp -v common-*.tgz ${electrica_charts_dir}/user-service/charts/ && \
+  helm lint ${electrica_charts_dir}/user-service && \
+  helm package ${electrica_charts_dir}/user-service && \
+\
+echo && \
+echo --------------------- Linting and packaging connector-hub-service --------------------- && \
+find ${electrica_charts_dir}/connector-hub-service/charts/ -name "*.tgz" -exec rm -rf {} \; && \
+  cp -v common-*.tgz ${electrica_charts_dir}/connector-hub-service/charts/ && \
+  helm lint ${electrica_charts_dir}/connector-hub-service && \
+  helm package ${electrica_charts_dir}/connector-hub-service && \
+echo && \
 echo --------------------- Linting and packaging invoker-service --------------------- && \
 find ${electrica_charts_dir}/invoker-service/charts/ -name "*.tgz" -exec rm -rf {} \; && \
   cp -v common-*.tgz ${electrica_charts_dir}/invoker-service/charts/ && \

@@ -27,18 +27,20 @@ ingress:
       nginx.ingress.kubernetes.io/use-regex: "true"
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/cors-allow-headers: "Origin,Content-Type,Content-Encoding,Accept,Accept-Encoding,Authorization"
+#      TODO remove when SSL will be supported, see for details https://github.com/kubernetes/ingress-nginx/issues/1567
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
   rest:
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 1m
   longPool:
     annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 1m
       nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
   webSocket:
     annotations:
       nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
       nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
       nginx.ingress.kubernetes.io/configuration-snippet: |
-        proxy_http_version 1.1;
         proxy_set_header Upgrade "websocket";
         proxy_set_header Connection "Upgrade";
 
