@@ -9,10 +9,14 @@
     <springProperty name="SERVICE_NAME" source="spring.application.name" />
     <springProperty name="SERVICE_VERSION" source="common.service.version" />
 
+    <!--to enable logging use 'common.request.metric.logging.enabled' property-->
+    <logger name="io.electrica.common.filter.CustomRequestLoggingFilter" level="debug"/>
+    <logger name="io.electrica.metric.common.mq.MetricSender" level="debug"/>
+
     <springProfile name="default">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -24,7 +28,7 @@
     <springProfile name="dev">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -36,7 +40,7 @@
     <springProfile name="stage">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -48,7 +52,7 @@
     <springProfile name="test">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -60,7 +64,7 @@
     <springProfile name="prod">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </layout>
         </appender>
 
@@ -73,7 +77,7 @@
                 <totalSizeCap>500MB</totalSizeCap>
             </rollingPolicy>
             <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) user_id=[%X{user_id}] http_status=[%X{http_status}]%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] - %msg \(%thread, %logger{36}.%M:%line\) org=[%X{organization_id}] usr=[%X{user_id}] key=[%X{access_key_id}] http=[%X{http_status}]%n</pattern>
             </encoder>
         </appender>
 

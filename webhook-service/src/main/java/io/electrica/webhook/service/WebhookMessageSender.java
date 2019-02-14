@@ -65,7 +65,7 @@ public class WebhookMessageSender {
         );
     }
 
-    public UUID send(
+    public WebhookMessage send(
             UUID webhookId,
             String payload,
             String contentType,
@@ -100,6 +100,6 @@ public class WebhookMessageSender {
         );
         webhookInvocationSender.send(message, LocalDateTime.now());
 
-        return message.getId();
+        return message;
     }
 }

@@ -21,4 +21,13 @@ public class WebhookInvocationErrorEvent implements MetricEvent {
 
     @NotNull
     private LocalDateTime errorTime;
+
+    @NotNull
+    private Long organizationId;
+
+    @NotNull
+    private Long userId;
+
+    @NotNull
+    private Long accessKeyId;
 }

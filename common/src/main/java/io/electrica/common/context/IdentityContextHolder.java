@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Service that manage {@link Identity} contexts by threads.
@@ -40,7 +41,9 @@ public class IdentityContextHolder {
      */
     @VisibleForTesting
     public void setIdentity(Identity identity) {
+        MDC.put("organization_id", String.valueOf(identity.getOrganizationId()));
         MDC.put("user_id", String.valueOf(identity.getUserId()));
+        MDC.put("access_key_id", identity.getAccessKeyIdOptional().map(Objects::toString).orElse(""));
         Identity old = threadLocal.get();
         if (old != null) {
             log.error("Identity context re-entrance!!! Was: {} New: {}", old, identity);
@@ -60,12 +63,33 @@ public class IdentityContextHolder {
         }
     }
 
+    public void logForUserIfNoContext(Long organizationId, Long userId, Long accessKeyId, Runnable logRunnable) {
+        Identity identity = threadLocal.get();
+        try {
+            if (identity == null) {
+                MDC.put("organization_id", String.valueOf(organizationId));
+                MDC.put("user_id", String.valueOf(userId));
+                MDC.put("access_key_id", String.valueOf(accessKeyId));
+            }
+
+            logRunnable.run();
+        } finally {
+            if (identity == null) {
+                MDC.remove("organization_id");
+                MDC.remove("user_id");
+                MDC.remove("access_key_id");
+            }
+        }
+    }
+
     /**
      * Clean up context for current thread.
      */
     @VisibleForTesting
     public void clearIdentity() {
+        MDC.remove("organization_id");
         MDC.remove("user_id");
+        MDC.remove("access_key_id");
         threadLocal.remove();
     }
 

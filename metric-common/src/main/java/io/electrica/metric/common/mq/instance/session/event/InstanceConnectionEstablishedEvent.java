@@ -5,6 +5,7 @@ import io.electrica.metric.instance.session.dto.InstanceSessionDescriptorDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Delegate;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstanceConnectionEstablishedEvent implements MetricEvent {
+    @Delegate
     private InstanceSessionDescriptorDto descriptor;
 
     public static InstanceConnectionEstablishedEvent of(UUID id, String name, ZonedDateTime startedClientTime,

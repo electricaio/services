@@ -29,4 +29,13 @@ public class WebhookInvocationResultEvent implements MetricEvent {
     private UUID webhookServiceId;
 
     private String resultPayload;
+
+    @NotNull
+    private Long organizationId;
+
+    @NotNull
+    private Long userId;
+
+    @NotNull
+    private Long accessKeyId;
 }

@@ -35,6 +35,7 @@ services:
       - spring.config.additional-location=file:./config/docker-compose-override.yml
       - spring.rabbitmq.host=rabbitmq
       - common.metric.invocation.enabled=true
+      - common.request.metric.logging.enabled=true
     depends_on:
       - rabbitmq
     ports:
@@ -60,6 +61,7 @@ services:
       - spring.datasource.url=jdbc:postgresql://postgres-db:5432/webhook_db
       - spring.rabbitmq.host=rabbitmq
       - common.metric.invocation.enabled=true
+      - common.request.metric.logging.enabled=true
     depends_on:
       - postgres-db
       - rabbitmq
