@@ -1,4 +1,4 @@
-{{- define "common.ingress" -}}
+{{- define "common.ingresslp" -}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "common.fullname" . -}}
 {{- $common := dict "Values" .Values.common -}}
@@ -9,13 +9,13 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "common.fullname" . }}-rest
+  name: {{ include "common.fullname" . }}-lp
   labels:
-    app.kubernetes.io/name: {{ include "common.name" . }}-rest
+    app.kubernetes.io/name: {{ include "common.name" . }}-lp
     helm.sh/chart: {{ include "common.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with merge .Values.ingress.rest.annotations .Values.ingress.annotations }}
+{{- with merge .Values.ingress.longPool.annotations .Values.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
@@ -25,7 +25,7 @@ spec:
   rules:
     - http:
         paths:
-    {{- range .Values.ingress.rest.paths }}
+    {{- range .Values.ingress.longPool.paths }}
           - path: {{ . }}
             backend:
               serviceName: {{ $fullName }}

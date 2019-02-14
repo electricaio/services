@@ -11,3 +11,6 @@ dependencies:
   - name: metric-service
     version: 0.0.1-SNAPSHOT
     condition: metric-service.enabled
+  - name: websocket-service
+    version: 0.0.1-SNAPSHOT
+    condition: websocket-service.enabled

@@ -63,3 +63,12 @@ metric-service:
       spring.datasource.password: c8jJ30uD00
       spring.rabbitmq.username: backend
       spring.rabbitmq.password: f2mzUqKTa8Vb5yDp
+
+websocket-service:
+  enabled: true
+  config:
+    properties:
+      spring.rabbitmq.host: rabbitmq.electrica-system.svc.cluster.local
+    secrets:
+      spring.rabbitmq.username: backend
+      spring.rabbitmq.password: f2mzUqKTa8Vb5yDp

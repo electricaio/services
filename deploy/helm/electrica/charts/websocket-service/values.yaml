@@ -1,0 +1,10 @@
+image:
+  containerPort: 22027
+
+service:
+  targetPort: 22027
+
+ingress:
+  webSocket:
+    paths:
+      - /v[1-9]/websockets

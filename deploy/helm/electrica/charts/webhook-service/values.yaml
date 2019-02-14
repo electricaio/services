@@ -5,7 +5,11 @@ service:
   targetPort: 22026
 
 ingress:
-  paths:
-    - /public/v[1-9]/webhooks
-    - /v[1-9]/connections/.*/webhooks
-    - /v[1-9]/webhooks
+  rest:
+    paths:
+      - /public/v[1-9]/webhooks
+      - /v[1-9]/connections/.*/webhooks
+      - /v[1-9]/webhooks
+  longPool:
+    paths:
+      - /v[1-9]/webhooks/.*/invoke
