@@ -4,6 +4,7 @@ import io.electrica.common.security.PermissionType;
 import io.electrica.common.security.RoleType;
 import org.springframework.security.core.Authentication;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,8 +49,8 @@ public interface Identity {
         throw new UnsupportedOperationException();
     }
 
-    default Long getAccessKeyIdIfPresent() {
-        return null;
+    default Optional<Long> getAccessKeyIdOptional() {
+        return Optional.empty();
     }
 
     default long getTokenIssuedAt() {

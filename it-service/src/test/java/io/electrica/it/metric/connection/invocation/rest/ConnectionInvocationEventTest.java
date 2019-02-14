@@ -126,7 +126,11 @@ class ConnectionInvocationEventTest extends BaseIT {
                     null, null, Collections.singleton(status),
                     null, null
             ).stream().findFirst();
-            if (connectionInvocationDto.filter(dto -> dto.getStatus() == status).isPresent()) {
+            if (connectionInvocationDto
+                    //present action means ConnectionInvocationEvent was stored
+                    //check it for cases when result was stored faster then invocation
+                    .filter(dto -> dto.getAction() != null && dto.getStatus() == status)
+                    .isPresent()) {
                 break;
             }
         }

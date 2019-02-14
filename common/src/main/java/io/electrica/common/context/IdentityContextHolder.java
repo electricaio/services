@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.util.Objects;
 
 /**
  * Service that manage {@link Identity} contexts by threads.
@@ -43,7 +43,7 @@ public class IdentityContextHolder {
     public void setIdentity(Identity identity) {
         MDC.put("organization_id", String.valueOf(identity.getOrganizationId()));
         MDC.put("user_id", String.valueOf(identity.getUserId()));
-        MDC.put("access_key_id", String.valueOf(identity.getAccessKeyIdIfPresent()));
+        MDC.put("access_key_id", identity.getAccessKeyIdOptional().map(Objects::toString).orElse(""));
         Identity old = threadLocal.get();
         if (old != null) {
             log.error("Identity context re-entrance!!! Was: {} New: {}", old, identity);
@@ -63,18 +63,22 @@ public class IdentityContextHolder {
         }
     }
 
-    public void logForUser(Long organizationId, Long userId, Long accessKeyId, Runnable logRunnable) {
-        MDC.put("organization_id", String.valueOf(organizationId));
-        MDC.put("user_id", String.valueOf(userId));
-        MDC.put("access_key_id", String.valueOf(accessKeyId));
-
-        logRunnable.run();
-
+    public void logForUserIfNoContext(Long organizationId, Long userId, Long accessKeyId, Runnable logRunnable) {
         Identity identity = threadLocal.get();
-        if (identity != null) {
-            MDC.put("organization_id", String.valueOf(identity.getOrganizationId()));
-            MDC.put("user_id", String.valueOf(identity.getUserId()));
-            MDC.put("access_key_id", String.valueOf(identity.getAccessKeyIdIfPresent()));
+        try {
+            if (identity == null) {
+                MDC.put("organization_id", String.valueOf(organizationId));
+                MDC.put("user_id", String.valueOf(userId));
+                MDC.put("access_key_id", String.valueOf(accessKeyId));
+            }
+
+            logRunnable.run();
+        } finally {
+            if (identity == null) {
+                MDC.remove("organization_id");
+                MDC.remove("user_id");
+                MDC.remove("access_key_id");
+            }
         }
     }
 

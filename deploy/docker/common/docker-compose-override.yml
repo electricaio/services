@@ -6,7 +6,3 @@ feign:
   webhookService.url: webhook-service:22026
   websocketService.url: webhook-service:22027
   metricService.url: metric-service:22028
-
-logging.level:
-  io.electrica.common.filter.RequestResponseLoggingFilter: DEBUG
-  io.electrica.metric.common.mq.MetricSender: DEBUG

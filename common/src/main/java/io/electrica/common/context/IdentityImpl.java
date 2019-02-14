@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,9 +31,8 @@ public class IdentityImpl implements Identity {
     private final ValueCache<Long> accessKeyId = new ValueCache<>(() ->
             AuthorityHelper.readAccessKeyId(getAuthentication().getAuthorities())
     );
-    private final ValueCache<Long> optionalAccessKeyId = new ValueCache<>(() ->
+    private final ValueCache<Optional<Long>> optionalAccessKeyId = new ValueCache<>(() ->
             AuthorityHelper.readAccessKeyIdIfPresent(getAuthentication().getAuthorities())
-                    .orElse(null)
     );
     private final ValueCache<Long> userId = new ValueCache<>(() ->
             TokenHelper.extractIdFromTokenUsername(getAuthentication().getName())
@@ -84,7 +84,7 @@ public class IdentityImpl implements Identity {
     }
 
     @Override
-    public Long getAccessKeyIdIfPresent() {
+    public Optional<Long> getAccessKeyIdOptional() {
         return optionalAccessKeyId.get();
     }
 

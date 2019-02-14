@@ -28,25 +28,33 @@ public class MetricSender {
 
     private final RabbitTemplate rabbitTemplate;
     private final boolean metricsEnabled;
+    private final boolean loggingEnabled;
     private final ObjectMapper objectMapper;
     private final IdentityContextHolder identityContextHolder;
 
     @Inject
     public MetricSender(RabbitTemplate rabbitTemplate,
                         @Value("${common.metric.invocation.enabled}") boolean metricsEnabled,
-                        ObjectMapper objectMapper, IdentityContextHolder identityContextHolder) {
+                        @Value("${common.request.metric.logging.enabled}") boolean loggingEnabled,
+                        ObjectMapper objectMapper,
+                        IdentityContextHolder identityContextHolder) {
         this.rabbitTemplate = rabbitTemplate;
         this.metricsEnabled = metricsEnabled;
+        this.loggingEnabled = loggingEnabled;
         this.objectMapper = objectMapper;
         this.identityContextHolder = identityContextHolder;
     }
 
     public void send(String routingKey, MetricEvent event) {
-        if (log.isDebugEnabled()) {
+        if (loggingEnabled) {
             try {
                 String strMetricEvent = objectMapper.writeValueAsString(event);
-                identityContextHolder.logForUser(event.getOrganizationId(), event.getUserId(), event.getAccessKeyId(),
-                        () -> log.debug("Metric event {}", strMetricEvent));
+                identityContextHolder.logForUserIfNoContext(
+                        event.getOrganizationId(),
+                        event.getUserId(),
+                        event.getAccessKeyId(),
+                        () -> log.debug("Metric event {}", strMetricEvent)
+                );
             } catch (JsonProcessingException e) {
                 log.debug("Can't serialize metric event", e);
             }
