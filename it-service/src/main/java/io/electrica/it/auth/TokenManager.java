@@ -10,19 +10,21 @@ public class TokenManager {
 
     private static final MediaType MEDIA_TYPE_FORM_URL = MediaType.get("application/x-www-form-urlencoded");
 
+    private final ObjectMapper mapper;
     private final String clientId;
     private final String clientSecret;
-    private final String accessTokenUri;
-    private final ObjectMapper mapper;
+    private final String standUrl;
 
-    public TokenManager(@Value("${it-service.oauth2.client-id}") String clientId,
-                        @Value("${it-service.oauth2.client-secret}") String clientSecret,
-                        @Value("${it-service.oauth2.access-token-uri}") String accessTokenUri,
-                        ObjectMapper mapper) {
+    public TokenManager(
+            ObjectMapper mapper,
+            @Value("${it-service.oauth2.client-id}") String clientId,
+            @Value("${it-service.oauth2.client-secret}") String clientSecret,
+            @Value("${it-service.stand.url}") String standUrl
+    ) {
+        this.mapper = mapper;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.accessTokenUri = accessTokenUri;
-        this.mapper = mapper;
+        this.standUrl = standUrl;
     }
 
     public TokenDetails getTokenDetailsForUser(String userName, String password) {
@@ -42,8 +44,7 @@ public class TokenManager {
 
         Request request = new Request.Builder()
                 .addHeader("Authorization", Credentials.basic(clientId, clientSecret))
-                .addHeader("Content-Type", MEDIA_TYPE_FORM_URL.toString())
-                .url(accessTokenUri)
+                .url(standUrl + "/oauth/token")
                 .post(body)
                 .build();
         try {

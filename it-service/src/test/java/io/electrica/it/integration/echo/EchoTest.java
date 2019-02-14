@@ -42,7 +42,7 @@ class EchoTest extends BaseIT {
         contextHolder.setTokenForUser(user.getEmail());
         AccessKeyDto accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
-        instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
+        instance = Electrica.instance(new SingleInstanceHttpModule(standUrl), fullAccessKeyDto.getKey());
         ConnectionDto connectionDto = createConnection(getCurrTimeAsString(), connectorDto, accessKey.getId());
         Connector sdkConnector = instance.connector(connectorDto.getErn());
         Connection connection = sdkConnector.connection(connectionDto.getName());

@@ -24,7 +24,7 @@ class SlackMessageSender {
     void send(String payload) {
         ReportContext context = ReportContext.getInstance();
 
-        try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getInvokerServiceUrl()),
+        try (Electrica instance = Electrica.instance(new SingleInstanceHttpModule(context.getStandUrl()),
                 context.getAccessKey())) {
             String message = payload;
             SlackChannelV1Manager channelManager = new SlackChannelV1Manager(instance);

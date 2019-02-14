@@ -4,27 +4,34 @@ import io.electrica.it.auth.TokenDetails;
 import io.electrica.it.auth.TokenManager;
 import io.electrica.user.dto.OrganizationDto;
 import io.electrica.user.dto.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.util.*;
 
 @Component
 public class ContextHolder {
 
-    private static final String ADMIN_EMAIL = "admin@electrica.io";
-    private static final String ADMIN_PASSWORD = "admin";
-
     private final TokenManager tokenManager;
+    private final String adminEmail;
+    private final String adminPassword;
 
     private final ThreadLocal<TokenDetails> context = new ThreadLocal<>();
     private final List<OrganizationDto> organizations = new ArrayList<>();
     private final List<UserDto> users = new ArrayList<>();
     private final Map<String, TokenDetails> tokenStore = new HashMap<>();
 
-    public ContextHolder(TokenManager tokenManager) {
+    @Inject
+    public ContextHolder(
+            TokenManager tokenManager,
+            @Value("${it-service.oauth2.user}") String adminEmail,
+            @Value("${it-service.oauth2.password}") String adminPassword
+    ) {
         this.tokenManager = tokenManager;
+        this.adminEmail = adminEmail;
+        this.adminPassword = adminPassword;
     }
-
 
     public List<OrganizationDto> getOrganizations() {
         return organizations;
@@ -71,8 +78,8 @@ public class ContextHolder {
     }
 
     public void setTokenForAdmin() {
-        TokenDetails token = tokenStore.computeIfAbsent(ADMIN_EMAIL, ignored ->
-                tokenManager.getTokenDetailsForUser(ADMIN_EMAIL, ADMIN_PASSWORD)
+        TokenDetails token = tokenStore.computeIfAbsent(adminEmail, ignored ->
+                tokenManager.getTokenDetailsForUser(adminEmail, adminPassword)
         );
         setToken(token);
     }

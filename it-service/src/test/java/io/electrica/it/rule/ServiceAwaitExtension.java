@@ -18,6 +18,8 @@ import java.util.concurrent.TimeoutException;
 @Slf4j
 public class ServiceAwaitExtension implements BeforeAllCallback, AfterAllCallback {
 
+    private static final String AWAIT_DOCKER_CONTAINERS_ENABLED_ENV =
+            "ELECTRICA_IT_TEST_AWAIT_DOCKER_CONTAINERS_ENABLED";
     private static final long DEFAULT_CHECK_INTERVAL = TimeUnit.SECONDS.toMillis(10);
     private static final long DEFAULT_TIMEOUT = TimeUnit.MINUTES.toMillis(5);
     private static final List<String> DEFAULT_HOSTS = Arrays.asList(
@@ -29,8 +31,15 @@ public class ServiceAwaitExtension implements BeforeAllCallback, AfterAllCallbac
             "http://localhost:22027",
             "http://localhost:22028"
     );
-
     private static final Waiter INSTANCE = new Waiter();
+
+    private static boolean awaitContainers() {
+        String awaitEnv = System.getenv(AWAIT_DOCKER_CONTAINERS_ENABLED_ENV);
+        if (awaitEnv != null) {
+            return Boolean.valueOf(awaitEnv);
+        }
+        return true;
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
@@ -65,9 +74,11 @@ public class ServiceAwaitExtension implements BeforeAllCallback, AfterAllCallbac
         private synchronized void beforeAll() throws Exception {
             if (!initialized) {
                 try {
-                    for (String host : hosts) {
-                        String serviceHealthUrl = host + PathConstants.HEALTH_PATH;
-                        waitForService(serviceHealthUrl);
+                    if (awaitContainers()) {
+                        for (String host : hosts) {
+                            String serviceHealthUrl = host + PathConstants.HEALTH_PATH;
+                            waitForService(serviceHealthUrl);
+                        }
                     }
                 } finally {
                     initialized = true;

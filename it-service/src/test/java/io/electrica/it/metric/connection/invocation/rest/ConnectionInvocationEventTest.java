@@ -56,7 +56,7 @@ class ConnectionInvocationEventTest extends BaseIT {
         contextHolder.setTokenForUser(user.getEmail());
         accessKey = createAccessKey(user.getId(), getCurrTimeAsString());
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
-        instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
+        instance = Electrica.instance(new SingleInstanceHttpModule(standUrl), fullAccessKeyDto.getKey());
         connectorDto = getEchoConnector();
         connectionDto = createConnection(getCurrTimeAsString(), connectorDto, accessKey.getId());
         Connector sdkConnector = instance.connector(connectorDto.getErn());

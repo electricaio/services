@@ -1,16 +1,1 @@
 # Override here properties for functions tests
-it-service:
-  invoker-service:
-    url: http://localhost
-  slack:
-    v1:
-      webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
-      test-result-channel: slack-sdk-test
-  publish-report: false
-
-feign:
-  userService.url: localhost
-  connectorHubService.url: localhost
-  invokerService.url: localhost
-  connectorService.url: localhost
-  webhookService.url: localhost
