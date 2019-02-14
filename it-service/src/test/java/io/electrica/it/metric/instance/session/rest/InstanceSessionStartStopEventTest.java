@@ -52,7 +52,7 @@ public class InstanceSessionStartStopEventTest extends BaseIT {
 
     @Test
     public void testRunningStopped() throws Exception {
-        Electrica instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl),
+        Electrica instance = Electrica.instance(new SingleInstanceHttpModule(standUrl),
                 fullAccessKeyDto.getKey());
         checkState(instance.getInstanceId(), SessionState.Running);
         instance.close();
@@ -126,7 +126,7 @@ public class InstanceSessionStartStopEventTest extends BaseIT {
 
     private Request buildRequest(UUID instanceId) {
         return new Request.Builder()
-                .url(buildEndpointUrl(invokerServiceUrl))
+                .url(buildEndpointUrl(standUrl))
                 .header("Authorization", "Bearer " + fullAccessKeyDto.getKey())
                 .header(INSTANCE_ID_HEADER, instanceId.toString())
                 .header(INSTANCE_NAME_HEADER, instanceId.toString())

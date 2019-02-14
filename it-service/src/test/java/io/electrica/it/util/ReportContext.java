@@ -10,7 +10,7 @@ public class ReportContext {
     private static final ReportContext INSTANCE = new ReportContext();
 
     private String accessKey;
-    private String invokerServiceUrl;
+    private String standUrl;
     private Boolean publishReport;
     private String slackConnectionName;
     private String channelName;

@@ -87,7 +87,7 @@ class WebhookInvokeTest extends BaseIT {
         allWebhooks = Arrays.asList(privateWebhookDto, publicWebhookDto);
 
         FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKey.getId()).getBody();
-        instance = Electrica.instance(new SingleInstanceHttpModule(invokerServiceUrl), fullAccessKeyDto.getKey());
+        instance = Electrica.instance(new SingleInstanceHttpModule(standUrl), fullAccessKeyDto.getKey());
         Connector connector = instance.connector(ECHO_CONNECTOR_ERN);
         connection = connector.connection(connectionDto.getName());
     }

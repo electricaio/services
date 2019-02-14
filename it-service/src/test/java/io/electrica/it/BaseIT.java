@@ -72,8 +72,8 @@ public abstract class BaseIT {
     protected String slackV1WebhookToken;
     @Value("${it-service.slack.v1.test-result-channel}")
     protected String slackTestResultChannel;
-    @Value("${it-service.invoker-service.url}")
-    protected String invokerServiceUrl;
+    @Value("${it-service.stand.url}")
+    protected String standUrl;
     @Value("${it-service.publish-report}")
     protected Boolean publishReport;
 
@@ -90,7 +90,7 @@ public abstract class BaseIT {
             FullAccessKeyDto fullAccessKeyDto = accessKeyClient.getAccessKey(accessKeyDto.getId()).getBody();
 
             ReportContext context = ReportContext.getInstance();
-            context.setInvokerServiceUrl(invokerServiceUrl);
+            context.setStandUrl(standUrl);
             context.setAccessKey(fullAccessKeyDto.getKey());
             context.setPublishReport(publishReport);
             context.setSlackConnectionName(createSlackConnections(accessKeyDto.getId()).getName());

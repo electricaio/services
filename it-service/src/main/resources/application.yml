@@ -6,10 +6,24 @@ spring:
     name: it-service
 
 it-service:
+  stand:
+    url: http://localhost
   oauth2:
-    access-token-uri: http://localhost:22022/oauth/token
     client-id: frontend
     client-secret: change_me
     user: admin@electrica.io
     password: admin
-    grant_type: password
+  slack:
+    v1:
+      webhook-token: TCXDR6K47/BEQT2N9HS/LqBO6l5tBVzljy9Vbj4N5gkV
+      test-result-channel: slack-sdk-test
+  publish-report: false
+
+feign:
+  userService.url: ${it-service.stand.url}
+  connectorHubService.url: ${it-service.stand.url}
+  invokerService.url: ${it-service.stand.url}
+  connectorService.url: ${it-service.stand.url}
+  webhookService.url: ${it-service.stand.url}
+  websocketService.url: ${it-service.stand.url}
+  metricService.url: ${it-service.stand.url}
